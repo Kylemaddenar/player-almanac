@@ -10837,8 +10837,8 @@ body.reduced-motion .help-modal-content {
   }
 
   .boot-zone-top {
-    padding-top: 16px; /* Increased padding to prevent logo cutoff */
-    margin-top: 8px; /* Additional margin for better spacing */
+    padding-top: calc(24px + env(safe-area-inset-top, 0px)); /* Account for notch/dynamic island */
+    margin-top: 0; /* Safe area handled in padding */
   }
 
   /* Celestial light on mobile - slightly larger for visibility */
@@ -11658,6 +11658,11 @@ body.reduced-motion .help-modal-content {
   /* Even more compact boot screen - but keep adequate top padding */
   #boot {
     padding: calc(40px + var(--safe-area-top)) 12px calc(12px + var(--safe-area-bottom));
+  }
+
+  /* Account for notch/dynamic island on very small screens */
+  .boot-zone-top {
+    padding-top: calc(16px + env(safe-area-inset-top, 0px));
   }
 
   /* H: Ensure logo readable at minimum sizes (24-32px) */
