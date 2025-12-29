@@ -187,8 +187,8 @@ Contributions welcome! Please:
 
 ## 📚 Documentation
 
-- [QUICKSTART.md](QUICKSTART.md) - Setup guide and smoke tests
-- [CHANGELOG.txt](CHANGELOG.txt) - Full version history
+- [QUICKSTART.md]([QUICKSTART.md](https://github.com/Kylemaddenar/player-almanac/blob/main/Quickstart.md) - Setup guide and smoke tests
+- [CHANGELOG.txt]([CHANGELOG.txt](https://github.com/Kylemaddenar/player-almanac/blob/main/Changelog.md) - Full version history
 - In-app Help (❓ button) - Feature documentation
 
 ## ⚠️ Trademark
