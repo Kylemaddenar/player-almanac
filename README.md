@@ -199,7 +199,7 @@ For commercial licensing: [Kinzle.MA@gmail.com](mailto:Kinzle.MA@gmail.com)
 
 ## 🙏 Credits
 
-- **Created by**: Zagreous
+- **Created by**: Zagreous "That's just me"
 - **Fonts**: [Cinzel](https://fonts.google.com/specimen/Cinzel), [Inter](https://fonts.google.com/specimen/Inter), [JetBrains Mono](https://fonts.google.com/specimen/JetBrains+Mono)
 - **Animations**: [GSAP](https://greensock.com/gsap/) (optional)
 - **Inspired by**: D&D Beyond, Roll20, and the TTRPG community
@@ -208,7 +208,7 @@ For commercial licensing: [Kinzle.MA@gmail.com](mailto:Kinzle.MA@gmail.com)
 
 ## 📣 Changelog
 
-### v6.4 (December 28, 2025) - Security Hardening
+### v6.4 (Dec 28, 2025) - Security Hardening
 - Added Content Security Policy
 - Enhanced import validation with `VALIDATION_LIMITS`
 - Portrait/map validation blocks SVG (XSS prevention)
@@ -216,19 +216,17 @@ For commercial licensing: [Kinzle.MA@gmail.com](mailto:Kinzle.MA@gmail.com)
 - Added debug mode with `window.__CM_DEBUG`
 - Fixed license version consistency
 
-### v6.3 (December 28, 2025) - Mobile Menu Redesign
+### v6.3 (NOV 28, 2025) - Mobile Menu Redesign
 - Full-screen overlay menus on mobile
 - Touch-friendly 54px+ buttons
 - Improved scrollable content areas
 
-### v6.0 (December 2025) - Major Features
+### v6.0 (Oct 2025) - Major Features
 - One-page PDF character sheet
 - 2014/2024 rules version toggle
 - Multi-character backup/restore
 - Spell descriptions
 - Portrait export/import
-
-[See full changelog in player_almanac.html](player_almanac.html)
 
 ---
 
