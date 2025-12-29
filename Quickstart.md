@@ -129,8 +129,8 @@ Before distributing, verify:
 
 ## 📚 More Documentation
 
-- [README.md](README.md) - Full project documentation
-- [CHANGELOG.txt](CHANGELOG.txt) - Version history
+- [README.md]([README.md](https://github.com/Kylemaddenar/player-almanac/blob/main/README.md)) - Full project documentation
+- [CHANGELOG.txt]([CHANGELOG.txt](https://github.com/Kylemaddenar/player-almanac/blob/main/Changelog.md)) - Version history
 - In-app Help (❓) - Feature guides
 
 ---
