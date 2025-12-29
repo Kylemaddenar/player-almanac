@@ -1,3 +1,5 @@
+# Player Almanac
+
 [![Version](https://img.shields.io/badge/version-6.15.1-blue.svg)](https://github.com/Kylemaddenar/player-almanac)
 [![License](https://img.shields.io/badge/license-ZNAL%20v1.1-green.svg)](#license)
 [![Offline](https://img.shields.io/badge/offline-ready-brightgreen.svg)](#offline-first)
@@ -9,9 +11,9 @@
 ## 📸 Screenshots
 
 <p align="center">
-  <img src="screenshot_boot.png" alt="Boot Screen" width="250"/>
+  <img src="https://i.imgur.com/cgQ7xPp.png" alt="Mobile UI" width="250"/>
   &nbsp;&nbsp;&nbsp;
-  <img src="screenshot_sheet.png" alt="Character Sheet" width="500"/>
+  <img src="https://i.imgur.com/5rG7nOW.png" alt="Main Layout" width="500"/>
 </p>
 
 <p align="center">
@@ -19,7 +21,7 @@
 </p>
 
 <p align="center">
-  <img src="screenshot_map.png" alt="Campaign Map" width="800"/>
+  <img src="https://i.imgur.com/CniMuqi.png" alt="Campaign Map" width="800"/>
 </p>
 
 <p align="center">
