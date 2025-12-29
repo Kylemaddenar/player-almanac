@@ -169,14 +169,6 @@ Toggle between rule versions in Settings.
 
 ---
 
-## 📖 Documentation
-
-- [QUICKSTART.md](QUICKSTART.md) - Get running in 10 minutes
-- [README.md](README.md) - Full technical documentation
-- [Addon Authoring Guide](Player_Almanac_Addon_Authoring_Guide.docx) - Extend the app
-
----
-
 ## 🤝 Contributing
 
 Contributions welcome! Please:
