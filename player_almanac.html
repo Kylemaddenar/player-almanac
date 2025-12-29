@@ -988,6 +988,19 @@ body.high-contrast .watermark {
   border-color: rgba(200, 80, 80, 0.6);
 }
 
+/* P0-1: Primary action button (Export All) - most important recovery option */
+.boot-error-btn.boot-error-primary {
+  background: rgba(90, 200, 120, 0.2);
+  border-color: var(--accent-primary);
+  color: var(--accent-secondary);
+  font-weight: 600;
+}
+
+.boot-error-btn.boot-error-primary:hover {
+  background: rgba(90, 200, 120, 0.35);
+  border-color: var(--accent-secondary);
+}
+
 .boot-error-debug {
   font-family: var(--font-body);
   font-size: 0.75rem;
@@ -17233,8 +17246,11 @@ body {
           }
         }));
         
-        // Try to show a notification if the app is available
-        if (window.__PA_INSTANCE && typeof window.__PA_INSTANCE.toast === 'function') {
+        // P0-2: Show Export Now modal for critical save failures
+        const isCriticalKey = key.startsWith('cmCharState_v1:') || key === CHAR_INDEX_KEY;
+        if (isCriticalKey && window.__PA_INSTANCE) {
+          window.__PA_INSTANCE.showExportNowModal(key, value, stats);
+        } else if (window.__PA_INSTANCE && typeof window.__PA_INSTANCE.toast === 'function') {
           window.__PA_INSTANCE.toast(
             `Storage full! Failed to save "${key.split('_').pop()}". ` +
             `Export your data and delete old characters to free space.`, 
@@ -28994,6 +29010,7 @@ Actions:
             <p class="boot-error-message" id="bootErrorMessage">An error occurred while loading your character data. Your saves may be corrupted or the storage is unavailable. <strong>Please choose a recovery option below.</strong></p>
             <div class="boot-error-details" id="bootErrorDetails"></div>
             <div class="boot-error-actions">
+              <button type="button" class="boot-error-btn boot-error-primary" id="bootErrorExport">&#x1F4BE; Export All Data</button>
               <button type="button" class="boot-error-btn" id="bootErrorRetry">&#x1F504; Retry</button>
               <button type="button" class="boot-error-btn" id="bootErrorNew">&#x2728; Start New</button>
               <button type="button" class="boot-error-btn" id="bootErrorImport">&#x1F4C2; Import</button>
@@ -29006,6 +29023,11 @@ Actions:
           </div>
         `;
         document.getElementById('boot')?.appendChild(modal);
+        
+        // P0-1: Export All Data - attempt emergency export even in error state
+        document.getElementById('bootErrorExport')?.addEventListener('click', () => {
+          this.emergencyExportAll();
+        });
         
         // Bind error modal buttons
         document.getElementById('bootErrorRetry')?.addEventListener('click', () => {
@@ -29053,8 +29075,8 @@ Actions:
           if (e.key === 'Escape') {
             e.preventDefault();
             e.stopPropagation();
-            // Focus the retry button as the safest default action
-            document.getElementById('bootErrorRetry')?.focus();
+            // Focus the export button as the safest default action
+            document.getElementById('bootErrorExport')?.focus();
           }
         });
       }
@@ -29134,6 +29156,329 @@ Actions:
       } catch (e) {
         console.error('[PlayerAlmanac] Failed to reset all storage:', e);
         alert('Failed to reset completely. Please try clearing your browser data manually.');
+      }
+    }
+
+    /**
+     * P0-1: Emergency Export All - Export all data even during error state
+     * This attempts to salvage whatever data can be read from localStorage
+     * even if the app is in a broken state. Data preservation is paramount.
+     */
+    emergencyExportAll() {
+      try {
+        const exportData = {
+          _meta: {
+            type: 'player-almanac-emergency-export',
+            version: '1.0',
+            exportedAt: new Date().toISOString(),
+            reason: 'emergency-recovery'
+          },
+          characters: [],
+          rawStorage: {},
+          errors: []
+        };
+
+        // Try to collect all character data from localStorage
+        for (let i = 0; i < localStorage.length; i++) {
+          const key = localStorage.key(i);
+          if (!key) continue;
+          
+          try {
+            const value = localStorage.getItem(key);
+            
+            // Collect all PA-related data
+            if (key.startsWith('cmCharState_v1:') || key.startsWith('pa-char-')) {
+              try {
+                const parsed = JSON.parse(value);
+                exportData.characters.push({
+                  key: key,
+                  data: parsed
+                });
+              } catch (parseErr) {
+                // Even if JSON is corrupt, save raw value
+                exportData.rawStorage[key] = value;
+                exportData.errors.push(`Parse error for ${key}: ${parseErr.message}`);
+              }
+            } else if (key.startsWith('cm') || key.startsWith('pa-')) {
+              // Save other PA-related keys
+              exportData.rawStorage[key] = value;
+            }
+          } catch (readErr) {
+            exportData.errors.push(`Read error for ${key}: ${readErr.message}`);
+          }
+        }
+
+        // Try to get character index
+        try {
+          const indexRaw = localStorage.getItem(CHAR_INDEX_KEY);
+          if (indexRaw) {
+            exportData.characterIndex = JSON.parse(indexRaw);
+          }
+        } catch (e) {
+          exportData.errors.push(`Character index error: ${e.message}`);
+        }
+
+        // Generate filename
+        const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
+        const filename = `player-almanac-emergency-backup-${timestamp}.json`;
+
+        // Download the file
+        const json = JSON.stringify(exportData, null, 2);
+        const blob = new Blob([json], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = filename;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+
+        // Show success message
+        const charCount = exportData.characters.length;
+        const errorCount = exportData.errors.length;
+        let message = `Emergency export complete! Saved ${charCount} character(s).`;
+        if (errorCount > 0) {
+          message += ` (${errorCount} items had errors but raw data was preserved)`;
+        }
+        alert(message);
+
+        console.log('[PlayerAlmanac] Emergency export completed:', {
+          characters: charCount,
+          rawKeys: Object.keys(exportData.rawStorage).length,
+          errors: errorCount
+        });
+
+      } catch (e) {
+        console.error('[PlayerAlmanac] Emergency export failed:', e);
+        alert('Emergency export failed: ' + e.message + '\n\nYou may need to manually copy data from browser DevTools > Application > Local Storage.');
+      }
+    }
+
+    /**
+     * P0-2: Show Export Now modal when critical save fails
+     * Provides immediate one-click export to prevent data loss
+     */
+    showExportNowModal(failedKey, failedValue, stats) {
+      // Remove existing modal if present
+      const existing = document.getElementById('exportNowModal');
+      if (existing) existing.remove();
+      
+      const modal = document.createElement('div');
+      modal.id = 'exportNowModal';
+      modal.className = 'boot-error-modal';
+      modal.setAttribute('role', 'alertdialog');
+      modal.setAttribute('aria-modal', 'true');
+      modal.innerHTML = `
+        <div class="boot-error-content" style="max-width: 480px;">
+          <div class="boot-error-icon">💾</div>
+          <h2 class="boot-error-title">Storage Full - Save Failed!</h2>
+          <p class="boot-error-message">
+            Your character data couldn't be saved because browser storage is full.
+            <strong>Export your data now to prevent loss!</strong>
+          </p>
+          <div class="boot-error-details" style="font-size: 0.8rem; color: var(--text-muted);">
+            Storage used: ~${Math.round((stats?.used || 0) / 1024)}KB
+          </div>
+          <div class="boot-error-actions" style="margin-top: 20px;">
+            <button type="button" class="boot-error-btn boot-error-primary" id="exportNowBtn">💾 Export All Now</button>
+            <button type="button" class="boot-error-btn" id="exportNowDismiss">Dismiss</button>
+          </div>
+          <p style="font-size: 0.75rem; color: var(--text-muted); margin-top: 16px;">
+            Tip: Delete old characters or clear portraits to free space.
+          </p>
+        </div>
+      `;
+      
+      document.body.appendChild(modal);
+      modal.hidden = false;
+      
+      // Wire buttons
+      document.getElementById('exportNowBtn')?.addEventListener('click', () => {
+        this.emergencyExportAll();
+        modal.remove();
+      });
+      
+      document.getElementById('exportNowDismiss')?.addEventListener('click', () => {
+        modal.remove();
+      });
+      
+      // Focus export button
+      setTimeout(() => document.getElementById('exportNowBtn')?.focus(), 50);
+      
+      console.warn('[PlayerAlmanac] Export Now modal shown due to save failure:', failedKey);
+    }
+
+    /**
+     * P0-2: Auto-backup system - creates rolling snapshots
+     * Stores up to MAX_AUTO_BACKUPS snapshots in localStorage
+     */
+    _autoBackupKey = 'pa-auto-backups';
+    _maxAutoBackups = 3;
+    _autoBackupInterval = null;
+    _lastAutoBackupTime = 0;
+    
+    /**
+     * P0-2: Initialize auto-backup system
+     * Called during app init, creates periodic backups
+     */
+    initAutoBackup() {
+      // Run backup every 5 minutes if there have been changes
+      const BACKUP_INTERVAL_MS = 5 * 60 * 1000; // 5 minutes
+      
+      this._autoBackupInterval = setInterval(() => {
+        this.createAutoBackup('interval');
+      }, BACKUP_INTERVAL_MS);
+      
+      // Also backup on visibility change (user leaving page)
+      document.addEventListener('visibilitychange', () => {
+        if (document.visibilityState === 'hidden') {
+          this.createAutoBackup('visibility');
+        }
+      });
+      
+      // Backup before unload
+      window.addEventListener('beforeunload', () => {
+        this.createAutoBackup('unload');
+      });
+      
+      console.log('[PlayerAlmanac] Auto-backup system initialized');
+    }
+    
+    /**
+     * P0-2: Create an auto-backup snapshot
+     * @param {string} trigger - What triggered the backup (interval, visibility, unload, manual)
+     */
+    createAutoBackup(trigger = 'manual') {
+      try {
+        // Don't backup too frequently (minimum 1 minute apart)
+        const now = Date.now();
+        if (now - this._lastAutoBackupTime < 60000 && trigger !== 'manual') {
+          return false;
+        }
+        
+        // Collect current character data
+        const backupData = {
+          timestamp: new Date().toISOString(),
+          trigger: trigger,
+          activeCharId: this.activeCharId,
+          charIndex: this.charIndex,
+          characters: {}
+        };
+        
+        // Save each character's state
+        for (const char of (this.charIndex || [])) {
+          const stateKey = this.charStateKey(char.id);
+          const stateRaw = localStorage.getItem(stateKey);
+          if (stateRaw) {
+            try {
+              backupData.characters[char.id] = JSON.parse(stateRaw);
+            } catch {
+              backupData.characters[char.id] = stateRaw; // Store raw if parse fails
+            }
+          }
+        }
+        
+        // Get existing backups
+        let backups = [];
+        try {
+          const existing = localStorage.getItem(this._autoBackupKey);
+          if (existing) backups = JSON.parse(existing);
+          if (!Array.isArray(backups)) backups = [];
+        } catch {
+          backups = [];
+        }
+        
+        // Add new backup and trim to max
+        backups.unshift(backupData);
+        if (backups.length > this._maxAutoBackups) {
+          backups = backups.slice(0, this._maxAutoBackups);
+        }
+        
+        // Save backups (may fail if quota exceeded, but that's ok)
+        try {
+          localStorage.setItem(this._autoBackupKey, JSON.stringify(backups));
+          this._lastAutoBackupTime = now;
+          debugLog('backup', `Auto-backup created (${trigger}):`, backupData.timestamp);
+          return true;
+        } catch (e) {
+          // Quota exceeded for backups - try with fewer backups
+          if (backups.length > 1) {
+            backups = backups.slice(0, 1);
+            try {
+              localStorage.setItem(this._autoBackupKey, JSON.stringify(backups));
+              return true;
+            } catch {
+              // Can't even store one backup - storage is critically full
+              console.warn('[PlayerAlmanac] Auto-backup failed - storage full');
+              return false;
+            }
+          }
+          return false;
+        }
+      } catch (e) {
+        console.error('[PlayerAlmanac] Auto-backup error:', e);
+        return false;
+      }
+    }
+    
+    /**
+     * P0-2: Get available auto-backups
+     * @returns {Array} List of backup objects with timestamps
+     */
+    getAutoBackups() {
+      try {
+        const raw = localStorage.getItem(this._autoBackupKey);
+        if (!raw) return [];
+        const backups = JSON.parse(raw);
+        return Array.isArray(backups) ? backups : [];
+      } catch {
+        return [];
+      }
+    }
+    
+    /**
+     * P0-2: Restore from an auto-backup
+     * @param {number} index - Index of backup to restore (0 = most recent)
+     */
+    restoreFromAutoBackup(index = 0) {
+      const backups = this.getAutoBackups();
+      if (index < 0 || index >= backups.length) {
+        this.toast('Backup not found', 'error');
+        return false;
+      }
+      
+      const backup = backups[index];
+      if (!confirm(`Restore from backup created ${new Date(backup.timestamp).toLocaleString()}?\n\nThis will overwrite current data.`)) {
+        return false;
+      }
+      
+      try {
+        // Restore character index
+        if (backup.charIndex) {
+          localStorage.setItem(CHAR_INDEX_KEY, JSON.stringify(backup.charIndex));
+        }
+        
+        // Restore each character
+        for (const [charId, charData] of Object.entries(backup.characters || {})) {
+          const key = this.charStateKey(charId);
+          const value = typeof charData === 'string' ? charData : JSON.stringify(charData);
+          localStorage.setItem(key, value);
+        }
+        
+        // Restore active character
+        if (backup.activeCharId) {
+          localStorage.setItem(CHAR_ACTIVE_KEY, backup.activeCharId);
+        }
+        
+        this.toast('Backup restored! Reloading...', 'success');
+        setTimeout(() => window.location.reload(), 1000);
+        return true;
+      } catch (e) {
+        console.error('[PlayerAlmanac] Restore failed:', e);
+        this.toast('Restore failed: ' + e.message, 'error');
+        return false;
       }
     }
 
@@ -29816,67 +30161,167 @@ Actions:
 
     /**
      * Handle importing backup data from error recovery flow
+     * P0-3: Import validation - handles corrupt, malformed, and hostile files safely
      * @param {Object} data - Parsed JSON from backup file
      */
     handleImportData(data) {
-      // Check if it's a multi-character backup (from bootExportAllCharacters)
-      if (data.characters && Array.isArray(data.characters)) {
-        // Multi-character backup
-        for (const char of data.characters) {
-          if (!char.state || !char.id) continue;
+      try {
+        // P0-3: Validate data is an object
+        if (!data || typeof data !== 'object') {
+          throw new Error('Import data is not a valid object');
+        }
+
+        // P0-3: Check for emergency export format
+        if (data._meta?.type === 'player-almanac-emergency-export' || data._meta?.type === 'emergency-export') {
+          this.handleEmergencyImport(data);
+          return;
+        }
+
+        // Check if it's a multi-character backup (from bootExportAllCharacters)
+        if (data.characters && Array.isArray(data.characters)) {
+          // P0-3: Validate characters array isn't too large
+          if (data.characters.length > 100) {
+            throw new Error('Too many characters in backup (max 100)');
+          }
+          
+          // Multi-character backup
+          let importedCount = 0;
+          for (const char of data.characters) {
+            try {
+              if (!char.state || !char.id) continue;
+              const newId = this.genCharId();
+              const normalized = normalizeState(char.state, this.defaults);
+              const now = Date.now();
+              
+              this.charIndex.push({
+                id: newId,
+                name: safeText(normalized.name) || 'Imported Character',
+                createdAt: char.meta?.createdAt || now,
+                updatedAt: now,
+              });
+              
+              storageSet(this.charStateKey(newId), JSON.stringify(normalized));
+              importedCount++;
+            } catch (charErr) {
+              console.warn('[PlayerAlmanac] Skipped corrupt character in import:', charErr);
+            }
+          }
+          
+          this.saveCharIndex();
+          if (this.charIndex.length > 0) {
+            this.activeCharId = this.charIndex[0].id;
+            storageSet(CHAR_ACTIVE_KEY, this.activeCharId);
+          }
+          
+          console.log(`[PlayerAlmanac] Imported ${importedCount} character(s)`);
+          
+        } else if (data.data) {
+          // Single character export (wrapped format)
+          const normalized = normalizeState(data.data, this.defaults);
           const newId = this.genCharId();
-          const normalized = normalizeState(char.state, this.defaults);
           const now = Date.now();
           
           this.charIndex.push({
             id: newId,
             name: safeText(normalized.name) || 'Imported Character',
-            createdAt: char.meta?.createdAt || now,
+            createdAt: now,
             updatedAt: now,
           });
           
           storageSet(this.charStateKey(newId), JSON.stringify(normalized));
-        }
-        this.saveCharIndex();
-        if (this.charIndex.length > 0) {
-          this.activeCharId = this.charIndex[0].id;
+          this.saveCharIndex();
+          this.activeCharId = newId;
+          storageSet(CHAR_ACTIVE_KEY, this.activeCharId);
+          
+        } else {
+          // Legacy raw state format
+          const normalized = normalizeState(data, this.defaults);
+          const newId = this.genCharId();
+          const now = Date.now();
+          
+          this.charIndex.push({
+            id: newId,
+            name: safeText(normalized.name) || 'Imported Character',
+            createdAt: now,
+            updatedAt: now,
+          });
+          
+          storageSet(this.charStateKey(newId), JSON.stringify(normalized));
+          this.saveCharIndex();
+          this.activeCharId = newId;
           storageSet(CHAR_ACTIVE_KEY, this.activeCharId);
         }
-      } else if (data.data) {
-        // Single character export (wrapped format)
-        const normalized = normalizeState(data.data, this.defaults);
-        const newId = this.genCharId();
-        const now = Date.now();
-        
-        this.charIndex.push({
-          id: newId,
-          name: safeText(normalized.name) || 'Imported Character',
-          createdAt: now,
-          updatedAt: now,
-        });
-        
-        storageSet(this.charStateKey(newId), JSON.stringify(normalized));
-        this.saveCharIndex();
-        this.activeCharId = newId;
-        storageSet(CHAR_ACTIVE_KEY, this.activeCharId);
-      } else {
-        // Legacy raw state format
-        const normalized = normalizeState(data, this.defaults);
-        const newId = this.genCharId();
-        const now = Date.now();
-        
-        this.charIndex.push({
-          id: newId,
-          name: safeText(normalized.name) || 'Imported Character',
-          createdAt: now,
-          updatedAt: now,
-        });
-        
-        storageSet(this.charStateKey(newId), JSON.stringify(normalized));
-        this.saveCharIndex();
-        this.activeCharId = newId;
+      } catch (e) {
+        console.error('[PlayerAlmanac] Import failed:', e);
+        throw new Error('Import failed: ' + (e.message || 'Unknown error'));
+      }
+    }
+
+    /**
+     * P0-3: Handle emergency export format imports
+     * Emergency exports may have raw/partially corrupt data
+     */
+    handleEmergencyImport(data) {
+      let imported = 0;
+      
+      // Try characters array first
+      if (data.characters && Array.isArray(data.characters)) {
+        for (const charEntry of data.characters) {
+          try {
+            const charData = charEntry.data || charEntry;
+            if (!charData) continue;
+            
+            const newId = this.genCharId();
+            const normalized = normalizeState(charData, this.defaults);
+            const now = Date.now();
+            
+            this.charIndex.push({
+              id: newId,
+              name: safeText(normalized.name) || 'Recovered Character',
+              createdAt: now,
+              updatedAt: now,
+            });
+            
+            storageSet(this.charStateKey(newId), JSON.stringify(normalized));
+            imported++;
+          } catch (e) {
+            console.warn('[PlayerAlmanac] Skipped corrupt emergency character:', e);
+          }
+        }
+      }
+      
+      // Try rawStorage if present
+      if (data.rawStorage && typeof data.rawStorage === 'object') {
+        for (const [key, value] of Object.entries(data.rawStorage)) {
+          if (!key.startsWith('cmCharState_v1:')) continue;
+          try {
+            const parsed = typeof value === 'string' ? JSON.parse(value) : value;
+            const newId = this.genCharId();
+            const normalized = normalizeState(parsed, this.defaults);
+            const now = Date.now();
+            
+            this.charIndex.push({
+              id: newId,
+              name: safeText(normalized.name) || 'Recovered Character',
+              createdAt: now,
+              updatedAt: now,
+            });
+            
+            storageSet(this.charStateKey(newId), JSON.stringify(normalized));
+            imported++;
+          } catch (e) {
+            console.warn('[PlayerAlmanac] Skipped corrupt raw storage entry:', key, e);
+          }
+        }
+      }
+      
+      this.saveCharIndex();
+      if (this.charIndex.length > 0 && !this.activeCharId) {
+        this.activeCharId = this.charIndex[0].id;
         storageSet(CHAR_ACTIVE_KEY, this.activeCharId);
       }
+      
+      console.log(`[PlayerAlmanac] Emergency import recovered ${imported} character(s)`);
     }
 
     /**
@@ -30138,10 +30583,14 @@ Actions:
     }
     
     // Section H/4: Create a DOM element for an addon item
+    // P0-4: Includes security info (hash) and warning styling
     createAddonItemElement(addon) {
       const item = document.createElement('div');
       item.className = 'pa-addon-item' + (addon.enabled ? '' : ' disabled');
       item.dataset.addonId = addon.id;
+      
+      // P0-4: Get truncated hash if available (async computed separately)
+      const shortHash = addon.hash ? addon.hash.slice(0, 8) : '—';
       
       item.innerHTML = `
         <div class="pa-addon-icon">&#x1F9E9;</div>
@@ -30149,7 +30598,10 @@ Actions:
           <div class="pa-addon-name">${this.escapeHtml(addon.name)}</div>
           <div class="pa-addon-meta">
             <span class="pa-addon-version">v${this.escapeHtml(addon.version)}</span>
+            ${addon.author ? `<span class="pa-addon-author">by ${this.escapeHtml(addon.author)}</span>` : ''}
+            <span class="pa-addon-hash" title="SHA-256 hash (first 8 chars): ${shortHash}">🔐 ${shortHash}</span>
           </div>
+          ${addon.lastError ? `<div class="pa-addon-error" style="color:#f88;font-size:0.75rem;">Error: ${this.escapeHtml(addon.lastError)}</div>` : ''}
         </div>
         <div class="pa-addon-actions">
           <label class="pa-addon-toggle" title="Enable/Disable">
@@ -30160,6 +30612,9 @@ Actions:
           <button class="pa-addon-remove" data-addon-id="${this.escapeHtml(addon.id)}" title="Remove">&#xD7;</button>
         </div>
       `;
+      
+      // P0-4: Compute hash async and update display
+      this.updateAddonHash(addon.id, item);
       
       // Wire up toggle
       const toggle = item.querySelector('input[type="checkbox"]');
@@ -30183,6 +30638,31 @@ Actions:
       }
       
       return item;
+    }
+    
+    /**
+     * P0-4: Update addon hash display (async)
+     */
+    async updateAddonHash(id, itemElement) {
+      try {
+        const html = await this.getAddonHtml(id);
+        if (html) {
+          const hash = await this.computeAddonHash(html);
+          const shortHash = hash.slice(0, 8);
+          
+          // Update the hash display in the DOM
+          const hashEl = itemElement.querySelector('.pa-addon-hash');
+          if (hashEl) {
+            hashEl.textContent = '🔐 ' + shortHash;
+            hashEl.title = `SHA-256: ${hash}`;
+          }
+          
+          // Store hash in registry for future reference
+          this.updateAddonInRegistry(id, { hash: hash });
+        }
+      } catch (e) {
+        console.warn('[PlayerAlmanac] Could not update addon hash:', e);
+      }
     }
     
     // Section H/4: Helper to escape HTML for safe rendering
@@ -30547,11 +31027,43 @@ Actions:
     }
     
     // Section H/7: Toggle addon enabled state (reversible, no auto-execution)
-    toggleAddon(id, enabled) {
+    // P0-4: Shows security warning when enabling addons
+    async toggleAddon(id, enabled) {
       const addon = this.getAddonById(id);
       if (!addon) {
         console.warn('[PlayerAlmanac] Addon not found:', id);
         return;
+      }
+      
+      // P0-4: Show security warning when enabling an addon
+      if (enabled && !addon.enabled) {
+        // Get addon HTML to compute hash
+        let hash = 'unknown';
+        try {
+          const html = await this.getAddonHtml(id);
+          if (html) {
+            hash = await this.computeAddonHash(html);
+          }
+        } catch (e) {
+          console.warn('[PlayerAlmanac] Could not compute addon hash:', e);
+        }
+        
+        // Show security warning
+        const warningMsg = 
+          `⚠️ SECURITY WARNING\n\n` +
+          `Addons can run code and access your character data.\n\n` +
+          `Addon: ${addon.name}\n` +
+          `Version: ${addon.version || 'unknown'}\n` +
+          `Author: ${addon.author || 'unknown'}\n` +
+          `SHA-256: ${hash.slice(0, 16)}...\n\n` +
+          `Only enable addons from sources you trust.\n\n` +
+          `Enable this addon?`;
+        
+        if (!confirm(warningMsg)) {
+          // User cancelled - reset the checkbox
+          this.renderAddonsList();
+          return;
+        }
       }
       
       // Only flip the enabled flag - do not execute anything
@@ -30564,6 +31076,23 @@ Actions:
         console.log('[PlayerAlmanac] Addon', enabled ? 'enabled' : 'disabled', ':', id);
       } else {
         this.showAddonsError('Failed to update addon state');
+      }
+    }
+    
+    /**
+     * P0-4: Compute SHA-256 hash of addon content
+     * Used to help users detect tampering
+     */
+    async computeAddonHash(content) {
+      try {
+        const encoder = new TextEncoder();
+        const data = encoder.encode(content);
+        const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+        const hashArray = Array.from(new Uint8Array(hashBuffer));
+        return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+      } catch (e) {
+        console.warn('[PlayerAlmanac] Hash computation failed:', e);
+        return 'unavailable';
       }
     }
     
@@ -31936,15 +32465,80 @@ console.log('[PA Addon] Host API bridge initialized for addon:', window.PA.addon
   // P1.2: Store global reference for storage quota error handling
   window.__PA_INSTANCE = app;
 
-  // Never strand the user behind the boot overlay if something throws during init.
+  // P0-1: Never strand the user behind the boot overlay if something throws during init.
+  // Instead of hiding everything, show a recovery UI with export/reset options.
   const forceReveal = (err) => {
     try { console.error('[PlayerAlmanac] Init error:', err); } catch (e) {}
+    
+    // Try to show the boot error modal with recovery options
+    try {
+      if (app && typeof app.showBootErrorModal === 'function') {
+        app.showBootErrorModal(err instanceof Error ? err : new Error(String(err)));
+        return; // Recovery modal shown, don't hide boot screen
+      }
+    } catch (modalErr) {
+      console.error('[PlayerAlmanac] Could not show error modal:', modalErr);
+    }
+    
+    // Fallback: Create minimal recovery UI if app isn't available
     try {
       const boot = document.getElementById('boot');
-      const appEl = document.getElementById('app');
-      if (boot) { boot.classList.add('hidden'); boot.style.opacity = '0'; }
-      if (appEl) appEl.style.opacity = '1';
-    } catch (e) {}
+      if (boot) {
+        // Don't hide boot - replace its content with recovery UI
+        boot.innerHTML = `
+          <div class="boot-error-modal" style="display:flex !important; position:fixed; inset:0; z-index:99999; background:rgba(0,0,0,0.95); align-items:center; justify-content:center;">
+            <div style="background:rgba(30,30,40,0.98); border:1px solid rgba(255,255,255,0.1); border-radius:12px; padding:32px; max-width:500px; text-align:center; font-family:system-ui,sans-serif; color:#eee;">
+              <div style="font-size:48px; margin-bottom:16px;">⚠️</div>
+              <h2 style="margin:0 0 16px; font-size:1.3rem;">Player Almanac Failed to Start</h2>
+              <p style="color:#aaa; margin-bottom:24px; line-height:1.5;">A critical error occurred during startup. Your character data may still be recoverable.</p>
+              <div style="background:rgba(0,0,0,0.3); border-radius:6px; padding:12px; margin-bottom:24px; text-align:left; font-family:monospace; font-size:0.75rem; color:#f88; max-height:100px; overflow:auto;">
+                ${String(err?.message || err || 'Unknown error')}
+              </div>
+              <div style="display:flex; gap:12px; flex-wrap:wrap; justify-content:center;">
+                <button onclick="window.__PA_EMERGENCY_EXPORT?.()" style="padding:12px 20px; border:1px solid #5a5; background:rgba(90,170,90,0.2); color:#8f8; border-radius:8px; cursor:pointer; font-weight:600;">💾 Export All Data</button>
+                <button onclick="location.reload()" style="padding:12px 20px; border:1px solid #888; background:rgba(255,255,255,0.05); color:#fff; border-radius:8px; cursor:pointer;">🔄 Retry</button>
+                <button onclick="if(confirm('Delete ALL data?')){localStorage.clear();indexedDB.deleteDatabase('PlayerAlmanacPortraits');location.reload()}" style="padding:12px 20px; border:1px solid #a55; background:rgba(170,90,90,0.2); color:#f88; border-radius:8px; cursor:pointer;">🗑️ Reset All</button>
+              </div>
+            </div>
+          </div>
+        `;
+        boot.style.display = 'block';
+        boot.style.opacity = '1';
+      }
+    } catch (fallbackErr) {
+      // Absolute last resort - at least show something
+      document.body.innerHTML = '<div style="padding:40px;text-align:center;font-family:sans-serif;color:#fff;background:#111;min-height:100vh;"><h1>⚠️ Player Almanac Error</h1><p>A critical error occurred. Please refresh or clear browser data.</p><pre style="color:#f88;margin:20px auto;max-width:600px;text-align:left;">' + String(err) + '</pre><button onclick="location.reload()" style="padding:12px 24px;font-size:16px;cursor:pointer;">Reload</button></div>';
+    }
+  };
+
+  // P0-1: Emergency export function available even when app fails
+  window.__PA_EMERGENCY_EXPORT = () => {
+    try {
+      const exportData = {
+        _meta: { type: 'emergency-export', exportedAt: new Date().toISOString() },
+        characters: [],
+        rawStorage: {}
+      };
+      
+      for (let i = 0; i < localStorage.length; i++) {
+        const key = localStorage.key(i);
+        if (!key) continue;
+        const value = localStorage.getItem(key);
+        if (key.startsWith('cmCharState_v1:') || key.startsWith('pa-')) {
+          try { exportData.characters.push({ key, data: JSON.parse(value) }); }
+          catch { exportData.rawStorage[key] = value; }
+        }
+      }
+      
+      const blob = new Blob([JSON.stringify(exportData, null, 2)], { type: 'application/json' });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = 'player-almanac-emergency-' + Date.now() + '.json';
+      a.click();
+      alert('Export complete! ' + exportData.characters.length + ' character(s) saved.');
+    } catch (e) {
+      alert('Export failed: ' + e.message);
+    }
   };
 
   window.addEventListener('error', (e) => forceReveal(e?.error || e));
