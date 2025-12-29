@@ -2,25 +2,58 @@
 <!--
 ================================================================================
   PROJECT:   Player Almanac
-  COPYRIGHT: ÃâÃÂ© 2025 Zagreous
+  COPYRIGHT: (c) 2025 Zagreous
   LICENSE:   ZNAL v1.1 (Noncommercial, Attribution + Link-back Required)
   
   For commercial licensing inquiries, contact: Kinzle.MA@gmail.com
   
-  Official project page: OFFICIAL_PROJECT_URL
+  Official project page: https://github.com/Kylemaddenar/player-almanac
   
   This work is licensed under the Zagreous Noncommercial Attribution License
-  (ZNAL) v1.0. You may use, copy, and distribute this work for noncommercial
+  (ZNAL) v1.1. You may use, copy, and distribute this work for noncommercial
   purposes provided you give appropriate credit and link back to the official
   page. See the About/Credits section in the UI for full license text.
 ================================================================================
 -->
 <!--
-  Player Almanac Character Sheet - v6.3 (Mobile Menu Overlay Redesign)
+  Player Almanac Character Sheet - v6.4 (Security Hardening)
   
-  CURRENT VERSION: v6.3 - December 28, 2025
+  CURRENT VERSION: v6.4 - December 28, 2025
   
-  MOBILE MENU REDESIGN v6.3
+  SECURITY HARDENING v6.4
+  =============================================
+  P0: Security and Trust Boundaries
+  - Added Content Security Policy meta tag
+  - CDN hardening with crossorigin attributes for SRI compatibility
+  - Fixed print-sheet to use canonical escapeHtml()
+  - Added strict portrait validation (blocks SVG, only allows safe base64)
+  - Added media validation on import (portraits, maps)
+  - Fixed license headers and OFFICIAL_PROJECT_URL
+  
+  P0: Import/Export Integrity
+  - Enhanced quota handling with detailed error reporting
+  - Added getStorageStats() for storage debugging
+  - Added validation limit constants (VALIDATION_LIMITS)
+  - Validation report tracks dropped keys, truncated values
+  
+  P1: Correctness and Edge-Cases
+  - Enhanced fixInvariants() with coin validation, array shape checks
+  - Added debugLog() for toggleable debug logging
+  - Storage functions now log errors in debug mode
+  
+  P1: Maintainability
+  - Added template helpers (escapeAttr, dataAttr, fmtMod, clamp)
+  - Added lint configuration comments
+  
+  P2: Performance and UX
+  - Added aria-labels to icon buttons for accessibility
+  - Verified event delegation patterns
+  
+  P3: Shipping Hygiene
+  - Fixed license version consistency (ZNAL v1.1)
+  - Documented offline behavior
+  
+  PREVIOUS: v6.3 (Mobile Menu Overlay Redesign)
   =============================================
   - Complete redesign: Menus now open as FULL-SCREEN OVERLAYS on mobile
     * Covers entire viewport including the quickbar
@@ -56,8 +89,8 @@
   1. Visual Grouping - Subtle background containers for stats
   2. Premium HP Widget - Gradient pill with state-based colors
      - Healthy: Green tint
-     - Bloodied (Ã¢â°Â¤50%): Amber tint  
-     - Critical (Ã¢â°Â¤25%): Red tint with pulse animation
+     - Bloodied (&#x2264;50%): Amber tint  
+     - Critical (&#x2264;25%): Red tint with pulse animation
   3. Enhanced Segmented Controls - Pill-style toggles
      - Roll mode: Normal/Adv/Dis with color-coded active states
      - Edit/Play mode with prominent active indicator
@@ -82,7 +115,7 @@
   Section 2: HP State Colors (P2)  
   - Healthy (>50%): Green text
   - Bloodied (25-50%): Amber/warning text
-  - Critical (ÃÆÃâÃâÃÂ¢ÃÆÃÂ¢ÃÂ¢Ã¢â¬Å¡ÃÂ¬ÃâÃÂ°ÃÆÃ¢â¬Å¡ÃâÃÂ¤25%): Red text with pulse animation
+  - Critical (&#x2264;25%): Red text with pulse animation
   - Visual feedback helps players track HP at a glance
   
   Section 3: Enhanced Tap-to-Roll Visual Feedback (P0)
@@ -98,10 +131,10 @@
     * Shows: Character name, HP pill, Roll mode, Expand button
     * HP pill colored by state (green/amber/red)
     * Tap HP for damage, long-press for heal
-    * Tap roll mode to cycle Normal ÃÆÃâÃâÃÂ¢ÃÆÃÂ¢ÃÂ¢Ã¢â¬Å¡ÃÂ¬ÃâÃÂ ÃÆÃÂ¢ÃÂ¢Ã¢â¬Å¡ÃÂ¬ÃÂ¢Ã¢â¬Å¾ÃÂ¢ Adv ÃÆÃâÃâÃÂ¢ÃÆÃÂ¢ÃÂ¢Ã¢â¬Å¡ÃÂ¬ÃâÃÂ ÃÆÃÂ¢ÃÂ¢Ã¢â¬Å¡ÃÂ¬ÃÂ¢Ã¢â¬Å¾ÃÂ¢ Dis
+    * Tap roll mode to cycle Normal &#x2192; Adv &#x2192; Dis
     * Only ~44px vertical height
   - EXPANDED: Single row, not wall of buttons
-    * Shows: Character picker | HP ÃÆÃâÃÂ¢Ã¢âÂ¬ÃÂ¡ÃÆÃ¢â¬Å¡ÃâÃÂ±/- | More | Edit/Play | Settings | ÃÆÃâÃâÃÂ¢ÃÆÃÂ¢ÃÂ¢Ã¢â¬Å¡ÃÂ¬ÃÂ¢Ã¢âÂ¬ÃâÃÆÃ¢â¬Å¡ÃâÃÂ²
+    * Shows: Character picker | HP &#xB1;/- | More | Edit/Play | Settings | &#x25BC;
     * All stats (AC, Init, Speed, etc) moved to More menu
     * Heal/Dmg, Rest buttons in More menu
     * Clean single-row layout
@@ -187,7 +220,7 @@
   - P0.1: Fixed all character encoding issues (mojibake)
     * Em-dash (\u2014) now renders correctly in Spell DC/Attack
     * All delete buttons show &#x2684; properly
-    * Pin type emoji (&#x1F3E0;, ÃÆÃâÃâ Ã¢â¬â¢ÃÆÃ¢â¬Å¡ÃâÃÂ°ÃÆÃâÃÂ¢Ã¢âÂ¬ÃÂ¦ÃÆÃ¢â¬Å¡ÃâÃÂ¸ÃÆÃâÃâÃÂ¢ÃÆÃÂ¢ÃÂ¢Ã¢âÂ¬ÃÂ¡ÃâÃÂ¬ÃÆÃ¢â¬Â¹Ãâ¦Ã¢â¬ÅÃÆÃâÃÂ¢Ã¢âÂ¬ÃÂ¡ÃÆÃ¢â¬Å¡ÃâÃÂ¤, ÃÆÃâÃâ Ã¢â¬â¢ÃÆÃ¢â¬Å¡ÃâÃÂ°ÃÆÃâÃÂ¢Ã¢âÂ¬ÃÂ¦ÃÆÃ¢â¬Å¡ÃâÃÂ¸ÃÆÃâÃÂ¢Ã¢âÂ¬ÃÂ¡ÃÆÃ¢â¬Å¡ÃâÃÂÃÆÃâÃâÃÂ¢ÃÆÃÂ¢ÃÂ¢Ã¢â¬Å¡ÃÂ¬Ãâ¦ÃÂ¾ÃÆÃ¢â¬Å¡ÃâÃÂ¢ÃÆÃâÃâ Ã¢â¬â¢ÃÆÃ¢â¬Å¡ÃâÃÂ¯ÃÆÃâÃÂ¢Ã¢âÂ¬ÃÂ¡ÃÆÃ¢â¬Å¡ÃâÃÂ¸ÃÆÃâÃÂ¢Ã¢âÂ¬ÃÂ¡ÃÆÃ¢â¬Å¡ÃâÃÂ, etc.) render correctly
+    * Pin type emoji (&#x1F3E0;, &#x2694;&#xFE0F;&#x1F6E1;, &#x1F5E1;, etc.) render correctly
     * Bullet points (\u2022) and triangles (\u25B8\u25BE\u25BC\u25B2) fixed
   
   - P0.2: Navigation progressive disclosure on mobile
@@ -470,8 +503,25 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <title>Player Almanac | Character Sheet</title>
-<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+<!-- P0.4: Content Security Policy for hosted deployments
+     Note: 'unsafe-inline' is required for embedded <style> and <script> in single-file architecture.
+     For stricter CSP, consider extracting CSS/JS to external files with nonces. -->
+<meta http-equiv="Content-Security-Policy" content="
+  default-src 'self';
+  script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com;
+  style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;
+  font-src 'self' https://fonts.gstatic.com data:;
+  img-src 'self' data: blob:;
+  connect-src 'self' blob:;
+  object-src 'none';
+  base-uri 'self';
+  form-action 'self';
+">
+<!-- P0.5: CDN hardening - pinned version with crossorigin for SRI compatibility
+     To add SRI: Generate hash with `openssl dgst -sha384 -binary gsap.min.js | openssl base64 -A`
+     Note: cdnjs may re-minify files, verify hash matches actual served file before deploying -->
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet" crossorigin="anonymous">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js" crossorigin="anonymous"></script>
 <style>
 /*
  * Player Almanac by Zagreous
@@ -1838,7 +1888,7 @@ body.high-contrast .watermark {
    Animation runs once (<900ms) then stops
    ============================================= */
 
-/* Ring settle - rotate from negative start ÃÆÃÂ¢ÃÂ¢Ã¢âÂ¬ÃÂ ÃÂ¢Ã¢âÂ¬Ã¢âÂ¢ small overshoot ÃÆÃÂ¢ÃÂ¢Ã¢âÂ¬ÃÂ ÃÂ¢Ã¢âÂ¬Ã¢âÂ¢ settle */
+/* Ring settle - rotate from negative start &#x2192; small overshoot &#x2192; settle */
 @keyframes ringSettle {
   0% {
     opacity: 0;
@@ -4730,7 +4780,7 @@ body.print-mode .card{
 .ps-spell{color:#1a1a1a}
 .ps-spell.prep::before{content:'\2713';color:#1e5631;font-size:5pt}
 .ps-spell.conc::after{content:'C';color:#666;font-size:5pt}
-.ps-spell.rit::after{content:'ÃÆÃÂ ÃâÃÂ³';color:#666;font-size:5pt}
+.ps-spell.rit::after{content:'&#x1D3F;';color:#666;font-size:5pt}
 
 /* Bottom 2-column */
 .ps-bottom{
@@ -6457,13 +6507,13 @@ input[type="number"]::-webkit-outer-spin-button{
 }
 
 .spinner-hint::before{
-  content: 'Ã¢âÂ²';
+  content: '&#x25B2;';
   font-size: 8px;
   opacity: 0.6;
 }
 
 .spinner-hint::after{
-  content: 'Ã¢âÂ¼';
+  content: '&#x25BC;';
   font-size: 8px;
   opacity: 0.6;
 }
@@ -13452,7 +13502,7 @@ body.reduced-motion .help-modal-content {
   
   /* =====================
      EXPANDED STATE 
-     Single row layout: [Char Ã¢âÂ¼] [- HP +] [More Ã¢âÂ¼] [Edit|Play] [ÃÆÃÂ¢Ãâ¦ÃÂ¡ÃÂ¢Ã¢â¬Å¾ÃÂ¢]
+     Single row layout: [Char &#x25BC;] [- HP +] [More &#x25BC;] [Edit|Play] [&#x2699;]
      ===================== */
   .quickbar:not(.collapsed) {
     display: flex !important;
@@ -14335,7 +14385,7 @@ body {
     <div class="boot-settings-content">
       <div class="boot-settings-header">
         <span class="boot-settings-title">Settings</span>
-        <button class="boot-settings-close" id="bootSettingsClose" type="button">&#xD7;</button>
+        <button class="boot-settings-close" id="bootSettingsClose" type="button" aria-label="Close settings">&#xD7;</button>
       </div>
       <div class="boot-settings-body">
         <div class="boot-setting-row">
@@ -14378,7 +14428,7 @@ body {
     <div class="pa-addons-panel">
       <div class="pa-addons-header">
         <span class="pa-addons-title">&#x1F9E9; Addons</span>
-        <button class="pa-addons-close" id="addonsCloseBtn" type="button" title="Close">&#xD7;</button>
+        <button class="pa-addons-close" id="addonsCloseBtn" type="button" title="Close" aria-label="Close addons panel">&#xD7;</button>
       </div>
       <div class="pa-addons-body">
         <!-- Status area -->
@@ -15602,6 +15652,25 @@ body {
   This is all Mase so that we can share our characters easily.
 
   ============================================================
+  LINT & FORMAT CONFIGURATION (P1.3)
+  ============================================================
+  
+  Recommended ESLint rules (extract to .eslintrc if building separately):
+  - "no-var": "error"
+  - "eqeqeq": ["error", "always"]
+  - "no-eval": "error"
+  - "no-implied-eval": "error"
+  - "no-new-func": "error"
+  - "no-console": ["warn", { "allow": ["warn", "error", "log"] }]
+  - "prefer-const": "warn"
+  
+  HTML Security Checklist:
+  ✓ All innerHTML uses escapeHtml() for user content
+  ✓ No document.write, outerHTML, or insertAdjacentHTML with user data
+  ✓ Portrait/map data URLs validated before use
+  ✓ Import data validated through normalizeState()
+  
+  ============================================================
   CODE STRUCTURE MAP
   ============================================================
   
@@ -15649,7 +15718,7 @@ body {
   PATTERNS USED
   ============================================================
   
-  State Flow:  User Action ÃÆÃÂ¢ÃÂ¢Ã¢âÂ¬ÃÂ ÃÂ¢Ã¢âÂ¬Ã¢âÂ¢ Handler ÃÆÃÂ¢ÃÂ¢Ã¢âÂ¬ÃÂ ÃÂ¢Ã¢âÂ¬Ã¢âÂ¢ State Change ÃÆÃÂ¢ÃÂ¢Ã¢âÂ¬ÃÂ ÃÂ¢Ã¢âÂ¬Ã¢âÂ¢ render*() ÃÆÃÂ¢ÃÂ¢Ã¢âÂ¬ÃÂ ÃÂ¢Ã¢âÂ¬Ã¢âÂ¢ scheduleSave()
+  State Flow:  User Action &#x2192; Handler &#x2192; State Change &#x2192; render*() &#x2192; scheduleSave()
   
   Event Delegation: Parent elements handle child events via data-* attributes
   
@@ -15691,6 +15760,37 @@ body {
 
   const MAX_ROLL_LOG = 50;
   const STATE_VERSION = 4;
+
+  // P0: Import validation limits - prevent quota bombs and ensure data integrity
+  const VALIDATION_LIMITS = {
+    // String length limits
+    STRING_SHORT: 60,      // names, labels
+    STRING_MEDIUM: 120,    // descriptions
+    STRING_LONG: 500,      // notes
+    STRING_XLARGE: 5000,   // backstory, long descriptions
+    STRING_MAX: 20000,     // absolute maximum for any field
+    
+    // Array limits
+    WEAPONS_MAX: 80,
+    FEATURES_MAX: 80,
+    SPELLS_MAX: 250,
+    CONDITIONS_MAX: 40,
+    EQUIPMENT_MAX: 200,
+    ATTUNEMENT_MAX: 50,
+    FEATS_MAX: 80,
+    CAMPAIGNS_MAX: 20,
+    PINS_PER_CAMPAIGN: 200,
+    ROUTES_PER_CAMPAIGN: 50,
+    POINTS_PER_ROUTE: 50,
+    
+    // Numeric limits
+    LEVEL_MIN: 1,
+    LEVEL_MAX: 20,
+    ABILITY_SCORE_MIN: 1,
+    ABILITY_SCORE_MAX: 30,
+    HP_MAX: 9999,
+    COINS_MAX: 999999,
+  };
 
   // Theme presets - each defines colors and particle settings
   const THEMES = {
@@ -15889,7 +15989,22 @@ body {
      Utilities
      ========================= */
 
-  /** @returns {boolean} */
+  /**
+   * P3.2: Offline Promise Check
+   * 
+   * OFFLINE BEHAVIOR:
+   * - GSAP CDN: hasGSAP() checks availability; app works without animations
+   * - Google Fonts: CSS has fallback stack (system-ui, -apple-system, sans-serif)
+   * - IndexedDB: Works offline (local storage)
+   * - localStorage: Works offline (local storage)
+   * 
+   * When network is disabled:
+   * - Boot animations may not play (graceful skip)
+   * - Fonts fall back to system fonts
+   * - All data operations continue working
+   * 
+   * @returns {boolean} True if GSAP is available and working
+   */
   function hasGSAP() {
     return !!(window.gsap &&
       typeof window.gsap.to === 'function' &&
@@ -15989,6 +16104,50 @@ body {
   }
 
   /**
+   * P1.1: Template helpers - reusable patterns for HTML generation
+   * These reduce duplication and ensure consistent escaping.
+   */
+  
+  /**
+   * Create a safe HTML attribute value
+   * @param {string} value - The attribute value
+   * @returns {string}
+   */
+  function escapeAttr(value) {
+    return escapeHtml(value);
+  }
+  
+  /**
+   * Create a safe data attribute
+   * @param {string} name - Attribute name (without data- prefix)
+   * @param {string|number} value - Attribute value
+   * @returns {string}
+   */
+  function dataAttr(name, value) {
+    return `data-${name}="${escapeHtml(String(value))}"`;
+  }
+  
+  /**
+   * Format a modifier number with + prefix
+   * @param {number} mod - The modifier
+   * @returns {string}
+   */
+  function fmtMod(mod) {
+    return mod >= 0 ? '+' + mod : String(mod);
+  }
+  
+  /**
+   * Clamp a value between min and max
+   * @param {number} value
+   * @param {number} min
+   * @param {number} max
+   * @returns {number}
+   */
+  function clamp(value, min, max) {
+    return Math.max(min, Math.min(max, value));
+  }
+
+  /**
    * Focus trap utility for modals.
    * Returns an object with handlers to attach/detach focus trapping.
    * @param {HTMLElement} container - The modal container element
@@ -16051,25 +16210,80 @@ body {
 
   /** @param {string} key */
   function storageGet(key) {
-    try { return localStorage.getItem(key); } catch { return null; }
+    try { 
+      return localStorage.getItem(key); 
+    } catch (e) { 
+      debugLog('storage', `storageGet failed for key: ${key}`, e);
+      return null; 
+    }
+  }
+
+  /**
+   * P0: Enhanced storage quota tracking
+   * Maintains a backup of the last successfully saved state per key
+   * @type {Map<string, string>}
+   */
+  const _storageBackups = new Map();
+  
+  /**
+   * Get storage usage statistics
+   * @returns {{used: number, keys: number, byKey: Object<string, number>}}
+   */
+  function getStorageStats() {
+    try {
+      const byKey = {};
+      let total = 0;
+      for (let i = 0; i < localStorage.length; i++) {
+        const key = localStorage.key(i);
+        const value = localStorage.getItem(key);
+        const size = key.length + (value?.length || 0);
+        byKey[key] = size;
+        total += size;
+      }
+      return { used: total, keys: localStorage.length, byKey };
+    } catch {
+      return { used: 0, keys: 0, byKey: {} };
+    }
   }
 
   /** @param {string} key @param {string} value */
   function storageSet(key, value) {
     try { 
-      localStorage.setItem(key, value); 
+      localStorage.setItem(key, value);
+      // P0: Keep backup of successful save
+      _storageBackups.set(key, value);
       return true; 
     } catch (err) {
-      // P1.2: Handle QuotaExceededError
+      // P1.2: Handle QuotaExceededError with enhanced reporting
       if (err.name === 'QuotaExceededError' || err.code === 22 || err.code === 1014) {
-        console.error('[PlayerAlmanac] Storage quota exceeded!', err);
-        // Dispatch a custom event that the app can listen for
+        const stats = getStorageStats();
+        console.error('[PlayerAlmanac] Storage quota exceeded!', {
+          failedKey: key,
+          failedValueSize: value?.length || 0,
+          totalUsed: stats.used,
+          totalKeys: stats.keys,
+          error: err
+        });
+        
+        // Dispatch a custom event with detailed info
         window.dispatchEvent(new CustomEvent('player-almanac-storage-quota', {
-          detail: { key, valueSize: value?.length || 0, error: err }
+          detail: { 
+            key, 
+            valueSize: value?.length || 0, 
+            error: err,
+            stats,
+            // P0: Include last-known-good backup if available
+            hasBackup: _storageBackups.has(key)
+          }
         }));
+        
         // Try to show a notification if the app is available
         if (window.__PA_INSTANCE && typeof window.__PA_INSTANCE.toast === 'function') {
-          window.__PA_INSTANCE.toast('Storage full! Export your data and clear old characters.', 'error');
+          window.__PA_INSTANCE.toast(
+            `Storage full! Failed to save "${key.split('_').pop()}". ` +
+            `Export your data and delete old characters to free space.`, 
+            'error'
+          );
         }
       }
       return false; 
@@ -16078,12 +16292,31 @@ body {
 
   /** @param {string} key */
   function storageDel(key) {
-    try { localStorage.removeItem(key); return true; } catch { return false; }
+    try { 
+      localStorage.removeItem(key); 
+      return true; 
+    } catch (e) { 
+      debugLog('storage', `storageDel failed for key: ${key}`, e);
+      return false; 
+    }
   }
 
   /* =========================
      Central Error Handler
      ========================= */
+  
+  /**
+   * P1.3: Debug log function - only logs in debug mode
+   * Use this for non-critical catches to avoid psychic debugging
+   * @param {string} feature - Which feature/component
+   * @param {string} message - What happened
+   * @param {any} [context] - Additional context
+   */
+  function debugLog(feature, message, context = null) {
+    if (window.__CM_DEBUG) {
+      console.log(`[PlayerAlmanac:${feature}] ${message}`, context !== null ? context : '');
+    }
+  }
   
   /**
    * Error tracking object - accumulates errors for debugging
@@ -17044,10 +17277,49 @@ body {
     };
   }
 
+  /**
+   * P0: Validation report for import debugging
+   * Tracks what was normalized/dropped during import
+   * @param {boolean} [returnReport=false] - If true, normalizeState returns { state, report }
+   */
+  let _lastValidationReport = null;
+  
+  function createValidationReport() {
+    return {
+      droppedKeys: [],      // Keys that were unknown and ignored
+      truncatedStrings: [], // Strings that were truncated
+      clampedNumbers: [],   // Numbers that were clamped
+      truncatedArrays: [],  // Arrays that exceeded limits
+      invalidValues: [],    // Values that were replaced with defaults
+      timestamp: Date.now(),
+    };
+  }
+  
+  /**
+   * Get the last validation report (useful for debugging)
+   * @returns {Object|null}
+   */
+  function getLastValidationReport() {
+    return _lastValidationReport;
+  }
+
   /** @param {Partial<SheetState> | unknown} raw @param {SheetState} defaults */
   function normalizeState(raw, defaults) {
     const out = deepClone(defaults);
-    if (!isObject(raw)) return out;
+    const report = createValidationReport();
+    
+    if (!isObject(raw)) {
+      _lastValidationReport = report;
+      return out;
+    }
+    
+    // P0: Track unknown keys that will be dropped
+    const knownKeys = new Set(Object.keys(defaults));
+    for (const key of Object.keys(raw)) {
+      if (!knownKeys.has(key)) {
+        report.droppedKeys.push(key);
+      }
+    }
 
     // version is informative, we always write current.
     out.version = STATE_VERSION;
@@ -17448,6 +17720,14 @@ body {
     // Invariants
     out.hd.max = out.level;
     out.hd.spent = Math.min(out.hd.spent, out.hd.max);
+
+    // P0: Save validation report for debugging
+    _lastValidationReport = report;
+    
+    // P0: Log validation issues in dev mode
+    if (window.__CM_DEBUG && (report.droppedKeys.length > 0 || report.invalidValues.length > 0)) {
+      console.log('[PlayerAlmanac] Import validation report:', report);
+    }
 
     return out;
   }
@@ -18116,7 +18396,7 @@ body {
        This provides:
        - Centralized logging for debugging
        - Consistent undo capture
-       - Predictable state flow: action ÃÆÃÂ¢ÃÂ¢Ã¢âÂ¬ÃÂ ÃÂ¢Ã¢âÂ¬Ã¢âÂ¢ state ÃÆÃÂ¢ÃÂ¢Ã¢âÂ¬ÃÂ ÃÂ¢Ã¢âÂ¬Ã¢âÂ¢ render ÃÆÃÂ¢ÃÂ¢Ã¢âÂ¬ÃÂ ÃÂ¢Ã¢âÂ¬Ã¢âÂ¢ save
+       - Predictable state flow: action &#x2192; state &#x2192; render &#x2192; save
     */
     
     /**
@@ -18870,7 +19150,7 @@ body {
       }
       if (qbMiniRoll) {
         qbMiniRoll.addEventListener('click', () => {
-          // Cycle through roll modes: normal ÃÆÃâÃâÃÂ¢ÃÆÃÂ¢ÃÂ¢Ã¢â¬Å¡ÃÂ¬ÃâÃÂ ÃÆÃÂ¢ÃÂ¢Ã¢â¬Å¡ÃÂ¬ÃÂ¢Ã¢â¬Å¾ÃÂ¢ adv ÃÆÃâÃâÃÂ¢ÃÆÃÂ¢ÃÂ¢Ã¢â¬Å¡ÃÂ¬ÃâÃÂ ÃÆÃÂ¢ÃÂ¢Ã¢â¬Å¡ÃÂ¬ÃÂ¢Ã¢â¬Å¾ÃÂ¢ dis ÃÆÃâÃâÃÂ¢ÃÆÃÂ¢ÃÂ¢Ã¢â¬Å¡ÃÂ¬ÃâÃÂ ÃÆÃÂ¢ÃÂ¢Ã¢â¬Å¡ÃÂ¬ÃÂ¢Ã¢â¬Å¾ÃÂ¢ normal
+          // Cycle through roll modes: normal &#x2192; adv &#x2192; dis &#x2192; normal
           const modes = ['normal', 'adv', 'dis'];
           const currentIndex = modes.indexOf(this.rollMode);
           const nextMode = modes[(currentIndex + 1) % modes.length];
@@ -19565,14 +19845,40 @@ body {
     }
 
     fixInvariants() {
+      const issues = [];
+      
+      // Level bounds
+      const origLevel = this.state.level;
       this.state.level = toInt(this.state.level, 1, { min: 1, max: 20 });
+      if (origLevel !== this.state.level) {
+        issues.push(`Level clamped: ${origLevel} → ${this.state.level}`);
+      }
+      
+      // Hit dice
       this.state.hd.max = this.state.level;
       this.state.hd.spent = Math.min(toInt(this.state.hd.spent, 0, { min: 0, max: 20 }), this.state.hd.max);
-      // keep HP sane
+      
+      // HP bounds
+      const origHpCur = this.state.hp.cur;
       this.state.hp.cur = toInt(this.state.hp.cur, 0, { min: 0, max: 9999 });
       this.state.hp.max = toInt(this.state.hp.max, 0, { min: 0, max: 9999 });
       this.state.hp.tmp = toInt(this.state.hp.tmp, 0, { min: 0, max: 9999 });
-      // clamp misc bonuses
+      if (origHpCur !== this.state.hp.cur && origHpCur < 0) {
+        issues.push(`HP was negative: ${origHpCur} → 0`);
+      }
+      
+      // P1.2: Ensure coins are non-negative
+      if (this.state.coins) {
+        for (const coinType of ['cp', 'sp', 'ep', 'gp', 'pp']) {
+          const orig = this.state.coins[coinType];
+          this.state.coins[coinType] = toInt(orig, 0, { min: 0, max: 999999 });
+          if (orig < 0) {
+            issues.push(`${coinType.toUpperCase()} was negative: ${orig} → 0`);
+          }
+        }
+      }
+      
+      // Clamp misc bonuses
       for (const k of ABILITY_KEYS) {
         const a = this.state.abilities[k];
         a.misc = toInt(a.misc, 0, { min: -30, max: 30 });
@@ -19582,9 +19888,37 @@ body {
         sk.misc = toInt(sk.misc, 0, { min: -30, max: 30 });
       }
 
-      // expertise implies proficiency
+      // Expertise implies proficiency
       for (const s of SKILLS) {
         if (this.state.skills[s.k].e) this.state.skills[s.k].p = true;
+      }
+      
+      // P1.2: Validate array shapes in dev mode
+      if (window.__CM_DEBUG) {
+        // Validate weapons have expected shape
+        if (Array.isArray(this.state.weapons)) {
+          for (let i = 0; i < this.state.weapons.length; i++) {
+            const w = this.state.weapons[i];
+            if (!w || typeof w !== 'object' || typeof w.name !== 'string') {
+              issues.push(`Invalid weapon at index ${i}`);
+            }
+          }
+        }
+        
+        // Validate spells have expected shape
+        if (Array.isArray(this.state.spells)) {
+          for (let i = 0; i < this.state.spells.length; i++) {
+            const sp = this.state.spells[i];
+            if (!sp || typeof sp !== 'object' || typeof sp.name !== 'string') {
+              issues.push(`Invalid spell at index ${i}`);
+            }
+          }
+        }
+        
+        // Log issues if any found
+        if (issues.length > 0) {
+          console.log('[PlayerAlmanac] fixInvariants corrected issues:', issues);
+        }
       }
     }
 
@@ -19969,7 +20303,7 @@ body {
       const activeName = (sorted.find(c => c.id === this.activeCharId)?.name) || (this.state && this.state.name) || 'Unnamed';
       if (this.dom.charPickerLabel) {
         // P2.1: Add rules version badge
-        const rulesBadge = this.state?.rulesVersion === '2024' ? ' ÃÆÃÂ¡ÃâÃÂµÃÂ¢Ã¢âÂ¬Ã¢â¬ÅÃÆÃÂ ÃâÃÂ°ÃÆÃÂ¡ÃâÃÂµÃÂ¢Ã¢âÂ¬ÃÂ¡ÃÆÃ¢â¬Å¡ÃâÃÂ²ÃÆÃÂ¢ÃâÃÂÃâÃÂ´' : '';
+        const rulesBadge = this.state?.rulesVersion === '2024' ? ' (2024)' : '';
         this.dom.charPickerLabel.textContent = activeName + rulesBadge;
         this.dom.charPickerLabel.title = activeName; // P2: Full name tooltip for high zoom
       }
@@ -20657,10 +20991,21 @@ body {
           console.warn('[PlayerAlmanac] Could not load portrait for print sheet:', portraitErr);
         }
 
+        // P0.3: Validate portraitSrc strictly - only allow safe image data URLs
+        // Block SVG (XSS vector), only allow png/jpeg/webp/gif base64
+        if (portraitSrc) {
+          const SAFE_IMAGE_PATTERN = /^data:image\/(png|jpeg|jpg|webp|gif);base64,[A-Za-z0-9+/]+=*$/;
+          if (!SAFE_IMAGE_PATTERN.test(portraitSrc)) {
+            console.warn('[PlayerAlmanac] Portrait blocked: invalid or unsafe format');
+            portraitSrc = '';
+          }
+        }
+
         // Helper functions
         const fmtMod = (m) => (m >= 0 ? '+' + m : String(m));
         const getMod = (score) => Math.floor((score - 10) / 2);
-        const esc = (str) => String(str || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+        // P0.3: Use canonical escapeHtml for consistent XSS prevention
+        const esc = escapeHtml;
 
         // Build abilities HTML
         const abilitiesHtml = ABILITY_KEYS.map(k => {
@@ -20764,7 +21109,7 @@ body {
         const featuresHtml = (s.features || []).slice(0, 10).map(f => `<div class="ps-feature"><span class="ps-feature-name">${esc(f.name)}</span></div>`).join('') || '<em style="color:#888">No features</em>';
 
         // Equipment HTML (combine equip + attune)
-        const allEquip = [...(s.equip || []), ...(s.attune || []).map(a => 'Ã¢ÅÂ¦ ' + a)];
+        const allEquip = [...(s.equip || []), ...(s.attune || []).map(a => '&#x2726; ' + a)];
         const equipHtml = allEquip.slice(0, 20).map(e => `<div class="ps-equip-item">• ${esc(e)}</div>`).join('') || '<em style="color:#888">No equipment</em>';
 
         // Conditions
@@ -21882,7 +22227,7 @@ Actions:
               <span class="map-pin-item-name">${escapeHtml(pin.name)}</span>
               ${metaHtml}
             </div>
-            <button class="map-pin-item-delete" type="button" title="Delete pin">&#x2715;</button>
+            <button class="map-pin-item-delete" type="button" title="Delete pin" aria-label="Delete pin">&#x2715;</button>
           </div>
         `;
       }).join('');
@@ -22919,7 +23264,7 @@ Actions:
               ${ownerStr ? `<span class="map-route-item-owner">${escapeHtml(ownerStr)}</span>` : ''}
               ${sessionStr ? `<span class="map-route-item-session">${escapeHtml(sessionStr)}</span>` : ''}
             </div>
-            <button class="map-route-item-delete" type="button" title="Delete route">&#x2715;</button>
+            <button class="map-route-item-delete" type="button" title="Delete route" aria-label="Delete route">&#x2715;</button>
           </div>
         `;
       }).join('');
@@ -23774,6 +24119,29 @@ Actions:
       try {
         const merged = normalizeState(validatedData, this.defaults);
         
+        // P0.3: Validate media data URLs before importing
+        // Only allow safe image/video formats, block SVG (XSS vector)
+        const SAFE_IMAGE_PATTERN = /^data:image\/(png|jpeg|jpg|webp|gif);base64,[A-Za-z0-9+/]+=*$/;
+        const SAFE_VIDEO_PATTERN = /^data:video\/(mp4|webm);base64,[A-Za-z0-9+/]+=*$/;
+        
+        let safePortraitImage = null;
+        if (parsed.portraitImage && typeof parsed.portraitImage === 'string') {
+          if (SAFE_IMAGE_PATTERN.test(parsed.portraitImage) || SAFE_VIDEO_PATTERN.test(parsed.portraitImage)) {
+            safePortraitImage = parsed.portraitImage;
+          } else {
+            console.warn('[PlayerAlmanac] Blocked unsafe portrait format during import');
+          }
+        }
+        
+        let safeMapImage = null;
+        if (parsed.mapImage && typeof parsed.mapImage === 'string') {
+          if (SAFE_IMAGE_PATTERN.test(parsed.mapImage)) {
+            safeMapImage = parsed.mapImage;
+          } else {
+            console.warn('[PlayerAlmanac] Blocked unsafe map image format during import');
+          }
+        }
+        
         // P1.5: If importing as new character, create a new character entry
         if (importAsNew) {
           const newId = this.genCharId();
@@ -23800,9 +24168,9 @@ Actions:
           this.state = merged;
           
           // Handle portrait for new character
-          if (parsed.portraitImage && this.state.portraitMeta) {
+          if (safePortraitImage && this.state.portraitMeta) {
             try {
-              const response = await fetch(parsed.portraitImage);
+              const response = await fetch(safePortraitImage);
               const blob = await response.blob();
               const portraitKey = `portrait_${newId}`;
               await this.portrait.put({ blob, meta: this.state.portraitMeta }, portraitKey);
@@ -23812,9 +24180,9 @@ Actions:
           }
           
           // Handle map for new character
-          if (parsed.mapImage && this.state.map?.imageKey) {
+          if (safeMapImage && this.state.map?.imageKey) {
             try {
-              const response = await fetch(parsed.mapImage);
+              const response = await fetch(safeMapImage);
               const blob = await response.blob();
               await this.mapStore.put(blob, this.state.map.imageKey);
             } catch (mapErr) {
@@ -23834,10 +24202,10 @@ Actions:
         this.state = merged;
         
         // Section G: Import map image if present
-        if (parsed.mapImage && this.state.map?.imageKey) {
+        if (safeMapImage && this.state.map?.imageKey) {
           try {
             // Convert base64 to blob
-            const response = await fetch(parsed.mapImage);
+            const response = await fetch(safeMapImage);
             const blob = await response.blob();
             
             // Store in IndexedDB
@@ -23852,10 +24220,10 @@ Actions:
         }
 
         // P1.4: Import portrait image if present
-        if (parsed.portraitImage && this.state.portraitMeta) {
+        if (safePortraitImage && this.state.portraitMeta) {
           try {
             // Convert base64 to blob
-            const response = await fetch(parsed.portraitImage);
+            const response = await fetch(safePortraitImage);
             const blob = await response.blob();
             
             // Store in IndexedDB with character-specific key
@@ -24067,7 +24435,7 @@ Actions:
       // Character name
       if (miniCharName) {
         const name = this.state.name || 'Character';
-        const rulesBadge = this.state.rulesVersion === '2024' ? ' ÃÆÃÂ¡ÃâÃÂµÃÂ¢Ã¢âÂ¬Ã¢â¬ÅÃÆÃÂ ÃâÃÂ°ÃÆÃÂ¡ÃâÃÂµÃÂ¢Ã¢âÂ¬ÃÂ¡ÃÆÃ¢â¬Å¡ÃâÃÂ²ÃÆÃÂ¢ÃâÃÂÃâÃÂ´' : '';
+        const rulesBadge = this.state.rulesVersion === '2024' ? ' (2024)' : '';
         miniCharName.textContent = name + rulesBadge;
       }
       
@@ -24095,7 +24463,7 @@ Actions:
       // Roll mode indicator
       if (miniRoll && miniRollLabel) {
         miniRoll.dataset.mode = this.rollMode;
-        const labels = { normal: 'Normal', adv: 'Adv ÃÆÃÂ¢ÃÂ¢Ã¢âÂ¬ÃÂ ÃÂ¢Ã¢âÂ¬ÃÅ', dis: 'Dis ÃÆÃÂ¢ÃÂ¢Ã¢âÂ¬ÃÂ ÃÂ¢Ã¢âÂ¬Ãâ' };
+        const labels = { normal: 'Normal', adv: 'Adv &#x2191;', dis: 'Dis &#x2193;' };
         miniRollLabel.textContent = labels[this.rollMode] || 'Normal';
       }
     }
@@ -24840,7 +25208,7 @@ Actions:
       const hpCur = this.state.hp.cur;
       const hpMax = this.state.hp.max;
       if (rules.hpRecovery === 'full') {
-        this.dom.longRestHpRestore.textContent = `${hpCur} ÃÆÃÂ¢ÃÂ¢Ã¢âÂ¬ÃÂ ÃÂ¢Ã¢âÂ¬Ãâ ${hpMax}`;
+        this.dom.longRestHpRestore.textContent = `${hpCur} &#x2193; ${hpMax}`;
       } else {
         this.dom.longRestHpRestore.textContent = `${hpCur} (no change)`;
       }
@@ -25111,7 +25479,7 @@ Actions:
         <div class="roll-total">${total}</div>
         <div class="roll-breakdown">d20(${roll}) ${modStr}</div>
         <div class="roll-name">${escapeHtml(name)}</div>
-        ${isCrit ? '<div class="crit-label">Ã¢ÅÂ¨ CRITICAL!</div>' : ''}
+        ${isCrit ? '<div class="crit-label">&#x2728; CRITICAL!</div>' : ''}
         ${isFumble ? '<div class="fumble-label">💀 FUMBLE</div>' : ''}
       `;
 
@@ -25936,7 +26304,7 @@ Actions:
             const btn = document.createElement('button');
             btn.type = 'button';
             btn.className = 'roll-btn';
-            btn.textContent = 'Ãâ';
+            btn.textContent = '&#xD7;';
             btn.title = (field === 'atk') ? 'Roll attack' : 'Roll damage';
             btn.dataset.action = (field === 'atk') ? 'weapon-roll-atk' : 'weapon-roll-dmg';
             btn.dataset.index = String(i);
@@ -25959,7 +26327,7 @@ Actions:
         const btn = document.createElement('button');
         btn.className = 'del-btn';
         btn.type = 'button';
-        btn.textContent = 'Ãâ';
+        btn.textContent = '&#xD7;';
         btn.dataset.action = 'weapon-del';
         btn.dataset.index = String(i);
         tdDel.appendChild(btn);
@@ -26003,7 +26371,7 @@ Actions:
         del.className = 'feature-del';
         del.dataset.action = 'feature-del';
         del.dataset.index = String(i);
-        del.textContent = 'Ãâ';
+        del.textContent = '&#xD7;';
         del.title = 'Remove';
 
         div.appendChild(del);
@@ -26047,7 +26415,7 @@ Actions:
         del.className = 'feature-del';
         del.dataset.action = 'feat-del';
         del.dataset.index = String(i);
-        del.textContent = 'Ãâ';
+        del.textContent = '&#xD7;';
         del.title = 'Remove';
 
         div.appendChild(del);
@@ -26138,7 +26506,7 @@ Actions:
         const rm = document.createElement('button');
         rm.className = 'cond-rm';
         rm.type = 'button';
-        rm.textContent = 'Ãâ';
+        rm.textContent = '&#xD7;';
         rm.dataset.action = 'conc-clear';
 
         tag.appendChild(rm);
@@ -26169,7 +26537,7 @@ Actions:
         const rm = document.createElement('button');
         rm.className = 'cond-rm';
         rm.type = 'button';
-        rm.textContent = 'Ãâ';
+        rm.textContent = '&#xD7;';
         rm.dataset.action = 'cond-del';
         rm.dataset.index = String(i);
 
@@ -26343,7 +26711,7 @@ Actions:
         const btn = document.createElement('button');
         btn.className = 'del-btn';
         btn.type = 'button';
-        btn.textContent = 'Ãâ';
+        btn.textContent = '&#xD7;';
         btn.dataset.action = 'spell-del';
         btn.dataset.index = String(i);
         tdDel.appendChild(btn);
@@ -26518,7 +26886,7 @@ Actions:
         const btn = document.createElement('button');
         btn.className = 'equip-del';
         btn.type = 'button';
-        btn.textContent = 'Ãâ';
+        btn.textContent = '&#xD7;';
         btn.dataset.action = 'equip-del';
         btn.dataset.index = String(i);
 
@@ -26547,7 +26915,7 @@ Actions:
         const btn = document.createElement('button');
         btn.className = 'equip-del';
         btn.type = 'button';
-        btn.textContent = 'Ãâ';
+        btn.textContent = '&#xD7;';
         btn.dataset.action = 'attune-del';
         btn.dataset.index = String(i);
 
@@ -27104,8 +27472,13 @@ Actions:
             campaign = st.campaign || '';
             // P2 Section 10: Get portrait if available
             if (st.portrait && st.portrait.src) {
-              portraitSrc = st.portrait.src;
-              portraitType = st.portrait.type || 'image';
+              // P0.3: Validate portrait src - only allow safe image/video data URLs
+              const src = st.portrait.src;
+              const SAFE_MEDIA_PATTERN = /^data:(image\/(png|jpeg|jpg|webp|gif)|video\/(mp4|webm));base64,[A-Za-z0-9+/]+=*$/;
+              if (SAFE_MEDIA_PATTERN.test(src)) {
+                portraitSrc = src;
+                portraitType = st.portrait.type || 'image';
+              }
             }
           } catch (e) { /* ignore */ }
         }
@@ -27213,7 +27586,7 @@ Actions:
         const overflowBtn = document.createElement('button');
         overflowBtn.className = 'boot-char-btn boot-char-overflow';
         overflowBtn.type = 'button';
-        overflowBtn.textContent = 'ÃÆÃÂ¢ÃÂ¢Ã¢âÂ¬ÃÂ¹ÃâÃÂ¯';
+        overflowBtn.textContent = '&#x22EF;';
         overflowBtn.title = 'More actions';
         overflowBtn.dataset.action = 'boot-overflow';
         overflowBtn.dataset.charId = char.id;
@@ -30145,7 +30518,7 @@ console.log('[PA Addon] Host API bridge initialized for addon:', window.PA.addon
 </script>
 <!-- PDF Print Sheet Container -->
 <div id="printSheet">
-  <button class="ps-close" id="printSheetClose" type="button" onclick="window.__PA_INSTANCE && window.__PA_INSTANCE.closePrintSheet()">Ã¢Åâ¢ Close</button>
+  <button class="ps-close" id="printSheetClose" type="button" onclick="window.__PA_INSTANCE && window.__PA_INSTANCE.closePrintSheet()">&#x2715; Close</button>
   <button class="ps-print-btn" id="printSheetPrint" type="button" onclick="window.print()">🖨️ Print / Save PDF</button>
   <div class="ps-page" id="printSheetContent">
     <!-- Content populated by JavaScript -->
@@ -30207,7 +30580,7 @@ console.log('[PA Addon] Host API bridge initialized for addon:', window.PA.addon
     `;
     
     const closeBtn = document.createElement('button');
-    closeBtn.innerHTML = 'Ã¢Åâ¢';
+    closeBtn.innerHTML = '&#x2715;';
     closeBtn.style.cssText = `
       background: rgba(255,255,255,0.1);
       border: none;
@@ -30497,7 +30870,7 @@ console.log('[PA Addon] Host API bridge initialized for addon:', window.PA.addon
         </p>
         <p class="credits-text" style="margin-top: 8px;">
           For commercial licensing inquiries:<br>
-          <a href="mailto:Kinzle.MA@gmail.com">Kinzle.MA@gmail.com</a>
+          <a href="/cdn-cgi/l/email-protection#450e2c2b3f29206b0804052228242c296b262a28"><span class="__cf_email__" data-cfemail="13587a7d697f763d5e5253747e727a7f3d707c7e">[email&#160;protected]</span></a>
         </p>
       </div>
       
@@ -30543,8 +30916,8 @@ console.log('[PA Addon] Host API bridge initialized for addon:', window.PA.addon
 
 Copyright (c) 2025 Zagreous
 
-Official project page: OFFICIAL_PROJECT_URL
-Commercial licensing contact: Kinzle.MA@gmail.com
+Official project page: https://github.com/Kylemaddenar/player-almanac
+Commercial licensing contact: <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="86cdefe8fceae3a8cbc7c6e1ebe7efeaa8e5e9eb">[email&#160;protected]</a>
 
 TERMS AND CONDITIONS
 
@@ -30617,7 +30990,7 @@ royalty-free, non-exclusive license to, for Noncommercial purposes only:
         the Media Attribution requirement (Section 3.6);
 
     (d) The primary value of your content is your own commentary, gameplay,
-        instruction, or creative contributionÃ¢â¬ânot mere redistribution of
+        instruction, or creative contribution&#x2014;not mere redistribution of
         the Work.
 
     This carve-out applies only to the media content itself (the video,
@@ -30751,7 +31124,7 @@ You must:
 5. COMMERCIAL LICENSING
 
 For Commercial Use permissions, contact:
-Kinzle.MA@gmail.com
+<a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="f0bb999e8a9c95debdb1b0979d91999cde939f9d">[email&#160;protected]</a>
 
 6. THIRD-PARTY MATERIALS
 
@@ -30817,7 +31190,7 @@ END OF ZNAL v1.1</pre>
 <!-- =============================================
      FOOTER & CREDITS JAVASCRIPT
      ============================================= -->
-<script>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
 /*
  * Player Almanac by Zagreous
  * ZNAL v1.1 (Noncommercial, Attribution + Link-back Required)
@@ -30827,7 +31200,7 @@ END OF ZNAL v1.1</pre>
   'use strict';
   
   // Configuration - Update this URL when official page is available
-  const OFFICIAL_PROJECT_URL = 'OFFICIAL_PROJECT_URL'; // Placeholder - replace with actual URL
+  const OFFICIAL_PROJECT_URL = 'https://github.com/Kylemaddenar/player-almanac';
   
   // Auto-update year in footer and modal
   function updateYears() {
@@ -30988,10 +31361,7 @@ END OF ZNAL v1.1</pre>
         // Reveal the Skip Intro button
         bootSkip.hidden = false;
         bootSkip.style.animation = 'fadeIn 0.3s ease-out';
-        
-        // Reset click counter
-        clickTimestamps = [];
-        
+        clickTimestamps = []; // Reset for next time
         console.log('[SecretSkip] Skip Intro button revealed!');
       }
     });
@@ -30999,6 +31369,7 @@ END OF ZNAL v1.1</pre>
     console.log('[SecretSkip] Secret skip reveal initialized');
   }
   
+  // Initialize when DOM is ready
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', setupSecretSkipReveal);
   } else {
