@@ -16,9 +16,9 @@
 ================================================================================
 -->
 <!--
-  Player Almanac Character Sheet - v6.14 OFFLINE BUILD (No External Dependencies)
+  Player Almanac Character Sheet - v6.15.1 OFFLINE BUILD (No External Dependencies)
   
-  CURRENT VERSION: v6.14 - December 29, 2025
+  CURRENT VERSION: v6.15.1 - December 29, 2025
   
   For complete version history, see: CHANGELOG.txt
 -->
@@ -45,11 +45,7 @@
   base-uri 'self';
   form-action 'self';
 ">
-<!-- P0.5: CDN hardening - pinned version with crossorigin for SRI compatibility
-     To add SRI: Generate hash with `openssl dgst -sha384 -binary gsap.min.js | openssl base64 -A`
-     Note: cdnjs may re-minify files, verify hash matches actual served file before deploying -->
-<!-- Google Fonts removed for offline mode -->
-<!-- GSAP 3.12.2 - Inlined for offline use -->
+<!-- GSAP 3.12.2 - Inlined for offline use (no external CDN) -->
 <script>
 /* GSAP 3.12.2 - GreenSock Animation Platform
  * https://greensock.com
@@ -2373,6 +2369,18 @@ body.high-contrast .watermark {
 .boot-footer-link:focus-visible{
   outline:2px solid var(--accent-secondary);
   outline-offset:2px;
+}
+
+/* P0-1: Recovery button - always accessible for emergency export */
+.boot-recovery-btn{
+  background:rgba(200,150,50,0.15);
+  border-color:rgba(200,150,50,0.3);
+  color:#e0c080;
+}
+.boot-recovery-btn:hover{
+  background:rgba(200,150,50,0.25);
+  border-color:rgba(200,150,50,0.5);
+  color:#f0d090;
 }
 
 /* Section 12/7: Boot Settings Panel */
@@ -14164,6 +14172,8 @@ body {
     <button class="boot-skip-btn" id="bootSkip" type="button" hidden>Skip Intro</button>
   </div>
   <div class="boot-footer-right">
+    <!-- P0-1: Recovery button always accessible for data export -->
+    <button class="boot-footer-link boot-recovery-btn" id="bootRecoveryBtn" type="button" title="Emergency data recovery - export all data">&#x1F6E0; Recovery</button>
     <button class="boot-footer-link" id="bootExportAll" type="button" title="Export all characters">Export All</button>
     <button class="boot-footer-link" id="bootRestoreBackup" type="button" title="Restore from backup file">Restore Backup</button>
     <button class="boot-footer-link" id="bootImportFile" type="button" title="Import character file">Import</button>
@@ -14171,7 +14181,7 @@ body {
     <button class="boot-footer-link boot-settings-btn" id="bootSettingsBtn" type="button" title="Settings">&#x2699; Settings</button>
   </div>
   <div class="boot-footer-version">
-    <span class="boot-version">v6.6</span>
+    <span class="boot-version">v6.15.1</span>
     <span class="boot-build">Build 2025.12.29</span>
   </div>
 </footer>
@@ -14541,7 +14551,7 @@ body {
           <button class="qb-menu-item" id="quickPrintBtn" type="button" data-close-pop="1" title="Open print dialog" data-tip="Print sheet or save as PDF" aria-label="Print or save PDF" data-i18n="settings.print">Print / Save PDF</button>
         </div>
         <div class="qb-setting">
-          <button class="qb-menu-item" id="printSheetBtn" type="button" onclick="window.__PA_INSTANCE && window.__PA_INSTANCE.generatePrintSheet()" title="Generate single-page character sheet" data-tip="Formatted one-page PDF" aria-label="Generate print sheet">ðŸ“„ One-Page Sheet</button>
+          <button class="qb-menu-item" id="printSheetBtn" type="button" onclick="window.__PA_INSTANCE && window.__PA_INSTANCE.generatePrintSheet()" title="Generate single-page character sheet" data-tip="Formatted one-page PDF" aria-label="Generate print sheet">&#x1F4C4; One-Page Sheet</button>
         </div>
         <div class="qb-setting qb-setting-divider"></div>
         <div class="qb-setting">
@@ -15478,10 +15488,10 @@ body {
   - "prefer-const": "warn"
   
   HTML Security Checklist:
-  âœ“ All innerHTML uses escapeHtml() for user content
-  âœ“ No document.write, outerHTML, or insertAdjacentHTML with user data
-  âœ“ Portrait/map data URLs validated before use
-  âœ“ Import data validated through normalizeState()
+  ✓ All innerHTML uses escapeHtml() for user content
+  ✓ No document.write, outerHTML, or insertAdjacentHTML with user data
+  ✓ Portrait/map data URLs validated before use
+  ✓ Import data validated through normalizeState()
   
   ============================================================
   CODE STRUCTURE MAP
@@ -19337,15 +19347,35 @@ body {
       this.printMode = false;
       this._tempPrint = false;
 
-
-      this.portrait = new PortraitStore();
-      this.mapStore = new MapStore(); // Section B: Map image storage
+      // P0-3: Initialize storage with soft failure
+      try {
+        this.portrait = new PortraitStore();
+      } catch (e) {
+        console.error('[PlayerAlmanac] PortraitStore init failed (non-fatal):', e);
+        this.portrait = null;
+        this._portraitsDisabled = true;
+      }
+      
+      try {
+        this.mapStore = new MapStore(); // Section B: Map image storage
+      } catch (e) {
+        console.error('[PlayerAlmanac] MapStore init failed (non-fatal):', e);
+        this.mapStore = null;
+        this._mapDisabled = true;
+      }
+      
       this.particles = null;
 
       // drag state for portrait
       this.dragging = false;
       this.dragStart = { x: 0, y: 0 };
       this.dragOrig = { x: 0, y: 0 };
+      
+      // P0-3: Feature disable flags
+      this._addonsDisabled = false;
+      this._portraitsDisabled = false;
+      this._mapDisabled = false;
+      this._printDisabled = false;
       
       // Section 10: Spell sort/filter defaults
       this._spellSort = 'level';
@@ -19358,6 +19388,11 @@ body {
       // Initialization guard
       this._initialized = false;
       this._initializationPhase = null;
+      
+      // P0: Spam click protection flags
+      this._exportingJSON = false;
+      this._exportingWithMap = false;
+      this._importingData = false;
     }
 
     /* =========================
@@ -19663,7 +19698,8 @@ body {
           clearTimeout(this.saveTimer);
           this.persist({ toast: false, force: true });
         }
-        this.portrait.revokeURL();
+        // P0-3: Guard portrait usage
+        if (this.portrait) this.portrait.revokeURL();
         
         // Section 12: Navigation guardrail - confirm if in active flow
         if (this._activeFlow && this._unsavedFlowData) {
@@ -19724,6 +19760,10 @@ body {
       if (this.dom.bootImportFile) {
         this.dom.bootImportFile.addEventListener('click', () => this.bootImportCharacter());
       }
+      // P0-1: Recovery button - always accessible emergency export
+      if (this.dom.bootRecoveryBtn) {
+        this.dom.bootRecoveryBtn.addEventListener('click', () => this.emergencyExportAll());
+      }
       // Mobile: Boot footer toggle (collapsible on mobile)
       const bootFooterRow = document.getElementById('bootFooterRow');
       if (bootFooterRow) {
@@ -19758,9 +19798,20 @@ body {
         });
       }
       // Section H/6: Initialize addon install file input
-      this.initAddonsInstallInput();
-      // Section H/10: Initialize host API for addon communication
-      this.initAddonHostApi();
+      // P0-3: Wrap addon initialization in try/catch for soft failure
+      try {
+        this.initAddonsInstallInput();
+        // Section H/10: Initialize host API for addon communication
+        this.initAddonHostApi();
+      } catch (e) {
+        console.error('[PlayerAlmanac] Addons initialization failed (non-fatal):', e);
+        this._addonsDisabled = true;
+        // Disable addons button if initialization failed
+        if (this.dom.bootAddonsBtn) {
+          this.dom.bootAddonsBtn.style.opacity = '0.5';
+          this.dom.bootAddonsBtn.title = 'Addons unavailable: ' + e.message;
+        }
+      }
       // Section 12/7: Settings panel
       if (this.dom.bootSettingsBtn) {
         this.dom.bootSettingsBtn.addEventListener('click', () => this.openBootSettings());
@@ -20843,7 +20894,7 @@ body {
       const origLevel = this.state.level;
       this.state.level = toInt(this.state.level, 1, { min: 1, max: 20 });
       if (origLevel !== this.state.level) {
-        issues.push(`Level clamped: ${origLevel} â†’ ${this.state.level}`);
+        issues.push(`Level clamped: ${origLevel} → ${this.state.level}`);
       }
       
       // Hit dice
@@ -20856,7 +20907,7 @@ body {
       this.state.hp.max = toInt(this.state.hp.max, 0, { min: 0, max: 9999 });
       this.state.hp.tmp = toInt(this.state.hp.tmp, 0, { min: 0, max: 9999 });
       if (origHpCur !== this.state.hp.cur && origHpCur < 0) {
-        issues.push(`HP was negative: ${origHpCur} â†’ 0`);
+        issues.push(`HP was negative: ${origHpCur} → 0`);
       }
       
       // P1.2: Ensure coins are non-negative
@@ -20865,7 +20916,7 @@ body {
           const orig = this.state.coins[coinType];
           this.state.coins[coinType] = toInt(orig, 0, { min: 0, max: 999999 });
           if (orig < 0) {
-            issues.push(`${coinType.toUpperCase()} was negative: ${orig} â†’ 0`);
+            issues.push(`${coinType.toUpperCase()} was negative: ${orig} → 0`);
           }
         }
       }
@@ -21518,44 +21569,55 @@ body {
 
 
     async exportJSON() {
-      this.persist({ toast: false, force: true });
-
-      // P1.4: Include portrait in export
-      let portraitData = null;
-      if (this.state.portraitMeta) {
-        // Get the portrait key - use character-specific key if available
-        const portraitKey = this.activeCharId ? `portrait_${this.activeCharId}` : PORTRAIT_KEY_LEGACY;
-        const stored = await this.portrait.get(portraitKey);
-        if (!stored && this.activeCharId) {
-          // Try legacy key as fallback
-          const legacy = await this.portrait.get(PORTRAIT_KEY_LEGACY);
-          if (legacy?.blob) {
-            portraitData = await this._blobToBase64(legacy.blob);
-          }
-        } else if (stored?.blob) {
-          portraitData = await this._blobToBase64(stored.blob);
-        }
+      // P0: Spam click protection
+      if (this._exportingJSON) {
+        return;
       }
+      this._exportingJSON = true;
+      
+      try {
+        this.persist({ toast: false, force: true });
 
-      const exportObj = {
-        schema: { name: EXPORT_SCHEMA_NAME, version: EXPORT_SCHEMA_VERSION },
-        exportedAt: new Date().toISOString(),
-        app: { stateVersion: STATE_VERSION },
-        data: this.state,
-        portraitImage: portraitData, // P1.4: Base64 encoded portrait
-      };
+        // P1.4: Include portrait in export
+        let portraitData = null;
+        if (this.state.portraitMeta) {
+          // Get the portrait key - use character-specific key if available
+          const portraitKey = this.activeCharId ? `portrait_${this.activeCharId}` : PORTRAIT_KEY_LEGACY;
+          const stored = await this.portrait.get(portraitKey);
+          if (!stored && this.activeCharId) {
+            // Try legacy key as fallback
+            const legacy = await this.portrait.get(PORTRAIT_KEY_LEGACY);
+            if (legacy?.blob) {
+              portraitData = await this._blobToBase64(legacy.blob);
+            }
+          } else if (stored?.blob) {
+            portraitData = await this._blobToBase64(stored.blob);
+          }
+        }
 
-      const payload = JSON.stringify(exportObj, null, 2);
-      const blob = new Blob([payload], { type: 'application/json' });
-      const url = URL.createObjectURL(blob);
+        const exportObj = {
+          schema: { name: EXPORT_SCHEMA_NAME, version: EXPORT_SCHEMA_VERSION },
+          exportedAt: new Date().toISOString(),
+          app: { stateVersion: STATE_VERSION },
+          data: this.state,
+          portraitImage: portraitData, // P1.4: Base64 encoded portrait
+        };
 
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = `${filenameSafe(this.state.name)}_${todayISO()}_character_v${EXPORT_SCHEMA_VERSION}.json`;
-      a.click();
+        const payload = JSON.stringify(exportObj, null, 2);
+        const blob = new Blob([payload], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
 
-      URL.revokeObjectURL(url);
-      this.toast('Exported');
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `${filenameSafe(this.state.name)}_${todayISO()}_character_v${EXPORT_SCHEMA_VERSION}.json`;
+        a.click();
+
+        URL.revokeObjectURL(url);
+        this.toast('Exported');
+      } finally {
+        // Reset flag after a brief delay to allow download to start
+        setTimeout(() => { this._exportingJSON = false; }, 500);
+      }
     }
 
     /** P1.4: Helper to convert blob to base64 */
@@ -21573,53 +21635,63 @@ body {
      * Creates a larger export file that includes the map image as base64
      */
     async exportWithMap() {
-      this.persist({ toast: false, force: true });
-      
-      let mapImageData = null;
-      let portraitData = null;
-      
-      // Get map image if exists
-      if (this.state.map?.imageKey) {
-        const stored = await this.mapStore.get(this.state.map.imageKey);
-        if (stored?.blob) {
-          mapImageData = await this._blobToBase64(stored.blob);
-        }
+      // P0: Spam click protection
+      if (this._exportingWithMap) {
+        return;
       }
-
-      // P1.4: Get portrait if exists
-      if (this.state.portraitMeta) {
-        const portraitKey = this.activeCharId ? `portrait_${this.activeCharId}` : PORTRAIT_KEY_LEGACY;
-        const stored = await this.portrait.get(portraitKey);
-        if (!stored && this.activeCharId) {
-          const legacy = await this.portrait.get(PORTRAIT_KEY_LEGACY);
-          if (legacy?.blob) {
-            portraitData = await this._blobToBase64(legacy.blob);
+      this._exportingWithMap = true;
+      
+      try {
+        this.persist({ toast: false, force: true });
+        
+        let mapImageData = null;
+        let portraitData = null;
+        
+        // Get map image if exists
+        if (this.state.map?.imageKey) {
+          const stored = await this.mapStore.get(this.state.map.imageKey);
+          if (stored?.blob) {
+            mapImageData = await this._blobToBase64(stored.blob);
           }
-        } else if (stored?.blob) {
-          portraitData = await this._blobToBase64(stored.blob);
         }
+
+        // P1.4: Get portrait if exists
+        if (this.state.portraitMeta) {
+          const portraitKey = this.activeCharId ? `portrait_${this.activeCharId}` : PORTRAIT_KEY_LEGACY;
+          const stored = await this.portrait.get(portraitKey);
+          if (!stored && this.activeCharId) {
+            const legacy = await this.portrait.get(PORTRAIT_KEY_LEGACY);
+            if (legacy?.blob) {
+              portraitData = await this._blobToBase64(legacy.blob);
+            }
+          } else if (stored?.blob) {
+            portraitData = await this._blobToBase64(stored.blob);
+          }
+        }
+        
+        const exportObj = {
+          schema: { name: EXPORT_SCHEMA_NAME, version: EXPORT_SCHEMA_VERSION },
+          exportedAt: new Date().toISOString(),
+          app: { stateVersion: STATE_VERSION },
+          data: this.state,
+          mapImage: mapImageData, // Base64 encoded map image
+          portraitImage: portraitData, // P1.4: Base64 encoded portrait
+        };
+
+        const payload = JSON.stringify(exportObj, null, 2);
+        const blob = new Blob([payload], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `${filenameSafe(this.state.name)}_${todayISO()}_character_with_map_v${EXPORT_SCHEMA_VERSION}.json`;
+        a.click();
+
+        URL.revokeObjectURL(url);
+        this.toast('Exported with map');
+      } finally {
+        setTimeout(() => { this._exportingWithMap = false; }, 500);
       }
-      
-      const exportObj = {
-        schema: { name: EXPORT_SCHEMA_NAME, version: EXPORT_SCHEMA_VERSION },
-        exportedAt: new Date().toISOString(),
-        app: { stateVersion: STATE_VERSION },
-        data: this.state,
-        mapImage: mapImageData, // Base64 encoded map image
-        portraitImage: portraitData, // P1.4: Base64 encoded portrait
-      };
-
-      const payload = JSON.stringify(exportObj, null, 2);
-      const blob = new Blob([payload], { type: 'application/json' });
-      const url = URL.createObjectURL(blob);
-
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = `${filenameSafe(this.state.name)}_${todayISO()}_character_with_map_v${EXPORT_SCHEMA_VERSION}.json`;
-      a.click();
-
-      URL.revokeObjectURL(url);
-      this.toast('Exported with map');
     }
 
     openImportModal() {
@@ -22804,8 +22876,8 @@ body {
         // Characters section
         if (label === '+ New') {
           li.innerHTML = '<strong>+ New</strong> ' + t('help.newCharDesc');
-        } else if (label.includes('Menu') || label === '⋯ Menu') {
-          li.innerHTML = '<strong>⋯ Menu</strong> ' + t('help.menuDesc');
+        } else if (label.includes('Menu') || label === '⋮ Menu') {
+          li.innerHTML = '<strong>⋮ Menu</strong> ' + t('help.menuDesc');
         } else if (label === 'Export') {
           li.innerHTML = '<strong>Export</strong> ' + t('help.exportDesc');
         } else if (label === 'Import') {
@@ -23042,9 +23114,9 @@ body {
         const allEquip = [...(s.equip || []), ...(s.attune || []).map(a => '&#x2726; ' + a)];
         const equipHtml = allEquip.slice(0, 20).map(e => `<div class="ps-equip-item">• ${esc(e)}</div>`).join('') || `<em style="color:#888">${t('printSheet.noEquipment')}</em>`;
 
-        // Conditions
+        // Conditions - escape each condition for XSS safety
         const condsHtml = (s.conds && s.conds.length > 0) 
-          ? `<div class="ps-conditions">${t('printSheet.conditions')}: ${s.conds.join(', ')}</div>` 
+          ? `<div class="ps-conditions">${t('printSheet.conditions')}: ${s.conds.map(c => esc(c)).join(', ')}</div>` 
           : '';
 
         // Death saves
@@ -23244,6 +23316,7 @@ body {
     
     // Map viewer state
     _mapInitialized = false;
+    _mapDisabled = false; // P0-3: Flag to track if map feature is disabled due to errors
     _mapZoom = 1;
     _mapPan = { x: 0, y: 0 };
     _mapDragging = false;
@@ -23253,66 +23326,116 @@ body {
     _mapImageSize = { width: 0, height: 0 };
     
     async initMapIfNeeded() {
+      // P0-3: If map was disabled due to previous errors, skip initialization
+      if (this._mapDisabled) {
+        debugLog('map', 'Map feature is disabled');
+        return;
+      }
+      
+      // P0-3: Early exit if critical map elements are missing
+      if (!this.dom.mapTab || !this.dom.mapViewer) {
+        debugLog('map', 'Map UI elements not found - map feature disabled');
+        this._mapDisabled = true;
+        this.disableMapFeature('Map elements not available');
+        return;
+      }
+      
       if (this._mapInitialized) {
         // Just refresh the display if already initialized
-        this.updateCampaignSelector();
-        this.updateMapCharacterSelector(); // Section 7
-        this.renderMapOverlays();
+        try {
+          this.updateCampaignSelector();
+          this.updateMapCharacterSelector(); // Section 7
+          this.renderMapOverlays();
+        } catch (e) {
+          console.warn('[PlayerAlmanac] Map refresh error (non-fatal):', e);
+        }
         return;
       }
       
       this._mapInitialized = true;
       
-      // Bind map event handlers
-      this.bindMapEvents();
+      // P0-3: Wrap map initialization in try/catch to prevent total app failure
+      try {
+        // Bind map event handlers
+        this.bindMapEvents();
+        
+        // Section G: Initialize campaigns array if needed
+        if (!this.state.campaigns) {
+          this.state.campaigns = [];
+        }
+        
+        // Migrate legacy map data to campaigns if needed
+        if (this.state.map && !this.state.campaigns.length) {
+          const legacyCampaign = {
+            id: 'campaign_legacy_' + Date.now(),
+            name: this.state.map.name || 'Campaign Map',
+            imageKey: this.state.map.imageKey,
+            mapSize: { width: 0, height: 0 },
+            scale: this.state.map.scale,
+            pins: this.state.map.pins || [],
+            routes: this.state.map.routes || [],
+            origin: this.state.map.origin,
+            token: this.state.map.token,
+            createdAt: Date.now(),
+          };
+          this.state.campaigns.push(legacyCampaign);
+          this.state.activeCampaignId = legacyCampaign.id;
+        }
+        
+        // Update campaign selector
+        this.updateCampaignSelector();
+        
+        // Section 7: Update character selector
+        this.updateMapCharacterSelector();
+        
+        // Load existing map data (legacy support)
+        await this.loadMapFromStorage();
+        
+        // Load active campaign map
+        if (this.state.activeCampaignId) {
+          await this.loadActiveCampaignMap();
+        }
+        
+        // Update UI
+        this.updateMapStatus();
+        this.updateMapPanel();
+        this.renderMapOverlays();
+        
+        // Section 10: Render route list
+        this.renderRouteList();
+        
+        // Section 11: Initialize right panel context
+        this.updateRightPanelContext();
+      } catch (e) {
+        // P0-3: Map initialization failed, but app should continue working
+        console.error('[PlayerAlmanac] Map initialization failed (non-fatal):', e);
+        this._mapDisabled = true;
+        this._mapInitialized = false; // Allow retry if fixed
+        this.disableMapFeature('Map initialization failed: ' + e.message);
+      }
+    }
+    
+    /**
+     * P0-3: Disable map feature gracefully when it can't be initialized
+     * Keeps the rest of the app functioning
+     */
+    disableMapFeature(reason) {
+      console.warn('[PlayerAlmanac] Map feature disabled:', reason);
       
-      // Section G: Initialize campaigns array if needed
-      if (!this.state.campaigns) {
-        this.state.campaigns = [];
+      // Disable the map tab to prevent users from accessing broken feature
+      if (this.dom.mapTab) {
+        this.dom.mapTab.setAttribute('disabled', 'true');
+        this.dom.mapTab.style.opacity = '0.5';
+        this.dom.mapTab.style.pointerEvents = 'none';
+        this.dom.mapTab.title = 'Map feature unavailable: ' + reason;
       }
       
-      // Migrate legacy map data to campaigns if needed
-      if (this.state.map && !this.state.campaigns.length) {
-        const legacyCampaign = {
-          id: 'campaign_legacy_' + Date.now(),
-          name: this.state.map.name || 'Campaign Map',
-          imageKey: this.state.map.imageKey,
-          mapSize: { width: 0, height: 0 },
-          scale: this.state.map.scale,
-          pins: this.state.map.pins || [],
-          routes: this.state.map.routes || [],
-          origin: this.state.map.origin,
-          token: this.state.map.token,
-          createdAt: Date.now(),
-        };
-        this.state.campaigns.push(legacyCampaign);
-        this.state.activeCampaignId = legacyCampaign.id;
+      // Show notice if user is on map tab
+      if (this.dom.mapSection && !this.dom.mapSection.hidden) {
+        // Switch to a different tab
+        this.showTab('stats');
+        this.toast('Map feature is unavailable', 'warning');
       }
-      
-      // Update campaign selector
-      this.updateCampaignSelector();
-      
-      // Section 7: Update character selector
-      this.updateMapCharacterSelector();
-      
-      // Load existing map data (legacy support)
-      await this.loadMapFromStorage();
-      
-      // Load active campaign map
-      if (this.state.activeCampaignId) {
-        await this.loadActiveCampaignMap();
-      }
-      
-      // Update UI
-      this.updateMapStatus();
-      this.updateMapPanel();
-      this.renderMapOverlays();
-      
-      // Section 10: Render route list
-      this.renderRouteList();
-      
-      // Section 11: Initialize right panel context
-      this.updateRightPanelContext();
     }
     
     bindMapEvents() {
@@ -23320,7 +23443,11 @@ body {
       const canvas = this.dom.mapCanvas;
       const canvasWrap = this.dom.mapCanvasWrap;
       
-      if (!viewer || !canvas) return;
+      // P0-3: Early exit if critical elements missing
+      if (!viewer || !canvas) {
+        debugLog('map', 'bindMapEvents: viewer or canvas missing');
+        return;
+      }
       
       // Tool selection
       const tools = this.dom.mapTools?.querySelectorAll('.map-tool');
@@ -24057,9 +24184,9 @@ Actions:
           const unit = unitLabels[map.scale.unit] || map.scale.unit;
           // Show in a more readable format: "1 mile = X pixels" or "100 px = Y miles"
           if (ppu >= 1) {
-            scaleInfo.querySelector('.map-scale-status').textContent = `âœ“ 1 ${unit} = ${ppu.toFixed(1)} px`;
+            scaleInfo.querySelector('.map-scale-status').textContent = `✓ 1 ${unit} = ${ppu.toFixed(1)} px`;
           } else {
-            scaleInfo.querySelector('.map-scale-status').textContent = `âœ“ 1 px = ${(1/ppu).toFixed(2)} ${unit}s`;
+            scaleInfo.querySelector('.map-scale-status').textContent = `✓ 1 px = ${(1/ppu).toFixed(2)} ${unit}s`;
           }
         } else {
           scaleInfo.classList.remove('calibrated');
@@ -25280,7 +25407,7 @@ Actions:
       
       // Update inspector title
       if (this.dom.mapRouteInspectorTitle) {
-        this.dom.mapRouteInspectorTitle.textContent = 'ðŸ“ ' + (route.name || 'Route');
+        this.dom.mapRouteInspectorTitle.textContent = '📍 ' + (route.name || 'Route');
       }
       
       // Populate fields
@@ -25333,7 +25460,7 @@ Actions:
       if (this._selectedPinId) {
         // Pin selected - show pin inspector
         showPanels(panelPinInspector);
-        if (contextIcon) contextIcon.textContent = 'ðŸ“';
+        if (contextIcon) contextIcon.textContent = '📍';
         if (contextText) contextText.textContent = 'Pin Inspector';
         return;
       }
@@ -25341,7 +25468,7 @@ Actions:
       if (this._selectedRouteId) {
         // Route selected - show route inspector
         showPanels(panelRouteInspector);
-        if (contextIcon) contextIcon.textContent = 'ðŸ“';
+        if (contextIcon) contextIcon.textContent = '📍';
         if (contextText) contextText.textContent = 'Route Inspector';
         return;
       }
@@ -25352,7 +25479,7 @@ Actions:
       if (tool === 'scale') {
         // Scale tool - show scale panel prominently with map settings
         showPanels(panelScale, panelCampaign, panelMap);
-        if (contextIcon) contextIcon.textContent = 'ðŸ“';
+        if (contextIcon) contextIcon.textContent = '📍';
         if (contextText) contextText.textContent = 'Scale Calibration';
         return;
       }
@@ -25360,7 +25487,7 @@ Actions:
       if (tool === 'route') {
         // Route tool - show route panel with instructions
         showPanels(panelRoutes, panelCampaign, panelMap);
-        if (contextIcon) contextIcon.textContent = 'ðŸ“';
+        if (contextIcon) contextIcon.textContent = '📍';
         if (contextText) contextText.textContent = 'Route Planning';
         return;
       }
@@ -25368,7 +25495,7 @@ Actions:
       if (tool === 'pin') {
         // Pin tool - show pins browser with map settings
         showPanels(panelPins, panelCampaign, panelMap);
-        if (contextIcon) contextIcon.textContent = 'ðŸ“';
+        if (contextIcon) contextIcon.textContent = '📍';
         if (contextText) contextText.textContent = 'Pins Browser';
         return;
       }
@@ -25376,14 +25503,14 @@ Actions:
       if (tool === 'origin' || tool === 'lastseen') {
         // Origin/LastSeen tool - show origin settings with map settings
         showPanels(panelOrigin, panelCampaign, panelMap);
-        if (contextIcon) contextIcon.textContent = tool === 'origin' ? 'ðŸ ' : 'ðŸ‘¤';
+        if (contextIcon) contextIcon.textContent = tool === 'origin' ? '🏠' : '👤';
         if (contextText) contextText.textContent = tool === 'origin' ? 'Place Origin' : 'Mark Last Seen';
         return;
       }
       
       // Default context - show map settings overview
       showPanels(panelCampaign, panelMap, panelScale, panelPins, panelRoutes);
-      if (contextIcon) contextIcon.textContent = 'ðŸ“';
+      if (contextIcon) contextIcon.textContent = '📍';
       if (contextText) contextText.textContent = 'Map Settings';
     }
     
@@ -25405,7 +25532,7 @@ Actions:
       
       // Update inspector title
       if (this.dom.mapRouteInspectorTitle) {
-        this.dom.mapRouteInspectorTitle.textContent = 'ðŸ“ ' + route.name;
+        this.dom.mapRouteInspectorTitle.textContent = '📍 ' + route.name;
       }
       
       // Re-render
@@ -25775,7 +25902,7 @@ Actions:
       // Update inspector title
       if (this.dom.mapPinInspectorTitle) {
         const pinIcons = { origin: '\uD83C\uDFE0', last_seen: '\uD83D\uDC64', town: '\uD83C\uDFD8\uFE0F', city: '\uD83C\uDFF0', dungeon: '\u2694\uFE0F', landmark: '\uD83D\uDDFF', quest: '\u2757', shop: '\uD83D\uDED2', tavern: '\uD83C\uDF7A', temple: '\u26EA', location: '\uD83D\uDCCD' };
-        this.dom.mapPinInspectorTitle.textContent = (pinIcons[pin.type] || 'ðŸ“') + ' ' + (pin.name || 'Pin');
+        this.dom.mapPinInspectorTitle.textContent = (pinIcons[pin.type] || '📍') + ' ' + (pin.name || 'Pin');
       }
       
       // Populate fields
@@ -25813,7 +25940,7 @@ Actions:
       // Update title
       if (this.dom.mapPinInspectorTitle) {
         const pinIcons = { origin: '\uD83C\uDFE0', last_seen: '\uD83D\uDC64', town: '\uD83C\uDFD8\uFE0F', city: '\uD83C\uDFF0', dungeon: '\u2694\uFE0F', landmark: '\uD83D\uDDFF', quest: '\u2757', shop: '\uD83D\uDED2', tavern: '\uD83C\uDF7A', temple: '\u26EA', location: '\uD83D\uDCCD' };
-        this.dom.mapPinInspectorTitle.textContent = (pinIcons[pin.type] || 'ðŸ“') + ' ' + pin.name;
+        this.dom.mapPinInspectorTitle.textContent = (pinIcons[pin.type] || '📍') + ' ' + pin.name;
       }
       
       this.renderMapPins();
@@ -26014,6 +26141,11 @@ Actions:
     }
 
     doImport() {
+      // P0: Spam click protection
+      if (this._importingData) {
+        return;
+      }
+      
       this.setImportError('');
 
       const src = (this.dom.importTA && this.dom.importTA.value) ? this.dom.importTA.value.trim() : '';
@@ -26040,6 +26172,9 @@ Actions:
 
       // P1.5: Check if importing as new character
       const importAsNew = !!(this.dom.importAsNew && this.dom.importAsNew.checked);
+      
+      // P0: Mark as importing before async operation
+      this._importingData = true;
       
       // Handle async import with map
       this.doImportAsync(parsed, v.data, importAsNew);
@@ -26175,6 +26310,9 @@ Actions:
         this.toast('Imported');
       } catch (e) {
         this.setImportError('Import failed: ' + (e && e.message ? e.message : String(e)));
+      } finally {
+        // P0: Reset importing flag
+        this._importingData = false;
       }
     }
 
@@ -27410,7 +27548,7 @@ Actions:
         <div class="roll-breakdown">d20(${roll}) ${modStr}</div>
         <div class="roll-name">${escapeHtml(name)}</div>
         ${isCrit ? '<div class="crit-label">&#x2728; CRITICAL!</div>' : ''}
-        ${isFumble ? '<div class="fumble-label">ðŸ’€ FUMBLE</div>' : ''}
+        ${isFumble ? '<div class="fumble-label">💀 FUMBLE</div>' : ''}
       `;
 
       document.body.appendChild(toast);
@@ -29161,19 +29299,22 @@ Actions:
 
     /**
      * P0-1: Emergency Export All - Export all data even during error state
-     * This attempts to salvage whatever data can be read from localStorage
+     * This attempts to salvage whatever data can be read from localStorage AND IndexedDB
      * even if the app is in a broken state. Data preservation is paramount.
+     * 
+     * Includes: characters, settings, addons (registry + HTML from IndexedDB)
      */
-    emergencyExportAll() {
+    async emergencyExportAll() {
       try {
         const exportData = {
           _meta: {
             type: 'player-almanac-emergency-export',
-            version: '1.0',
+            version: '2.0', // Upgraded to include addons
             exportedAt: new Date().toISOString(),
             reason: 'emergency-recovery'
           },
           characters: [],
+          addons: [],
           rawStorage: {},
           errors: []
         };
@@ -29199,8 +29340,8 @@ Actions:
                 exportData.rawStorage[key] = value;
                 exportData.errors.push(`Parse error for ${key}: ${parseErr.message}`);
               }
-            } else if (key.startsWith('cm') || key.startsWith('pa-')) {
-              // Save other PA-related keys
+            } else if (key.startsWith('cm') || key.startsWith('pa-') || key.startsWith('pa_')) {
+              // Save other PA-related keys (including pa_addons_registry)
               exportData.rawStorage[key] = value;
             }
           } catch (readErr) {
@@ -29216,6 +29357,26 @@ Actions:
           }
         } catch (e) {
           exportData.errors.push(`Character index error: ${e.message}`);
+        }
+        
+        // P0-1: Export addons registry and HTML from IndexedDB
+        try {
+          const addonsRegistry = localStorage.getItem('pa_addons_registry');
+          if (addonsRegistry) {
+            exportData.addonsRegistry = JSON.parse(addonsRegistry);
+          }
+        } catch (e) {
+          exportData.errors.push(`Addons registry error: ${e.message}`);
+        }
+        
+        // P0-1: Collect addon HTML from IndexedDB
+        try {
+          const addonHtmlData = await this.exportAllAddonsFromIndexedDB();
+          if (addonHtmlData && addonHtmlData.length > 0) {
+            exportData.addons = addonHtmlData;
+          }
+        } catch (e) {
+          exportData.errors.push(`Addons IndexedDB error: ${e.message}`);
         }
 
         // Generate filename
@@ -29237,8 +29398,13 @@ Actions:
 
         // Show success message
         const charCount = exportData.characters.length;
+        const addonCount = exportData.addons.length;
         const errorCount = exportData.errors.length;
-        let message = `Emergency export complete! Saved ${charCount} character(s).`;
+        let message = `Emergency export complete! Saved ${charCount} character(s)`;
+        if (addonCount > 0) {
+          message += `, ${addonCount} addon(s)`;
+        }
+        message += '.';
         if (errorCount > 0) {
           message += ` (${errorCount} items had errors but raw data was preserved)`;
         }
@@ -29246,6 +29412,7 @@ Actions:
 
         console.log('[PlayerAlmanac] Emergency export completed:', {
           characters: charCount,
+          addons: addonCount,
           rawKeys: Object.keys(exportData.rawStorage).length,
           errors: errorCount
         });
@@ -29254,6 +29421,59 @@ Actions:
         console.error('[PlayerAlmanac] Emergency export failed:', e);
         alert('Emergency export failed: ' + e.message + '\n\nYou may need to manually copy data from browser DevTools > Application > Local Storage.');
       }
+    }
+    
+    /**
+     * P0-1: Export all addons from IndexedDB
+     * Returns array of {id, html} objects for each addon stored
+     */
+    async exportAllAddonsFromIndexedDB() {
+      return new Promise((resolve) => {
+        try {
+          const request = indexedDB.open('PlayerAlmanacAddons', 1);
+          
+          request.onupgradeneeded = (e) => {
+            const db = /** @type {IDBOpenDBRequest} */(e.target).result;
+            if (!db.objectStoreNames.contains('addons')) {
+              db.createObjectStore('addons', { keyPath: 'id' });
+            }
+          };
+          
+          request.onsuccess = (e) => {
+            const db = /** @type {IDBOpenDBRequest} */(e.target).result;
+            try {
+              const tx = db.transaction('addons', 'readonly');
+              const store = tx.objectStore('addons');
+              const getAllReq = store.getAll();
+              
+              getAllReq.onsuccess = () => {
+                db.close();
+                const addons = getAllReq.result || [];
+                // Return array of {id, html} objects
+                resolve(addons.map(a => ({ id: a.id, html: a.html })));
+              };
+              
+              getAllReq.onerror = () => {
+                db.close();
+                console.warn('[PlayerAlmanac] Failed to get addons from IndexedDB');
+                resolve([]);
+              };
+            } catch (txErr) {
+              db.close();
+              console.warn('[PlayerAlmanac] Transaction error:', txErr);
+              resolve([]);
+            }
+          };
+          
+          request.onerror = () => {
+            console.warn('[PlayerAlmanac] Failed to open addons IndexedDB');
+            resolve([]);
+          };
+        } catch (e) {
+          console.error('[PlayerAlmanac] IndexedDB error:', e);
+          resolve([]);
+        }
+      });
     }
 
     /**
@@ -29318,12 +29538,16 @@ Actions:
     _maxAutoBackups = 3;
     _autoBackupInterval = null;
     _lastAutoBackupTime = 0;
+    _autoBackupAbortController = null;
     
     /**
      * P0-2: Initialize auto-backup system
      * Called during app init, creates periodic backups
      */
     initAutoBackup() {
+      // Clean up any previous instance (safety for hot reload scenarios)
+      this.cleanupAutoBackup();
+      
       // Run backup every 5 minutes if there have been changes
       const BACKUP_INTERVAL_MS = 5 * 60 * 1000; // 5 minutes
       
@@ -29331,19 +29555,37 @@ Actions:
         this.createAutoBackup('interval');
       }, BACKUP_INTERVAL_MS);
       
+      // Create abort controller for cleanup
+      this._autoBackupAbortController = new AbortController();
+      const signal = this._autoBackupAbortController.signal;
+      
       // Also backup on visibility change (user leaving page)
       document.addEventListener('visibilitychange', () => {
         if (document.visibilityState === 'hidden') {
           this.createAutoBackup('visibility');
         }
-      });
+      }, { signal });
       
       // Backup before unload
       window.addEventListener('beforeunload', () => {
         this.createAutoBackup('unload');
-      });
+      }, { signal });
       
       console.log('[PlayerAlmanac] Auto-backup system initialized');
+    }
+    
+    /**
+     * P0: Cleanup auto-backup system (prevents interval/listener leaks)
+     */
+    cleanupAutoBackup() {
+      if (this._autoBackupInterval) {
+        clearInterval(this._autoBackupInterval);
+        this._autoBackupInterval = null;
+      }
+      if (this._autoBackupAbortController) {
+        this._autoBackupAbortController.abort();
+        this._autoBackupAbortController = null;
+      }
     }
     
     /**
@@ -30599,7 +30841,7 @@ Actions:
           <div class="pa-addon-meta">
             <span class="pa-addon-version">v${this.escapeHtml(addon.version)}</span>
             ${addon.author ? `<span class="pa-addon-author">by ${this.escapeHtml(addon.author)}</span>` : ''}
-            <span class="pa-addon-hash" title="SHA-256 hash (first 8 chars): ${shortHash}">🔐 ${shortHash}</span>
+            <span class="pa-addon-hash" title="SHA-256 hash (first 8 chars): ${shortHash}">🔒 ${shortHash}</span>
           </div>
           ${addon.lastError ? `<div class="pa-addon-error" style="color:#f88;font-size:0.75rem;">Error: ${this.escapeHtml(addon.lastError)}</div>` : ''}
         </div>
@@ -30653,7 +30895,7 @@ Actions:
           // Update the hash display in the DOM
           const hashEl = itemElement.querySelector('.pa-addon-hash');
           if (hashEl) {
-            hashEl.textContent = '🔐 ' + shortHash;
+            hashEl.textContent = '🔒 ' + shortHash;
             hashEl.title = `SHA-256: ${hash}`;
           }
           
@@ -31106,9 +31348,21 @@ Actions:
     // Section H/9: Sandboxed Addon Execution
     // =========================
     
-    // Track active addon overlays
+    // Track active addon overlays with security tokens
     _activeAddonOverlays = new Map();
+    // P0-2: Per-session security tokens for addon message validation
+    _addonSessionTokens = new Map();
     
+    /**
+     * P0-2: Generate a cryptographically random session token
+     * Used to validate postMessage origin since file:// URLs have null origin
+     */
+    _generateSessionToken() {
+      const array = new Uint8Array(32);
+      crypto.getRandomValues(array);
+      return Array.from(array, b => b.toString(16).padStart(2, '0')).join('');
+    }
+
     // Section H/9: Launch addon in sandboxed iframe overlay
     async launchAddonSandboxed(id) {
       const addon = this.getAddonById(id);
@@ -31139,8 +31393,12 @@ Actions:
           throw new Error('Addon HTML content not found');
         }
         
-        // Inject the host API bridge into the addon HTML
-        const bridgedHtml = this.injectHostApiBridge(html, id);
+        // P0-2: Generate per-session security token for this addon
+        const sessionToken = this._generateSessionToken();
+        this._addonSessionTokens.set(id, sessionToken);
+        
+        // Inject the host API bridge into the addon HTML (with session token)
+        const bridgedHtml = this.injectHostApiBridge(html, id, sessionToken);
         
         // Create overlay container
         const overlay = this.createAddonOverlay(id, addon.name);
@@ -31155,8 +31413,8 @@ Actions:
         const content = overlay.querySelector('.pa-addon-overlay-content');
         if (content) content.appendChild(iframe);
         
-        // Track the overlay
-        this._activeAddonOverlays.set(id, { overlay, iframe });
+        // P0-2: Track the overlay with iframe reference for source validation
+        this._activeAddonOverlays.set(id, { overlay, iframe, sessionToken });
         
         // Update registry
         this.updateAddonInRegistry(id, {
@@ -31212,6 +31470,9 @@ Actions:
       
       this._activeAddonOverlays.delete(id);
       
+      // P0-2: Clean up session token when addon closes
+      this._addonSessionTokens.delete(id);
+      
       // Remove modal class if no more overlays
       if (this._activeAddonOverlays.size === 0) {
         document.body.classList.remove('addon-open');
@@ -31221,27 +31482,38 @@ Actions:
     }
     
     // Section H/9: Inject host API bridge into addon HTML
-    injectHostApiBridge(html, addonId) {
+    // P0-2: Includes session token for secure postMessage validation
+    injectHostApiBridge(html, addonId, sessionToken) {
       // Create the bridge script that will be injected
       const bridgeScript = `
 <script>
 // Player Almanac Host API Bridge
+// P0-2: Secure postMessage with session token
 window.PA = window.PA || {};
 window.PA.addonId = '${addonId}';
+window.PA._sessionToken = '${sessionToken}';
 
-// Send message to host
+// Send message to host with session token
 window.PA._send = function(type, payload) {
   return new Promise((resolve, reject) => {
     const msgId = Date.now() + '-' + Math.random().toString(36).substr(2, 9);
     const handler = (e) => {
-      if (e.data && e.data.msgId === msgId) {
+      // P0-2: Only accept messages with matching msgId and valid session token
+      if (e.data && e.data.msgId === msgId && e.data._sessionToken === window.PA._sessionToken) {
         window.removeEventListener('message', handler);
         if (e.data.error) reject(new Error(e.data.error));
         else resolve(e.data.result);
       }
     };
     window.addEventListener('message', handler);
-    parent.postMessage({ type, payload, addonId: window.PA.addonId, msgId }, '*');
+    // P0-2: Include session token in all outgoing messages
+    parent.postMessage({ 
+      type, 
+      payload, 
+      addonId: window.PA.addonId, 
+      msgId,
+      _sessionToken: window.PA._sessionToken 
+    }, '*');
     // Timeout after 5 seconds
     setTimeout(() => {
       window.removeEventListener('message', handler);
@@ -31301,6 +31573,7 @@ console.log('[PA Addon] Host API bridge initialized for addon:', window.PA.addon
     ]);
     
     // Section H/10: Initialize host API message listener
+    // P0-2: Strict security validation for addon messages
     initAddonHostApi() {
       window.addEventListener('message', (e) => {
         // Only handle messages with our expected structure
@@ -31308,36 +31581,57 @@ console.log('[PA Addon] Host API bridge initialized for addon:', window.PA.addon
           return;
         }
         
-        // Verify the addon is actually active
-        if (!this._activeAddonOverlays.has(e.data.addonId)) {
+        // P0-2: Verify the addon is actually active
+        const addonEntry = this._activeAddonOverlays.get(e.data.addonId);
+        if (!addonEntry) {
           console.warn('[PlayerAlmanac] Host API message from unknown addon:', e.data.addonId);
+          return;
+        }
+        
+        // P0-2: CRITICAL - Verify message source matches the iframe's contentWindow
+        // This prevents any other window/frame from impersonating an addon
+        if (e.source !== addonEntry.iframe?.contentWindow) {
+          console.warn('[PlayerAlmanac] Host API message source mismatch - possible spoofing attempt');
+          return;
+        }
+        
+        // P0-2: Verify session token (required since file:// origins are often "null")
+        const expectedToken = this._addonSessionTokens.get(e.data.addonId);
+        if (!expectedToken || e.data._sessionToken !== expectedToken) {
+          console.warn('[PlayerAlmanac] Host API session token mismatch');
           return;
         }
         
         // Check whitelist
         if (!this._addonApiWhitelist.has(e.data.type)) {
-          this.sendAddonApiResponse(e.source, e.data.msgId, null, 'Unknown API method: ' + e.data.type);
+          this.sendAddonApiResponse(e.source, e.data.msgId, expectedToken, null, 'Unknown API method: ' + e.data.type);
           return;
         }
         
         // Handle the API call
-        this.handleAddonApiCall(e.data.type, e.data.payload, e.data.addonId, e.data.msgId, e.source);
+        this.handleAddonApiCall(e.data.type, e.data.payload, e.data.addonId, e.data.msgId, e.source, expectedToken);
       });
       
-      console.log('[PlayerAlmanac] Host API initialized');
+      console.log('[PlayerAlmanac] Host API initialized with strict security');
     }
     
     // Section H/10: Send response back to addon iframe
-    sendAddonApiResponse(source, msgId, result, error = null) {
+    // P0-2: Include session token in response for validation
+    sendAddonApiResponse(source, msgId, sessionToken, result, error = null) {
       if (source && typeof source.postMessage === 'function') {
-        source.postMessage({ msgId, result, error }, '*');
+        source.postMessage({ msgId, result, error, _sessionToken: sessionToken }, '*');
       }
     }
     
     // Section H/10: Handle individual API calls
-    handleAddonApiCall(type, payload, addonId, msgId, source) {
+    handleAddonApiCall(type, payload, addonId, msgId, source, sessionToken) {
       try {
         let result = null;
+        
+        // P0-2: Validate payload schema based on API type
+        if (!this.validateAddonPayload(type, payload)) {
+          throw new Error('Invalid payload schema for ' + type);
+        }
         
         switch (type) {
           case 'getState':
@@ -31393,11 +31687,52 @@ console.log('[PA Addon] Host API bridge initialized for addon:', window.PA.addon
             throw new Error('Unhandled API method');
         }
         
-        this.sendAddonApiResponse(source, msgId, result);
+        this.sendAddonApiResponse(source, msgId, sessionToken, result);
         
       } catch (e) {
         console.error('[PlayerAlmanac] Host API error:', e);
-        this.sendAddonApiResponse(source, msgId, null, e.message);
+        this.sendAddonApiResponse(source, msgId, sessionToken, null, e.message);
+      }
+    }
+    
+    /**
+     * P0-2: Validate payload schema for each API method
+     * Prevents malformed/malicious payloads from reaching handlers
+     */
+    validateAddonPayload(type, payload) {
+      switch (type) {
+        case 'getState':
+        case 'listCharacters':
+        case 'listCampaigns':
+        case 'closeAddon':
+          // No payload required
+          return true;
+          
+        case 'patchState':
+          // Must be an object
+          return payload && typeof payload === 'object' && !Array.isArray(payload);
+          
+        case 'createCharacter':
+          // Optional object or undefined
+          return payload === undefined || payload === null || 
+                 (typeof payload === 'object' && !Array.isArray(payload));
+          
+        case 'updateCharacter':
+          // Must have id (string) and optional data object
+          return payload && typeof payload === 'object' && 
+                 typeof payload.id === 'string' && payload.id.length > 0;
+          
+        case 'setActiveCampaign':
+          // Must be a string
+          return typeof payload === 'string';
+          
+        case 'toast':
+          // Must have msg string
+          return payload && typeof payload === 'object' && 
+                 typeof payload.msg === 'string';
+          
+        default:
+          return false;
       }
     }
     
@@ -32026,6 +32361,7 @@ console.log('[PA Addon] Host API bridge initialized for addon:', window.PA.addon
       bootViewAll: getEl('bootViewAll', false),
       bootOnboarding: getEl('bootOnboarding', false),
       bootSkipPref: getEl('bootSkipPref', false),
+      bootRecoveryBtn: getEl('bootRecoveryBtn', false), // P0-1: Emergency recovery button
       bootExportAll: getEl('bootExportAll', false),
       bootRestoreBackup: getEl('bootRestoreBackup', false),
       bootImportFile: getEl('bootImportFile', false),
@@ -32512,22 +32848,45 @@ console.log('[PA Addon] Host API bridge initialized for addon:', window.PA.addon
   };
 
   // P0-1: Emergency export function available even when app fails
-  window.__PA_EMERGENCY_EXPORT = () => {
+  // Updated to include addons from IndexedDB when possible
+  window.__PA_EMERGENCY_EXPORT = async () => {
     try {
       const exportData = {
-        _meta: { type: 'emergency-export', exportedAt: new Date().toISOString() },
+        _meta: { type: 'emergency-export', version: '2.0', exportedAt: new Date().toISOString() },
         characters: [],
+        addons: [],
         rawStorage: {}
       };
       
+      // Export localStorage data
       for (let i = 0; i < localStorage.length; i++) {
         const key = localStorage.key(i);
         if (!key) continue;
         const value = localStorage.getItem(key);
-        if (key.startsWith('cmCharState_v1:') || key.startsWith('pa-')) {
+        if (key.startsWith('cmCharState_v1:') || key.startsWith('pa-') || key.startsWith('pa_')) {
           try { exportData.characters.push({ key, data: JSON.parse(value) }); }
           catch { exportData.rawStorage[key] = value; }
         }
+      }
+      
+      // P0-1: Try to export addons from IndexedDB
+      try {
+        const db = await new Promise((resolve, reject) => {
+          const req = indexedDB.open('PlayerAlmanacAddons', 1);
+          req.onsuccess = () => resolve(req.result);
+          req.onerror = () => reject(req.error);
+        });
+        const tx = db.transaction('addons', 'readonly');
+        const store = tx.objectStore('addons');
+        const addons = await new Promise((resolve) => {
+          const req = store.getAll();
+          req.onsuccess = () => resolve(req.result || []);
+          req.onerror = () => resolve([]);
+        });
+        db.close();
+        exportData.addons = addons.map(a => ({ id: a.id, html: a.html }));
+      } catch (idbErr) {
+        console.warn('[PA Emergency] IndexedDB unavailable:', idbErr);
       }
       
       const blob = new Blob([JSON.stringify(exportData, null, 2)], { type: 'application/json' });
@@ -32535,7 +32894,10 @@ console.log('[PA Addon] Host API bridge initialized for addon:', window.PA.addon
       a.href = URL.createObjectURL(blob);
       a.download = 'player-almanac-emergency-' + Date.now() + '.json';
       a.click();
-      alert('Export complete! ' + exportData.characters.length + ' character(s) saved.');
+      let msg = 'Export complete! ' + exportData.characters.length + ' character(s)';
+      if (exportData.addons.length > 0) msg += ', ' + exportData.addons.length + ' addon(s)';
+      msg += ' saved.';
+      alert(msg);
     } catch (e) {
       alert('Export failed: ' + e.message);
     }
@@ -33036,7 +33398,7 @@ console.log('[PA Addon] Host API bridge initialized for addon:', window.PA.addon
 <!-- PDF Print Sheet Container -->
 <div id="printSheet">
   <button class="ps-close" id="printSheetClose" type="button" onclick="window.__PA_INSTANCE && window.__PA_INSTANCE.closePrintSheet()">&#x2715; Close</button>
-  <button class="ps-print-btn" id="printSheetPrint" type="button" onclick="window.print()">ðŸ–¨ï¸ Print / Save PDF</button>
+  <button class="ps-print-btn" id="printSheetPrint" type="button" onclick="window.print()">🖨️ Print / Save PDF</button>
   <div class="ps-page" id="printSheetContent">
     <!-- Content populated by JavaScript -->
   </div>
@@ -33431,17 +33793,17 @@ console.log('[PA Addon] Host API bridge initialized for addon:', window.PA.addon
           const app = window.__PA_INSTANCE || window.app;
           
           const currentState = delBtn.getAttribute('data-confirm-state');
-          console.log('[Delete v6.14] Handler fired! state:', currentState, 'charId:', charId, 'event:', e.type);
-          console.log('[Delete v6.14] App instance:', app ? 'found' : 'NOT FOUND');
+          console.log('[Delete v6.15.1] Handler fired! state:', currentState, 'charId:', charId, 'event:', e.type);
+          console.log('[Delete v6.15.1] App instance:', app ? 'found' : 'NOT FOUND');
           
           if (currentState === 'initial') {
             // First tap - show confirmation
             delBtn.setAttribute('data-confirm-state', 'confirm');
-            delBtn.textContent = 'âœ“';
+            delBtn.textContent = '✓';
             delBtn.style.background = 'rgba(220, 53, 69, 0.7)';
             delBtn.style.color = '#fff';
             delBtn.style.fontWeight = 'bold';
-            console.log('[Delete v6.14] Changed to confirm state');
+            console.log('[Delete v6.15.1] Changed to confirm state');
             
             // Reset after 4 seconds
             delBtn._resetTimer = setTimeout(() => {
@@ -33451,25 +33813,25 @@ console.log('[PA Addon] Host API bridge initialized for addon:', window.PA.addon
                 delBtn.style.background = 'rgba(220, 53, 69, 0.15)';
                 delBtn.style.color = '#dc3545';
                 delBtn.style.fontWeight = 'normal';
-                console.log('[Delete v6.14] Reset to initial state');
+                console.log('[Delete v6.15.1] Reset to initial state');
               }
             }, 4000);
             
           } else if (currentState === 'confirm') {
             // Second tap - delete!
             clearTimeout(delBtn._resetTimer);
-            console.log('[Delete v6.14] CONFIRMED! Deleting character:', charId);
+            console.log('[Delete v6.15.1] CONFIRMED! Deleting character:', charId);
             
             if (app && app.charIndex) {
               if (charId === app.activeCharId) {
                 closeMobileMenuModal();
                 setTimeout(() => {
-                  console.log('[Delete v6.14] Calling deleteActiveCharacter');
+                  console.log('[Delete v6.15.1] Calling deleteActiveCharacter');
                   app.deleteActiveCharacter(true);
                 }, 100);
               } else {
                 const idx = app.charIndex.findIndex(c => c.id === charId);
-                console.log('[Delete v6.14] Found at index:', idx);
+                console.log('[Delete v6.15.1] Found at index:', idx);
                 if (idx >= 0) {
                   app.charIndex.splice(idx, 1);
                   app.saveCharIndex();
@@ -33477,7 +33839,7 @@ console.log('[PA Addon] Host API bridge initialized for addon:', window.PA.addon
                   try { app.portrait.del('cm_portrait_' + charId); } catch(err) {}
                   app.renderCharacterSelect();
                   app.toast('Character deleted');
-                  console.log('[Delete v6.14] Character removed from charIndex');
+                  console.log('[Delete v6.15.1] Character removed from charIndex');
                   
                   // Remove from UI
                   item.style.transition = 'opacity 0.2s, transform 0.2s';
@@ -33487,7 +33849,7 @@ console.log('[PA Addon] Host API bridge initialized for addon:', window.PA.addon
                 }
               }
             } else {
-              console.error('[Delete v6.14] App or charIndex not found!', { app, charIndex: app?.charIndex });
+              console.error('[Delete v6.15.1] App or charIndex not found!', { app, charIndex: app?.charIndex });
             }
           }
         }
@@ -33499,20 +33861,20 @@ console.log('[PA Addon] Host API bridge initialized for addon:', window.PA.addon
         let touchHandled = false;
         delBtn.addEventListener('touchstart', function(e) {
           touchHandled = true;
-          console.log('[Delete v6.14] touchstart');
+          console.log('[Delete v6.15.1] touchstart');
         }, { passive: true });
         
         delBtn.addEventListener('touchend', function(e) {
           if (touchHandled) {
             e.preventDefault();
-            console.log('[Delete v6.14] touchend - calling handleDelete');
+            console.log('[Delete v6.15.1] touchend - calling handleDelete');
             handleDelete(e);
             touchHandled = false;
           }
         }, { passive: false });
         
         item.appendChild(delBtn);
-        console.log('[Delete v6.14] Delete button added for character:', charId);
+        console.log('[Delete v6.15.1] Delete button added for character:', charId);
       });
     }
     
@@ -33643,7 +34005,7 @@ console.log('[PA Addon] Host API bridge initialized for addon:', window.PA.addon
         </p>
         <p class="credits-text" style="margin-top: 8px;">
           For commercial licensing inquiries:<br>
-          <a href="mailto:Kinzle.MA@gmail.com">Kinzle.MA@gmail.com</a>
+          <a href="/cdn-cgi/l/email-protection#ade6c4c3d7c1c883e0ecedcac0ccc4c183cec2c0"><span class="__cf_email__" data-cfemail="ace7c5c2d6c0c982e1edeccbc1cdc5c082cfc3c1">[email&#160;protected]</span></a>
         </p>
       </div>
       
@@ -33690,7 +34052,7 @@ console.log('[PA Addon] Host API bridge initialized for addon:', window.PA.addon
 Copyright (c) 2025 Zagreous
 
 Official project page: https://github.com/Kylemaddenar/player-almanac
-Commercial licensing contact: <a href="mailto:Kinzle.MA@gmail.com">Kinzle.MA@gmail.com</a>
+Commercial licensing contact: <a href="/cdn-cgi/l/email-protection#a5eecccbdfc9c08be8e4e5c2c8c4ccc98bc6cac8"><span class="__cf_email__" data-cfemail="662d0f081c0a03482b2726010b070f0a4805090b">[email&#160;protected]</span></a>
 
 TERMS AND CONDITIONS
 
@@ -33897,7 +34259,7 @@ You must:
 5. COMMERCIAL LICENSING
 
 For Commercial Use permissions, contact:
-<a href="mailto:Kinzle.MA@gmail.com">Kinzle.MA@gmail.com</a>
+<a href="/cdn-cgi/l/email-protection#3c77555246505912717d7c5b515d5550125f5351"><span class="__cf_email__" data-cfemail="63280a0d190f064d2e2223040e020a0f4d000c0e">[email&#160;protected]</span></a>
 
 6. THIRD-PARTY MATERIALS
 
@@ -33963,7 +34325,7 @@ END OF ZNAL v1.1</pre>
 <!-- =============================================
      FOOTER & CREDITS JAVASCRIPT
      ============================================= -->
-<!-- Cloudflare email protection removed for offline build --><script>
+<script>
 /*
  * Player Almanac by Zagreous
  * ZNAL v1.1 (Noncommercial, Attribution + Link-back Required)
@@ -34164,25 +34526,104 @@ END OF ZNAL v1.1</pre>
   const html = document.documentElement.outerHTML;
   const urlPatterns = [
     /https?:\/\/fonts\.googleapis\.com/g,
-    /https?:\/\/fonts\.gstatic\.com/g,
     /https?:\/\/cdnjs\.cloudflare\.com/g,
-    /https?:\/\/unpkg\.com/g
+    /https?:\/\/fonts\.gstatic\.com/g
   ];
   
-  const found = [];
+  let found = [];
   urlPatterns.forEach(pattern => {
     const matches = html.match(pattern);
-    if (matches) {
-      found.push(...matches);
-    }
+    if (matches) found.push(...matches);
   });
   
   if (found.length > 0) {
-    console.warn('[PlayerAlmanac] OFFLINE BUILD WARNING: Found external URLs:', found);
+    console.warn('[Offline Validator] External URLs detected:', found);
+    console.warn('[Offline Validator] This build may not work fully offline.');
   } else {
-    console.log('[PlayerAlmanac] Offline build verified: No external CDN URLs detected.');
+    console.log('[Offline Validator] ✓ No external URLs detected - build is fully offline.');
   }
 })();
 </script>
+
+<script>
+/* =============================================
+   P0-4: OFFLINE INTEGRITY CHECK (Production)
+   Shows visible warning if external URLs detected.
+   ============================================= */
+(function() {
+  'use strict';
+  
+  // Run after DOM is ready
+  function checkOfflineIntegrity() {
+    const html = document.documentElement.outerHTML;
+    
+    // Patterns that indicate external dependencies
+    const criticalPatterns = [
+      { pattern: /https?:\/\/fonts\.googleapis\.com/g, name: 'Google Fonts' },
+      { pattern: /https?:\/\/cdnjs\.cloudflare\.com/g, name: 'CDNJS' },
+      { pattern: /https?:\/\/unpkg\.com/g, name: 'unpkg' },
+      { pattern: /https?:\/\/cdn\.jsdelivr\.net/g, name: 'jsDelivr' }
+    ];
+    
+    let foundDeps = [];
+    criticalPatterns.forEach(({ pattern, name }) => {
+      const matches = html.match(pattern);
+      if (matches) foundDeps.push(name);
+    });
+    
+    // If external dependencies found, show warning banner
+    if (foundDeps.length > 0) {
+      console.warn('[P0-4 Offline Check] External dependencies detected:', foundDeps);
+      
+      // Create visible warning banner
+      const banner = document.createElement('div');
+      banner.id = 'offlineWarningBanner';
+      banner.setAttribute('role', 'alert');
+      banner.style.cssText = `
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        background: linear-gradient(90deg, #8b4513, #a0522d);
+        color: #fff;
+        padding: 12px 20px;
+        font-family: system-ui, sans-serif;
+        font-size: 14px;
+        text-align: center;
+        z-index: 999999;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+      `;
+      banner.innerHTML = `
+        <strong>⚠️ Offline Build Check Failed</strong> — 
+        This build requires internet for: ${foundDeps.join(', ')}.
+        <button onclick="this.parentElement.remove()" style="
+          margin-left: 16px;
+          padding: 4px 12px;
+          background: rgba(255,255,255,0.2);
+          border: 1px solid rgba(255,255,255,0.4);
+          color: #fff;
+          border-radius: 4px;
+          cursor: pointer;
+          font-size: 12px;
+        ">Dismiss</button>
+      `;
+      
+      // Insert at top of body
+      document.body.insertBefore(banner, document.body.firstChild);
+      
+      // Adjust body padding to prevent content overlap
+      document.body.style.paddingTop = (banner.offsetHeight + 10) + 'px';
+    }
+  }
+  
+  // Run check after load
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', checkOfflineIntegrity);
+  } else {
+    checkOfflineIntegrity();
+  }
+})();
+</script>
+
 </body>
 </html>
