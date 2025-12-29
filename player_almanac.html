@@ -16,511 +16,11 @@
 ================================================================================
 -->
 <!--
-  Player Almanac Character Sheet - v6.6 (Mobile Full-Screen Menu)
+  Player Almanac Character Sheet - v6.14 (Fixed App Reference)
   
-  CURRENT VERSION: v6.6 - December 29, 2025
+  CURRENT VERSION: v6.14 - December 29, 2025
   
-  MOBILE BOOT SCREEN FIXES v6.6
-  =============================================
-  - Fixed logo cutoff on mobile boot screen:
-    * Increased top padding from 32px to 48px at 520px breakpoint
-    * Maintained 40px top padding at 380px breakpoint (was 12px)
-    * Added margin-top to boot-zone-top for better spacing
-    * Increased boot-zone-top padding-top from 8px to 16px
-  - Fixed menu section alignment on mobile:
-    * Footer content now properly hidden when collapsed (visibility + height)
-    * Added margin: 0 auto to center footer-right grid
-    * Settings button (odd last item) now spans both columns and centers
-    * Fixed footer-left to use center alignment
-  - Fixed menu disappearing at narrow widths (≤380px):
-    * Added explicit expanded state rules for narrow screens
-    * Increased expanded max-height to 420px for single-column layout
-    * Reset orphan centering for single-column mode
-  - Fixed tabs scroll clipping on narrow screens:
-    * Removed negative margins that caused scroll trapping
-    * Added scroll-padding for proper snap alignment
-    * Added pseudo-element spacers for full scroll travel
-    * Fixed section-jump bar with same scroll improvements
-  - NEW: Mobile quickbar expanded state is now a full-screen glass overlay:
-    * Covers entire viewport with frosted glass background
-    * Vertically stacked menu buttons for easy touch access
-    * Close button in top-right corner
-    * HP widget prominently displayed at top
-    * Desktop layout unchanged
-  
-  PREVIOUS: v6.4 (Security Hardening)
-  =============================================
-  P0: Security and Trust Boundaries
-  - Added Content Security Policy meta tag
-  - CDN hardening with crossorigin attributes for SRI compatibility
-  - Fixed print-sheet to use canonical escapeHtml()
-  - Added strict portrait validation (blocks SVG, only allows safe base64)
-  - Added media validation on import (portraits, maps)
-  - Fixed license headers and OFFICIAL_PROJECT_URL
-  
-  P0: Import/Export Integrity
-  - Enhanced quota handling with detailed error reporting
-  - Added getStorageStats() for storage debugging
-  - Added validation limit constants (VALIDATION_LIMITS)
-  - Validation report tracks dropped keys, truncated values
-  
-  P1: Correctness and Edge-Cases
-  - Enhanced fixInvariants() with coin validation, array shape checks
-  - Added debugLog() for toggleable debug logging
-  - Storage functions now log errors in debug mode
-  
-  P1: Maintainability
-  - Added template helpers (escapeAttr, dataAttr, fmtMod, clamp)
-  - Added lint configuration comments
-  
-  P2: Performance and UX
-  - Added aria-labels to icon buttons for accessibility
-  - Verified event delegation patterns
-  
-  P3: Shipping Hygiene
-  - Fixed license version consistency (ZNAL v1.1)
-  - Documented offline behavior
-  
-  PREVIOUS: v6.3 (Mobile Menu Overlay Redesign)
-  =============================================
-  - Complete redesign: Menus now open as FULL-SCREEN OVERLAYS on mobile
-    * Covers entire viewport including the quickbar
-    * Large, touch-friendly buttons (54px min-height)
-    * Clear close button in header
-    * Scrollable content area
-    * Clones menu content and wires up all interactions
-  - Intercepts clicks on: Settings, More, Character Picker, Character Menu
-  - Replaces previous bottom-sheet approaches that weren't working
-  
-  PREVIOUS: v6.0 (Punchlist Implementation)
-  =============================================
-  Based on competitive research (Dec 2025) + deep codebase analysis.
-  
-  Key Improvements:
-  - P0.0: Fixed missing handleImportData method (critical bug)
-  - P0.4: Added "Restore Backup" for multi-character import
-  - P1.1: Added spell descriptions with expandable rows
-  - P1.2: QuotaExceededError handling with user notification
-  - P1.4: Portraits now included in export/import
-  - P1.5: "Import as New Character" option
-  - P2.1: 2014/2024 Rules Version toggle with badge display
-  - NEW: Single-page PDF character sheet generator (One-Page Sheet)
-  
-  PREVIOUS: v5.11 (Quickbar Visual Overhaul)
-  
-  QUICKBAR VISUAL OVERHAUL v2.0
-  =============================================
-  Based on research of Spotify, Discord, D&D Beyond,
-  Material Design, and mobile UX best practices.
-  
-  Key Improvements:
-  1. Visual Grouping - Subtle background containers for stats
-  2. Premium HP Widget - Gradient pill with state-based colors
-     - Healthy: Green tint
-     - Bloodied (&#x2264;50%): Amber tint  
-     - Critical (&#x2264;25%): Red tint with pulse animation
-  3. Enhanced Segmented Controls - Pill-style toggles
-     - Roll mode: Normal/Adv/Dis with color-coded active states
-     - Edit/Play mode with prominent active indicator
-  4. Better Buttons - Gradient primary, refined secondary
-  5. Mobile Optimized:
-     - Collapsed: Pill-shaped HUD elements
-     - Expanded: Centered action buttons, full-width segments
-     - Hidden less-used items (Short/Long rest in More menu)
-  6. Desktop: Better spacing and visual hierarchy
-  
-  PREVIOUS: v5.10 (Boot Screen Animation Fix)
-  
-  CUSTOM SPINNER CONTROLS - Touch-friendly Number Picker
-  =============================================
-  
-  Section 1: HP Quick Adjust Widget (P0)
-  - Added +/- buttons flanking HP display in quickbar
-  - One-tap damage/heal with prompt for amount
-  - Damage consumes Temp HP first automatically
-  - Toast notifications for HP changes
-  
-  Section 2: HP State Colors (P2)  
-  - Healthy (>50%): Green text
-  - Bloodied (25-50%): Amber/warning text
-  - Critical (&#x2264;25%): Red text with pulse animation
-  - Visual feedback helps players track HP at a glance
-  
-  Section 3: Enhanced Tap-to-Roll Visual Feedback (P0)
-  - Added "tap to roll" hint on ability scores (visible on hover)
-  - Dramatic roll result toast animation (center screen popup)
-  - Critical hits (nat 20): Green glow, confetti label
-  - Fumbles (nat 1): Red glow, skull label  
-  - Rolling flash animation on abilities and skills
-  - Haptic feedback on supported mobile devices
-
-  Section 4: Minimal & Clean Quickbar on Mobile (P0)
-  - COLLAPSED: Minimal "Combat HUD" pill bar
-    * Shows: Character name, HP pill, Roll mode, Expand button
-    * HP pill colored by state (green/amber/red)
-    * Tap HP for damage, long-press for heal
-    * Tap roll mode to cycle Normal &#x2192; Adv &#x2192; Dis
-    * Only ~44px vertical height
-  - EXPANDED: Single row, not wall of buttons
-    * Shows: Character picker | HP &#xB1;/- | More | Edit/Play | Settings | &#x25BC;
-    * All stats (AC, Init, Speed, etc) moved to More menu
-    * Heal/Dmg, Rest buttons in More menu
-    * Clean single-row layout
-  
-  PREVIOUS: v5.7 (Mobile UX Polish)
-  =============================================
-  Based on research of top mobile apps (Spotify, Instagram, 
-  Discord, D&D Beyond, Google Maps):
-  
-  Key Patterns Applied:
-  - Bottom navigation (quickbar) - thumb-friendly
-  - Card-based layouts - responsive grids
-  - Bottom sheets - progressive disclosure
-  - Floating Action Buttons - map tools
-  - Touch feedback - tap highlights
-  
-  Map Panel Fix:
-  - Added touchend event for better mobile support
-  - Panel click handler for header area
-  - Arrow indicator shows expand/collapse state
-  - Visual tap highlight feedback
-  
-  PREVIOUS: v4.52
-  =============================================
-  
-  MOBILE HARDENING UPDATE v4.52
-  
-  Viewport & Encoding (Section 1):
-  - Added viewport-fit=cover to enable proper safe-area insets on iOS notched devices
-  - Added maximum-scale=5 to allow user zoom but prevent accidental over-zoom
-  - Added apple-mobile-web-app-capable for standalone mode support
-  - Added apple-mobile-web-app-status-bar-style for translucent status bar
-  - Lowercase charset="utf-8" per HTML5 recommendation (helps with File Garden encoding)
-  
-  Touch Target Enhancement (Section 2):
-  - Updated --tap-target from 40px to 44px per WCAG guidelines
-  - Added global touch-action: manipulation to all interactive elements
-  - Prevents 300ms click delay and accidental double-tap zoom
-  - Comprehensive @media (pointer: coarse) rules for touch devices
-  - All form inputs enforce 16px minimum font-size to prevent iOS auto-zoom
-  
-  Bottom UI Collision Prevention (Section 3):
-  - Added --bottom-ui-height CSS variable for consistent spacing
-  - Content now has proper bottom padding to prevent fixed UI overlap
-  - Background scroll locks when roll log is expanded
-  - Proper z-index stacking for roll log and FAB menu
-  
-  Navigation Scroll Affordance (Section 4):
-  - Added fade edge indicators to quickbar stats row
-  - Added fade edge indicators to tabs (if using .tabs-wrap wrapper)
-  - Hidden scrollbars with scrollbar-width: none and ::-webkit-scrollbar
-  - Better visual cue that content is horizontally scrollable
-  
-  Map Panel Improvements (Section 5):
-  - Increased max-height from 45vh to 50vh for better usability
-  - Larger border-radius (20px) for more modern appearance
-  - Improved drag handle visibility (35% opacity vs 30%)
-  - Context header has background styling for clearer tap target
-  - Map viewer scroll locks when panel is expanded
-  - Map tools increased to 48px height with 24px icons
-  
-  Desktop Protection:
-  - All mobile styles scoped to @media (max-width: 520px)
-  - Touch device rules use @media (pointer: coarse) which doesn't affect desktop
-  - No DOM changes to existing IDs
-  - Icon SVGs and classes preserved
-  
-  PREVIOUS: v4.51 (Mobile UX Overhaul)
-  
-  ENCODING NOTE: All emoji and special Unicode symbols in this file use HTML
-  numeric character references (e.g., &#x1F4CB; for clipboard emoji) instead
-  of raw Unicode. This prevents encoding corruption when the file is edited
-  or transferred between systems. Do NOT replace these with raw emoji characters.
-  
-  EXCEPTION: CSS content property and JavaScript textContent do NOT parse HTML
-  entities. For these contexts, use:
-  - CSS: Unicode escapes like '\25BC' or actual characters like '\u25BC'
-  - JavaScript: Actual Unicode characters like '\u25B8' '\u25BE' '\u25BC' '\u25B2' '\u2022' '&#x1F3E0;' '&#x1F4CD;'
-  
-  MOBILE UX OVERHAUL v4.51
-  
-  P0 Fixes (Critical Usability):
-  - P0.1: Fixed all character encoding issues (mojibake)
-    * Em-dash (\u2014) now renders correctly in Spell DC/Attack
-    * All delete buttons show &#x2684; properly
-    * Pin type emoji (&#x1F3E0;, &#x2694;&#xFE0F;&#x1F6E1;, &#x1F5E1;, etc.) render correctly
-    * Bullet points (\u2022) and triangles (\u25B8\u25BE\u25BC\u25B2) fixed
-  
-  - P0.2: Navigation progressive disclosure on mobile
-    * Section "Jump to" bars collapse into toggleable rows
-    * Tap header to expand/collapse
-    * Tabs and cards more compact on mobile
-  
-  - P0.3: Quickbar collapsed by default on mobile
-    * New users on mobile see content immediately
-    * Collapsed state shows character name + expand button
-    * Saved preference persists across sessions
-  
-  - P0.4: Roll Log collapsed by default on mobile
-    * Pill-shaped handle at bottom of screen
-    * Tap to expand into bottom sheet
-    * Background scroll locks when expanded
-  
-  - P0.5: Floating actions become FAB menu on mobile
-    * Single FAB button replaces scattered action buttons
-    * Tap to reveal action menu with backdrop
-    * Auto-closes after selecting an action
-  
-  P1 Fixes (High Impact):
-  - P1.6: Map touch targets improved to 44px minimum
-  - P1.7: Additional encoding fixes for map pin icons
-  - P1.8: Mobile collapsible cards
-    * Tap card titles to collapse/expand content
-    * Vitals, Combat, Features, etc. are collapsible
-  
-  P2 Fixes (Polish):
-  - P2.9: Safe area and viewport handling verified
-  - P2.10: Form inputs 16px min to prevent iOS zoom
-    * All buttons meet 44px minimum touch target
-    * Adequate spacing between adjacent controls
-  
-  Desktop Protection:
-  - All mobile styles scoped to @media (max-width: 520px)
-  - No DOM changes to existing IDs
-  - Icon SVGs and classes preserved
-  
-  PREVIOUS: v4.50 (Mobile Layout Fix)
-  
-  - Popovers become bottom sheets on mobile (<520px)
-    * All quickbar popovers slide up from bottom
-    * Backdrop overlay for modal context
-    * Drag handle visual indicator
-    * Larger touch targets (52px min)
-    * Safe-area padding at bottom
-  
-  - Dynamic viewport height with feature detection
-    * Uses 100dvh where supported, falls back to 100vh
-    * Safe-area insets via env() with fallbacks
-  
-  P1 Fixes (High Priority):
-  - Tab rows collapse to horizontal scroll strip on mobile
-    * Single horizontal scrollable row
-    * Scroll snap for better UX
-    * Section jump bar also scrolls horizontally
-    * Label hidden on mobile to save space
-  
-  - Roll Log becomes handle on mobile
-    * Collapsed: 48px pill-shaped handle at bottom
-    * Expanded: Bottom sheet style with safe-area padding
-    * Dock toggle hidden on mobile
-  
-  - Floating icon stack repositioned for mobile
-    * Actions rail shifted to avoid roll log
-    * Adapts position when roll log expands
-    * Help FAB repositioned
-    * Motion toggle hidden (use settings menu)
-  
-  P2 Fixes (Quality):
-  - Safe-area CSS variables defined globally
-  - Feature detection for 100dvh via @supports
-  - Very narrow (380px) breakpoint for high zoom/small phones
-  
-  Desktop Protection:
-  - All mobile styles scoped to @media (max-width: 520px)
-  - Desktop-specific @media (min-width: 521px) block preserves original behavior
-  - No DOM changes, no ID changes, pure CSS approach
-  
-  PREVIOUS VERSION: v4.47 (Mobile UI Overhaul)
-  
-  P0 Fixes (Blockers):
-  - Quickbar mobile collapse: No longer becomes a vertical wall on phones
-    * Stats become horizontal scroll strip on mobile (<520px)
-    * Actions row scrolls horizontally, secondary actions in More menu
-    * Zones stack vertically in proper order
-  
-  - UI clipped behind browser chrome: Fixed with safe-area + dynamic viewport
-    * Added CSS env() safe-area-inset variables
-    * Added @supports for 100dvh dynamic viewport
-    * All fixed elements now respect safe areas
-  
-  - Floating elements overlap: Repositioned for mobile
-    * Roll log: full width at bottom, respects safe area
-    * Action rail: horizontal at bottom, shifts when log visible
-    * Help FAB: repositioned to avoid collisions
-    * Motion toggle: hidden on mobile (use settings menu)
-  
-  - Map unusable on mobile: Bottom sheet pattern
-    * Map viewer is primary, fills most of screen
-    * Tool rail: horizontal strip at bottom of map viewer
-    * Panel: bottom sheet with drag handle, collapses to peek
-    * Zoom controls repositioned, route instructions adapted
-  
-  P1 Fixes (High Pain):
-  - Boot screen overlaps: Mobile-responsive layout
-    * Safe-area aware padding
-    * Stacked actions, responsive logo/title sizing
-    * Recent characters: single column on mobile
-  
-  - Navigation surfaces collapse: Reduced competing elements
-    * Tabs: horizontal scroll strip
-    * Section jumps: horizontal scroll, hidden label
-    * Controls stack vertically on mobile
-  
-  - Nested scroll traps: Single primary scroll container
-    * #app is the scroll container on mobile
-    * Cards and tab content have overflow:visible
-    * Tables get dedicated horizontal scroll wrapper
-    * Popovers respect safe areas
-  
-  Additional Polish:
-  - Grid: single column on mobile
-  - Cards: tighter padding, smaller radii
-  - Modals: full width, safe-area aware
-  - Typography: responsive sizing throughout
-  - Touch targets: 44px minimum on touch devices
-  
-  Desktop Protection:
-  - All changes behind @media (max-width: 520px) or @media (max-width: 380px)
-  - Desktop layout explicitly preserved in @media (min-width: 901px)
-  - No DOM changes, no ID changes, pure CSS approach
-  
-  PREVIOUS VERSION: v4.46 (Responsive Quickbar Offset Fix)
-  PREVIOUS VERSION: v4.46 (Responsive Quickbar Offset Fix)
-  =============================================
-  P0 Fix (Responsive Quickbar Height):
-  - Fixed: Content no longer slides under quickbar at 320px / 200-250% zoom
-  - __syncQuickbarHeightVar() now uses ResizeObserver + MutationObserver
-  - Collapsed quickbar state properly updates --quickbar-h variable
-  - Removed hardcoded body padding in favor of CSS variable
-  - Single source of truth: --quickbar-h controls all body offset
-  
-  P1 Verified (Button Click Protection):
-  - Drag-scroll on stats still protects interactive elements
-  - Actions row remains click-safe (no drag-scroll enabled)
-  - ignoreInteractive: true prevents click swallowing
-  
-  P2 Preserved (CSS-first Responsiveness):
-  - No DOM shuffling for responsive layout
-  - Grid/flex + overflow scrolling maintained
-  - Deterministic layout at all viewport sizes
-  
-  P3 Status (Offline GSAP - Optional):
-  - GSAP CDN still in use (line 143)
-  - hasGSAP() fallback already exists: app works without animations when CDN unavailable
-  - For true offline: bundle GSAP locally or remove CDN import
-  
-  PREVIOUS VERSION: v4.45 (Rest Buttons + More Menu Fix)
-  =============================================
-  - Added direct Short Rest and Long Rest buttons to quickbar
-  - Fixed More menu popover not opening (document click handler was closing it)
-  - Added z-index to popovers to ensure they display on top
-  
-  PREVIOUS VERSION: v4.44 (Security + Accessibility Fixes)
-  =============================================
-  P0 Fixes (Security + Data Loss):
-  - Fixed XSS: added escapeHtml() for all user content in innerHTML
-  - Fixed data loss: beforeunload/visibilitychange now flush pending saves
-  
-  P1 Fixes (Accessibility + Performance):
-  - Added focus traps to all modals (Quick HP, Conditions, Short/Long Rest, Import)
-  - Increased roll log cap from 8 to 50 entries
-  - Boot error modal: ESC documented as intentionally disabled (requires action)
-  
-  P2 Fixes (Polish):
-  - Quickbar character name: added title tooltip for truncated names
-  - Map tools: roving tabindex keyboard navigation (Arrow keys, Enter/Space)
-  - Save indicator: visual distinction (green checkmark/amber pulse/red warning)
-  - Delete confirmation: aria-live for screen reader announcement
-  
-  Architecture documentation added for Item 10/11 compliance.
-  
-  PREVIOUS VERSION: v4.43 (Toggle Position Fix)
-  =============================================
-  - Fixed collapse toggle: now uses position:fixed when collapsed
-    to properly center at top of viewport
-  - Added Map Menu with full-screen overlay
-  - Map button in More menu and action rail
-  - Left tool rail: Select, Origin, Token, Measure, Route, Pins, Scale
-  - Right details panel with Map, Origin, Scale, Pins, and Routes sections
-  - Keyboard accessibility (ESC to close)
-  - Sheet state preserved when opening/closing map
-  
-  SECTION G ADDITIONS (Campaign Map System):
-  ------------------------------------------
-  Section 1: Core Data + Persistence
-  - Campaign-based map model: campaigns[] with id, name, mapSize, scale, pins[], routes[]
-  - Normalized pin coordinates (0-1) for zoom/resize resilience
-  - IndexedDB storage for map images with import/export
-  - Enhanced pins: characterId, region, season/session, timestamps
-  - Routes support with owner, color, and session tracking
-  
-  Section 6: Pins Browser (Search + Filters)
-  - Search pins by name, region, character, notes
-  - Filter by pin type (Origins, Last Seen, Towns, etc.)
-  - Filter by character
-  - Filter by season/session
-  - Clicking pin in list centers map and selects it
-  - Enhanced pin list items show metadata (character, region, session)
-  
-  Section 7: Character Context
-  - Character selector dropdown in map topbar
-  - Origin tool places origin pin for selected character
-  - Last Seen tool places last_seen pin for selected character
-  - Pins are automatically tied to the correct character
-  
-  Section 8: Scale Calibration
-  - Scale tool: click two points to create reference line
-  - Input real-world distance + unit (miles/km/hex/etc)
-  - Set Scale button to calibrate
-  - Clear button to reset calibration
-  - Visual feedback: shows reference line length in pixels
-  - Status shows "1 mile = X px" format when calibrated
-  
-  Section 9: Measure Tool
-  - Two-click measure: A then B
-  - Display distance using calibrated scale (fallback to pixels)
-  - Measurement overlay line with visual distinction for measure/scale/route
-  - Proper unit labels (pluralization)
-  - Clear measurement button
-  
-  Section 10: Route Tool (Plot Where They're Going)
-  - Click to add route points (polyline)
-  - Enter to finish, Esc to cancel, Backspace removes last point
-  - Save route with owner (characterId/party/campaign) + season/session
-  - Show route distance using scale
-  - Route inspector panel for editing saved routes
-  - Route list panel with color-coded routes
-  - Click route in list or on map to select and center
-  - Delete route with confirmation
-  
-  Section 11: Tool-Aware Right Panel (Inspector)
-  - Context indicator shows current selection/tool state
-  - If nothing selected: show map settings (campaign, map, scale, pins, routes)
-  - If pin selected: show pin inspector
-  - If route selected: show route inspector
-  - Tool-specific contexts (scale, route, pin tools show relevant panels)
-  - Right panel always matches current selection/tool, no dead UI
-  
-  Section 12: UX + Safety Nets
-  - Confirm on destructive actions (remove map, delete pin/route, delete campaign)
-  - Keyboard shortcuts: Esc cancel tool action, Delete removes selected (with confirm)
-  - Touch support: pinch zoom + drag pan (already implemented)
-  - Zoom resilience: usable at 200&#x2014;250% zoom without controls vanishing
-  - Help button shows keyboard shortcuts (?/H key or button)
-  - No accidental losses, no "where did the UI go" moments
-  
-  KEY FEATURES (inherited from v4.32):
-  - Boot screen with 2-column layout on wide screens
-  - Recent Characters panel with scalable grid (10+ chars)
-  - 8 color themes with particle effects
-  - Multi-character support with IndexedDB portrait storage
-  - Short Rest / Long Rest with configurable rules
-  - Conditions & Concentration tracking
-  - Roll log with advantage/disadvantage modes
-  - Print mode for clean PDF output
-  - Full keyboard accessibility (WCAG compliant)
-  
-  For complete version history, see: CHANGELOG.md
+  For complete version history, see: CHANGELOG.txt
 -->
 <html lang="en">
 <head>
@@ -14496,12 +13996,19 @@ body {
   <div class="boot-settings-panel" id="bootSettingsPanel" hidden>
     <div class="boot-settings-content">
       <div class="boot-settings-header">
-        <span class="boot-settings-title">Settings</span>
+        <span class="boot-settings-title" data-i18n="bootSettings.title">Settings</span>
         <button class="boot-settings-close" id="bootSettingsClose" type="button" aria-label="Close settings">&#xD7;</button>
       </div>
       <div class="boot-settings-body">
         <div class="boot-setting-row">
-          <label class="boot-setting-label">Theme</label>
+          <label class="boot-setting-label" data-i18n="bootSettings.language">Language</label>
+          <select class="boot-setting-select" id="bootLanguageSelect">
+            <option value="en">English</option>
+            <option value="de">Deutsch</option>
+          </select>
+        </div>
+        <div class="boot-setting-row">
+          <label class="boot-setting-label" data-i18n="bootSettings.theme">Theme</label>
           <select class="boot-setting-select" id="bootThemeSelect">
             <option value="arcane">Arcane Purple</option>
             <option value="ember">Ember & Flame</option>
@@ -14514,21 +14021,21 @@ body {
           </select>
         </div>
         <div class="boot-setting-row">
-          <label class="boot-setting-label">Motion Effects</label>
+          <label class="boot-setting-label" data-i18n="bootSettings.motion">Motion Effects</label>
           <label class="boot-setting-switch">
             <input type="checkbox" id="bootMotionToggle" checked>
             <span class="boot-setting-slider"></span>
           </label>
         </div>
         <div class="boot-setting-row">
-          <label class="boot-setting-label">High Contrast</label>
+          <label class="boot-setting-label" data-i18n="bootSettings.contrast">High Contrast</label>
           <label class="boot-setting-switch">
             <input type="checkbox" id="bootContrastToggle">
             <span class="boot-setting-slider"></span>
           </label>
         </div>
         <div class="boot-setting-row boot-setting-status">
-          <label class="boot-setting-label">Storage Status</label>
+          <label class="boot-setting-label" data-i18n="bootSettings.storage">Storage Status</label>
           <span class="boot-storage-status" id="bootStorageStatus">Checking...</span>
         </div>
       </div>
@@ -14792,7 +14299,7 @@ body {
       <div class="qb-popover qb-menu qb-settings" id="settingsMenu" role="menu" aria-label="Settings">
         <div class="qb-setting">
           <label class="qb-field">
-            <span>Theme</span>
+            <span data-i18n="settings.theme">Theme</span>
             <select id="themeSelect" class="qb-select qb-select-compact">
               <option value="arcane">Arcane Purple</option>
               <option value="ember">Ember & Flame</option>
@@ -14808,28 +14315,38 @@ body {
         <!-- P2.1: Rules Version Toggle -->
         <div class="qb-setting">
           <label class="qb-field">
-            <span>Rules</span>
+            <span data-i18n="settings.rules">Rules</span>
             <select id="rulesVersionSelect" class="qb-select qb-select-compact">
               <option value="2014">2014 (PHB)</option>
               <option value="2024">2024 (PHB '24)</option>
             </select>
           </label>
         </div>
+        <!-- Language Toggle -->
+        <div class="qb-setting">
+          <label class="qb-field">
+            <span data-i18n="settings.language">Language</span>
+            <select id="languageSelect" class="qb-select qb-select-compact">
+              <option value="en">English</option>
+              <option value="de">Deutsch</option>
+            </select>
+          </label>
+        </div>
         <div class="qb-setting">
           <label class="qb-switch">
             <input type="checkbox" id="printModeToggle" />
-            <span>Print Mode</span>
+            <span data-i18n="settings.printMode">Print Mode</span>
           </label>
         </div>
         <div class="qb-setting">
           <label class="qb-switch">
             <input type="checkbox" id="motionToggle" />
-            <span>Motion</span>
+            <span data-i18n="settings.motion">Motion</span>
           </label>
         </div>
         <div class="qb-setting">
           <label class="qb-field">
-            <span>Contrast</span>
+            <span data-i18n="settings.contrast">Contrast</span>
             <select id="contrastSelect" class="qb-select qb-select-compact">
               <option value="normal">Normal</option>
               <option value="high">High</option>
@@ -14837,10 +14354,10 @@ body {
           </label>
         </div>
         <div class="qb-setting">
-          <button class="qb-menu-item" id="quickPrintBtn" type="button" data-close-pop="1" title="Open print dialog" data-tip="Print sheet or save as PDF" aria-label="Print or save PDF">Print / Save PDF</button>
+          <button class="qb-menu-item" id="quickPrintBtn" type="button" data-close-pop="1" title="Open print dialog" data-tip="Print sheet or save as PDF" aria-label="Print or save PDF" data-i18n="settings.print">Print / Save PDF</button>
         </div>
         <div class="qb-setting">
-          <button class="qb-menu-item" id="printSheetBtn" type="button" onclick="window.__PA_INSTANCE && window.__PA_INSTANCE.generatePrintSheet()" title="Generate single-page character sheet" data-tip="Formatted one-page PDF" aria-label="Generate print sheet">📄 One-Page Sheet</button>
+          <button class="qb-menu-item" id="printSheetBtn" type="button" onclick="window.__PA_INSTANCE && window.__PA_INSTANCE.generatePrintSheet()" title="Generate single-page character sheet" data-tip="Formatted one-page PDF" aria-label="Generate print sheet">ðŸ“„ One-Page Sheet</button>
         </div>
         <div class="qb-setting qb-setting-divider"></div>
         <div class="qb-setting">
@@ -15777,10 +15294,10 @@ body {
   - "prefer-const": "warn"
   
   HTML Security Checklist:
-  ✓ All innerHTML uses escapeHtml() for user content
-  ✓ No document.write, outerHTML, or insertAdjacentHTML with user data
-  ✓ Portrait/map data URLs validated before use
-  ✓ Import data validated through normalizeState()
+  âœ“ All innerHTML uses escapeHtml() for user content
+  âœ“ No document.write, outerHTML, or insertAdjacentHTML with user data
+  âœ“ Portrait/map data URLs validated before use
+  âœ“ Import data validated through normalizeState()
   
   ============================================================
   CODE STRUCTURE MAP
@@ -15856,6 +15373,7 @@ body {
   const MOTION_KEY = 'motion';
   const CONTRAST_KEY = 'contrastHigh';
   const THEME_KEY = 'cmTheme_v1';
+  const LANGUAGE_KEY = 'cmLanguage_v1';
   const MODE_KEY = 'cmMode';
   const ROLL_MODE_KEY = 'cmRollMode';
   const ROLL_LOG_KEY = 'cmRollLog_v1';
@@ -15903,6 +15421,1161 @@ body {
     HP_MAX: 9999,
     COINS_MAX: 999999,
   };
+
+  // Internationalization - Translation strings
+  const TRANSLATIONS = {
+    en: {
+      // Settings Menu
+      'settings.theme': 'Theme',
+      'settings.rules': 'Rules',
+      'settings.language': 'Language',
+      'settings.printMode': 'Print Mode',
+      'settings.motion': 'Motion',
+      'settings.contrast': 'Contrast',
+      'settings.print': 'Print / Save PDF',
+      'settings.onePageSheet': '📄 One-Page Sheet',
+      'settings.help': '❓ Help',
+      'settings.about': 'ℹ️ About / Credits',
+      
+      // Quickbar
+      'qb.saved': 'Saved',
+      'qb.saving': 'Saving...',
+      'qb.undo': 'Undo',
+      'qb.edit': 'Edit',
+      'qb.play': 'Play',
+      'qb.newChar': '+ New',
+      'qb.more': 'More',
+      'qb.hp': 'HP',
+      'qb.temp': 'TEMP',
+      'qb.ac': 'AC',
+      'qb.init': 'INIT',
+      'qb.speed': 'SPEED',
+      'qb.tempHP': 'Temp HP',
+      'qb.short': 'Short',
+      'qb.long': 'Long',
+      'qb.adv': 'Adv',
+      'qb.dis': 'Dis',
+      'qb.normal': 'Normal',
+      'qb.healDmg': 'Heal/Dmg',
+      
+      // More Menu
+      'more.heal': 'Heal',
+      'more.damage': 'Dmg',
+      'more.shortRest': 'Short Rest',
+      'more.longRest': 'Long Rest',
+      'more.map': 'Map',
+      'more.addons': 'Addons',
+      'more.stats': 'Stats',
+      'more.rest': 'Rest',
+      'more.tools': 'Tools',
+      
+      // Tabs
+      'tab.core': 'Core',
+      'tab.spells': 'Spells & Gear',
+      'tab.fate': 'Fateweaving',
+      
+      // Identity Card
+      'identity.portrait': 'Portrait',
+      'identity.upload': 'Upload',
+      'identity.adjust': 'Adjust',
+      'identity.clear': 'Clear',
+      'identity.name': 'Character Name',
+      'identity.newCharacter': 'New Character',
+      'identity.species': 'Species',
+      'identity.class': 'Class',
+      'identity.campaign': 'Campaign Name',
+      
+      // Section Jump Labels
+      'jump.jumpTo': 'Jump to:',
+      'jump.abilities': 'Abilities',
+      'jump.vitals': 'Vitals',
+      'jump.combat': 'Combat',
+      'jump.skills': 'Skills',
+      'jump.weapons': 'Weapons',
+      'jump.features': 'Features',
+      'jump.traits': 'Traits',
+      'jump.spellcasting': 'Spellcasting',
+      'jump.spellSlots': 'Spell Slots',
+      'jump.spells': 'Spells',
+      'jump.equipment': 'Equipment',
+      'jump.training': 'Training',
+      'jump.feats': 'Feats',
+      
+      // Card Titles
+      'card.abilities': 'Abilities',
+      'card.vitals': 'Vitals',
+      'card.combat': 'Combat',
+      'card.skills': 'Skills',
+      'card.weapons': 'Weapons & Attacks',
+      'card.features': 'Class Features',
+      'card.traits': 'Species Traits',
+      'card.backstory': 'Backstory & Personality',
+      'card.spellcasting': 'Spellcasting',
+      'card.coins': 'Coins',
+      'card.spellSlots': 'Spell Slots',
+      'card.cantripsSpells': 'Cantrips & Spells',
+      'card.equipment': 'Equipment',
+      'card.training': 'Training & Proficiencies',
+      'card.feats': 'Feats',
+      'card.bonds': 'Bonds',
+      'card.allies': 'Allies & Factions',
+      'card.notes': 'Campaign Notes',
+      
+      // Abilities (full names)
+      'ability.str': 'Strength',
+      'ability.dex': 'Dexterity',
+      'ability.con': 'Constitution',
+      'ability.int': 'Intelligence',
+      'ability.wis': 'Wisdom',
+      'ability.cha': 'Charisma',
+      // Ability abbreviations
+      'ability.str.abbr': 'STR',
+      'ability.dex.abbr': 'DEX',
+      'ability.con.abbr': 'CON',
+      'ability.int.abbr': 'INT',
+      'ability.wis.abbr': 'WIS',
+      'ability.cha.abbr': 'CHA',
+      'ability.save': 'Save',
+      
+      // Skills
+      'skill.acrobatics': 'Acrobatics',
+      'skill.animalHandling': 'Animal Handling',
+      'skill.arcana': 'Arcana',
+      'skill.athletics': 'Athletics',
+      'skill.deception': 'Deception',
+      'skill.history': 'History',
+      'skill.insight': 'Insight',
+      'skill.intimidation': 'Intimidation',
+      'skill.investigation': 'Investigation',
+      'skill.medicine': 'Medicine',
+      'skill.nature': 'Nature',
+      'skill.perception': 'Perception',
+      'skill.performance': 'Performance',
+      'skill.persuasion': 'Persuasion',
+      'skill.religion': 'Religion',
+      'skill.sleightOfHand': 'Sleight of Hand',
+      'skill.stealth': 'Stealth',
+      'skill.survival': 'Survival',
+      'skill.prof': 'PROF',
+      'skill.exp': 'EXP',
+      
+      // Combat Stats
+      'combat.ac': 'Armor Class',
+      'combat.initiative': 'Initiative',
+      'combat.speed': 'Speed',
+      'combat.proficiency': 'Proficiency',
+      
+      // Vitals
+      'vitals.current': 'Current',
+      'vitals.max': 'Max',
+      'vitals.temp': 'Temp',
+      'vitals.successes': 'Successes',
+      'vitals.failures': 'Failures',
+      'vitals.hitDice': 'Hit Dice',
+      'vitals.condition': '+ Condition',
+      
+      // Skills section
+      'skills.search': 'Search skills...',
+      'skills.profOnly': 'Proficient only',
+      
+      // Spellcasting
+      'spell.ability': 'Ability',
+      'spell.none': 'None',
+      'spell.saveDC': 'Spell Save DC',
+      'spell.attack': 'Spell Attack',
+      'spell.sort': 'Sort:',
+      'spell.show': 'Show:',
+      'spell.level': 'Level',
+      'spell.name': 'Name',
+      'spell.conc': 'Conc',
+      'spell.ritual': 'Ritual',
+      'spell.all': 'All',
+      'spell.prepared': 'Prepared',
+      'spell.concentration': 'Concentration',
+      'spell.addSpell': '+ Add Spell',
+      'spell.addCantrip': '+ Add Cantrip',
+      
+      // Weapons Table
+      'weapon.name': 'Name',
+      'weapon.atk': 'Atk',
+      'weapon.damage': 'Damage',
+      'weapon.notes': 'Notes',
+      'weapon.add': '+ Add Weapon',
+      
+      // Features
+      'feature.add': '+ Add Feature',
+      
+      // Equipment
+      'equip.add': '+ Add Item',
+      
+      // Feats
+      'feat.add': '+ Add Feat',
+      
+      // Roll Log
+      'rollLog.title': 'Roll Log',
+      'rollLog.clear': 'Clear',
+      'rollLog.all': 'All',
+      'rollLog.skills': 'Skills',
+      'rollLog.saves': 'Saves',
+      'rollLog.attacks': 'Attacks',
+      'rollLog.misc': 'Misc',
+      'rollLog.empty': 'No rolls yet. Click a skill, save, or attack to roll!',
+      
+      // Help Modal
+      'help.title': 'Quick Reference',
+      'help.rolling': 'Rolling Dice',
+      'help.characters': 'Characters',
+      'help.shortcuts': 'Keyboard Shortcuts',
+      
+      // Actions
+      'action.save': 'Save',
+      'action.export': 'Export',
+      'action.import': 'Import',
+      'action.print': 'Print',
+      'action.cancel': 'Cancel',
+      'action.confirm': 'Confirm',
+      'action.delete': 'Delete',
+      'action.duplicate': 'Duplicate',
+      'action.close': 'Close',
+      'action.done': 'Done',
+      'action.reset': 'Reset',
+      
+      // Boot Screen
+      'boot.title': 'Player Almanac',
+      'boot.subtitle': 'Character Sheet Manager',
+      'boot.newChar': '+ New Character',
+      'boot.import': 'Import Character',
+      'boot.yourChars': 'Your Characters',
+      
+      // Boot Screen Extended
+      'boot.tagline': 'Your tabletop companion',
+      'boot.welcomeTitle': 'Welcome, Adventurer',
+      'boot.welcomeText': 'Create your first character to begin tracking your journey through any tabletop RPG campaign.',
+      'boot.restoreBackup': 'Restore Backup',
+      'boot.settingsBtn': 'Settings',
+      'boot.addons': 'Addons',
+      
+      // Boot Settings Panel
+      'bootSettings.title': 'Settings',
+      'bootSettings.language': 'Language',
+      'bootSettings.theme': 'Theme',
+      'bootSettings.motion': 'Motion Effects',
+      'bootSettings.contrast': 'High Contrast',
+      'bootSettings.storage': 'Storage Status',
+      'bootSettings.checking': 'Checking...',
+      
+      // Contrast Options
+      'contrast.normal': 'Normal',
+      'contrast.high': 'High',
+      
+      // About Modal
+      'about.title': 'About Player Almanac',
+      'about.project': 'PROJECT',
+      'about.projectName': 'Player Almanac',
+      'about.copyright': '© 2025 Zagreous',
+      'about.description': 'A digital character sheet and campaign companion for tabletop RPGs.',
+      'about.license': 'LICENSE',
+      'about.licenseTitle': 'ZNAL v1.1',
+      'about.licenseFull': '(Zagreous Noncommercial Attribution License)',
+      'about.licenseText': 'Noncommercial use permitted with attribution and link-back required.',
+      'about.streamingText': 'YouTube/Twitch/streaming use permitted (even monetized) with attribution.',
+      'about.commercialText': 'For commercial licensing inquiries:',
+      'about.attribution': 'REQUIRED ATTRIBUTION',
+      'about.attributionText': 'Player Almanac by Zagreous',
+      'about.attributionLicense': 'Licensed under ZNAL v1.1 (Noncommercial + Attribution)',
+      'about.attributionPage': 'Official project page:',
+      'about.thirdParty': 'THIRD-PARTY NOTICES',
+      'about.gsap': 'GSAP 3.12.2',
+      'about.gsapText': '(GreenSock) — Animation library via cdnjs.cloudflare.com.',
+      'about.gsapLicense': 'Subject to GreenSock license terms.',
+      'about.gsapNote': 'Note: Requires internet connection for animations.',
+      'about.fonts': 'Fonts:',
+      'about.fontsText': 'Cinzel, Inter, JetBrains Mono — Google Fonts, licensed under the SIL Open Font License (OFL).',
+      'about.icons': 'Icons:',
+      'about.iconsText': 'Custom inline SVGs — Original artwork.',
+      'about.emoji': 'Emoji:',
+      'about.emojiText': 'Unicode standard characters — Rendered by your device/browser.',
+      'about.trademark': 'TRADEMARK DISCLAIMER',
+      'about.trademarkText': 'Dungeons & Dragons® is a registered trademark of Wizards of the Coast LLC. Player Almanac is not affiliated with, endorsed, sponsored, or specifically approved by Wizards of the Coast LLC.',
+      
+      // Conditions
+      'condition.blinded': 'Blinded',
+      'condition.charmed': 'Charmed',
+      'condition.deafened': 'Deafened',
+      'condition.frightened': 'Frightened',
+      'condition.grappled': 'Grappled',
+      'condition.incapacitated': 'Incapacitated',
+      'condition.invisible': 'Invisible',
+      'condition.paralyzed': 'Paralyzed',
+      'condition.petrified': 'Petrified',
+      'condition.poisoned': 'Poisoned',
+      'condition.prone': 'Prone',
+      'condition.restrained': 'Restrained',
+      'condition.stunned': 'Stunned',
+      'condition.unconscious': 'Unconscious',
+      'condition.exhaustion': 'Exhaustion',
+      
+      // Temp HP Modal
+      'tempHP.title': 'Temp HP',
+      'tempHP.amount': 'Amount',
+      'tempHP.description': 'Sets Temp HP directly.',
+      'tempHP.set': 'Set Temp HP',
+      
+      // Short Rest Modal
+      'shortRest.title': 'Short Rest',
+      'shortRest.spendHitDice': 'Spend Hit Dice to Heal',
+      'shortRest.description': 'Click hit dice to select them for rolling. Each die rolled heals HP equal to the roll + your CON modifier.',
+      'shortRest.available': 'Available Hit Dice',
+      'shortRest.selected': 'Selected to Spend',
+      'shortRest.conMod': 'CON Modifier (per die)',
+      'shortRest.resets': 'Short Rest Resets',
+      'shortRest.configureFeatures': 'Configure which features reset on a short rest.',
+      'shortRest.noFeatures': 'No class features to configure. Add features on the Core tab.',
+      'shortRest.rollDice': 'Roll Selected Dice',
+      'shortRest.complete': 'Complete Rest',
+      
+      // Long Rest Modal
+      'longRest.title': 'Long Rest',
+      'longRest.benefits': 'Long Rest Benefits',
+      'longRest.description': 'A long rest restores all HP, recovers half your total hit dice (minimum 1), and resets all spell slots and long rest features.',
+      'longRest.whatRestored': 'What Will Be Restored',
+      'longRest.hitPoints': 'Hit Points',
+      'longRest.hitDiceRecovered': 'Hit Dice Recovered',
+      'longRest.spellSlots': 'Spell Slots',
+      'longRest.deathSaves': 'Death Saves',
+      'longRest.noRecovery': 'No recovery',
+      'longRest.noneToRestore': 'None to restore',
+      'longRest.reset': 'Reset',
+      'longRest.resets': 'Long Rest Resets',
+      'longRest.configureFeatures': 'Configure which features reset on a long rest.',
+      'longRest.noFeatures': 'No class features to configure.',
+      'longRest.restRules': 'Rest Rules',
+      'longRest.hitDiceRecovery': 'Hit Dice Recovery',
+      'longRest.hpRecovery': 'HP Recovery',
+      'longRest.halfLevel': 'Half level (RAW)',
+      'longRest.fullHP': 'Full HP (RAW)',
+      'longRest.complete': 'Complete Long Rest',
+      
+      // Heal/Damage Modal
+      'healDmg.title': 'Heal / Damage',
+      'healDmg.amount': 'Amount',
+      'healDmg.heal': 'Heal',
+      'healDmg.damage': 'Damage',
+      
+      // Training & Proficiencies
+      'training.armor': 'Armor',
+      'training.light': 'Light',
+      'training.medium': 'Medium',
+      'training.heavy': 'Heavy',
+      'training.shields': 'Shields',
+      'training.weapons': 'Weapons',
+      'training.tools': 'Tools',
+      'training.languages': 'Languages',
+      
+      // Equipment
+      'equip.magicAttunement': 'Magic Item Attunement',
+      'equip.addAttunement': '+ Add Attunement',
+      'equip.compact': 'Compact',
+      
+      // Spell Table Headers
+      'spellTable.lvl': 'LVL',
+      'spellTable.name': 'Name',
+      'spellTable.cast': 'Cast',
+      'spellTable.range': 'Range',
+      'spellTable.c': 'C',
+      'spellTable.r': 'R',
+      'spellTable.p': 'P',
+      'spellTable.notes': 'Notes',
+      
+      // Help Modal Content
+      'help.quickBar': 'Quick Bar',
+      'help.diceRolls': 'Dice Rolls',
+      'help.map': 'Map',
+      'help.editPlay': 'Edit/Play',
+      'help.editPlayDesc': 'Toggle between editing and play mode (locks fields)',
+      'help.advDis': 'Adv/Dis',
+      'help.advDisDesc': 'Set global advantage or disadvantage for all rolls',
+      'help.healDmgDesc': 'Quickly add or remove HP',
+      'help.moreDesc': 'Access rest options, extra stats, and map',
+      'help.clickDesc': 'any skill, save, or stat to roll with modifiers',
+      'help.initDesc': 'Click the Initiative stat to roll initiative',
+      'help.advDisRollDesc': 'affects all rolls until changed back to Normal',
+      'help.selectPan': 'Select / Pan tool',
+      'help.placeOrigin': 'Place character origin',
+      'help.markLastSeen': 'Mark last seen location',
+      'help.measureDistance': 'Measure distance between two points',
+      'help.drawRoutes': 'Draw travel routes',
+      'help.addPins': 'Add location pins',
+      'help.calibrateScale': 'Calibrate map scale',
+      'help.closeMap': 'Close map or cancel tool action',
+      'help.newCharDesc': 'Create a new character',
+      'help.menuDesc': 'Duplicate or delete current character',
+      'help.exportDesc': 'Save character to a JSON file',
+      'help.importDesc': 'Load character from a file',
+      'help.undoShortcut': 'Undo last change',
+      'help.saveShortcut': 'Force save (auto-saves anyway)',
+      'help.printShortcut': 'Print / Save as PDF',
+      'help.helpShortcut': 'Open this help panel',
+      'help.escShortcut': 'Close modals and menus',
+      'help.footer': 'Hover over any button to see a tooltip. Press Esc to close.',
+      
+      // About Modal
+      'about.title': 'About Player Almanac',
+      'about.project': 'Project',
+      'about.description': 'A digital character sheet and campaign companion for tabletop RPGs.',
+      'about.license': 'License',
+      'about.licenseDesc': 'Noncommercial use permitted with attribution and link-back required.',
+      'about.streamingDesc': 'YouTube/Twitch/streaming use permitted (even monetized) with attribution.',
+      'about.commercialDesc': 'For commercial licensing inquiries:',
+      'about.attribution': 'Required Attribution',
+      'about.attributionBy': 'Player Almanac by Zagreous',
+      'about.attributionLicense': 'Licensed under ZNAL v1.1 (Noncommercial + Attribution)',
+      'about.officialPage': 'Official project page:',
+      'about.thirdParty': 'Third-Party Notices',
+      'about.gsapDesc': '(GreenSock) — Animation library via cdnjs.cloudflare.com.',
+      'about.gsapLicense': 'Subject to GreenSock license terms.',
+      'about.gsapNote': 'Note: Requires internet connection for animations.',
+      'about.fonts': 'Fonts:',
+      'about.fontsDesc': 'Cinzel, Inter, JetBrains Mono — Google Fonts, licensed under the SIL Open Font License (OFL).',
+      'about.icons': 'Icons:',
+      'about.iconsDesc': 'Custom inline SVGs — Original artwork.',
+      'about.emoji': 'Emoji:',
+      'about.emojiDesc': 'Unicode standard characters — Rendered by your device/browser.',
+      'about.trademark': 'Trademark Disclaimer',
+      'about.trademarkDesc': 'Dungeons & Dragons® is a registered trademark of Wizards of the Coast LLC. Player Almanac is not affiliated with, endorsed, sponsored, or specifically approved by Wizards of the Coast LLC.',
+      
+      // Map Screen
+      'map.title': 'Campaign Map',
+      'map.noMapLoaded': 'No map loaded',
+      'map.placingFor': 'Placing for:',
+      'map.current': '(Current)',
+      'map.settings': 'Map Settings',
+      'map.campaign': 'Campaign',
+      'map.noCampaigns': 'No campaigns',
+      'map.new': '+ New',
+      'map.delete': 'Delete',
+      'map.export': 'Export',
+      'map.import': 'Import',
+      'map.mapSection': 'Map',
+      'map.mapImage': 'Map Image',
+      'map.replace': 'Replace',
+      'map.remove': 'Remove',
+      'map.mapName': 'Map Name',
+      'map.mapNamePlaceholder': 'Campaign Map',
+      'map.scale': 'Scale',
+      'map.notCalibrated': 'Not calibrated',
+      'map.referenceLine': 'Reference line:',
+      'map.distance': 'Distance',
+      'map.setScale': 'Set Scale',
+      'map.clear': 'Clear',
+      'map.scaleHint': 'Select the Scale tool and draw a line between two known points on the map.',
+      'map.pins': 'Pins',
+      'map.searchPins': 'Search name, region, character...',
+      'map.allTypes': 'All Types',
+      'map.allCharacters': 'All Characters',
+      'map.noMapTitle': 'No Map Loaded',
+      'map.noMapDesc': 'Upload an image to get started with your campaign map.',
+      'map.uploadMap': 'Upload Map',
+      'map.tools.select': 'Select',
+      'map.tools.origin': 'Origin',
+      'map.tools.lastSeen': 'Last Seen',
+      'map.tools.measure': 'Measure',
+      'map.tools.route': 'Route',
+      'map.tools.pins': 'Pins',
+      'map.tools.scale': 'Scale',
+      
+      // Fateweaving Tab
+      'fate.thread': 'Thread',
+      'fate.notes': 'Notes',
+      'fate.rewards': 'Rewards',
+      'fate.curse': 'Curse',
+      'fate.bargains': 'Bargains',
+      'fate.miscNotes': 'Misc Notes',
+      'fate.threadOfFate': 'Thread of Fate',
+      'fate.fateweavingNotes': 'Fateweaving Notes',
+      'fate.fateweavingRewards': 'Fateweaving Rewards',
+      'fate.darkBargains': 'Dark Bargains',
+      'fate.bargain1': 'Bargain 1',
+      'fate.bargain2': 'Bargain 2',
+      'fate.bargain3': 'Bargain 3',
+      'fate.fateweavingCurse': 'Fateweaving Curse',
+      'fate.campaignNotes': 'Campaign Notes',
+      
+      // Tooltips
+      'tooltip.saveChar': 'Save character (auto-saves)',
+      'tooltip.exportChar': 'Export character to file',
+      'tooltip.importChar': 'Import character from file',
+      'tooltip.printChar': 'Print character sheet',
+      'tooltip.mapView': 'Open campaign map',
+      
+      // Misc
+      'misc.level': 'Lv',
+      'misc.or': 'or',
+      'misc.tapToRoll': 'tap to roll',
+      'misc.click': 'Click',
+      'misc.init': 'Init',
+      'misc.miles': 'miles',
+      'misc.km': 'km',
+      'misc.ft': 'ft',
+      'misc.m': 'm',
+      'misc.px': 'px',
+      
+      // Boot Screen
+      'boot.loading': 'Loading...',
+      'boot.importChar': 'Import Character',
+      'boot.exportAll': 'Export All',
+      'boot.importBtn': 'Import',
+      'boot.newCharLabel': 'New Character',
+      'boot.createFirst': 'Create Your First Character',
+      'boot.startAdventure': 'Start your adventure',
+      'boot.loadFromFile': 'Load from file',
+      
+      // Character Menu
+      'charMenu.duplicate': 'Duplicate',
+      'charMenu.delete': 'Delete',
+      'charMenu.deleteConfirm': 'Click Delete again to confirm.',
+      'charMenu.searchChars': 'Search characters...',
+      
+      // Import Modal
+      'import.title': 'Import Character',
+      'import.fromFile': 'Import from file',
+      'import.jsonLabel': 'Import JSON',
+      'import.asNew': 'Import as new character',
+      'import.hint': 'Exports are versioned. Older (unversioned) exports still import, but may lose newer fields.',
+      'import.cancel': 'Cancel',
+      'import.import': 'Import',
+      
+      // Contrast Options  
+      'contrast.normal': 'Normal',
+      'contrast.high': 'High',
+      
+      // Print Sheet
+      'printSheet.generating': 'Generating print sheet...',
+      'printSheet.ready': 'Print sheet ready! Click "Print / Save PDF" to save.',
+      'printSheet.level': 'Level',
+      'printSheet.save': 'Save',
+      'printSheet.combat': 'Combat',
+      'printSheet.hitPoints': 'Hit Points',
+      'printSheet.ac': 'AC',
+      'printSheet.initiative': 'Initiative',
+      'printSheet.speed': 'Speed',
+      'printSheet.prof': 'Prof',
+      'printSheet.passive': 'Passive',
+      'printSheet.hitDice': 'Hit Dice',
+      'printSheet.saves': 'Saves',
+      'printSheet.fails': 'Fails',
+      'printSheet.attacks': 'Attacks',
+      'printSheet.skills': 'Skills',
+      'printSheet.spellcasting': 'Spellcasting',
+      'printSheet.slots': 'Slots',
+      'printSheet.attack': 'Attack',
+      'printSheet.cantrips': 'Cantrips',
+      'printSheet.level1': '1st Level',
+      'printSheet.level2': '2nd Level',
+      'printSheet.level3': '3rd Level',
+      'printSheet.level4': '4th Level',
+      'printSheet.level5': '5th Level',
+      'printSheet.level6': '6th Level',
+      'printSheet.level7': '7th Level',
+      'printSheet.level8': '8th Level',
+      'printSheet.level9': '9th Level',
+      'printSheet.noSpells': 'No spells',
+      'printSheet.features': 'Features & Traits',
+      'printSheet.noFeatures': 'No features',
+      'printSheet.equipment': 'Equipment',
+      'printSheet.noEquipment': 'No equipment',
+      'printSheet.proficiencies': 'Proficiencies',
+      'printSheet.armor': 'Armor',
+      'printSheet.weapons': 'Weapons',
+      'printSheet.tools': 'Tools',
+      'printSheet.languages': 'Languages',
+      'printSheet.none': 'None',
+      'printSheet.noWeapons': 'No weapons',
+      'printSheet.conditions': 'Conditions',
+      'printSheet.unnamed': 'Unnamed Character',
+      'printSheet.footer': 'Player Almanac • Character Sheet',
+    },
+    de: {
+      // Settings Menu
+      'settings.theme': 'Design',
+      'settings.rules': 'Regeln',
+      'settings.language': 'Sprache',
+      'settings.printMode': 'Druckmodus',
+      'settings.motion': 'Animationen',
+      'settings.contrast': 'Kontrast',
+      'settings.print': 'Drucken / Als PDF speichern',
+      'settings.onePageSheet': '📄 Einzelseiten-Bogen',
+      'settings.help': '❓ Hilfe',
+      'settings.about': 'ℹ️ Über / Credits',
+      
+      // Quickbar
+      'qb.saved': 'Gespeichert',
+      'qb.saving': 'Speichert...',
+      'qb.undo': 'Rückgängig',
+      'qb.edit': 'Bearbeiten',
+      'qb.play': 'Spielen',
+      'qb.newChar': '+ Neu',
+      'qb.more': 'Mehr',
+      'qb.hp': 'TP',
+      'qb.temp': 'TEMP',
+      'qb.ac': 'RK',
+      'qb.init': 'INI',
+      'qb.speed': 'BEW',
+      'qb.tempHP': 'Temp TP',
+      'qb.short': 'Kurz',
+      'qb.long': 'Lang',
+      'qb.adv': 'Vort',
+      'qb.dis': 'Nacht',
+      'qb.normal': 'Normal',
+      'qb.healDmg': 'Heilen/Schaden',
+      
+      // More Menu
+      'more.heal': 'Heilen',
+      'more.damage': 'Schaden',
+      'more.shortRest': 'Kurze Rast',
+      'more.longRest': 'Lange Rast',
+      'more.map': 'Karte',
+      'more.addons': 'Erweiterungen',
+      'more.stats': 'Werte',
+      'more.rest': 'Rast',
+      'more.tools': 'Werkzeuge',
+      
+      // Tabs
+      'tab.core': 'Basis',
+      'tab.spells': 'Zauber & Ausrüstung',
+      'tab.fate': 'Schicksalsweben',
+      
+      // Identity Card
+      'identity.portrait': 'Porträt',
+      'identity.upload': 'Hochladen',
+      'identity.adjust': 'Anpassen',
+      'identity.clear': 'Löschen',
+      'identity.name': 'Charaktername',
+      'identity.newCharacter': 'Neuer Charakter',
+      'identity.species': 'Spezies',
+      'identity.class': 'Klasse',
+      'identity.campaign': 'Kampagnenname',
+      
+      // Section Jump Labels
+      'jump.jumpTo': 'Springe zu:',
+      'jump.abilities': 'Attribute',
+      'jump.vitals': 'Vitalwerte',
+      'jump.combat': 'Kampf',
+      'jump.skills': 'Fertigkeiten',
+      'jump.weapons': 'Waffen',
+      'jump.features': 'Fähigkeiten',
+      'jump.traits': 'Merkmale',
+      'jump.spellcasting': 'Zauberwirken',
+      'jump.spellSlots': 'Zauberplätze',
+      'jump.spells': 'Zauber',
+      'jump.equipment': 'Ausrüstung',
+      'jump.training': 'Training',
+      'jump.feats': 'Talente',
+      
+      // Card Titles
+      'card.abilities': 'Attribute',
+      'card.vitals': 'Vitalwerte',
+      'card.combat': 'Kampf',
+      'card.skills': 'Fertigkeiten',
+      'card.weapons': 'Waffen & Angriffe',
+      'card.features': 'Klassenfähigkeiten',
+      'card.traits': 'Speziesmerkmale',
+      'card.backstory': 'Hintergrund & Persönlichkeit',
+      'card.spellcasting': 'Zauberwirken',
+      'card.coins': 'Münzen',
+      'card.spellSlots': 'Zauberplätze',
+      'card.cantripsSpells': 'Zaubertricks & Zauber',
+      'card.equipment': 'Ausrüstung',
+      'card.training': 'Training & Übung',
+      'card.feats': 'Talente',
+      'card.bonds': 'Bindungen',
+      'card.allies': 'Verbündete & Fraktionen',
+      'card.notes': 'Kampagnennotizen',
+      
+      // Abilities (full names)
+      'ability.str': 'Stärke',
+      'ability.dex': 'Geschicklichkeit',
+      'ability.con': 'Konstitution',
+      'ability.int': 'Intelligenz',
+      'ability.wis': 'Weisheit',
+      'ability.cha': 'Charisma',
+      // Ability abbreviations
+      'ability.str.abbr': 'STÄ',
+      'ability.dex.abbr': 'GES',
+      'ability.con.abbr': 'KON',
+      'ability.int.abbr': 'INT',
+      'ability.wis.abbr': 'WEI',
+      'ability.cha.abbr': 'CHA',
+      'ability.save': 'Rettung',
+      
+      // Skills
+      'skill.acrobatics': 'Akrobatik',
+      'skill.animalHandling': 'Tierumgang',
+      'skill.arcana': 'Arkane Kunde',
+      'skill.athletics': 'Athletik',
+      'skill.deception': 'Täuschung',
+      'skill.history': 'Geschichte',
+      'skill.insight': 'Motiv erkennen',
+      'skill.intimidation': 'Einschüchtern',
+      'skill.investigation': 'Nachforschungen',
+      'skill.medicine': 'Heilkunde',
+      'skill.nature': 'Naturkunde',
+      'skill.perception': 'Wahrnehmung',
+      'skill.performance': 'Auftreten',
+      'skill.persuasion': 'Überzeugen',
+      'skill.religion': 'Religion',
+      'skill.sleightOfHand': 'Fingerfertigkeit',
+      'skill.stealth': 'Heimlichkeit',
+      'skill.survival': 'Überleben',
+      'skill.prof': 'GEÜBT',
+      'skill.exp': 'EXP',
+      
+      // Combat Stats
+      'combat.ac': 'Rüstungsklasse',
+      'combat.initiative': 'Initiative',
+      'combat.speed': 'Bewegung',
+      'combat.proficiency': 'Übungsbonus',
+      
+      // Vitals
+      'vitals.current': 'Aktuell',
+      'vitals.max': 'Max',
+      'vitals.temp': 'Temp',
+      'vitals.successes': 'Erfolge',
+      'vitals.failures': 'Fehlschläge',
+      'vitals.hitDice': 'Trefferwürfel',
+      'vitals.condition': '+ Zustand',
+      
+      // Skills section
+      'skills.search': 'Fertigkeiten suchen...',
+      'skills.profOnly': 'Nur geübte',
+      
+      // Spellcasting
+      'spell.ability': 'Attribut',
+      'spell.none': 'Keines',
+      'spell.saveDC': 'Zauber-SG',
+      'spell.attack': 'Zauberangriff',
+      'spell.sort': 'Sortieren:',
+      'spell.show': 'Anzeigen:',
+      'spell.level': 'Stufe',
+      'spell.name': 'Name',
+      'spell.conc': 'Konz',
+      'spell.ritual': 'Ritual',
+      'spell.all': 'Alle',
+      'spell.prepared': 'Vorbereitet',
+      'spell.concentration': 'Konzentration',
+      'spell.addSpell': '+ Zauber hinzufügen',
+      'spell.addCantrip': '+ Zaubertrick hinzufügen',
+      
+      // Weapons Table
+      'weapon.name': 'Name',
+      'weapon.atk': 'Ang',
+      'weapon.damage': 'Schaden',
+      'weapon.notes': 'Notizen',
+      'weapon.add': '+ Waffe hinzufügen',
+      
+      // Features
+      'feature.add': '+ Fähigkeit hinzufügen',
+      
+      // Equipment
+      'equip.add': '+ Gegenstand hinzufügen',
+      
+      // Feats
+      'feat.add': '+ Talent hinzufügen',
+      
+      // Roll Log
+      'rollLog.title': 'Würfelprotokoll',
+      'rollLog.clear': 'Leeren',
+      'rollLog.all': 'Alle',
+      'rollLog.skills': 'Fertigkeiten',
+      'rollLog.saves': 'Rettungswürfe',
+      'rollLog.attacks': 'Angriffe',
+      'rollLog.misc': 'Sonstige',
+      'rollLog.empty': 'Noch keine Würfe. Klicke auf eine Fertigkeit, Rettungswurf oder Angriff!',
+      
+      // Help Modal
+      'help.title': 'Kurzreferenz',
+      'help.rolling': 'Würfeln',
+      'help.characters': 'Charaktere',
+      'help.shortcuts': 'Tastenkürzel',
+      
+      // Actions
+      'action.save': 'Speichern',
+      'action.export': 'Exportieren',
+      'action.import': 'Importieren',
+      'action.print': 'Drucken',
+      'action.cancel': 'Abbrechen',
+      'action.confirm': 'Bestätigen',
+      'action.delete': 'Löschen',
+      'action.duplicate': 'Duplizieren',
+      'action.close': 'Schließen',
+      'action.done': 'Fertig',
+      'action.reset': 'Zurücksetzen',
+      
+      // Boot Screen
+      'boot.title': 'Player Almanac',
+      'boot.subtitle': 'Charakterbogen-Manager',
+      'boot.newChar': '+ Neuer Charakter',
+      'boot.import': 'Charakter importieren',
+      'boot.yourChars': 'Deine Charaktere',
+      
+      // Boot Screen Extended
+      'boot.tagline': 'Dein Tischrollenspiel-Begleiter',
+      'boot.welcomeTitle': 'Willkommen, Abenteurer',
+      'boot.welcomeText': 'Erstelle deinen ersten Charakter, um deine Reise durch jede Tischrollenspiel-Kampagne zu verfolgen.',
+      'boot.restoreBackup': 'Backup wiederherstellen',
+      'boot.settingsBtn': 'Einstellungen',
+      'boot.addons': 'Erweiterungen',
+      
+      // Boot Settings Panel
+      'bootSettings.title': 'Einstellungen',
+      'bootSettings.language': 'Sprache',
+      'bootSettings.theme': 'Design',
+      'bootSettings.motion': 'Animationen',
+      'bootSettings.contrast': 'Hoher Kontrast',
+      'bootSettings.storage': 'Speicherstatus',
+      'bootSettings.checking': 'Prüfe...',
+      
+      // Contrast Options
+      'contrast.normal': 'Normal',
+      'contrast.high': 'Hoch',
+      
+      // About Modal
+      'about.title': 'Über Player Almanac',
+      'about.project': 'PROJEKT',
+      'about.projectName': 'Player Almanac',
+      'about.copyright': '© 2025 Zagreous',
+      'about.description': 'Ein digitaler Charakterbogen und Kampagnenbegleiter für Tischrollenspiele.',
+      'about.license': 'LIZENZ',
+      'about.licenseTitle': 'ZNAL v1.1',
+      'about.licenseFull': '(Zagreous Noncommercial Attribution License)',
+      'about.licenseText': 'Nichtkommerzielle Nutzung mit Namensnennung und Verlinkung erlaubt.',
+      'about.streamingText': 'YouTube/Twitch/Streaming erlaubt (auch monetarisiert) mit Namensnennung.',
+      'about.commercialText': 'Für kommerzielle Lizenzanfragen:',
+      'about.attribution': 'ERFORDERLICHE NAMENSNENNUNG',
+      'about.attributionText': 'Player Almanac von Zagreous',
+      'about.attributionLicense': 'Lizenziert unter ZNAL v1.1 (Nichtkommerziell + Namensnennung)',
+      'about.attributionPage': 'Offizielle Projektseite:',
+      'about.thirdParty': 'DRITTANBIETER-HINWEISE',
+      'about.gsap': 'GSAP 3.12.2',
+      'about.gsapText': '(GreenSock) — Animationsbibliothek via cdnjs.cloudflare.com.',
+      'about.gsapLicense': 'Unterliegt den GreenSock-Lizenzbedingungen.',
+      'about.gsapNote': 'Hinweis: Erfordert Internetverbindung für Animationen.',
+      'about.fonts': 'Schriftarten:',
+      'about.fontsText': 'Cinzel, Inter, JetBrains Mono — Google Fonts, lizenziert unter der SIL Open Font License (OFL).',
+      'about.icons': 'Icons:',
+      'about.iconsText': 'Benutzerdefinierte Inline-SVGs — Originalkunstwerk.',
+      'about.emoji': 'Emoji:',
+      'about.emojiText': 'Unicode-Standardzeichen — Gerendert durch Ihr Gerät/Browser.',
+      'about.trademark': 'MARKENRECHTLICHER HINWEIS',
+      'about.trademarkText': 'Dungeons & Dragons® ist eine eingetragene Marke von Wizards of the Coast LLC. Player Almanac ist nicht mit Wizards of the Coast LLC verbunden, wird nicht von ihr unterstützt, gesponsert oder speziell genehmigt.',
+      
+      // Conditions
+      'condition.blinded': 'Geblendet',
+      'condition.charmed': 'Bezaubert',
+      'condition.deafened': 'Taub',
+      'condition.frightened': 'Verängstigt',
+      'condition.grappled': 'Gepackt',
+      'condition.incapacitated': 'Kampfunfähig',
+      'condition.invisible': 'Unsichtbar',
+      'condition.paralyzed': 'Gelähmt',
+      'condition.petrified': 'Versteinert',
+      'condition.poisoned': 'Vergiftet',
+      'condition.prone': 'Liegend',
+      'condition.restrained': 'Festgesetzt',
+      'condition.stunned': 'Betäubt',
+      'condition.unconscious': 'Bewusstlos',
+      'condition.exhaustion': 'Erschöpfung',
+      
+      // Temp HP Modal
+      'tempHP.title': 'Temp. TP',
+      'tempHP.amount': 'Betrag',
+      'tempHP.description': 'Setzt temporäre Trefferpunkte direkt.',
+      'tempHP.set': 'Temp. TP setzen',
+      
+      // Short Rest Modal
+      'shortRest.title': 'Kurze Rast',
+      'shortRest.spendHitDice': 'Trefferwürfel ausgeben zum Heilen',
+      'shortRest.description': 'Klicke auf Trefferwürfel, um sie auszuwählen. Jeder gewürfelte Würfel heilt TP in Höhe des Wurfs + deinem KON-Modifikator.',
+      'shortRest.available': 'Verfügbare Trefferwürfel',
+      'shortRest.selected': 'Ausgewählt',
+      'shortRest.conMod': 'KON-Modifikator (pro Würfel)',
+      'shortRest.resets': 'Kurze Rast stellt wieder her',
+      'shortRest.configureFeatures': 'Konfiguriere, welche Fähigkeiten bei einer kurzen Rast zurückgesetzt werden.',
+      'shortRest.noFeatures': 'Keine Klassenfähigkeiten zu konfigurieren. Füge Fähigkeiten im Basis-Tab hinzu.',
+      'shortRest.rollDice': 'Ausgewählte Würfeln',
+      'shortRest.complete': 'Rast abschließen',
+      
+      // Long Rest Modal
+      'longRest.title': 'Lange Rast',
+      'longRest.benefits': 'Vorteile der langen Rast',
+      'longRest.description': 'Eine lange Rast stellt alle TP wieder her, erholt die Hälfte deiner Trefferwürfel (mindestens 1) und setzt alle Zauberplätze und Fähigkeiten zurück.',
+      'longRest.whatRestored': 'Was wiederhergestellt wird',
+      'longRest.hitPoints': 'Trefferpunkte',
+      'longRest.hitDiceRecovered': 'Trefferwürfel erholt',
+      'longRest.spellSlots': 'Zauberplätze',
+      'longRest.deathSaves': 'Todesrettungswürfe',
+      'longRest.noRecovery': 'Keine Erholung',
+      'longRest.noneToRestore': 'Keine wiederherzustellen',
+      'longRest.reset': 'Zurücksetzen',
+      'longRest.resets': 'Lange Rast stellt wieder her',
+      'longRest.configureFeatures': 'Konfiguriere, welche Fähigkeiten bei einer langen Rast zurückgesetzt werden.',
+      'longRest.noFeatures': 'Keine Klassenfähigkeiten zu konfigurieren.',
+      'longRest.restRules': 'Rastregeln',
+      'longRest.hitDiceRecovery': 'Trefferwürfel-Erholung',
+      'longRest.hpRecovery': 'TP-Erholung',
+      'longRest.halfLevel': 'Halbe Stufe (RAW)',
+      'longRest.fullHP': 'Volle TP (RAW)',
+      'longRest.complete': 'Lange Rast abschließen',
+      
+      // Heal/Damage Modal
+      'healDmg.title': 'Heilen / Schaden',
+      'healDmg.amount': 'Betrag',
+      'healDmg.heal': 'Heilen',
+      'healDmg.damage': 'Schaden',
+      
+      // Training & Proficiencies
+      'training.armor': 'Rüstung',
+      'training.light': 'Leicht',
+      'training.medium': 'Mittel',
+      'training.heavy': 'Schwer',
+      'training.shields': 'Schilde',
+      'training.weapons': 'Waffen',
+      'training.tools': 'Werkzeuge',
+      'training.languages': 'Sprachen',
+      
+      // Equipment
+      'equip.magicAttunement': 'Magische Gegenstände (Einstimmung)',
+      'equip.addAttunement': '+ Einstimmung hinzufügen',
+      'equip.compact': 'Kompakt',
+      
+      // Spell Table Headers
+      'spellTable.lvl': 'ST',
+      'spellTable.name': 'Name',
+      'spellTable.cast': 'Wirken',
+      'spellTable.range': 'Reichweite',
+      'spellTable.c': 'K',
+      'spellTable.r': 'R',
+      'spellTable.p': 'V',
+      'spellTable.notes': 'Notizen',
+      
+      // Help Modal Content
+      'help.quickBar': 'Schnellleiste',
+      'help.diceRolls': 'Würfelwürfe',
+      'help.map': 'Karte',
+      'help.editPlay': 'Bearbeiten/Spielen',
+      'help.editPlayDesc': 'Wechsle zwischen Bearbeitungs- und Spielmodus (sperrt Felder)',
+      'help.advDis': 'Vort/Nacht',
+      'help.advDisDesc': 'Setze globalen Vorteil oder Nachteil für alle Würfe',
+      'help.healDmgDesc': 'Schnell TP hinzufügen oder entfernen',
+      'help.moreDesc': 'Zugriff auf Rastoptionen, Extra-Werte und Karte',
+      'help.clickDesc': 'auf Fertigkeit, Rettungswurf oder Wert klicken zum Würfeln mit Modifikatoren',
+      'help.initDesc': 'Klicke auf Initiative, um Initiative zu würfeln',
+      'help.advDisRollDesc': 'beeinflusst alle Würfe bis zur Rückkehr zu Normal',
+      'help.selectPan': 'Auswahl- / Verschiebe-Werkzeug',
+      'help.placeOrigin': 'Charakter-Ursprung platzieren',
+      'help.markLastSeen': 'Zuletzt gesehenen Ort markieren',
+      'help.measureDistance': 'Entfernung zwischen zwei Punkten messen',
+      'help.drawRoutes': 'Reiserouten zeichnen',
+      'help.addPins': 'Ortspins hinzufügen',
+      'help.calibrateScale': 'Kartenmaßstab kalibrieren',
+      'help.closeMap': 'Karte schließen oder Werkzeugaktion abbrechen',
+      'help.newCharDesc': 'Neuen Charakter erstellen',
+      'help.menuDesc': 'Aktuellen Charakter duplizieren oder löschen',
+      'help.exportDesc': 'Charakter als JSON-Datei speichern',
+      'help.importDesc': 'Charakter aus Datei laden',
+      'help.undoShortcut': 'Letzte Änderung rückgängig',
+      'help.saveShortcut': 'Speichern erzwingen (speichert automatisch)',
+      'help.printShortcut': 'Drucken / Als PDF speichern',
+      'help.helpShortcut': 'Diese Hilfe öffnen',
+      'help.escShortcut': 'Dialoge und Menüs schließen',
+      'help.footer': 'Bewege den Mauszeiger über eine Schaltfläche für einen Tooltip. Drücke Esc zum Schließen.',
+      
+      // About Modal
+      'about.title': 'Über Player Almanac',
+      'about.project': 'Projekt',
+      'about.description': 'Ein digitaler Charakterbogen und Kampagnenbegleiter für Tischrollenspiele.',
+      'about.license': 'Lizenz',
+      'about.licenseDesc': 'Nichtkommerzielle Nutzung mit Namensnennung und Verlinkung erlaubt.',
+      'about.streamingDesc': 'YouTube/Twitch/Streaming erlaubt (auch monetarisiert) mit Namensnennung.',
+      'about.commercialDesc': 'Für kommerzielle Lizenzanfragen:',
+      'about.attribution': 'Erforderliche Namensnennung',
+      'about.attributionBy': 'Player Almanac von Zagreous',
+      'about.attributionLicense': 'Lizenziert unter ZNAL v1.1 (Nichtkommerziell + Namensnennung)',
+      'about.officialPage': 'Offizielle Projektseite:',
+      'about.thirdParty': 'Drittanbieter-Hinweise',
+      'about.gsapDesc': '(GreenSock) — Animationsbibliothek via cdnjs.cloudflare.com.',
+      'about.gsapLicense': 'Unterliegt den GreenSock-Lizenzbedingungen.',
+      'about.gsapNote': 'Hinweis: Erfordert Internetverbindung für Animationen.',
+      'about.fonts': 'Schriftarten:',
+      'about.fontsDesc': 'Cinzel, Inter, JetBrains Mono — Google Fonts, lizenziert unter der SIL Open Font License (OFL).',
+      'about.icons': 'Icons:',
+      'about.iconsDesc': 'Benutzerdefinierte Inline-SVGs — Originalkunstwerk.',
+      'about.emoji': 'Emoji:',
+      'about.emojiDesc': 'Unicode-Standardzeichen — Gerendert durch Ihr Gerät/Browser.',
+      'about.trademark': 'Markenrechtlicher Hinweis',
+      'about.trademarkDesc': 'Dungeons & Dragons® ist eine eingetragene Marke von Wizards of the Coast LLC. Player Almanac ist nicht mit Wizards of the Coast LLC verbunden oder von ihr genehmigt.',
+      
+      // Map Screen
+      'map.title': 'Kampagnenkarte',
+      'map.noMapLoaded': 'Keine Karte geladen',
+      'map.placingFor': 'Platzieren für:',
+      'map.current': '(Aktuell)',
+      'map.settings': 'Karteneinstellungen',
+      'map.campaign': 'Kampagne',
+      'map.noCampaigns': 'Keine Kampagnen',
+      'map.new': '+ Neu',
+      'map.delete': 'Löschen',
+      'map.export': 'Exportieren',
+      'map.import': 'Importieren',
+      'map.mapSection': 'Karte',
+      'map.mapImage': 'Kartenbild',
+      'map.replace': 'Ersetzen',
+      'map.remove': 'Entfernen',
+      'map.mapName': 'Kartenname',
+      'map.mapNamePlaceholder': 'Kampagnenkarte',
+      'map.scale': 'Maßstab',
+      'map.notCalibrated': 'Nicht kalibriert',
+      'map.referenceLine': 'Referenzlinie:',
+      'map.distance': 'Entfernung',
+      'map.setScale': 'Maßstab setzen',
+      'map.clear': 'Löschen',
+      'map.scaleHint': 'Wähle das Maßstab-Werkzeug und zeichne eine Linie zwischen zwei bekannten Punkten auf der Karte.',
+      'map.pins': 'Markierungen',
+      'map.searchPins': 'Name, Region, Charakter suchen...',
+      'map.allTypes': 'Alle Typen',
+      'map.allCharacters': 'Alle Charaktere',
+      'map.noMapTitle': 'Keine Karte geladen',
+      'map.noMapDesc': 'Lade ein Bild hoch, um mit deiner Kampagnenkarte zu beginnen.',
+      'map.uploadMap': 'Karte hochladen',
+      'map.tools.select': 'Auswählen',
+      'map.tools.origin': 'Ursprung',
+      'map.tools.lastSeen': 'Zuletzt gesehen',
+      'map.tools.measure': 'Messen',
+      'map.tools.route': 'Route',
+      'map.tools.pins': 'Markierungen',
+      'map.tools.scale': 'Maßstab',
+      
+      // Fateweaving Tab
+      'fate.thread': 'Faden',
+      'fate.notes': 'Notizen',
+      'fate.rewards': 'Belohnungen',
+      'fate.curse': 'Fluch',
+      'fate.bargains': 'Abkommen',
+      'fate.miscNotes': 'Sonstige Notizen',
+      'fate.threadOfFate': 'Schicksalsfaden',
+      'fate.fateweavingNotes': 'Schicksalsweben-Notizen',
+      'fate.fateweavingRewards': 'Schicksalsweben-Belohnungen',
+      'fate.darkBargains': 'Dunkle Abkommen',
+      'fate.bargain1': 'Abkommen 1',
+      'fate.bargain2': 'Abkommen 2',
+      'fate.bargain3': 'Abkommen 3',
+      'fate.fateweavingCurse': 'Schicksalsweben-Fluch',
+      'fate.campaignNotes': 'Kampagnennotizen',
+      
+      // Tooltips
+      'tooltip.saveChar': 'Charakter speichern (automatisch)',
+      'tooltip.exportChar': 'Charakter als Datei exportieren',
+      'tooltip.importChar': 'Charakter aus Datei importieren',
+      'tooltip.printChar': 'Charakterbogen drucken',
+      'tooltip.mapView': 'Kampagnenkarte öffnen',
+      
+      // Misc
+      'misc.level': 'St',
+      'misc.or': 'oder',
+      'misc.tapToRoll': 'tippen zum Würfeln',
+      'misc.click': 'Klick',
+      'misc.init': 'Init',
+      'misc.miles': 'Meilen',
+      'misc.km': 'km',
+      'misc.ft': 'Fuß',
+      'misc.m': 'm',
+      'misc.px': 'px',
+      
+      // Boot Screen
+      'boot.loading': 'Lädt...',
+      'boot.importChar': 'Charakter importieren',
+      'boot.exportAll': 'Alle exportieren',
+      'boot.importBtn': 'Importieren',
+      'boot.newCharLabel': 'Neuer Charakter',
+      'boot.createFirst': 'Erstelle deinen ersten Charakter',
+      'boot.startAdventure': 'Beginne dein Abenteuer',
+      'boot.loadFromFile': 'Aus Datei laden',
+      
+      // Character Menu
+      'charMenu.duplicate': 'Duplizieren',
+      'charMenu.delete': 'Löschen',
+      'charMenu.deleteConfirm': 'Zum Bestätigen erneut auf Löschen klicken.',
+      'charMenu.searchChars': 'Charaktere suchen...',
+      
+      // Import Modal
+      'import.title': 'Charakter importieren',
+      'import.fromFile': 'Aus Datei importieren',
+      'import.jsonLabel': 'JSON importieren',
+      'import.asNew': 'Als neuen Charakter importieren',
+      'import.hint': 'Exporte sind versioniert. Ältere (nicht versionierte) Exporte werden importiert, aber neuere Felder können fehlen.',
+      'import.cancel': 'Abbrechen',
+      'import.import': 'Importieren',
+      
+      // Contrast Options  
+      'contrast.normal': 'Normal',
+      'contrast.high': 'Hoch',
+      
+      // Print Sheet
+      'printSheet.generating': 'Erstelle Druckbogen...',
+      'printSheet.ready': 'Druckbogen bereit! Klicke auf "Drucken / Als PDF speichern" zum Speichern.',
+      'printSheet.level': 'Stufe',
+      'printSheet.save': 'Rettung',
+      'printSheet.combat': 'Kampf',
+      'printSheet.hitPoints': 'Trefferpunkte',
+      'printSheet.ac': 'RK',
+      'printSheet.initiative': 'Initiative',
+      'printSheet.speed': 'Bewegung',
+      'printSheet.prof': 'Übung',
+      'printSheet.passive': 'Passiv',
+      'printSheet.hitDice': 'Trefferwürfel',
+      'printSheet.saves': 'Erfolge',
+      'printSheet.fails': 'Fehlschläge',
+      'printSheet.attacks': 'Angriffe',
+      'printSheet.skills': 'Fertigkeiten',
+      'printSheet.spellcasting': 'Zauberwirken',
+      'printSheet.slots': 'Plätze',
+      'printSheet.attack': 'Angriff',
+      'printSheet.cantrips': 'Zaubertricks',
+      'printSheet.level1': '1. Grad',
+      'printSheet.level2': '2. Grad',
+      'printSheet.level3': '3. Grad',
+      'printSheet.level4': '4. Grad',
+      'printSheet.level5': '5. Grad',
+      'printSheet.level6': '6. Grad',
+      'printSheet.level7': '7. Grad',
+      'printSheet.level8': '8. Grad',
+      'printSheet.level9': '9. Grad',
+      'printSheet.noSpells': 'Keine Zauber',
+      'printSheet.features': 'Fähigkeiten & Merkmale',
+      'printSheet.noFeatures': 'Keine Fähigkeiten',
+      'printSheet.equipment': 'Ausrüstung',
+      'printSheet.noEquipment': 'Keine Ausrüstung',
+      'printSheet.proficiencies': 'Übung',
+      'printSheet.armor': 'Rüstung',
+      'printSheet.weapons': 'Waffen',
+      'printSheet.tools': 'Werkzeuge',
+      'printSheet.languages': 'Sprachen',
+      'printSheet.none': 'Keine',
+      'printSheet.noWeapons': 'Keine Waffen',
+      'printSheet.conditions': 'Zustände',
+      'printSheet.unnamed': 'Unbenannter Charakter',
+      'printSheet.footer': 'Player Almanac • Charakterbogen',
+    }
+  };
+
+  // Current language (defaults to English)
+  let currentLanguage = 'en';
+
+  // Translation helper function
+  function t(key) {
+    const lang = currentLanguage || 'en';
+    return TRANSLATIONS[lang]?.[key] || TRANSLATIONS['en']?.[key] || key;
+  }
 
   // Theme presets - each defines colors and particle settings
   const THEMES = {
@@ -18643,6 +19316,12 @@ body {
         this.applyTheme(this.currentTheme, { persist: false });
         if (this.dom.themeSelect) this.dom.themeSelect.value = this.currentTheme;
 
+        // Language preference
+        const storedLang = storageGet(LANGUAGE_KEY);
+        currentLanguage = (storedLang && TRANSLATIONS[storedLang]) ? storedLang : 'en';
+        this.applyLanguage(currentLanguage, { persist: false });
+        if (this.dom.languageSelect) this.dom.languageSelect.value = currentLanguage;
+
 
         // Mode preference (Edit vs Play)
         const storedMode = storageGet(MODE_KEY);
@@ -18913,6 +19592,12 @@ body {
           this.applyTheme(sel.value, { persist: true });
         });
       }
+      if (this.dom.bootLanguageSelect) {
+        this.dom.bootLanguageSelect.addEventListener('change', (e) => {
+          const sel = /** @type {HTMLSelectElement} */(e.target);
+          this.applyLanguage(sel.value, { persist: true });
+        });
+      }
       if (this.dom.bootMotionToggle) {
         this.dom.bootMotionToggle.addEventListener('change', (e) => {
           const cb = /** @type {HTMLInputElement} */(e.target);
@@ -18947,6 +19632,14 @@ body {
           this.renderCharacterSelect(); // Update picker badge
           this.updateQuickBar(); // Update minimal HUD badge
           this.toast(`Rules: ${sel.value === '2024' ? "2024 PHB" : "2014 PHB"}`);
+        });
+      }
+
+      // Language toggle
+      if (this.dom.languageSelect) {
+        this.dom.languageSelect.addEventListener('change', (e) => {
+          const sel = /** @type {HTMLSelectElement} */(e.target);
+          this.applyLanguage(sel.value, { persist: true });
         });
       }
 
@@ -19963,7 +20656,7 @@ body {
       const origLevel = this.state.level;
       this.state.level = toInt(this.state.level, 1, { min: 1, max: 20 });
       if (origLevel !== this.state.level) {
-        issues.push(`Level clamped: ${origLevel} → ${this.state.level}`);
+        issues.push(`Level clamped: ${origLevel} â†’ ${this.state.level}`);
       }
       
       // Hit dice
@@ -19976,7 +20669,7 @@ body {
       this.state.hp.max = toInt(this.state.hp.max, 0, { min: 0, max: 9999 });
       this.state.hp.tmp = toInt(this.state.hp.tmp, 0, { min: 0, max: 9999 });
       if (origHpCur !== this.state.hp.cur && origHpCur < 0) {
-        issues.push(`HP was negative: ${origHpCur} → 0`);
+        issues.push(`HP was negative: ${origHpCur} â†’ 0`);
       }
       
       // P1.2: Ensure coins are non-negative
@@ -19985,7 +20678,7 @@ body {
           const orig = this.state.coins[coinType];
           this.state.coins[coinType] = toInt(orig, 0, { min: 0, max: 999999 });
           if (orig < 0) {
-            issues.push(`${coinType.toUpperCase()} was negative: ${orig} → 0`);
+            issues.push(`${coinType.toUpperCase()} was negative: ${orig} â†’ 0`);
           }
         }
       }
@@ -21012,6 +21705,940 @@ body {
       if (persist) this.toast(`Theme: ${theme.name}`);
     }
 
+    applyLanguage(langCode, opts = {}) {
+      const persist = (opts && opts.persist === false) ? false : true;
+      if (!TRANSLATIONS[langCode]) return;
+
+      currentLanguage = langCode;
+      if (this.dom.languageSelect) this.dom.languageSelect.value = langCode;
+      if (this.dom.bootLanguageSelect) this.dom.bootLanguageSelect.value = langCode;
+      if (persist) storageSet(LANGUAGE_KEY, langCode);
+
+      // Update all elements with data-i18n attribute
+      document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.getAttribute('data-i18n');
+        if (key) {
+          el.textContent = t(key);
+        }
+      });
+
+      // Update placeholders with data-i18n-placeholder attribute
+      document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+        const key = el.getAttribute('data-i18n-placeholder');
+        if (key) {
+          el.setAttribute('placeholder', t(key));
+        }
+      });
+
+      // Update specific UI elements that don't use data-i18n
+      this.updateUILanguage();
+
+      // Toast feedback
+      if (persist) {
+        const langName = langCode === 'de' ? 'Deutsch' : 'English';
+        this.toast(`${t('settings.language')}: ${langName}`);
+      }
+    }
+
+    updateUILanguage() {
+      // Re-render abilities and skills with new translations (only if state is loaded)
+      if (this.state && this.state.level) {
+        this.renderAbilities();
+        this.renderSkills();
+      }
+      
+      // Update card titles
+      const cardMappings = [
+        { selector: '[data-section="core-abilities"] .card-title', key: 'card.abilities' },
+        { selector: '[data-section="core-vitals"] .card-title', key: 'card.vitals' },
+        { selector: '[data-section="core-combat"] .card-title', key: 'card.combat' },
+        { selector: '#skills-card .card-title', key: 'card.skills' },
+        { selector: '[data-section="core-weapons"] .card-title', key: 'card.weapons' },
+        { selector: '[data-section="core-features"] .card-title', key: 'card.features' },
+        { selector: '[data-section="core-traits"] .card-title', key: 'card.traits' },
+        { selector: '[data-section="spells-casting"] .card-title:first-child', key: 'card.spellcasting' },
+        { selector: '[data-section="spells-slots"] .card-title', key: 'card.spellSlots' },
+        { selector: '[data-section="spells-list"] .card-title', key: 'card.cantripsSpells' },
+        { selector: '[data-section="spells-equip"] .card-title', key: 'card.equipment' },
+        { selector: '[data-section="spells-training"] .card-title', key: 'card.training' },
+        { selector: '[data-section="spells-feats"] .card-title', key: 'card.feats' },
+      ];
+
+      cardMappings.forEach(({ selector, key }) => {
+        const el = document.querySelector(selector);
+        if (el) el.textContent = t(key);
+      });
+
+      // Update tabs
+      const tabMappings = [
+        { selector: '[data-tab="core"]', key: 'tab.core' },
+        { selector: '[data-tab="spells"]', key: 'tab.spells' },
+        { selector: '[data-tab="fate"]', key: 'tab.fate' },
+      ];
+
+      tabMappings.forEach(({ selector, key }) => {
+        const el = document.querySelector(selector);
+        if (el) el.textContent = t(key);
+      });
+
+      // Update quickbar buttons
+      const qbMappings = [
+        { id: 'saveStatus', key: 'qb.saved' },
+        { id: 'undoBtn', key: 'qb.undo' },
+        { id: 'charNewBtn', key: 'qb.newChar' },
+      ];
+
+      qbMappings.forEach(({ id, key }) => {
+        const el = document.getElementById(id);
+        if (el) el.textContent = t(key);
+      });
+      
+      // Update quickbar stat labels
+      document.querySelectorAll('.qb-stat').forEach(stat => {
+        const label = stat.querySelector('.qb-stat-label');
+        if (label) {
+          const labelText = label.textContent.trim().toUpperCase();
+          if (labelText === 'HP' || labelText === 'TP') label.textContent = t('qb.hp');
+          else if (labelText === 'TEMP') label.textContent = t('qb.temp');
+          else if (labelText === 'AC' || labelText === 'RK') label.textContent = t('qb.ac');
+          else if (labelText === 'INIT' || labelText === 'INI') label.textContent = t('qb.init');
+          else if (labelText === 'SPEED' || labelText === 'BEW') label.textContent = t('qb.speed');
+        }
+      });
+      
+      // Update quickbar action buttons
+      const tempHPBtn = document.getElementById('qbTempHPBtn');
+      if (tempHPBtn) tempHPBtn.textContent = t('qb.tempHP');
+      
+      const shortRestBtn = document.getElementById('qbShortBtn');
+      if (shortRestBtn) shortRestBtn.textContent = t('qb.short');
+      
+      const longRestBtn = document.getElementById('qbLongBtn');
+      if (longRestBtn) longRestBtn.textContent = t('qb.long');
+      
+      // Update roll mode buttons
+      const rollModeNormal = document.getElementById('rollModeNormal');
+      if (rollModeNormal) rollModeNormal.textContent = t('qb.normal');
+      
+      const rollModeAdv = document.getElementById('rollModeAdv');
+      if (rollModeAdv) rollModeAdv.textContent = t('qb.adv');
+      
+      const rollModeDis = document.getElementById('rollModeDis');
+      if (rollModeDis) rollModeDis.textContent = t('qb.dis');
+      
+      // Update direct rest buttons (in quickbar)
+      const qbShortRestDirect = document.getElementById('qbShortRestDirect');
+      if (qbShortRestDirect) qbShortRestDirect.innerHTML = '&#x263E; ' + t('qb.short');
+      
+      const qbLongRestDirect = document.getElementById('qbLongRestDirect');
+      if (qbLongRestDirect) qbLongRestDirect.innerHTML = '&#x1F319; ' + t('qb.long');
+      
+      // Update Temp HP button
+      const qbTempBtn = document.getElementById('qbTempBtn');
+      if (qbTempBtn) qbTempBtn.textContent = t('qb.tempHP');
+      
+      // Update Heal/Dmg button in quickbar
+      const qbHealDmgBtn = document.getElementById('qbHealDmgBtn');
+      if (qbHealDmgBtn) qbHealDmgBtn.textContent = t('qb.healDmg');
+
+      // Update mode buttons with their special content
+      const modeEditBtn = document.getElementById('modeEditBtn');
+      if (modeEditBtn) modeEditBtn.textContent = t('qb.edit');
+      
+      const modePlayBtn = document.getElementById('modePlayBtn');
+      if (modePlayBtn) modePlayBtn.innerHTML = '&#x1F512; ' + t('qb.play');
+
+      // Update More menu button
+      const moreBtn = document.getElementById('qbMoreBtn');
+      if (moreBtn) {
+        moreBtn.innerHTML = t('qb.more') + ' &#x25BE;';
+      }
+
+      // Update More menu items
+      const moreMappings = [
+        { id: 'qbHealDmgBtn', keys: ['more.heal', 'more.damage'], format: (h, d) => `${h}/${d}` },
+        { id: 'qbShortRestBtn', key: 'more.shortRest', icon: '&#x263E; ' },
+        { id: 'qbLongRestBtn', key: 'more.longRest', icon: '&#x1F319; ' },
+        { id: 'qbMapBtn', key: 'more.map', icon: '&#x1F5FA;&#xFE0F; ' },
+        { id: 'qbAddonsBtn', key: 'more.addons', icon: '&#x1F9E9; ' },
+      ];
+
+      moreMappings.forEach(item => {
+        const el = document.getElementById(item.id);
+        if (el) {
+          if (item.keys) {
+            el.textContent = item.format(t(item.keys[0]), t(item.keys[1]));
+          } else if (item.key) {
+            el.innerHTML = (item.icon || '') + t(item.key);
+          }
+        }
+      });
+      
+      // Update More menu section titles
+      document.querySelectorAll('.qb-overflow-title').forEach(el => {
+        const text = el.textContent.trim().toUpperCase();
+        if (text === 'STATS' || text === 'WERTE') el.textContent = t('more.stats');
+        else if (text === 'REST' || text === 'RAST') el.textContent = t('more.rest');
+        else if (text === 'TOOLS' || text === 'WERKZEUGE') el.textContent = t('more.tools');
+      });
+
+      // Update combat stats labels
+      const combatMappings = [
+        { text: 'Armor Class', key: 'combat.ac' },
+        { text: 'Rüstungsklasse', key: 'combat.ac' },
+        { text: 'Initiative', key: 'combat.initiative' },
+        { text: 'Speed', key: 'combat.speed' },
+        { text: 'Bewegung', key: 'combat.speed' },
+        { text: 'Proficiency', key: 'combat.proficiency' },
+        { text: 'Übungsbonus', key: 'combat.proficiency' },
+      ];
+
+      document.querySelectorAll('.stat-label').forEach(el => {
+        const currentText = el.textContent.trim();
+        const mapping = combatMappings.find(m => m.text === currentText);
+        if (mapping) el.textContent = t(mapping.key);
+      });
+
+      // Update vitals labels
+      const vitalLabels = document.querySelectorAll('.hp-inputs label');
+      if (vitalLabels.length >= 3) {
+        vitalLabels[0].textContent = t('vitals.current');
+        vitalLabels[1].textContent = t('vitals.max');
+        vitalLabels[2].textContent = t('vitals.temp');
+      }
+
+      // Update death save labels
+      const deathLabels = document.querySelectorAll('.death-group label');
+      if (deathLabels.length >= 2) {
+        deathLabels[0].textContent = t('vitals.successes');
+        deathLabels[1].textContent = t('vitals.failures');
+      }
+      
+      // Update Hit Dice label
+      const hdLabel = document.querySelector('.hd-label');
+      if (hdLabel) {
+        const select = hdLabel.querySelector('select');
+        if (select) {
+          hdLabel.childNodes[0].textContent = t('vitals.hitDice') + ' ';
+        }
+      }
+
+      // Update add condition button
+      const addCondBtn = document.getElementById('addCondBtn');
+      if (addCondBtn) addCondBtn.textContent = t('vitals.condition');
+
+      // Update add buttons
+      const addBtnMappings = [
+        { id: 'addWeaponBtn', key: 'weapon.add' },
+        { id: 'addFeatureBtn', key: 'feature.add' },
+        { id: 'addSpellBtn', key: 'spell.addSpell' },
+        { id: 'addCantripBtn', key: 'spell.addCantrip' },
+        { id: 'addEquipBtn', key: 'equip.add' },
+        { id: 'addFeatBtn', key: 'feat.add' },
+      ];
+
+      addBtnMappings.forEach(({ id, key }) => {
+        const el = document.getElementById(id);
+        if (el) el.textContent = t(key);
+      });
+
+      // Update weapons table headers
+      const weaponHeaders = document.querySelectorAll('[data-section="core-weapons"] thead th');
+      if (weaponHeaders.length >= 4) {
+        weaponHeaders[0].textContent = t('weapon.name');
+        weaponHeaders[1].textContent = t('weapon.atk');
+        weaponHeaders[2].textContent = t('weapon.damage');
+        weaponHeaders[3].textContent = t('weapon.notes');
+      }
+
+      // Update skills search placeholder
+      const skillsSearch = document.getElementById('skillsSearch');
+      if (skillsSearch) skillsSearch.placeholder = t('skills.search');
+
+      // Update proficient only checkbox label
+      const profOnlyLabel = document.querySelector('.skills-filter span');
+      if (profOnlyLabel) profOnlyLabel.textContent = t('skills.profOnly');
+
+      // Update roll log
+      const rollLogTitle = document.querySelector('.roll-log-title');
+      if (rollLogTitle) {
+        const count = rollLogTitle.querySelector('.roll-log-count');
+        const countHTML = count ? count.outerHTML : '<span class="roll-log-count" id="rollLogCount">0</span>';
+        rollLogTitle.innerHTML = t('rollLog.title') + ' ' + countHTML;
+      }
+
+      const rollLogClear = document.getElementById('rollLogClear');
+      if (rollLogClear) rollLogClear.textContent = t('rollLog.clear');
+
+      const rollLogEmpty = document.getElementById('rollLogEmpty');
+      if (rollLogEmpty) rollLogEmpty.textContent = t('rollLog.empty');
+
+      // Update roll log filters
+      const filterMappings = [
+        { filter: 'all', key: 'rollLog.all' },
+        { filter: 'skill', key: 'rollLog.skills' },
+        { filter: 'save', key: 'rollLog.saves' },
+        { filter: 'attack', key: 'rollLog.attacks' },
+        { filter: 'misc', key: 'rollLog.misc' },
+      ];
+
+      filterMappings.forEach(({ filter, key }) => {
+        const el = document.querySelector(`[data-filter="${filter}"]`);
+        if (el) el.textContent = t(key);
+      });
+
+      // Update section jump labels (all jump navs)
+      document.querySelectorAll('.section-jump-label').forEach(el => {
+        el.textContent = t('jump.jumpTo');
+      });
+
+      // Update jump buttons
+      const jumpMappings = [
+        { section: 'core-abilities', key: 'jump.abilities' },
+        { section: 'core-vitals', key: 'jump.vitals' },
+        { section: 'core-combat', key: 'jump.combat' },
+        { section: 'core-skills', key: 'jump.skills' },
+        { section: 'core-weapons', key: 'jump.weapons' },
+        { section: 'core-features', key: 'jump.features' },
+        { section: 'core-traits', key: 'jump.traits' },
+        { section: 'spells-casting', key: 'jump.spellcasting' },
+        { section: 'spells-slots', key: 'jump.spellSlots' },
+        { section: 'spells-list', key: 'jump.spells' },
+        { section: 'spells-equip', key: 'jump.equipment' },
+        { section: 'spells-training', key: 'jump.training' },
+        { section: 'spells-feats', key: 'jump.feats' },
+      ];
+
+      jumpMappings.forEach(({ section, key }) => {
+        const el = document.querySelector(`[data-jump-section="${section}"]`);
+        if (el) el.textContent = t(key);
+      });
+
+      // Update portrait placeholder
+      const portraitPlaceholder = document.getElementById('portraitPlaceholder');
+      if (portraitPlaceholder) portraitPlaceholder.textContent = t('identity.portrait');
+      
+      // Update portrait buttons
+      const portraitMappings = [
+        { selector: '.portrait-upload', key: 'identity.upload' },
+        { id: 'portraitEdit', key: 'identity.adjust' },
+        { id: 'portraitClear', key: 'identity.clear' },
+        { id: 'portraitDone', key: 'action.done' },
+        { id: 'portraitReset', key: 'action.reset' },
+      ];
+
+      portraitMappings.forEach(item => {
+        let el;
+        if (item.id) {
+          el = document.getElementById(item.id);
+        } else if (item.selector) {
+          el = document.querySelector(item.selector);
+        }
+        if (el) {
+          // For the upload button, preserve the input
+          if (item.selector === '.portrait-upload') {
+            const input = el.querySelector('input');
+            if (input) {
+              el.textContent = t(item.key);
+              el.appendChild(input);
+            }
+          } else {
+            el.textContent = t(item.key);
+          }
+        }
+      });
+
+      // Update settings menu items
+      const settingsMappings = [
+        { id: 'quickPrintBtn', key: 'settings.print' },
+        { id: 'printSheetBtn', key: 'settings.onePageSheet' },
+        { id: 'settingsHelpBtn', key: 'settings.help' },
+        { id: 'settingsAboutBtn', key: 'settings.about' },
+      ];
+
+      settingsMappings.forEach(({ id, key }) => {
+        const el = document.getElementById(id);
+        if (el) el.textContent = t(key);
+      });
+
+      // Update help modal title
+      const helpTitle = document.getElementById('helpModalTitle');
+      if (helpTitle) helpTitle.textContent = t('help.title');
+
+      // Update help section titles
+      document.querySelectorAll('.help-section-title').forEach(el => {
+        const text = el.textContent.trim();
+        if (text === 'Rolling Dice' || text === 'Würfeln') {
+          el.textContent = t('help.rolling');
+        } else if (text === 'Characters' || text === 'Charaktere') {
+          el.textContent = t('help.characters');
+        } else if (text === 'Keyboard Shortcuts' || text === 'Tastenkürzel') {
+          el.textContent = t('help.shortcuts');
+        }
+      });
+      
+      // Update spellcasting labels
+      const spellAbilityLabel = document.querySelector('#spells-card label[style*="Ability"], #spells-card label');
+      document.querySelectorAll('#spells-card label').forEach(label => {
+        const text = label.textContent.trim();
+        if (text === 'Ability' || text === 'Attribut') {
+          label.textContent = t('spell.ability');
+        }
+      });
+      
+      // Update spell DC and Attack labels
+      document.querySelectorAll('[data-section="spells-casting"] label').forEach(label => {
+        const text = label.textContent.trim();
+        if (text === 'Spell Save DC' || text === 'Zauber-SG') {
+          label.textContent = t('spell.saveDC');
+        } else if (text === 'Spell Attack' || text === 'Zauberangriff') {
+          label.textContent = t('spell.attack');
+        }
+      });
+      
+      // Update Coins title
+      const coinsTitle = document.querySelector('[data-section="spells-casting"] .card-title:last-of-type');
+      if (coinsTitle && (coinsTitle.textContent === 'Coins' || coinsTitle.textContent === 'Münzen')) {
+        coinsTitle.textContent = t('card.coins');
+      }
+      
+      // Update spell sort/filter labels
+      const spellSortLabel = document.querySelector('.spells-control-label');
+      document.querySelectorAll('.spells-control-label').forEach((label, index) => {
+        if (index === 0) label.textContent = t('spell.sort');
+        else if (index === 1) label.textContent = t('spell.show');
+      });
+      
+      // Update spell sort buttons
+      const spellSortMappings = [
+        { sort: 'level', key: 'spell.level' },
+        { sort: 'name', key: 'spell.name' },
+        { sort: 'conc', key: 'spell.conc' },
+        { sort: 'ritual', key: 'spell.ritual' },
+      ];
+      
+      spellSortMappings.forEach(({ sort, key }) => {
+        const el = document.querySelector(`[data-spell-sort="${sort}"]`);
+        if (el) el.textContent = t(key);
+      });
+      
+      // Update spell filter buttons
+      const spellFilterMappings = [
+        { filter: 'all', key: 'spell.all' },
+        { filter: 'prepared', key: 'spell.prepared' },
+        { filter: 'conc', key: 'spell.concentration' },
+        { filter: 'ritual', key: 'spell.ritual' },
+      ];
+      
+      spellFilterMappings.forEach(({ filter, key }) => {
+        const el = document.querySelector(`[data-spell-filter="${filter}"]`);
+        if (el) el.textContent = t(key);
+      });
+      
+      // Update About modal title
+      const aboutTitle = document.querySelector('#aboutModal h2, .about-modal-title');
+      if (aboutTitle) aboutTitle.textContent = t('about.title');
+      
+      // ============ SHORT REST MODAL ============
+      const shortRestTitle = document.getElementById('shortRestTitle');
+      if (shortRestTitle) shortRestTitle.textContent = t('shortRest.title');
+      
+      // Short rest section titles and labels
+      document.querySelectorAll('#shortRestModal .rest-section-title').forEach((el, i) => {
+        if (i === 0) el.textContent = t('shortRest.spendHitDice');
+        else if (i === 1) el.textContent = t('shortRest.resets');
+      });
+      
+      document.querySelectorAll('#shortRestModal .rest-section .hint').forEach((el, i) => {
+        if (i === 0) el.textContent = t('shortRest.description');
+      });
+      
+      document.querySelectorAll('#shortRestModal .rest-config-section .hint').forEach(el => {
+        el.textContent = t('shortRest.configureFeatures');
+      });
+      
+      document.querySelectorAll('#shortRestModal .rest-stat-label').forEach((el, i) => {
+        if (i === 0) el.textContent = t('shortRest.available');
+        else if (i === 1) el.textContent = t('shortRest.selected');
+        else if (i === 2) el.textContent = t('shortRest.conMod');
+      });
+      
+      const shortRestCancel = document.getElementById('shortRestCancel');
+      if (shortRestCancel) shortRestCancel.textContent = t('action.cancel');
+      
+      const shortRestRoll = document.getElementById('shortRestRoll');
+      if (shortRestRoll) shortRestRoll.textContent = t('shortRest.rollDice');
+      
+      const shortRestConfirm = document.getElementById('shortRestConfirm');
+      if (shortRestConfirm) shortRestConfirm.textContent = t('shortRest.complete');
+      
+      // ============ LONG REST MODAL ============
+      const longRestTitle = document.getElementById('longRestTitle');
+      if (longRestTitle) longRestTitle.textContent = t('longRest.title');
+      
+      // Long rest section titles
+      document.querySelectorAll('#longRestModal .rest-section-title').forEach((el, i) => {
+        if (i === 0) el.textContent = t('longRest.benefits');
+        else if (i === 1) el.textContent = t('longRest.resets');
+        else if (i === 2) el.textContent = t('longRest.restRules');
+      });
+      
+      document.querySelectorAll('#longRestModal .rest-section .hint').forEach((el, i) => {
+        if (i === 0) el.textContent = t('longRest.description');
+      });
+      
+      document.querySelectorAll('#longRestModal .rest-config-section .hint').forEach((el, i) => {
+        if (i === 0) el.textContent = t('longRest.configureFeatures');
+      });
+      
+      const longRestSummaryTitle = document.querySelector('#longRestModal .rest-summary-title');
+      if (longRestSummaryTitle) longRestSummaryTitle.textContent = t('longRest.whatRestored');
+      
+      document.querySelectorAll('#longRestModal .rest-summary-item .label').forEach((el, i) => {
+        if (i === 0) el.textContent = t('longRest.hitPoints');
+        else if (i === 1) el.textContent = t('longRest.hitDiceRecovered');
+        else if (i === 2) el.textContent = t('longRest.spellSlots');
+        else if (i === 3) el.textContent = t('longRest.deathSaves');
+      });
+      
+      // Long rest config labels
+      document.querySelectorAll('#longRestModal .rest-config-row label').forEach((el, i) => {
+        if (i === 0) el.textContent = t('longRest.hitDiceRecovery');
+        else if (i === 1) el.textContent = t('longRest.hpRecovery');
+      });
+      
+      const longRestCancel = document.getElementById('longRestCancel');
+      if (longRestCancel) longRestCancel.textContent = t('action.cancel');
+      
+      const longRestConfirm = document.getElementById('longRestConfirm');
+      if (longRestConfirm) longRestConfirm.textContent = t('longRest.complete');
+      
+      // ============ HEAL/DAMAGE POPOVER ============
+      const qbTitle = document.querySelector('.qb-pop-title');
+      if (qbTitle) {
+        const text = qbTitle.textContent.trim();
+        if (text === 'Heal / Damage' || text === 'Heilen / Schaden') {
+          qbTitle.textContent = t('healDmg.title');
+        }
+      }
+      
+      // ============ TRAINING SECTION ============
+      document.querySelectorAll('[data-section="spells-training"] h3').forEach(el => {
+        const text = el.textContent.trim().toUpperCase();
+        if (text === 'ARMOR' || text === 'RÜSTUNG') el.textContent = t('training.armor');
+        else if (text === 'WEAPONS' || text === 'WAFFEN') el.textContent = t('training.weapons');
+        else if (text === 'TOOLS' || text === 'WERKZEUGE') el.textContent = t('training.tools');
+        else if (text === 'LANGUAGES' || text === 'SPRACHEN') el.textContent = t('training.languages');
+      });
+      
+      // Update armor checkbox labels
+      document.querySelectorAll('[data-section="spells-training"] .armor-checks label').forEach(el => {
+        const text = el.textContent.trim();
+        if (text === 'Light' || text === 'Leicht') el.textContent = t('training.light');
+        else if (text === 'Medium' || text === 'Mittel') el.textContent = t('training.medium');
+        else if (text === 'Heavy' || text === 'Schwer') el.textContent = t('training.heavy');
+        else if (text === 'Shields' || text === 'Schilde') el.textContent = t('training.shields');
+      });
+      
+      // Update Magic Item Attunement title
+      document.querySelectorAll('[data-section="spells-equip"] h2').forEach(el => {
+        const text = el.textContent.trim();
+        if (text === 'Magic Item Attunement' || text.includes('Einstimmung')) {
+          el.textContent = t('equip.magicAttunement');
+        }
+      });
+      
+      // Update Add Attunement button
+      const addAttuneBtn = document.getElementById('addAttuneBtn');
+      if (addAttuneBtn) addAttuneBtn.textContent = t('equip.addAttunement');
+      
+      // Update Compact checkbox
+      document.querySelectorAll('.spells-compact-label, [data-section="spells-list"] label').forEach(el => {
+        const text = el.textContent.trim();
+        if (text === 'Compact' || text === 'Kompakt') el.textContent = t('equip.compact');
+      });
+      
+      // ============ SPELL TABLE HEADERS ============
+      document.querySelectorAll('.spells-table thead th').forEach(th => {
+        const text = th.textContent.trim().toUpperCase();
+        if (text === 'LVL' || text === 'ST') th.textContent = t('spellTable.lvl');
+        else if (text === 'NAME') th.textContent = t('spellTable.name');
+        else if (text === 'CAST' || text === 'WIRKEN') th.textContent = t('spellTable.cast');
+        else if (text === 'RANGE' || text === 'REICHWEITE') th.textContent = t('spellTable.range');
+        else if (text === 'C' || text === 'K') th.textContent = t('spellTable.c');
+        else if (text === 'R') th.textContent = t('spellTable.r');
+        else if (text === 'P' || text === 'V') th.textContent = t('spellTable.p');
+        else if (text === 'NOTES' || text === 'NOTIZEN') th.textContent = t('spellTable.notes');
+      });
+      
+      // ============ HELP MODAL ============
+      // Update section titles
+      document.querySelectorAll('#helpModal .help-section h3').forEach(el => {
+        const text = el.textContent.trim().toUpperCase();
+        if (text === 'QUICK BAR' || text === 'SCHNELLLEISTE') el.textContent = t('help.quickBar');
+        else if (text === 'DICE ROLLS' || text === 'WÜRFELWÜRFE') el.textContent = t('help.diceRolls');
+        else if (text === 'MAP' || text === 'KARTE') el.textContent = t('help.map');
+        else if (text === 'CHARACTERS' || text === 'CHARAKTERE') el.textContent = t('help.characters');
+      });
+      
+      // Update help descriptions
+      document.querySelectorAll('#helpModal .help-item').forEach(item => {
+        const badge = item.querySelector('.help-badge');
+        const desc = item.querySelector('.help-desc');
+        if (!badge || !desc) return;
+        
+        const badgeText = badge.textContent.trim();
+        if (badgeText === 'Edit/Play') desc.textContent = t('help.editPlayDesc');
+        else if (badgeText === 'Adv/Dis') {
+          // Check if it's in the quickbar section or dice rolls section
+          const section = item.closest('.help-section');
+          const sectionTitle = section?.querySelector('h3')?.textContent?.trim().toUpperCase();
+          if (sectionTitle === 'DICE ROLLS' || sectionTitle === 'WÜRFELWÜRFE') {
+            desc.textContent = t('help.advDisRollDesc');
+          } else {
+            desc.textContent = t('help.advDisDesc');
+          }
+        }
+        else if (badgeText === 'Heal/Dmg') desc.textContent = t('help.healDmgDesc');
+        else if (badgeText.includes('More')) desc.textContent = t('help.moreDesc');
+        else if (badgeText === 'Click') desc.textContent = t('help.clickDesc');
+        else if (badgeText === 'Init') desc.textContent = t('help.initDesc');
+        else if (badgeText === 'V') desc.textContent = t('help.selectPan');
+        else if (badgeText === 'O') desc.textContent = t('help.placeOrigin');
+        else if (badgeText === 'L') desc.textContent = t('help.markLastSeen');
+        else if (badgeText === 'M') desc.textContent = t('help.measureDistance');
+        else if (badgeText === 'R') desc.textContent = t('help.drawRoutes');
+        else if (badgeText === 'P') desc.textContent = t('help.addPins');
+        else if (badgeText === 'S') desc.textContent = t('help.calibrateScale');
+        else if (badgeText === 'Esc') desc.textContent = t('help.closeMap');
+      });
+      
+      // Help modal footer
+      const helpFooter = document.querySelector('#helpModal .help-modal-footer p, #helpModal .modal-footer p, #helpModal .help-footer');
+      if (helpFooter) helpFooter.textContent = t('help.footer');
+      
+      // ============ ABOUT MODAL ============
+      document.querySelectorAll('#aboutModal h3').forEach(el => {
+        const text = el.textContent.trim().toUpperCase();
+        if (text === 'PROJECT' || text === 'PROJEKT') el.textContent = t('about.project');
+        else if (text === 'LICENSE' || text === 'LIZENZ') el.textContent = t('about.license');
+        else if (text === 'REQUIRED ATTRIBUTION' || text.includes('NAMENSNENNUNG')) el.textContent = t('about.attribution');
+        else if (text === 'THIRD-PARTY NOTICES' || text.includes('DRITTANBIETER')) el.textContent = t('about.thirdParty');
+        else if (text === 'TRADEMARK DISCLAIMER' || text.includes('MARKEN')) el.textContent = t('about.trademark');
+      });
+      
+      // ============ TEMP HP MODAL ============
+      const tempHPTitle = document.querySelector('#tempHPModal .modal-title, .qb-pop-title');
+      if (tempHPTitle) {
+        const text = tempHPTitle.textContent.trim();
+        if (text === 'Temp HP' || text === 'Temp. TP') tempHPTitle.textContent = t('tempHP.title');
+      }
+      
+      const tempHPAmountLabel = document.querySelector('#tempHPModal label, .qb-pop label');
+      if (tempHPAmountLabel) {
+        const text = tempHPAmountLabel.textContent.trim().toUpperCase();
+        if (text === 'AMOUNT' || text === 'BETRAG') tempHPAmountLabel.textContent = t('tempHP.amount');
+      }
+      
+      document.querySelectorAll('#tempHPModal .hint, .qb-pop .hint').forEach(el => {
+        const text = el.textContent.trim();
+        if (text.includes('Sets Temp HP') || text.includes('Setzt temporäre')) {
+          el.textContent = t('tempHP.description');
+        }
+      });
+      
+      const setTempHPBtn = document.getElementById('qbSetTemp');
+      if (setTempHPBtn) setTempHPBtn.textContent = t('tempHP.set');
+      
+      // ============ QUICKBAR STAT LABELS ============
+      document.querySelectorAll('.qb-stat-label').forEach(el => {
+        const text = el.textContent.trim().toUpperCase();
+        if (text === 'HP' || text === 'TP') el.textContent = t('qb.hp');
+        else if (text === 'TEMP') el.textContent = t('qb.temp');
+        else if (text === 'AC' || text === 'RK') el.textContent = t('qb.ac');
+        else if (text === 'INIT' || text === 'INI') el.textContent = t('qb.init');
+        else if (text === 'SPEED' || text === 'BEW') el.textContent = t('qb.speed');
+      });
+      
+      // ============ FATEWEAVING TAB ============
+      // Jump buttons
+      const fateJumpMappings = [
+        { section: 'fate-thread', key: 'fate.thread' },
+        { section: 'fate-notes', key: 'fate.notes' },
+        { section: 'fate-rewards', key: 'fate.rewards' },
+        { section: 'fate-curse', key: 'fate.curse' },
+        { section: 'fate-bargains', key: 'fate.bargains' },
+        { section: 'fate-misc', key: 'fate.miscNotes' },
+      ];
+      
+      fateJumpMappings.forEach(({ section, key }) => {
+        const el = document.querySelector(`[data-jump-section="${section}"]`);
+        if (el) el.textContent = t(key);
+      });
+      
+      // Card titles
+      document.querySelectorAll('[data-section^="fate-"] .card-title, #fate-tab .card-title').forEach(el => {
+        const text = el.textContent.trim().toUpperCase();
+        if (text === 'THREAD OF FATE' || text === 'SCHICKSALSFADEN') el.textContent = t('fate.threadOfFate');
+        else if (text === 'FATEWEAVING NOTES' || text === 'SCHICKSALSWEBEN-NOTIZEN') el.textContent = t('fate.fateweavingNotes');
+        else if (text === 'FATEWEAVING REWARDS' || text === 'SCHICKSALSWEBEN-BELOHNUNGEN') el.textContent = t('fate.fateweavingRewards');
+        else if (text === 'DARK BARGAINS' || text === 'DUNKLE ABKOMMEN') el.textContent = t('fate.darkBargains');
+        else if (text === 'FATEWEAVING CURSE' || text === 'SCHICKSALSWEBEN-FLUCH') el.textContent = t('fate.fateweavingCurse');
+        else if (text === 'CAMPAIGN NOTES' || text === 'KAMPAGNENNOTIZEN') el.textContent = t('fate.campaignNotes');
+      });
+      
+      // Bargain placeholders
+      document.querySelectorAll('.bargain-placeholder, [data-section="fate-bargains"] label').forEach((el, i) => {
+        const text = el.textContent.trim();
+        if (text.startsWith('Bargain') || text.startsWith('Abkommen')) {
+          if (i === 0 || text.includes('1')) el.textContent = t('fate.bargain1');
+          else if (i === 1 || text.includes('2')) el.textContent = t('fate.bargain2');
+          else if (i === 2 || text.includes('3')) el.textContent = t('fate.bargain3');
+        }
+      });
+      
+      // ============ MAP SCREEN ============
+      const mapTitle = document.querySelector('.map-header-title, #mapTitle');
+      if (mapTitle) mapTitle.textContent = t('map.title');
+      
+      const mapStatus = document.querySelector('.map-header-status, #mapStatus');
+      if (mapStatus) {
+        const text = mapStatus.textContent.trim();
+        if (text === 'No map loaded' || text === 'Keine Karte geladen') {
+          mapStatus.textContent = t('map.noMapLoaded');
+        }
+      }
+      
+      const placingForLabel = document.querySelector('.map-placing-label');
+      if (placingForLabel) placingForLabel.textContent = t('map.placingFor');
+      
+      // Map settings panel
+      const mapSettingsTitle = document.querySelector('.map-settings-title, #mapSettingsTitle');
+      if (mapSettingsTitle) mapSettingsTitle.textContent = t('map.settings');
+      
+      // Map settings section titles
+      document.querySelectorAll('.map-settings h3, .map-panel-section h3').forEach(el => {
+        const text = el.textContent.trim().toUpperCase();
+        if (text === 'CAMPAIGN' || text === 'KAMPAGNE') el.textContent = t('map.campaign');
+        else if (text === 'MAP' || text === 'KARTE') el.textContent = t('map.mapSection');
+        else if (text === 'SCALE' || text === 'MASSSTAB') el.textContent = t('map.scale');
+        else if (text.includes('PINS') || text.includes('MARKIERUNGEN')) el.textContent = t('map.pins');
+      });
+      
+      // Map settings labels
+      document.querySelectorAll('.map-settings label, .map-panel label').forEach(el => {
+        const text = el.textContent.trim().toUpperCase();
+        if (text === 'MAP IMAGE' || text === 'KARTENBILD') el.textContent = t('map.mapImage');
+        else if (text === 'MAP NAME' || text === 'KARTENNAME') el.textContent = t('map.mapName');
+        else if (text === 'DISTANCE' || text === 'ENTFERNUNG') el.textContent = t('map.distance');
+      });
+      
+      // Map buttons
+      document.querySelectorAll('.map-settings button, .map-panel button').forEach(btn => {
+        const text = btn.textContent.trim().toUpperCase();
+        if (text === '+ NEW' || text === '+ NEU') btn.textContent = t('map.new');
+        else if (text === 'DELETE' || text === 'LÖSCHEN') btn.textContent = t('map.delete');
+        else if (text === 'EXPORT' || text === 'EXPORTIEREN') btn.textContent = t('map.export');
+        else if (text === 'IMPORT' || text === 'IMPORTIEREN') btn.textContent = t('map.import');
+        else if (text === 'REPLACE' || text === 'ERSETZEN') btn.textContent = t('map.replace');
+        else if (text === 'REMOVE' || text === 'ENTFERNEN') btn.textContent = t('map.remove');
+        else if (text === 'SET SCALE' || text === 'MASSSTAB SETZEN') btn.textContent = t('map.setScale');
+        else if (text === 'CLEAR' || text === 'LÖSCHEN') btn.textContent = t('map.clear');
+        else if (text === 'UPLOAD MAP' || text === 'KARTE HOCHLADEN') btn.textContent = t('map.uploadMap');
+      });
+      
+      // Map no-map-loaded text
+      const noMapTitle = document.querySelector('.map-empty-title, #noMapTitle');
+      if (noMapTitle) noMapTitle.textContent = t('map.noMapTitle');
+      
+      const noMapDesc = document.querySelector('.map-empty-desc, #noMapDesc');
+      if (noMapDesc) noMapDesc.textContent = t('map.noMapDesc');
+      
+      // Map tool labels
+      document.querySelectorAll('.map-tool-label').forEach(el => {
+        const text = el.textContent.trim().toUpperCase();
+        if (text === 'SELECT' || text === 'AUSWÄHLEN') el.textContent = t('map.tools.select');
+        else if (text === 'ORIGIN' || text === 'URSPRUNG') el.textContent = t('map.tools.origin');
+        else if (text === 'LAST SEEN' || text === 'ZULETZT GESEHEN') el.textContent = t('map.tools.lastSeen');
+        else if (text === 'MEASURE' || text === 'MESSEN') el.textContent = t('map.tools.measure');
+        else if (text === 'ROUTE') el.textContent = t('map.tools.route');
+        else if (text === 'PINS' || text === 'MARKIERUNGEN') el.textContent = t('map.tools.pins');
+        else if (text === 'SCALE' || text === 'MASSSTAB') el.textContent = t('map.tools.scale');
+      });
+      
+      // Scale hint text
+      const scaleHint = document.querySelector('.map-scale-hint, #mapScaleHint');
+      if (scaleHint) scaleHint.textContent = t('map.scaleHint');
+      
+      // Pins search placeholder
+      const pinsSearch = document.querySelector('.map-pins-search, #mapPinsSearch');
+      if (pinsSearch) pinsSearch.placeholder = t('map.searchPins');
+      
+      // ============ SIDEBAR TOOLTIPS ============
+      document.querySelectorAll('.fab-btn[data-tip], .sidebar-btn[data-tip]').forEach(btn => {
+        const tip = btn.getAttribute('data-tip');
+        if (tip?.includes('Save character') || tip?.includes('Charakter speichern')) {
+          btn.setAttribute('data-tip', t('tooltip.saveChar'));
+        } else if (tip?.includes('Export') || tip?.includes('export')) {
+          btn.setAttribute('data-tip', t('tooltip.exportChar'));
+        } else if (tip?.includes('Import') || tip?.includes('import')) {
+          btn.setAttribute('data-tip', t('tooltip.importChar'));
+        } else if (tip?.includes('Print') || tip?.includes('Druck')) {
+          btn.setAttribute('data-tip', t('tooltip.printChar'));
+        } else if (tip?.includes('map') || tip?.includes('Karte')) {
+          btn.setAttribute('data-tip', t('tooltip.mapView'));
+        }
+      });
+      
+      // ============ BOOT SCREEN ============
+      const bootLoadingStatus = document.getElementById('bootLoadingStatus');
+      if (bootLoadingStatus) bootLoadingStatus.textContent = t('boot.loading');
+      
+      // Boot tagline
+      const bootTagline = document.querySelector('.boot-tagline');
+      if (bootTagline) bootTagline.textContent = t('boot.tagline');
+      
+      // Welcome section
+      const bootWelcomeTitle = document.querySelector('.boot-onboarding-title');
+      if (bootWelcomeTitle) bootWelcomeTitle.textContent = t('boot.welcomeTitle');
+      
+      const bootWelcomeText = document.querySelector('.boot-onboarding-text');
+      if (bootWelcomeText) bootWelcomeText.textContent = t('boot.welcomeText');
+      
+      // Boot action buttons - Import Character label
+      const bootImportLabel = document.querySelector('.boot-import .boot-action-label');
+      if (bootImportLabel) bootImportLabel.textContent = t('boot.importChar');
+      
+      // Boot import subtext
+      const bootImportSubtext = document.querySelector('.boot-import .boot-action-subtext');
+      if (bootImportSubtext) bootImportSubtext.textContent = t('boot.loadFromFile');
+      
+      // Boot new character labels
+      const bootNewLabel = document.querySelector('#bootNew .boot-action-label');
+      if (bootNewLabel) bootNewLabel.textContent = t('boot.newCharLabel');
+      
+      const bootNewPrimaryLabel = document.querySelector('#bootNewPrimary .boot-action-label');
+      if (bootNewPrimaryLabel) bootNewPrimaryLabel.textContent = t('boot.createFirst');
+      
+      const bootNewPrimarySubtext = document.querySelector('#bootNewPrimary .boot-action-subtext');
+      if (bootNewPrimarySubtext) bootNewPrimarySubtext.textContent = t('boot.startAdventure');
+      
+      // Boot footer links
+      const bootExportAll = document.getElementById('bootExportAll');
+      if (bootExportAll) bootExportAll.textContent = t('boot.exportAll');
+      
+      const bootImportFile = document.getElementById('bootImportFile');
+      if (bootImportFile) bootImportFile.textContent = t('boot.importBtn');
+      
+      const bootRestoreBackup = document.getElementById('bootRestoreBackup');
+      if (bootRestoreBackup) bootRestoreBackup.textContent = t('boot.restoreBackup');
+      
+      const bootAddonsBtn = document.getElementById('bootAddonsBtn');
+      if (bootAddonsBtn) bootAddonsBtn.innerHTML = '&#x1F9E9; ' + t('boot.addons');
+      
+      const bootSettingsBtn = document.getElementById('bootSettingsBtn');
+      if (bootSettingsBtn) bootSettingsBtn.innerHTML = '&#x2699; ' + t('boot.settingsBtn');
+      
+      // Your Characters title
+      const bootCharsTitle = document.querySelector('.boot-chars-title');
+      if (bootCharsTitle) bootCharsTitle.textContent = t('boot.yourChars');
+      
+      // Boot settings panel
+      const bootStorageStatus = document.getElementById('bootStorageStatus');
+      if (bootStorageStatus && bootStorageStatus.textContent === 'Checking...') {
+        bootStorageStatus.textContent = t('bootSettings.checking');
+      }
+      
+      // ============ CHARACTER MENU ============
+      const charDupBtn = document.getElementById('charDupBtn');
+      if (charDupBtn) charDupBtn.textContent = t('charMenu.duplicate');
+      
+      const charDelBtn = document.getElementById('charDelBtn');
+      if (charDelBtn) charDelBtn.textContent = t('charMenu.delete');
+      
+      const charDelHint = document.getElementById('charDelHint');
+      if (charDelHint) charDelHint.textContent = t('charMenu.deleteConfirm');
+      
+      const charSearch = document.getElementById('charSearch');
+      if (charSearch) charSearch.placeholder = t('charMenu.searchChars');
+      
+      // ============ IMPORT MODAL ============
+      const importModalTitle = document.getElementById('importModalTitle');
+      if (importModalTitle) importModalTitle.textContent = t('import.title');
+      
+      // Import modal labels
+      document.querySelectorAll('#importModal .label').forEach((el, i) => {
+        const text = el.textContent.trim().toLowerCase();
+        if (text.includes('import from file') || text.includes('aus datei')) {
+          el.textContent = t('import.fromFile');
+        } else if (text.includes('import json') || text.includes('json import')) {
+          el.textContent = t('import.jsonLabel');
+        }
+      });
+      
+      // Import as new checkbox label
+      const importAsNewLabel = document.querySelector('#importModal .import-as-new-label span, #importAsNew + span');
+      document.querySelectorAll('#importModal label span').forEach(el => {
+        const text = el.textContent.trim().toLowerCase();
+        if (text.includes('import as new') || text.includes('als neuen')) {
+          el.textContent = t('import.asNew');
+        }
+      });
+      
+      // Import modal hint
+      const importInfo = document.getElementById('importInfo');
+      if (importInfo) importInfo.textContent = t('import.hint');
+      
+      // Import modal buttons
+      const cancelImportBtn = document.getElementById('cancelImportBtn');
+      if (cancelImportBtn) cancelImportBtn.textContent = t('import.cancel');
+      
+      const doImportBtn = document.getElementById('doImportBtn');
+      if (doImportBtn) doImportBtn.textContent = t('import.import');
+      
+      // ============ CONTRAST OPTIONS ============
+      const contrastSelect = document.getElementById('contrastSelect');
+      if (contrastSelect) {
+        contrastSelect.querySelectorAll('option').forEach(opt => {
+          if (opt.value === 'normal') opt.textContent = t('contrast.normal');
+          else if (opt.value === 'high') opt.textContent = t('contrast.high');
+        });
+      }
+      
+      // ============ HELP MODAL CONTENT ============
+      // Update keyboard shortcut descriptions
+      document.querySelectorAll('#helpModal .help-section li').forEach(li => {
+        const kbd = li.querySelector('kbd');
+        const strong = li.querySelector('strong');
+        if (!kbd && !strong) return;
+        
+        const label = kbd?.textContent || strong?.textContent || '';
+        
+        // Characters section
+        if (label === '+ New') {
+          li.innerHTML = '<strong>+ New</strong> ' + t('help.newCharDesc');
+        } else if (label.includes('Menu') || label === '⋯ Menu') {
+          li.innerHTML = '<strong>⋯ Menu</strong> ' + t('help.menuDesc');
+        } else if (label === 'Export') {
+          li.innerHTML = '<strong>Export</strong> ' + t('help.exportDesc');
+        } else if (label === 'Import') {
+          li.innerHTML = '<strong>Import</strong> ' + t('help.importDesc');
+        }
+        // Keyboard shortcuts section
+        else if (label === 'Ctrl+Z') {
+          li.innerHTML = '<kbd>Ctrl+Z</kbd> ' + t('help.undoShortcut');
+        } else if (label === 'Ctrl+S') {
+          li.innerHTML = '<kbd>Ctrl+S</kbd> ' + t('help.saveShortcut');
+        } else if (label === 'Ctrl+P') {
+          li.innerHTML = '<kbd>Ctrl+P</kbd> ' + t('help.printShortcut');
+        } else if (label === '?') {
+          li.innerHTML = '<kbd>?</kbd> ' + t('help.helpShortcut');
+        } else if (label === 'Esc' && li.closest('.help-section')?.querySelector('h3')?.textContent?.toLowerCase().includes('keyboard')) {
+          li.innerHTML = '<kbd>Esc</kbd> ' + t('help.escShortcut');
+        }
+      });
+    }
+
         // ===== Quickbar responsive collapse =====
     setupQuickbarResponsive() {
       // CSS-only responsive behavior: no DOM moving needed.
@@ -21083,7 +22710,7 @@ body {
     async generatePrintSheet() {
       try {
         console.log('[PlayerAlmanac] Generating print sheet...');
-        this.toast('Generating print sheet...');
+        this.toast(t('printSheet.generating'));
         this.closeAllPopovers(); // Close settings menu
         
         const s = this.state;
@@ -21119,15 +22746,16 @@ body {
         // P0.3: Use canonical escapeHtml for consistent XSS prevention
         const esc = escapeHtml;
 
-        // Build abilities HTML
+        // Build abilities HTML - use translated ability names
         const abilitiesHtml = ABILITY_KEYS.map(k => {
           const ab = s.abilities[k] || { score: 10, prof: false, misc: 0 };
           const mod = getMod(ab.score);
           const save = mod + (ab.prof ? pb : 0) + (ab.misc || 0);
-          return `<div class="ps-ability"><div class="ps-ability-name">${ABILITY_NAMES[k] || k.toUpperCase()}</div><div class="ps-ability-mod">${fmtMod(mod)}</div><div class="ps-ability-score">${ab.score}</div><div class="ps-ability-save ${ab.prof ? 'prof' : ''}">Save ${fmtMod(save)}${ab.prof ? ' \u25CF' : ''}</div></div>`;
+          const abilityName = t(`ability.${k}`) || ABILITY_NAMES[k] || k.toUpperCase();
+          return `<div class="ps-ability"><div class="ps-ability-name">${abilityName}</div><div class="ps-ability-mod">${fmtMod(mod)}</div><div class="ps-ability-score">${ab.score}</div><div class="ps-ability-save ${ab.prof ? 'prof' : ''}">${t('printSheet.save')} ${fmtMod(save)}${ab.prof ? ' \u25CF' : ''}</div></div>`;
         }).join('');
 
-        // Build skills HTML
+        // Build skills HTML - use translated skill names
         const skillsHtml = SKILLS.map(sk => {
           const skill = s.skills[sk.k] || { p: false, e: false, misc: 0 };
           const ab = s.abilities[sk.a] || { score: 10 };
@@ -21138,7 +22766,9 @@ body {
           bonus += (skill.misc || 0);
           const cls = skill.e ? 'expert' : (skill.p ? 'prof' : '');
           const profMark = skill.e ? '\u25C6' : (skill.p ? '\u25CF' : '\u25CB');
-          return `<div class="ps-skill ${cls}"><span class="ps-prof-mark">${profMark}</span><span class="ps-skill-mod">${fmtMod(bonus)}</span><span class="ps-skill-name">${sk.n} <span class="ps-skill-ab">(${sk.a.toUpperCase()})</span></span></div>`;
+          const skillName = t(`skill.${sk.k}`) || sk.n;
+          const abilityAbbr = t(`ability.${sk.a}.abbr`) || sk.a.toUpperCase();
+          return `<div class="ps-skill ${cls}"><span class="ps-prof-mark">${profMark}</span><span class="ps-skill-mod">${fmtMod(bonus)}</span><span class="ps-skill-name">${skillName} <span class="ps-skill-ab">(${abilityAbbr})</span></span></div>`;
         }).join('');
 
         // Combat stats
@@ -21162,7 +22792,7 @@ body {
         const hdText = `${hdRemaining}${hd.die}`;
 
         // Weapons HTML
-        const weaponsHtml = (s.weapons || []).slice(0, 6).map(w => `<div class="ps-weapon"><span class="ps-weapon-name">${esc(w.name)}</span><span>${esc(w.atk)}</span><span>${esc(w.dmg)}</span></div>`).join('') || '<em style="color:#888">No weapons</em>';
+        const weaponsHtml = (s.weapons || []).slice(0, 6).map(w => `<div class="ps-weapon"><span class="ps-weapon-name">${esc(w.name)}</span><span>${esc(w.atk)}</span><span>${esc(w.dmg)}</span></div>`).join('') || `<em style="color:#888">${t('printSheet.noWeapons')}</em>`;
 
         // Spells by level
         const spellsByLevel = {};
@@ -21173,9 +22803,9 @@ body {
         });
         
         const spellLevelNames = {
-          '0': 'Cantrips', '1': '1st Level', '2': '2nd Level', '3': '3rd Level',
-          '4': '4th Level', '5': '5th Level', '6': '6th Level', '7': '7th Level',
-          '8': '8th Level', '9': '9th Level'
+          '0': t('printSheet.cantrips'), '1': t('printSheet.level1'), '2': t('printSheet.level2'), '3': t('printSheet.level3'),
+          '4': t('printSheet.level4'), '5': t('printSheet.level5'), '6': t('printSheet.level6'), '7': t('printSheet.level7'),
+          '8': t('printSheet.level8'), '9': t('printSheet.level9')
         };
         
         let spellsHtml = '';
@@ -21188,7 +22818,7 @@ body {
           }
         }
         if (slotsUsed.length > 0) {
-          spellsHtml += `<div class="ps-slots">Slots: ${slotsUsed.join(' | ')}</div>`;
+          spellsHtml += `<div class="ps-slots">${t('printSheet.slots')}: ${slotsUsed.join(' | ')}</div>`;
         }
         
         // Spell ability and DC
@@ -21197,7 +22827,8 @@ body {
           const spellMod = getMod(spellAbility.score);
           const spellDC = 8 + pb + spellMod;
           const spellAtk = pb + spellMod;
-          spellsHtml += `<div class="ps-slots">DC ${spellDC} | Attack ${fmtMod(spellAtk)} (${s.spellAb.toUpperCase()})</div>`;
+          const abilityAbbr = t(`ability.${s.spellAb}.abbr`) || s.spellAb.toUpperCase();
+          spellsHtml += `<div class="ps-slots">DC ${spellDC} | ${t('printSheet.attack')} ${fmtMod(spellAtk)} (${abilityAbbr})</div>`;
         }
         
         for (const lvl of ['0','1','2','3','4','5','6','7','8','9']) {
@@ -21215,23 +22846,23 @@ body {
             spellsHtml += `</div>`;
           }
         }
-        if (!spellsHtml) spellsHtml = '<em style="color:#888">No spells</em>';
+        if (!spellsHtml) spellsHtml = `<em style="color:#888">${t('printSheet.noSpells')}</em>`;
 
         // Features HTML
-        const featuresHtml = (s.features || []).slice(0, 10).map(f => `<div class="ps-feature"><span class="ps-feature-name">${esc(f.name)}</span></div>`).join('') || '<em style="color:#888">No features</em>';
+        const featuresHtml = (s.features || []).slice(0, 10).map(f => `<div class="ps-feature"><span class="ps-feature-name">${esc(f.name)}</span></div>`).join('') || `<em style="color:#888">${t('printSheet.noFeatures')}</em>`;
 
         // Equipment HTML (combine equip + attune)
         const allEquip = [...(s.equip || []), ...(s.attune || []).map(a => '&#x2726; ' + a)];
-        const equipHtml = allEquip.slice(0, 20).map(e => `<div class="ps-equip-item">• ${esc(e)}</div>`).join('') || '<em style="color:#888">No equipment</em>';
+        const equipHtml = allEquip.slice(0, 20).map(e => `<div class="ps-equip-item">â€¢ ${esc(e)}</div>`).join('') || `<em style="color:#888">${t('printSheet.noEquipment')}</em>`;
 
         // Conditions
         const condsHtml = (s.conds && s.conds.length > 0) 
-          ? `<div class="ps-conditions">Conditions: ${s.conds.join(', ')}</div>` 
+          ? `<div class="ps-conditions">${t('printSheet.conditions')}: ${s.conds.join(', ')}</div>` 
           : '';
 
         // Death saves
         const death = s.death || { suc: 0, fail: 0 };
-        const deathHtml = `<div class="ps-death"><div class="ps-death-row"><span class="ps-death-label">Saves</span><div class="ps-death-boxes">${[0,1,2].map(i => `<div class="ps-death-box ${i < death.suc ? 'filled' : ''}"></div>`).join('')}</div></div><div class="ps-death-row"><span class="ps-death-label">Fails</span><div class="ps-death-boxes">${[0,1,2].map(i => `<div class="ps-death-box ${i < death.fail ? 'filled' : ''}"></div>`).join('')}</div></div></div>`;
+        const deathHtml = `<div class="ps-death"><div class="ps-death-row"><span class="ps-death-label">${t('printSheet.saves')}</span><div class="ps-death-boxes">${[0,1,2].map(i => `<div class="ps-death-box ${i < death.suc ? 'filled' : ''}"></div>`).join('')}</div></div><div class="ps-death-row"><span class="ps-death-label">${t('printSheet.fails')}</span><div class="ps-death-boxes">${[0,1,2].map(i => `<div class="ps-death-box ${i < death.fail ? 'filled' : ''}"></div>`).join('')}</div></div></div>`;
 
         // Coins
         const coins = s.coins || { cp: 0, sp: 0, ep: 0, gp: 0, pp: 0 };
@@ -21239,19 +22870,19 @@ body {
 
         // Proficiencies
         const armorProfs = s.armor ? Object.entries(s.armor).filter(([k,v])=>v).map(([k])=>k).join(', ') : '';
-        const profsHtml = `<div class="ps-prof-row"><span class="ps-prof-label">Armor:</span> ${esc(armorProfs) || 'None'}</div><div class="ps-prof-row"><span class="ps-prof-label">Weapons:</span> ${esc(s.wpnProf) || 'None'}</div><div class="ps-prof-row"><span class="ps-prof-label">Tools:</span> ${esc(s.toolProf) || 'None'}</div><div class="ps-prof-row"><span class="ps-prof-label">Languages:</span> ${esc(s.langs) || 'None'}</div>`;
+        const profsHtml = `<div class="ps-prof-row"><span class="ps-prof-label">${t('printSheet.armor')}:</span> ${esc(armorProfs) || t('printSheet.none')}</div><div class="ps-prof-row"><span class="ps-prof-label">${t('printSheet.weapons')}:</span> ${esc(s.wpnProf) || t('printSheet.none')}</div><div class="ps-prof-row"><span class="ps-prof-label">${t('printSheet.tools')}:</span> ${esc(s.toolProf) || t('printSheet.none')}</div><div class="ps-prof-row"><span class="ps-prof-label">${t('printSheet.languages')}:</span> ${esc(s.langs) || t('printSheet.none')}</div>`;
 
         // Build the full page
         const html = `
           <div class="ps-header">
             <div class="ps-header-left">
-              <div class="ps-name">${esc(s.name) || 'Unnamed Character'}</div>
-              <div class="ps-subtitle">${esc(s.species)}${s.species && s.class ? ' ' : ''}${esc(s.class)}${s.background ? ' • ' + esc(s.background) : ''}${s.campaign ? ' – ' + esc(s.campaign) : ''}</div>
+              <div class="ps-name">${esc(s.name) || t('printSheet.unnamed')}</div>
+              <div class="ps-subtitle">${esc(s.species)}${s.species && s.class ? ' ' : ''}${esc(s.class)}${s.background ? ' â€¢ ' + esc(s.background) : ''}${s.campaign ? ' â€“ ' + esc(s.campaign) : ''}</div>
             </div>
             ${portraitSrc ? `<img class="ps-portrait" src="${portraitSrc}" alt=""/>` : ''}
             <div class="ps-level-badge">
               <span class="lvl">${s.level || 1}</span>
-              <span class="lbl">Level</span>
+              <span class="lbl">${t('printSheet.level')}</span>
             </div>
           </div>
 
@@ -21261,65 +22892,65 @@ body {
 
           <div class="ps-main">
             <div class="ps-section">
-              <div class="ps-section-title">Combat</div>
+              <div class="ps-section-title">${t('printSheet.combat')}</div>
               <div class="ps-combat-grid">
                 <div class="ps-combat-stat big">
-                  <div class="ps-combat-label">Hit Points</div>
+                  <div class="ps-combat-label">${t('printSheet.hitPoints')}</div>
                   <div class="ps-combat-value">${hpText}</div>
                 </div>
                 <div class="ps-combat-stat">
-                  <div class="ps-combat-label">AC</div>
+                  <div class="ps-combat-label">${t('printSheet.ac')}</div>
                   <div class="ps-combat-value">${s.ac || 10}</div>
                 </div>
                 <div class="ps-combat-stat">
-                  <div class="ps-combat-label">Initiative</div>
+                  <div class="ps-combat-label">${t('printSheet.initiative')}</div>
                   <div class="ps-combat-value">${fmtMod(initMod)}</div>
                 </div>
                 <div class="ps-combat-stat">
-                  <div class="ps-combat-label">Speed</div>
+                  <div class="ps-combat-label">${t('printSheet.speed')}</div>
                   <div class="ps-combat-value">${esc(s.speed) || '30'}</div>
                 </div>
                 <div class="ps-combat-stat">
-                  <div class="ps-combat-label">Prof</div>
+                  <div class="ps-combat-label">${t('printSheet.prof')}</div>
                   <div class="ps-combat-value">${fmtMod(pb)}</div>
                 </div>
                 <div class="ps-combat-stat">
-                  <div class="ps-combat-label">Passive</div>
+                  <div class="ps-combat-label">${t('printSheet.passive')}</div>
                   <div class="ps-combat-value">${passivePerc}</div>
                 </div>
                 <div class="ps-combat-stat">
-                  <div class="ps-combat-label">Hit Dice</div>
+                  <div class="ps-combat-label">${t('printSheet.hitDice')}</div>
                   <div class="ps-combat-value">${hdText}</div>
                 </div>
               </div>
               ${deathHtml}
               ${condsHtml}
-              <div class="ps-section-title" style="margin-top:4px">Attacks</div>
+              <div class="ps-section-title" style="margin-top:4px">${t('printSheet.attacks')}</div>
               <div class="ps-weapons">${weaponsHtml}</div>
             </div>
 
             <div class="ps-section">
-              <div class="ps-section-title">Skills</div>
+              <div class="ps-section-title">${t('printSheet.skills')}</div>
               <div class="ps-skills">${skillsHtml}</div>
             </div>
 
             <div class="ps-section">
-              <div class="ps-section-title">Spellcasting</div>
+              <div class="ps-section-title">${t('printSheet.spellcasting')}</div>
               <div class="ps-spells">${spellsHtml}</div>
             </div>
           </div>
 
           <div class="ps-bottom">
             <div class="ps-section">
-              <div class="ps-section-title">Features & Traits</div>
+              <div class="ps-section-title">${t('printSheet.features')}</div>
               <div class="ps-features">${featuresHtml}</div>
               ${coinsHtml}
             </div>
 
             <div class="ps-section">
-              <div class="ps-section-title">Equipment</div>
+              <div class="ps-section-title">${t('printSheet.equipment')}</div>
               <div class="ps-equipment">${equipHtml}</div>
-              <div class="ps-section-title" style="margin-top:4px">Proficiencies</div>
+              <div class="ps-section-title" style="margin-top:4px">${t('printSheet.proficiencies')}</div>
               <div class="ps-profs">${profsHtml}</div>
             </div>
           </div>
@@ -21340,7 +22971,7 @@ body {
           printSheet.classList.add('active');
           document.body.classList.add('print-sheet-active');
           console.log('[PlayerAlmanac] Print sheet displayed');
-          this.toast('Print sheet ready! Click "Print / Save PDF" to save.');
+          this.toast(t('printSheet.ready'));
         } else {
           console.error('[PlayerAlmanac] Print sheet element not found');
           this.toast('Error: Print sheet element not found');
@@ -22239,9 +23870,9 @@ Actions:
           const unit = unitLabels[map.scale.unit] || map.scale.unit;
           // Show in a more readable format: "1 mile = X pixels" or "100 px = Y miles"
           if (ppu >= 1) {
-            scaleInfo.querySelector('.map-scale-status').textContent = `✓ 1 ${unit} = ${ppu.toFixed(1)} px`;
+            scaleInfo.querySelector('.map-scale-status').textContent = `âœ“ 1 ${unit} = ${ppu.toFixed(1)} px`;
           } else {
-            scaleInfo.querySelector('.map-scale-status').textContent = `✓ 1 px = ${(1/ppu).toFixed(2)} ${unit}s`;
+            scaleInfo.querySelector('.map-scale-status').textContent = `âœ“ 1 px = ${(1/ppu).toFixed(2)} ${unit}s`;
           }
         } else {
           scaleInfo.classList.remove('calibrated');
@@ -23462,7 +25093,7 @@ Actions:
       
       // Update inspector title
       if (this.dom.mapRouteInspectorTitle) {
-        this.dom.mapRouteInspectorTitle.textContent = '📍 ' + (route.name || 'Route');
+        this.dom.mapRouteInspectorTitle.textContent = 'ðŸ“ ' + (route.name || 'Route');
       }
       
       // Populate fields
@@ -23515,7 +25146,7 @@ Actions:
       if (this._selectedPinId) {
         // Pin selected - show pin inspector
         showPanels(panelPinInspector);
-        if (contextIcon) contextIcon.textContent = '📍';
+        if (contextIcon) contextIcon.textContent = 'ðŸ“';
         if (contextText) contextText.textContent = 'Pin Inspector';
         return;
       }
@@ -23523,7 +25154,7 @@ Actions:
       if (this._selectedRouteId) {
         // Route selected - show route inspector
         showPanels(panelRouteInspector);
-        if (contextIcon) contextIcon.textContent = '📍';
+        if (contextIcon) contextIcon.textContent = 'ðŸ“';
         if (contextText) contextText.textContent = 'Route Inspector';
         return;
       }
@@ -23534,7 +25165,7 @@ Actions:
       if (tool === 'scale') {
         // Scale tool - show scale panel prominently with map settings
         showPanels(panelScale, panelCampaign, panelMap);
-        if (contextIcon) contextIcon.textContent = '📍';
+        if (contextIcon) contextIcon.textContent = 'ðŸ“';
         if (contextText) contextText.textContent = 'Scale Calibration';
         return;
       }
@@ -23542,7 +25173,7 @@ Actions:
       if (tool === 'route') {
         // Route tool - show route panel with instructions
         showPanels(panelRoutes, panelCampaign, panelMap);
-        if (contextIcon) contextIcon.textContent = '📍';
+        if (contextIcon) contextIcon.textContent = 'ðŸ“';
         if (contextText) contextText.textContent = 'Route Planning';
         return;
       }
@@ -23550,7 +25181,7 @@ Actions:
       if (tool === 'pin') {
         // Pin tool - show pins browser with map settings
         showPanels(panelPins, panelCampaign, panelMap);
-        if (contextIcon) contextIcon.textContent = '📍';
+        if (contextIcon) contextIcon.textContent = 'ðŸ“';
         if (contextText) contextText.textContent = 'Pins Browser';
         return;
       }
@@ -23558,14 +25189,14 @@ Actions:
       if (tool === 'origin' || tool === 'lastseen') {
         // Origin/LastSeen tool - show origin settings with map settings
         showPanels(panelOrigin, panelCampaign, panelMap);
-        if (contextIcon) contextIcon.textContent = tool === 'origin' ? '🏠' : '👤';
+        if (contextIcon) contextIcon.textContent = tool === 'origin' ? 'ðŸ ' : 'ðŸ‘¤';
         if (contextText) contextText.textContent = tool === 'origin' ? 'Place Origin' : 'Mark Last Seen';
         return;
       }
       
       // Default context - show map settings overview
       showPanels(panelCampaign, panelMap, panelScale, panelPins, panelRoutes);
-      if (contextIcon) contextIcon.textContent = '📍';
+      if (contextIcon) contextIcon.textContent = 'ðŸ“';
       if (contextText) contextText.textContent = 'Map Settings';
     }
     
@@ -23587,7 +25218,7 @@ Actions:
       
       // Update inspector title
       if (this.dom.mapRouteInspectorTitle) {
-        this.dom.mapRouteInspectorTitle.textContent = '📍 ' + route.name;
+        this.dom.mapRouteInspectorTitle.textContent = 'ðŸ“ ' + route.name;
       }
       
       // Re-render
@@ -23957,7 +25588,7 @@ Actions:
       // Update inspector title
       if (this.dom.mapPinInspectorTitle) {
         const pinIcons = { origin: '\uD83C\uDFE0', last_seen: '\uD83D\uDC64', town: '\uD83C\uDFD8\uFE0F', city: '\uD83C\uDFF0', dungeon: '\u2694\uFE0F', landmark: '\uD83D\uDDFF', quest: '\u2757', shop: '\uD83D\uDED2', tavern: '\uD83C\uDF7A', temple: '\u26EA', location: '\uD83D\uDCCD' };
-        this.dom.mapPinInspectorTitle.textContent = (pinIcons[pin.type] || '📍') + ' ' + (pin.name || 'Pin');
+        this.dom.mapPinInspectorTitle.textContent = (pinIcons[pin.type] || 'ðŸ“') + ' ' + (pin.name || 'Pin');
       }
       
       // Populate fields
@@ -23995,7 +25626,7 @@ Actions:
       // Update title
       if (this.dom.mapPinInspectorTitle) {
         const pinIcons = { origin: '\uD83C\uDFE0', last_seen: '\uD83D\uDC64', town: '\uD83C\uDFD8\uFE0F', city: '\uD83C\uDFF0', dungeon: '\u2694\uFE0F', landmark: '\uD83D\uDDFF', quest: '\u2757', shop: '\uD83D\uDED2', tavern: '\uD83C\uDF7A', temple: '\u26EA', location: '\uD83D\uDCCD' };
-        this.dom.mapPinInspectorTitle.textContent = (pinIcons[pin.type] || '📍') + ' ' + pin.name;
+        this.dom.mapPinInspectorTitle.textContent = (pinIcons[pin.type] || 'ðŸ“') + ' ' + pin.name;
       }
       
       this.renderMapPins();
@@ -25592,7 +27223,7 @@ Actions:
         <div class="roll-breakdown">d20(${roll}) ${modStr}</div>
         <div class="roll-name">${escapeHtml(name)}</div>
         ${isCrit ? '<div class="crit-label">&#x2728; CRITICAL!</div>' : ''}
-        ${isFumble ? '<div class="fumble-label">💀 FUMBLE</div>' : ''}
+        ${isFumble ? '<div class="fumble-label">ðŸ’€ FUMBLE</div>' : ''}
       `;
 
       document.body.appendChild(toast);
@@ -26174,17 +27805,20 @@ Actions:
         const misc = toInt(d.misc, 0, { min: -30, max: 30 });
         const sv = m + (d.prof ? pb : 0) + misc;
         const cls = m >= 0 ? 'pos' : 'neg';
+        
+        // Get translated ability name
+        const abilityName = t(`ability.${k}`);
 
         const wrap = document.createElement('div');
         wrap.className = 'ability';
         wrap.dataset.ab = k;
         wrap.tabIndex = 0;
         wrap.setAttribute('role', 'button');
-        wrap.setAttribute('aria-label', `Roll ${ABILITY_NAMES[k]} check`);
+        wrap.setAttribute('aria-label', `Roll ${abilityName} check`);
 
         const nm = document.createElement('div');
         nm.className = 'ability-name';
-        nm.textContent = ABILITY_NAMES[k];
+        nm.textContent = abilityName;
 
         const mod = document.createElement('div');
         mod.className = 'ability-mod ' + cls;
@@ -26213,7 +27847,7 @@ Actions:
         save.dataset.ab = k;
         save.tabIndex = 0;
         save.setAttribute('role', 'button');
-        save.setAttribute('aria-label', `Roll ${ABILITY_NAMES[k]} save`);
+        save.setAttribute('aria-label', `Roll ${abilityName} save`);
         const cb = document.createElement('input');
         cb.type = 'checkbox';
         cb.checked = !!d.prof;
@@ -26227,7 +27861,7 @@ Actions:
         miscInp.className = 'save-misc';
         miscInp.value = String(d.misc ?? 0);
         miscInp.dataset.saveMisc = k;
-        miscInp.setAttribute('aria-label', `${ABILITY_NAMES[k]} save misc bonus`);
+        miscInp.setAttribute('aria-label', `${abilityName} save misc bonus`);
         miscInp.title = 'Misc bonus';
         save.appendChild(miscInp);
         
@@ -26239,12 +27873,12 @@ Actions:
           sensitivity: 8
         });
 
-        save.appendChild(document.createTextNode(' Save'));
+        save.appendChild(document.createTextNode(' ' + t('ability.save')));
 
         // P0: Tap-to-roll hint
         const tapHint = document.createElement('span');
         tapHint.className = 'tap-hint';
-        tapHint.textContent = 'tap to roll';
+        tapHint.textContent = t('misc.tapToRoll');
 
         wrap.appendChild(nm);
         wrap.appendChild(mod);
@@ -26271,6 +27905,10 @@ Actions:
         if (d.p) b += pb;
         if (d.e) b += pb;
         b += toInt(d.misc, 0, { min: -30, max: 30 });
+        
+        // Get translated skill name and ability abbreviation
+        const skillName = t(`skill.${s.k}`);
+        const abilityAbbr = t(`ability.${s.a}.abbr`);
 
         const row = document.createElement('div');
         row.className = 'skill-row';
@@ -26283,11 +27921,11 @@ Actions:
         
         const name = document.createElement('span');
         name.className = 'skill-name';
-        name.textContent = s.n;
+        name.textContent = skillName;
         
         const ab = document.createElement('span');
         ab.className = 'skill-ab';
-        ab.textContent = s.a.toUpperCase();
+        ab.textContent = abilityAbbr;
         
         info.appendChild(name);
         info.appendChild(ab);
@@ -26298,14 +27936,14 @@ Actions:
         profWrap.className = 'skill-toggle';
         const profLabel = document.createElement('span');
         profLabel.className = 'skill-toggle-label';
-        profLabel.textContent = 'Prof';
+        profLabel.textContent = t('skill.prof');
         const profCb = document.createElement('input');
         profCb.type = 'checkbox';
         profCb.className = 'skill-prof';
         profCb.checked = !!d.p;
         profCb.dataset.skill = s.k;
         profCb.dataset.toggle = 'prof';
-        profCb.setAttribute('aria-label', `${s.n} proficiency`);
+        profCb.setAttribute('aria-label', `${skillName} proficiency`);
         profWrap.appendChild(profLabel);
         profWrap.appendChild(profCb);
         row.appendChild(profWrap);
@@ -26315,14 +27953,14 @@ Actions:
         expWrap.className = 'skill-toggle';
         const expLabel = document.createElement('span');
         expLabel.className = 'skill-toggle-label';
-        expLabel.textContent = 'Exp';
+        expLabel.textContent = t('skill.exp');
         const expCb = document.createElement('input');
         expCb.type = 'checkbox';
         expCb.className = 'skill-exp';
         expCb.checked = !!d.e;
         expCb.dataset.skill = s.k;
         expCb.dataset.toggle = 'exp';
-        expCb.setAttribute('aria-label', `${s.n} expertise`);
+        expCb.setAttribute('aria-label', `${skillName} expertise`);
         expWrap.appendChild(expLabel);
         expWrap.appendChild(expCb);
         row.appendChild(expWrap);
@@ -26339,7 +27977,7 @@ Actions:
         misc.className = 'skill-misc';
         misc.value = String(d.misc ?? 0);
         misc.dataset.skillMisc = s.k;
-        misc.setAttribute('aria-label', `${s.n} misc bonus`);
+        misc.setAttribute('aria-label', `${skillName} misc bonus`);
         misc.title = 'Misc bonus';
         row.appendChild(misc);
         
@@ -26356,8 +27994,8 @@ Actions:
         rollBtn.type = 'button';
         rollBtn.className = 'skill-roll-btn';
         rollBtn.dataset.rollSkill = s.k;
-        rollBtn.setAttribute('aria-label', `Roll ${s.n}`);
-        rollBtn.title = `Roll ${s.n}`;
+        rollBtn.setAttribute('aria-label', `Roll ${skillName}`);
+        rollBtn.title = `Roll ${skillName}`;
         rollBtn.textContent = '\u2684';
         row.appendChild(rollBtn);
 
@@ -27698,7 +29336,7 @@ Actions:
         const overflowBtn = document.createElement('button');
         overflowBtn.className = 'boot-char-btn boot-char-overflow';
         overflowBtn.type = 'button';
-        overflowBtn.textContent = '&#x22EF;';
+        overflowBtn.innerHTML = '&#x22EF;'; // Use innerHTML for HTML entity (horizontal ellipsis)
         overflowBtn.title = 'More actions';
         overflowBtn.dataset.action = 'boot-overflow';
         overflowBtn.dataset.charId = char.id;
@@ -29695,6 +31333,7 @@ console.log('[PA Addon] Host API bridge initialized for addon:', window.PA.addon
       bootSettingsBtn: getEl('bootSettingsBtn', false),
       bootSettingsPanel: getEl('bootSettingsPanel', false),
       bootSettingsClose: getEl('bootSettingsClose', false),
+      bootLanguageSelect: getEl('bootLanguageSelect', false),
       bootThemeSelect: getEl('bootThemeSelect', false),
       bootMotionToggle: getEl('bootMotionToggle', false),
       bootContrastToggle: getEl('bootContrastToggle', false),
@@ -29755,6 +31394,7 @@ console.log('[PA Addon] Host API bridge initialized for addon:', window.PA.addon
       printModeToggle: getEl('printModeToggle', false),
       themeSelect: getEl('themeSelect', false),
       rulesVersionSelect: getEl('rulesVersionSelect', false),
+      languageSelect: getEl('languageSelect', false),
 
       // === CHARACTER MANAGEMENT ===
       charSelect: getEl('charSelect'),
@@ -30631,7 +32271,7 @@ console.log('[PA Addon] Host API bridge initialized for addon:', window.PA.addon
 <!-- PDF Print Sheet Container -->
 <div id="printSheet">
   <button class="ps-close" id="printSheetClose" type="button" onclick="window.__PA_INSTANCE && window.__PA_INSTANCE.closePrintSheet()">&#x2715; Close</button>
-  <button class="ps-print-btn" id="printSheetPrint" type="button" onclick="window.print()">🖨️ Print / Save PDF</button>
+  <button class="ps-print-btn" id="printSheetPrint" type="button" onclick="window.print()">ðŸ–¨ï¸ Print / Save PDF</button>
   <div class="ps-page" id="printSheetContent">
     <!-- Content populated by JavaScript -->
   </div>
@@ -30752,6 +32392,14 @@ console.log('[PA Addon] Host API bridge initialized for addon:', window.PA.addon
       `;
     });
     
+    // Style danger buttons (like Delete)
+    clone.querySelectorAll('.danger').forEach(btn => {
+      btn.style.cssText += `
+        color: #dc3545 !important;
+        border-color: rgba(220, 53, 69, 0.3) !important;
+      `;
+    });
+    
     // Style sections
     clone.querySelectorAll('.qb-overflow-section').forEach(section => {
       section.style.cssText = `
@@ -30796,9 +32444,76 @@ console.log('[PA Addon] Host API bridge initialized for addon:', window.PA.addon
     // Wire up click handlers
     clone.querySelectorAll('button, .qb-list-item').forEach(btn => {
       btn.addEventListener('click', (e) => {
+        // Skip if this click came from a mobile delete button (let it handle itself)
+        if (e.target.closest('.mobile-char-delete')) {
+          console.log('[MobileMenu] Skipping - delete button click');
+          return;
+        }
+        
+        // Skip if clicking on an item that has a delete button and we're clicking the button area
+        if (btn.getAttribute('data-has-delete') === 'true' && e.target !== btn) {
+          // Check if click is on the right side where delete button is
+          const rect = btn.getBoundingClientRect();
+          if (e.clientX > rect.right - 60) {
+            console.log('[MobileMenu] Skipping - click near delete button');
+            return;
+          }
+        }
+        
         // Find original button and click it
         const origId = btn.id;
         const origDataCharId = btn.getAttribute('data-char-id');
+        
+        // Special handling for delete button - needs confirmation in mobile modal
+        if (origId === 'charDelBtn') {
+          e.preventDefault();
+          e.stopPropagation();
+          
+          if (!btn._pendingDelete) {
+            // First click - show confirmation
+            btn._pendingDelete = true;
+            btn.textContent = 'Confirm Delete';
+            btn.style.background = 'rgba(220, 53, 69, 0.3) !important';
+            btn.style.borderColor = 'rgba(220, 53, 69, 0.5) !important';
+            
+            // Add a hint below the button
+            let hint = btn.parentElement.querySelector('.mobile-delete-hint');
+            if (!hint) {
+              hint = document.createElement('div');
+              hint.className = 'mobile-delete-hint';
+              hint.textContent = 'Tap again to permanently delete this character';
+              hint.style.cssText = `
+                color: #dc3545;
+                font-size: 0.85rem;
+                padding: 8px 16px;
+                margin-top: -4px;
+                margin-bottom: 8px;
+              `;
+              btn.parentElement.insertBefore(hint, btn.nextSibling);
+            }
+            
+            // Reset after 4 seconds
+            setTimeout(() => {
+              if (btn._pendingDelete) {
+                btn._pendingDelete = false;
+                btn.textContent = 'Delete';
+                btn.style.background = 'rgba(255,255,255,0.06) !important';
+                btn.style.borderColor = 'rgba(255,255,255,0.1) !important';
+                if (hint) hint.remove();
+              }
+            }, 4000);
+          } else {
+            // Second click - actually delete
+            btn._pendingDelete = false;
+            closeMobileMenuModal();
+            const app = window.__PA_INSTANCE || window.app;
+            if (app) {
+              // Directly call deleteActiveCharacter
+              app.deleteActiveCharacter(true);
+            }
+          }
+          return;
+        }
         
         if (origId) {
           const orig = document.getElementById(origId);
@@ -30812,14 +32527,18 @@ console.log('[PA Addon] Host API bridge initialized for addon:', window.PA.addon
         }
         
         if (origDataCharId) {
-          const orig = document.querySelector(`[data-char-id="${origDataCharId}"]`);
-          if (orig && orig !== btn) {
-            closeMobileMenuModal();
-            setTimeout(() => orig.click(), 50);
-            e.preventDefault();
-            e.stopPropagation();
-            return;
+          // Directly call selectCharacter instead of trying to click original
+          closeMobileMenuModal();
+          const app = window.__PA_INSTANCE || window.app;
+          if (app) {
+            setTimeout(() => {
+              app.selectCharacter(origDataCharId);
+              app.closeAllPopovers();
+            }, 50);
           }
+          e.preventDefault();
+          e.stopPropagation();
+          return;
         }
         
         // For buttons with data-action
@@ -30855,6 +32574,183 @@ console.log('[PA Addon] Host API bridge initialized for addon:', window.PA.addon
     });
     
     content.appendChild(clone);
+    
+    // Special handling for Character Picker menu
+    if (menuContent.id === 'charPickerMenu') {
+      // Add "New Character" button at the bottom
+      const newCharBtn = document.createElement('button');
+      newCharBtn.textContent = '+ New Character';
+      newCharBtn.style.cssText = `
+        min-height: 54px !important;
+        font-size: 1rem !important;
+        padding: 16px !important;
+        margin-top: 16px !important;
+        border-radius: 12px !important;
+        background: linear-gradient(135deg, rgba(90, 200, 120, 0.2), rgba(90, 200, 120, 0.1)) !important;
+        border: 1px solid rgba(90, 200, 120, 0.4) !important;
+        color: #5ac878 !important;
+        width: 100% !important;
+        text-align: center !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        font-weight: 600 !important;
+        cursor: pointer !important;
+      `;
+      newCharBtn.onclick = () => {
+        closeMobileMenuModal();
+        const origNewBtn = document.getElementById('charNewBtn');
+        if (origNewBtn) {
+          setTimeout(() => origNewBtn.click(), 50);
+        }
+      };
+      content.appendChild(newCharBtn);
+      
+      // Add delete buttons to each character item
+      clone.querySelectorAll('.qb-list-item').forEach(item => {
+        const charId = item.getAttribute('data-char-id');
+        if (!charId) return;
+        
+        // Hide the meta ID element to make room for delete button
+        const metaEl = item.querySelector('.meta');
+        if (metaEl) {
+          metaEl.style.display = 'none';
+        }
+        
+        // Wrap existing content
+        item.style.cssText += `
+          position: relative !important;
+          padding-right: 56px !important;
+        `;
+        
+        // Mark this item as having a delete button
+        item.setAttribute('data-has-delete', 'true');
+        
+        // Create delete button
+        const delBtn = document.createElement('button');
+        delBtn.innerHTML = '&#x1F5D1;'; // Trash icon
+        delBtn.className = 'mobile-char-delete';
+        delBtn.setAttribute('data-delete-char-id', charId);
+        delBtn.setAttribute('data-confirm-state', 'initial');
+        delBtn.style.cssText = `
+          position: absolute !important;
+          right: 8px !important;
+          top: 50% !important;
+          transform: translateY(-50%) !important;
+          width: 44px !important;
+          height: 44px !important;
+          min-height: 44px !important;
+          padding: 0 !important;
+          margin: 0 !important;
+          background: rgba(220, 53, 69, 0.15) !important;
+          border: 1px solid rgba(220, 53, 69, 0.3) !important;
+          border-radius: 8px !important;
+          color: #dc3545 !important;
+          font-size: 1.2rem !important;
+          display: flex !important;
+          align-items: center !important;
+          justify-content: center !important;
+          cursor: pointer !important;
+          z-index: 100 !important;
+          -webkit-tap-highlight-color: transparent !important;
+          touch-action: manipulation !important;
+        `;
+        
+        // Direct handler function
+        function handleDelete(e) {
+          e.preventDefault();
+          e.stopPropagation();
+          e.stopImmediatePropagation();
+          
+          // Get the app instance - it's stored as __PA_INSTANCE
+          const app = window.__PA_INSTANCE || window.app;
+          
+          const currentState = delBtn.getAttribute('data-confirm-state');
+          console.log('[Delete v6.14] Handler fired! state:', currentState, 'charId:', charId, 'event:', e.type);
+          console.log('[Delete v6.14] App instance:', app ? 'found' : 'NOT FOUND');
+          
+          if (currentState === 'initial') {
+            // First tap - show confirmation
+            delBtn.setAttribute('data-confirm-state', 'confirm');
+            delBtn.textContent = 'âœ“';
+            delBtn.style.background = 'rgba(220, 53, 69, 0.7)';
+            delBtn.style.color = '#fff';
+            delBtn.style.fontWeight = 'bold';
+            console.log('[Delete v6.14] Changed to confirm state');
+            
+            // Reset after 4 seconds
+            delBtn._resetTimer = setTimeout(() => {
+              if (delBtn.getAttribute('data-confirm-state') === 'confirm') {
+                delBtn.setAttribute('data-confirm-state', 'initial');
+                delBtn.innerHTML = '&#x1F5D1;';
+                delBtn.style.background = 'rgba(220, 53, 69, 0.15)';
+                delBtn.style.color = '#dc3545';
+                delBtn.style.fontWeight = 'normal';
+                console.log('[Delete v6.14] Reset to initial state');
+              }
+            }, 4000);
+            
+          } else if (currentState === 'confirm') {
+            // Second tap - delete!
+            clearTimeout(delBtn._resetTimer);
+            console.log('[Delete v6.14] CONFIRMED! Deleting character:', charId);
+            
+            if (app && app.charIndex) {
+              if (charId === app.activeCharId) {
+                closeMobileMenuModal();
+                setTimeout(() => {
+                  console.log('[Delete v6.14] Calling deleteActiveCharacter');
+                  app.deleteActiveCharacter(true);
+                }, 100);
+              } else {
+                const idx = app.charIndex.findIndex(c => c.id === charId);
+                console.log('[Delete v6.14] Found at index:', idx);
+                if (idx >= 0) {
+                  app.charIndex.splice(idx, 1);
+                  app.saveCharIndex();
+                  localStorage.removeItem('cmCharState_v1:' + charId);
+                  try { app.portrait.del('cm_portrait_' + charId); } catch(err) {}
+                  app.renderCharacterSelect();
+                  app.toast('Character deleted');
+                  console.log('[Delete v6.14] Character removed from charIndex');
+                  
+                  // Remove from UI
+                  item.style.transition = 'opacity 0.2s, transform 0.2s';
+                  item.style.opacity = '0';
+                  item.style.transform = 'translateX(50px)';
+                  setTimeout(() => item.remove(), 200);
+                }
+              }
+            } else {
+              console.error('[Delete v6.14] App or charIndex not found!', { app, charIndex: app?.charIndex });
+            }
+          }
+        }
+        
+        // Add handlers for BOTH click and touch
+        delBtn.addEventListener('click', handleDelete, true);
+        
+        // Touch handler - prevent ghost clicks
+        let touchHandled = false;
+        delBtn.addEventListener('touchstart', function(e) {
+          touchHandled = true;
+          console.log('[Delete v6.14] touchstart');
+        }, { passive: true });
+        
+        delBtn.addEventListener('touchend', function(e) {
+          if (touchHandled) {
+            e.preventDefault();
+            console.log('[Delete v6.14] touchend - calling handleDelete');
+            handleDelete(e);
+            touchHandled = false;
+          }
+        }, { passive: false });
+        
+        item.appendChild(delBtn);
+        console.log('[Delete v6.14] Delete button added for character:', charId);
+      });
+    }
+    
     modal.appendChild(header);
     modal.appendChild(content);
     document.body.appendChild(modal);
