@@ -1,463 +1,255 @@
-# Player Almanac
+# 🎲 Player Almanac
 
-**Version**: 6.3 (December 28, 2025)  
-**Type**: Single-file D&D 5e Character Sheet Application
+<p align="center">
+  <img src="https://img.shields.io/badge/version-6.4-blue" alt="Version 6.4">
+  <img src="https://img.shields.io/badge/D%26D-5th%20Edition-red" alt="D&D 5e">
+  <img src="https://img.shields.io/badge/license-ZNAL%20v1.1-green" alt="License">
+  <img src="https://img.shields.io/badge/offline-ready-brightgreen" alt="Offline Ready">
+</p>
 
-## What This Project Is
+**A beautiful, offline-first D&D 5e character sheet that runs entirely in your browser.**
 
-Player Almanac is a self-contained, browser-based character sheet for tabletop RPGs (primarily D&D 5th Edition). The entire application lives in a single HTML file with embedded CSS and JavaScript—no build step, no dependencies to install, no server required.
-
-### What It Does
-
-- **Character Management**: Create, edit, duplicate, and delete multiple characters
-- **Combat Tracking**: HP, temporary HP, conditions, concentration, death saves
-- **Dice Rolling**: Click-to-roll with advantage/disadvantage modes, roll history log
-- **Spellcasting**: Spell slots, spell list with sorting/filtering, prepared spells, expandable descriptions
-- **Campaign Maps**: Upload maps, place pins, plot routes, measure distances
-- **Rest System**: Short rest (hit dice healing) and long rest with configurable rules
-- **Theming**: 8 color themes with particle background effects
-- **Offline-First**: All data stored locally (localStorage + IndexedDB)
-- **Mobile-Optimized**: Responsive design with full-screen overlay menus on mobile
-- **Export/Import**: Full character backup with portraits, multi-character restore
-- **One-Page Sheet**: Single-page PDF character sheet generator
-- **Rules Toggle**: 2014/2024 rules version support with badge display
+No accounts. No servers. No subscriptions. Just download one HTML file and play.
 
 ---
 
-## How It's Structured
+## ✨ Features
 
-### Single-File Architecture
+### 📋 Complete Character Management
+- Create, edit, duplicate, and delete multiple characters
+- Full ability scores, skills, and saving throws
+- Hit points with temp HP and damage tracking
+- Death saving throws with visual indicators
+- Conditions and concentration tracking
 
-```
-player_almanac.html (31,011 lines)
-│
-├─ Lines 1-464        Version history / changelog comments
-├─ Lines 465-474      <head> meta tags, fonts, GSAP CDN
-├─ Lines 475-14,163   <style> - All CSS (themes, layouts, responsive)
-├─ Lines 14,216-15,500 <body> - HTML structure (boot screen, app, modals)
-└─ Lines 15,592-31,010 <script> - JavaScript application
-```
+### 🎯 Combat Ready
+- **Click-to-roll** any stat, skill, or attack
+- Advantage/Disadvantage toggle modes
+- Roll history log with natural 1/20 highlighting
+- HP quick-adjust buttons (+/- in one tap)
 
-### JavaScript Architecture
+### 📖 Spellcasting
+- Spell slot tracking with one-click expend/restore
+- Full spell list with sorting and filtering
+- Prepared spell marking
+- Expandable spell descriptions
+- Spellcasting DC and attack bonus auto-calculation
 
-```javascript
-// Main application class (line ~18,024)
-class SheetApp {
-  state: SheetState      // Single source of truth for character data
-  dom: DOMRefs           // Cached DOM element references
-  charIndex: CharMeta[]  // List of all characters (id, name, timestamps)
-  activeCharId: string   // Currently loaded character
-}
+### 🗺️ Campaign Maps
+- Upload your own maps (PNG, JPG, WebP)
+- Place location pins with notes
+- Plot travel routes
+- Measure distances with scale calibration
+- Multiple campaign support
 
-// Supporting classes
-class PortraitStore     // IndexedDB wrapper for portrait images (line ~17,459)
-class MapStore          // IndexedDB wrapper for map images (line ~17,557)
-class Particles         // Canvas-based background animation (line ~17,816)
-```
+### 🎨 8 Beautiful Themes
+- Arcane Purple
+- Forest Green
+- Ocean Blue
+- Ember Orange
+- Midnight Black
+- Parchment Classic
+- Blood Moon
+- Frost White
 
-### Data Flow (Unidirectional)
+Each theme includes animated particle backgrounds (optional).
 
-```
-User Action → Event Handler → State Mutation → fixInvariants() 
-                                                    ↓
-                                            updateDerived()
-                                                    ↓
-                                              render*()
-                                                    ↓
-                                            scheduleSave()
-```
+### 📱 Mobile Optimized
+- Responsive design works on any screen size
+- Full-screen overlay menus on mobile
+- Touch-friendly 44px+ tap targets
+- Safe area support for notched devices
+
+### 💾 Your Data, Your Control
+- **100% offline** - works without internet after first load
+- Data stored in your browser's localStorage
+- Export characters as JSON files
+- Import single characters or full backups
+- One-page PDF character sheet generator
+
+### ♿ Accessible
+- Full keyboard navigation
+- Focus traps for modals
+- ARIA labels throughout
+- High contrast mode available
 
 ---
 
-## How Data/State Is Stored
+## 🚀 Quick Start
 
-### Storage Layers
+### Option 1: Download and Open
+1. Download `player_almanac.html`
+2. Open it in any modern browser
+3. That's it! Start creating characters.
 
-| Layer | Technology | Purpose | Keys |
-|-------|------------|---------|------|
-| Character State | localStorage | All character data (JSON) | `cmCharState_v1:{id}` |
-| Character Index | localStorage | List of characters | `cmCharIndex_v1` |
-| Active Character | localStorage | Current character ID | `cmCharActive_v1` |
-| Portraits | IndexedDB | Character images (Blob) | `cm_portrait_db_v1` |
-| Map Images | IndexedDB | Campaign map images (Blob) | `cm_map_db_v1` |
-| Preferences | localStorage | Theme, motion, mode settings | Various keys |
+### Option 2: Local Development Server
+```bash
+# Clone the repo
+git clone https://github.com/zagreous/player-almanac.git
+cd player-almanac
 
-### State Schema (SheetState)
+# Serve with Python
+python3 -m http.server 8000
 
-```typescript
-interface SheetState {
-  version: number;           // Schema version (currently 4)
-  name: string;              // Character name
-  species: string;           // Race/species
-  class: string;             // Class(es)
-  level: number;             // 1-20
-  abilities: Record<AbilityKey, {score, prof, misc}>;
-  skills: Record<SkillKey, {p, e, misc}>;  // p=proficient, e=expertise
-  hp: {cur, max, tmp};
-  hd: {spent, max, die};     // Hit dice
-  death: {suc, fail};        // Death saves
-  conds: string[];           // Active conditions
-  concentration: {active, spell, promptOnDamage};
-  weapons: Weapon[];
-  features: Feature[];
-  spells: Spell[];
-  slots: Record<string, {t, e}>;  // t=total, e=expended
-  coins: {cp, sp, ep, gp, pp};
-  // ... more fields (see makeBaseDefaults() at line ~16,975)
-}
+# Or with Node.js
+npx serve .
+
+# Open http://localhost:8000/player_almanac.html
 ```
 
 ---
 
-## Codebase Map
+## 📸 Screenshots
 
-### CSS Sections (Lines 475-14,163)
-
-| Lines | Section | Description |
-|-------|---------|-------------|
-| 476-600 | CSS Variables | `:root` with colors, spacing, typography |
-| 542-600 | Density Toggle | `.density-compact` modifier classes |
-| 600-2000 | Core Layout | Grid, cards, panels, forms |
-| 2000-4000 | Components | Buttons, modals, popovers, tabs |
-| 4000-6000 | Character Sheet | Abilities, skills, weapons, spells |
-| 6000-8000 | Quickbar | Top navigation, stats, actions |
-| 8000-10,000 | Map System | Map viewer, tools, panels |
-| 10,000-14,163 | Mobile/Print | Responsive breakpoints, print styles, mobile overlays |
-
-### HTML Sections (Lines 14,216-15,500)
-
-| Lines | Element | ID | Purpose |
-|-------|---------|-----|---------|
-| 14,221-14,790 | Boot Screen | `#boot` | Intro/launcher screen |
-| 14,790-15,100 | Quickbar | `#quickBar` | Top navigation bar |
-| 15,100-15,350 | Character Sheet | `#app` | Main content area |
-| 15,364-15,500 | Modals | Various | HP, conditions, rest, import |
-
-### JavaScript Sections (Lines 15,592-31,010)
-
-| Lines | Section | Key Functions |
-|-------|---------|---------------|
-| 15,692-15,960 | Constants | Storage keys, themes, skills data |
-| 15,903-15,960 | CONDITIONS | Condition definitions array |
-| 16,975-17,050 | State Schema | `makeBaseDefaults`, `normalizeState` |
-| 17,459-17,556 | PortraitStore | IndexedDB for portraits |
-| 17,557-17,815 | MapStore | IndexedDB for map images |
-| 17,816-18,023 | Particles | Background animation class |
-| 18,024-18,400 | SheetApp Class | Main application controller |
-| 18,200-18,400 | Boot Logic | `init()`, `runBoot()`, `skipBoot()` |
-| 18,400-20,000 | Event Binding | `bindEvents()`, all event handlers |
-| 20,000-22,000 | State Management | `fixInvariants`, `scheduleSave`, `persist` |
-| 22,000-24,000 | Rendering | `renderAll`, `renderAbilities`, `renderSkills`... |
-| 24,000-26,000 | Modals | HP modal, conditions, short/long rest |
-| 26,000-28,000 | Rolling | Dice rolling, roll log, roll modes |
-| 28,000-30,000 | Map System | Map viewer, pins, routes, tools |
-| 30,000-31,010 | Footer/Credits | License, credits dialog, secret skip |
+| Boot Screen | Character Sheet | Mobile View |
+|-------------|-----------------|-------------|
+| ![Boot](docs/boot.png) | ![Sheet](docs/sheet.png) | ![Mobile](docs/mobile.png) |
 
 ---
 
-## Common Tasks
+## 🔒 Security (v6.4)
 
-### Where to Change UI
+Player Almanac takes security seriously:
 
-| Task | Location |
-|------|----------|
-| Colors/themes | CSS variables (line ~476) + `THEMES` object (line ~15,696) |
-| Spacing/padding | CSS variables `--space-*`, `--card-pad` (line ~520) |
-| Fonts | CSS variables `--font-*` (line ~510) |
-| Add new button | HTML (line ~14,790+), then add event in `bindEvents()` |
-| Modify card layout | Look for `.card` styles (line ~2000+) |
-
-### Where to Add Features
-
-| Feature Type | Where to Add |
-|--------------|--------------|
-| New character field | 1. Add to `makeBaseDefaults()` 2. Add to `normalizeState()` 3. Add HTML input 4. Add render function |
-| New modal | 1. Add HTML (before `</body>`) 2. Add to `buildDOMRefs()` 3. Add open/close functions |
-| New dice roll type | Add to `rollDice()` family or create new `rollX()` method |
-| New condition | Add to `CONDITIONS` array (line ~15,903) |
-
-### Where Settings Live
-
-| Setting | Storage Key | Default |
-|---------|-------------|---------|
-| Theme | `cmTheme_v1` | `'arcane'` |
-| Motion (particles) | `motion` | `true` |
-| High Contrast | `contrastHigh` | `false` |
-| Edit/Play Mode | `cmMode` | `'edit'` |
-| Roll Mode | `cmRollMode` | `'normal'` |
-| Roll Log Collapsed | `cmRollLogCollapsed_v1` | `false` |
-| Quickbar Collapsed | `cmQuickbarCollapsed_v1` | `false` |
-| Skip Intro | `cmSkipIntro_v1` | `'0'` |
-| Print Mode | `cmPrintMode_v1` | `false` |
-| Rules Version | `cmRulesVersion_v1` | `'2014'` |
-
-### Where Saves/Storage Happen
-
-```javascript
-// Main save flow
-scheduleSave()           // Debounces (900ms)
-  → persist()            // Writes to localStorage
-    → localStorage.setItem(CHAR_STATE_PREFIX + id, JSON.stringify(state))
-
-// IndexedDB for media
-PortraitStore.put(blob)  // Line ~17,500 - stores portrait
-MapStore.put(blob)       // Line ~17,600 - stores map image
-
-// Emergency save on page hide/unload
-visibilitychange → persist({ force: true })
-beforeunload → persist({ force: true })
-```
-
-### How to Build/Release
-
-No build step required. The file is self-contained.
-
-**To deploy:**
-1. Copy `player_almanac.html` to any web server
-2. Or host on GitHub Pages, Netlify, etc.
-3. Or share the file directly (works offline)
-
-**For development:**
-- Use a local server to avoid CORS issues with IndexedDB
-- `python3 -m http.server 8000` or `npx serve .`
-- Open `http://localhost:8000/player_almanac.html`
+- **Content Security Policy** - Restricts what can run in the page
+- **XSS Prevention** - All user input escaped before rendering
+- **Import Validation** - Imported data strictly validated
+- **No Tracking** - Zero analytics, telemetry, or external calls
+- **SVG Blocking** - Portrait/map uploads block potentially dangerous SVG
 
 ---
 
-## Do Not Break
+## 📦 What's in the Box
 
-These are critical invariants. Breaking them will cause data loss or crashes:
+```
+player_almanac.html    # The entire app (31k lines, ~1MB)
+README.md              # Full documentation
+QUICKSTART.md          # Get running in 10 minutes
+```
 
-| Invariant | Why It Matters | Where It Lives |
-|-----------|----------------|----------------|
-| `STATE_VERSION = 4` | Migration system depends on this | Line ~15,693 |
-| `cmCharState_v1:` prefix | All saved data uses this key format | Line ~15,680 |
-| `normalizeState()` always runs on load | Ensures backward compatibility | Line ~17,048 |
-| `fixInvariants()` after every state mutation | Keeps derived values consistent | SheetApp class |
-| `scheduleSave()` called after changes | Prevents data loss | After state changes |
-| `escapeHtml()` on all user input → innerHTML | Prevents XSS | Throughout render functions |
+That's it. One file does everything.
 
 ---
 
-## Troubleshooting
+## 🛠️ Tech Stack
 
-### What to Check When
-
-| Issue | First Check | Likely Cause |
-|-------|-------------|--------------|
-| Changes don't persist | localStorage quota | Try `localStorage.clear()` or check DevTools |
-| Blank screen on load | Console errors (F12) | JS error in boot sequence |
-| Imports fail silently | JSON format | Check `normalizeState()` logs |
-| Roll button does nothing | Click handler | Look in `bindEvents()` |
-| Mobile tap not working | Test on real device | Touch event handler missing |
-
-### Where Logs/Errors Show Up
-
-```javascript
-// All console logs use this prefix:
-console.log('[PlayerAlmanac] ...');
-
-// Enable debug mode for visual badges:
-window.__CM_DEBUG = true;
-
-// Inspect current state:
-window.app.state
-
-// Check storage:
-localStorage.getItem('cmCharIndex_v1')
-localStorage.getItem('cmCharState_v1:' + window.app.activeCharId)
-```
-
-### How to Verify Fixes
-
-1. **Save/Load**: Make change → reload → verify data persists
-2. **State integrity**: `JSON.parse(localStorage.getItem('cmCharState_v1:' + id))` should match `app.state`
-3. **Mobile**: Test on actual device or Chrome DevTools device mode
-4. **Accessibility**: Tab through all interactive elements
-5. **Print mode**: Toggle print mode, verify layout
-6. **Themes**: Cycle through all 8 themes
-
-### Debug Console Commands
-
-```javascript
-// Force save
-app.persist({ force: true, toast: true });
-
-// Dump current state
-JSON.stringify(app.state, null, 2);
-
-// Check character index
-app.charIndex;
-
-// Manually trigger render
-app.renderAll();
-
-// Reset roll mode
-app.setRollMode('normal');
-```
+- **HTML5** - Semantic markup
+- **CSS3** - Custom properties, flexbox, grid
+- **Vanilla JavaScript** - No frameworks, no dependencies
+- **localStorage** - Character data persistence
+- **IndexedDB** - Portrait and map image storage
+- **GSAP** - Optional animations (CDN, graceful fallback)
 
 ---
 
-## Conventions
+## 📋 Browser Support
 
-### Naming Rules
-
-| Type | Convention | Example |
-|------|------------|---------|
-| CSS Variables | `--kebab-case` | `--card-bg`, `--text-primary` |
-| CSS Classes | `kebab-case` | `.skill-row`, `.card-title` |
-| JS Variables | `camelCase` | `activeCharId`, `rollMode` |
-| JS Constants | `SCREAMING_SNAKE` | `MAX_ROLL_LOG`, `STATE_VERSION` |
-| DOM IDs | `camelCase` | `rollLogBody`, `qbHealDmgBtn` |
-| Storage Keys | `camelCase` with prefix | `cmCharState_v1:`, `cmTheme_v1` |
-
-### Folder Rules
-
-N/A - Single file application. However, keep these logical sections:
-1. CSS before `</style>`
-2. HTML body structure
-3. JavaScript after `<script>` before `</script>`
-
-### Patterns Used
-
-**Event Delegation:**
-```javascript
-// Instead of attaching to each element:
-document.addEventListener('click', (e) => {
-  const btn = e.target.closest('[data-action="weapon-del"]');
-  if (btn) { /* handle */ }
-});
-```
-
-**State-First Updates:**
-```javascript
-// Always: State → Render → Save
-this.state.hp.cur = newValue;  // 1. Mutate state
-this.renderHP();                // 2. Update DOM
-this.scheduleSave();            // 3. Persist
-```
-
-**Safe HTML Rendering:**
-```javascript
-// NEVER: element.innerHTML = userInput;
-// ALWAYS: element.innerHTML = escapeHtml(userInput);
-// OR: element.textContent = userInput;
-```
-
-**Debounced Saves:**
-```javascript
-// Don't save on every keystroke
-scheduleSave()  // Waits 900ms, then persists
-```
-
-### How New Code Should Be Added
-
-1. **New State Field:**
-   ```javascript
-   // 1. Add default in makeBaseDefaults()
-   myField: '',
-   
-   // 2. Add normalization in normalizeState()
-   if (typeof raw.myField === 'string') out.myField = raw.myField.slice(0, 100);
-   
-   // 3. Add DOM input in HTML
-   // 4. Add to buildDOMRefs() if needed
-   // 5. Add render function
-   // 6. Add event handler
-   ```
-
-2. **New Modal:**
-   ```html
-   <!-- Add before </body> -->
-   <div class="modal" id="myModal" hidden>
-     <div class="modal-content">...</div>
-   </div>
-   ```
-   ```javascript
-   // Add to buildDOMRefs()
-   myModal: $('myModal'),
-   
-   // Add open/close functions
-   openMyModal() { this.dom.myModal.hidden = false; }
-   closeMyModal() { this.dom.myModal.hidden = true; }
-   ```
-
-3. **New Theme:**
-   ```javascript
-   // Add to THEMES object (line ~15,696)
-   myTheme: {
-     name: 'My Theme',
-     bgDeep: '#...',
-     // ... all required color properties
-   }
-   ```
+| Browser | Version | Status |
+|---------|---------|--------|
+| Chrome | 90+ | ✅ Full Support |
+| Firefox | 88+ | ✅ Full Support |
+| Safari | 14+ | ✅ Full Support |
+| Edge | 90+ | ✅ Full Support |
+| Mobile Safari | iOS 14+ | ✅ Full Support |
+| Chrome Android | 90+ | ✅ Full Support |
 
 ---
 
-## Audit Notes (Code Review Findings)
+## 🎮 D&D Rules Support
 
-### Security ✔ PASS
-- **XSS Protection**: All user content uses `escapeHtml()` before innerHTML
-- **Input Sanitization**: `normalizeState()` validates and clamps all imported data
-- **No Dangerous APIs**: Zero uses of `eval()`, `Function()`, `document.write()`, or `outerHTML`
-- **Safe Text Handling**: `safeText()` strips null bytes and trims all strings
+| Feature | 2014 PHB | 2024 PHB |
+|---------|----------|----------|
+| Ability scores | ✅ | ✅ |
+| Skills & proficiencies | ✅ | ✅ |
+| Spell slots | ✅ | ✅ |
+| Conditions | ✅ | ✅ |
+| Rest rules | ✅ | ✅ |
 
-### Data Safety ✔ PASS
-- **Emergency Saves**: `beforeunload` + `visibilitychange` flush pending saves
-- **Debounced Persistence**: 900ms debounce prevents excessive writes
-- **State Versioning**: `STATE_VERSION = 4` enables future migrations
-- **Defensive Cloning**: `deepClone()` prevents reference mutations
-- **QuotaExceededError**: User notification when storage is full
-
-### Accessibility ✔ PASS
-- **Focus Traps**: `createFocusTrap()` implemented for all modals
-- **ARIA Labels**: Interactive elements have proper `aria-label`, `aria-haspopup`, `aria-expanded`
-- **Keyboard Navigation**: ESC closes modals, Tab cycles, Enter/Space activates
-- **Touch Targets**: 44px minimum via `--tap-target` CSS variable (WCAG 2.5.5)
-
-### Performance ✔ PASS
-- **DOM Caching**: `buildDOMRefs()` caches all element references
-- **Event Delegation**: Click handlers use `.closest()` for efficiency
-- **Bounded Collections**: Roll log capped at 50 entries (`MAX_ROLL_LOG`)
-- **Lazy Rendering**: Map/particles only active when visible
-
-### Memory Management ✔ PASS
-- **Object URL Cleanup**: `revokeObjectURL()` called in PortraitStore/MapStore
-- **Event Cleanup**: Pin drag listeners properly removed
-- **Canvas Cleanup**: Particles cleared when motion disabled
-
-### Error Handling ✔ PASS  
-- **100+ try-catch blocks** throughout codebase
-- **Storage Fallbacks**: `storageGet/Set` return null/false on failure
-- **IndexedDB Fallbacks**: Operations return null on DB unavailable
-- **Boot Error Modal**: Dedicated error UI for initialization failures
-
-### Code Quality ✔ PASS
-- **Consistent Naming**: camelCase for JS, kebab-case for CSS
-- **Type Annotations**: JSDoc types for all major functions
-- **Clear Comments**: Section markers (`// Section B:`, etc.)
-- **Logical Organization**: Constants → Utilities → Classes → Initialization
-
-### Test Verification Checklist
-When making changes, verify:
-- [ ] Character create/edit/delete works
-- [ ] Save indicator shows "Saved" after changes
-- [ ] Page reload preserves all data
-- [ ] All 8 themes apply correctly  
-- [ ] Mobile layout works at 375px width
-- [ ] Print mode generates clean output
-- [ ] Import/export round-trips correctly
-- [ ] Mobile menu overlays work correctly
+Toggle between rule versions in Settings.
 
 ---
 
-## Maintenance
+## 📖 Documentation
 
-**When to update this documentation:**
-- Adding new major features
-- Changing storage schema
-- Adding new DOM IDs that are referenced programmatically
-- Modifying the boot flow or state management
-- Changing CSS variable names used throughout
+- [QUICKSTART.md](QUICKSTART.md) - Get running in 10 minutes
+- [README.md](README.md) - Full technical documentation
+- [Addon Authoring Guide](Player_Almanac_Addon_Authoring_Guide.docx) - Extend the app
 
-**Version History Location:** Lines 1-464 of `player_almanac.html`
+---
+
+## 🤝 Contributing
+
+Contributions welcome! Please:
+
+1. Fork the repository
+2. Create a feature branch
+3. Follow existing code conventions
+4. Test on desktop and mobile
+5. Submit a pull request
+
+### Code Style
+
+- **JavaScript**: camelCase variables, SCREAMING_SNAKE constants
+- **CSS**: kebab-case classes, BEM-ish naming
+- **HTML**: camelCase IDs, semantic elements
+- **Always use `escapeHtml()` for user content in innerHTML**
+
+---
+
+## 📜 License
+
+**ZNAL v1.1** (Zagreous Noncommercial Attribution License)
+
+- ✅ Free for personal and noncommercial use
+- ✅ Modify and distribute freely
+- ✅ Must include attribution and link-back
+- ❌ Commercial use requires separate license
+
+For commercial licensing: [Kinzle.MA@gmail.com](mailto:Kinzle.MA@gmail.com)
+
+---
+
+## 🙏 Credits
+
+- **Created by**: Zagreous
+- **Fonts**: [Cinzel](https://fonts.google.com/specimen/Cinzel), [Inter](https://fonts.google.com/specimen/Inter), [JetBrains Mono](https://fonts.google.com/specimen/JetBrains+Mono)
+- **Animations**: [GSAP](https://greensock.com/gsap/) (optional)
+- **Inspired by**: D&D Beyond, Roll20, and the TTRPG community
+
+---
+
+## 📣 Changelog
+
+### v6.4 (December 28, 2025) - Security Hardening
+- Added Content Security Policy
+- Enhanced import validation with `VALIDATION_LIMITS`
+- Portrait/map validation blocks SVG (XSS prevention)
+- Improved storage quota error reporting
+- Added debug mode with `window.__CM_DEBUG`
+- Fixed license version consistency
+
+### v6.3 (December 28, 2025) - Mobile Menu Redesign
+- Full-screen overlay menus on mobile
+- Touch-friendly 54px+ buttons
+- Improved scrollable content areas
+
+### v6.0 (December 2025) - Major Features
+- One-page PDF character sheet
+- 2014/2024 rules version toggle
+- Multi-character backup/restore
+- Spell descriptions
+- Portrait export/import
+
+[See full changelog in player_almanac.html](player_almanac.html)
+
+---
+
+<p align="center">
+  <strong>Made with ❤️ for tabletop gamers everywhere</strong>
+</p>
+
+<p align="center">
+  <a href="https://github.com/zagreous/player-almanac">⭐ Star on GitHub</a> •
+  <a href="https://github.com/zagreous/player-almanac/issues">🐛 Report Bug</a> •
+  <a href="https://github.com/zagreous/player-almanac/discussions">💬 Discussions</a>
+</p>
