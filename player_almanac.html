@@ -16,11 +16,39 @@
 ================================================================================
 -->
 <!--
-  Player Almanac Character Sheet - v6.4 (Security Hardening)
+  Player Almanac Character Sheet - v6.6 (Mobile Full-Screen Menu)
   
-  CURRENT VERSION: v6.4 - December 28, 2025
+  CURRENT VERSION: v6.6 - December 29, 2025
   
-  SECURITY HARDENING v6.4
+  MOBILE BOOT SCREEN FIXES v6.6
+  =============================================
+  - Fixed logo cutoff on mobile boot screen:
+    * Increased top padding from 32px to 48px at 520px breakpoint
+    * Maintained 40px top padding at 380px breakpoint (was 12px)
+    * Added margin-top to boot-zone-top for better spacing
+    * Increased boot-zone-top padding-top from 8px to 16px
+  - Fixed menu section alignment on mobile:
+    * Footer content now properly hidden when collapsed (visibility + height)
+    * Added margin: 0 auto to center footer-right grid
+    * Settings button (odd last item) now spans both columns and centers
+    * Fixed footer-left to use center alignment
+  - Fixed menu disappearing at narrow widths (≤380px):
+    * Added explicit expanded state rules for narrow screens
+    * Increased expanded max-height to 420px for single-column layout
+    * Reset orphan centering for single-column mode
+  - Fixed tabs scroll clipping on narrow screens:
+    * Removed negative margins that caused scroll trapping
+    * Added scroll-padding for proper snap alignment
+    * Added pseudo-element spacers for full scroll travel
+    * Fixed section-jump bar with same scroll improvements
+  - NEW: Mobile quickbar expanded state is now a full-screen glass overlay:
+    * Covers entire viewport with frosted glass background
+    * Vertically stacked menu buttons for easy touch access
+    * Close button in top-right corner
+    * HP widget prominently displayed at top
+    * Desktop layout unchanged
+  
+  PREVIOUS: v6.4 (Security Hardening)
   =============================================
   P0: Security and Trust Boundaries
   - Added Content Security Policy meta tag
@@ -5287,79 +5315,170 @@ body.quickbar-collapsed{
     display: none;
   }
 
-  /* ===== EXPANDED STATE: Clean single row ===== */
+  /* ===== EXPANDED STATE: Full-screen glass overlay ===== */
   .quickbar:not(.collapsed) {
-    padding: 8px 12px !important;
-    padding-top: calc(8px + var(--safe-area-top, 0px)) !important;
-    display: flex !important;
-    flex-wrap: nowrap !important;
-    align-items: center !important;
-    gap: 6px !important;
-    overflow: visible !important;
-    grid-template-columns: unset !important;
-    row-gap: unset !important;
-  }
-  
-  /* CRITICAL: Ensure popovers work in expanded state */
-  .quickbar:not(.collapsed) .qb-pop {
-    position: relative !important;
-    z-index: 100 !important;
-  }
-  
-  .quickbar:not(.collapsed) .qb-charpicker {
-    overflow: visible !important;
-    pointer-events: auto !important;
-    position: relative !important;
-    z-index: 200 !important;
-  }
-  
-  .quickbar:not(.collapsed) .qb-charpicker .qb-charbtn {
-    pointer-events: auto !important;
-    position: relative !important;
-    z-index: 201 !important;
-    -webkit-tap-highlight-color: var(--accent-glow);
-    touch-action: manipulation;
-  }
-  
-  /* Ensure the popover itself appears correctly */
-  .quickbar:not(.collapsed) .qb-pop.open > .qb-popover {
-    display: block !important;
-    pointer-events: auto !important;
-  }
-  
-  /* Force ALL popovers to be bottom sheet on mobile expanded */
-  .quickbar:not(.collapsed) .qb-charpicker.open > .qb-popover,
-  .quickbar:not(.collapsed) .qb-more.open > .qb-popover,
-  .quickbar:not(.collapsed) .qb-pop.open > .qb-popover,
-  .quickbar:not(.collapsed) #settingsWrap.open > .qb-popover {
     position: fixed !important;
-    top: auto !important;
-    bottom: 0 !important;
-    left: 0 !important;
-    right: 0 !important;
+    inset: 0 !important;
     width: 100% !important;
-    max-width: 100% !important;
-    max-height: 70vh !important;
-    border-radius: 20px 20px 0 0 !important;
-    z-index: 2000 !important;
-    display: block !important;
+    height: 100% !important;
+    max-height: 100% !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    background: rgba(10, 10, 18, 0.85) !important;
+    backdrop-filter: blur(20px) saturate(180%) !important;
+    -webkit-backdrop-filter: blur(20px) saturate(180%) !important;
+    border: none !important;
+    border-radius: 0 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: flex-start !important;
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+    z-index: 10000 !important;
+    animation: qbOverlayFadeIn 0.25s ease-out !important;
   }
   
-  /* Backdrop for expanded popover - applies to ALL open popovers */
-  .quickbar:not(.collapsed) .qb-pop.open::before {
-    content: '';
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,0.5);
-    z-index: 1999;
+  @keyframes qbOverlayFadeIn {
+    from {
+      opacity: 0;
+      backdrop-filter: blur(0px);
+      -webkit-backdrop-filter: blur(0px);
+    }
+    to {
+      opacity: 1;
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+    }
   }
   
-  /* Hide dividers */
+  /* Hide minimal HUD in expanded state */
+  .quickbar:not(.collapsed) .qb-minimal-hud {
+    display: none !important;
+    visibility: hidden !important;
+    pointer-events: none !important;
+  }
+  
+  /* Show collapse toggle as close button */
+  .quickbar:not(.collapsed) .qb-collapse-toggle {
+    position: fixed !important;
+    top: calc(16px + var(--safe-area-top, 0px)) !important;
+    right: 16px !important;
+    left: auto !important;
+    bottom: auto !important;
+    width: 44px !important;
+    height: 44px !important;
+    background: rgba(255, 255, 255, 0.1) !important;
+    border: 1px solid rgba(255, 255, 255, 0.2) !important;
+    border-radius: 50% !important;
+    color: var(--text-primary) !important;
+    font-size: 1.2rem !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    cursor: pointer !important;
+    z-index: 10002 !important;
+    transform: rotate(180deg) !important;
+    transition: background 0.15s ease, transform 0.15s ease !important;
+  }
+  
+  .quickbar:not(.collapsed) .qb-collapse-toggle:active {
+    background: rgba(255, 255, 255, 0.2) !important;
+    transform: rotate(180deg) scale(0.92) !important;
+  }
+  
+  /* Hide dividers in overlay */
   .quickbar:not(.collapsed) .qb-vdiv {
-    display: none;
+    display: none !important;
   }
   
-  /* Hide most items - move to More menu */
+  /* Expanded HP widget - centered at top */
+  .quickbar:not(.collapsed) .qb-expanded-hp {
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    padding: 16px 24px;
+    margin-top: calc(24px + var(--safe-area-top, 0px));
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 16px;
+    flex-shrink: 0;
+  }
+  
+  .quickbar:not(.collapsed) .qb-expanded-hp .qb-hp-adjust {
+    width: 44px;
+    height: 44px;
+    font-size: 1.2rem;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: var(--text-primary);
+  }
+  
+  .quickbar:not(.collapsed) .qb-expanded-hp .qb-hp-adjust:active {
+    transform: scale(0.92);
+    background: rgba(255, 255, 255, 0.15);
+  }
+  
+  .quickbar:not(.collapsed) .qb-exp-hp-value {
+    font-family: var(--font-mono);
+    font-size: 1.5rem;
+    font-weight: 700;
+    padding: 0 12px;
+    min-width: 80px;
+    text-align: center;
+  }
+  
+  /* HP state colors */
+  .quickbar:not(.collapsed) .qb-expanded-hp[data-hp-state="healthy"] .qb-exp-hp-value { color: var(--success); }
+  .quickbar:not(.collapsed) .qb-expanded-hp[data-hp-state="bloodied"] .qb-exp-hp-value { color: var(--warning); }
+  .quickbar:not(.collapsed) .qb-expanded-hp[data-hp-state="critical"] .qb-exp-hp-value { color: var(--danger); }
+  .quickbar:not(.collapsed) .qb-expanded-hp[data-hp-state="critical"] {
+    border-color: rgba(216,138,151,0.5);
+    animation: hp-critical-pulse 1.5s ease-in-out infinite;
+  }
+  
+  /* Layout zones - stacked vertically */
+  .quickbar:not(.collapsed) .qb-zone {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    width: 100% !important;
+    max-width: 320px !important;
+    padding: 0 16px !important;
+    margin: 0 !important;
+  }
+  
+  .quickbar:not(.collapsed) .qb-left {
+    order: 1 !important;
+    margin-top: 20px !important;
+  }
+  
+  .quickbar:not(.collapsed) .qb-center {
+    order: 2 !important;
+    margin-top: 16px !important;
+  }
+  
+  .quickbar:not(.collapsed) .qb-right {
+    order: 3 !important;
+    margin-top: 16px !important;
+    margin-bottom: calc(24px + var(--safe-area-bottom, 0px)) !important;
+  }
+  
+  /* Character picker button - large touch target */
+  .quickbar:not(.collapsed) .qb-charpicker .qb-charbtn {
+    width: 100% !important;
+    min-height: 56px !important;
+    padding: 14px 20px !important;
+    font-size: 1rem !important;
+    background: rgba(255, 255, 255, 0.08) !important;
+    border: 1px solid rgba(255, 255, 255, 0.15) !important;
+    border-radius: 14px !important;
+    justify-content: center !important;
+  }
+  
+  /* Hide items that are in the More menu */
   .quickbar:not(.collapsed) #charNewBtn,
   .quickbar:not(.collapsed) .qb-pop:has(#charMenuBtn),
   .quickbar:not(.collapsed) #qbStatsInline,
@@ -5373,129 +5492,102 @@ body.quickbar-collapsed{
     display: none !important;
   }
   
-  /* Layout zones with !important to override later media queries */
-  .quickbar:not(.collapsed) .qb-left {
-    display: flex !important;
-    align-items: center !important;
-    flex-shrink: 0 !important;
-    order: 1 !important;
-    width: auto !important;
-  }
-  
-  /* Show expanded HP widget */
-  .quickbar:not(.collapsed) .qb-expanded-hp {
-    display: flex !important;
-    align-items: center;
-    gap: 3px;
-    padding: 4px 6px;
-    background: var(--card-bg);
-    border: 1px solid var(--card-border);
-    border-radius: 8px;
-    flex-shrink: 0;
-    order: 2;
-  }
-  
-  .quickbar:not(.collapsed) .qb-expanded-hp .qb-hp-adjust {
-    width: 26px;
-    height: 26px;
-    font-size: 0.9rem;
-    border-radius: 6px;
-  }
-  
-  .quickbar:not(.collapsed) .qb-exp-hp-value {
-    font-family: var(--font-mono);
-    font-size: 0.82rem;
-    font-weight: 600;
-    padding: 0 4px;
-    min-width: 45px;
-    text-align: center;
-  }
-  
-  /* HP state colors for expanded widget */
-  .quickbar:not(.collapsed) .qb-expanded-hp[data-hp-state="healthy"] .qb-exp-hp-value { color: var(--success); }
-  .quickbar:not(.collapsed) .qb-expanded-hp[data-hp-state="bloodied"] .qb-exp-hp-value { color: var(--warning); }
-  .quickbar:not(.collapsed) .qb-expanded-hp[data-hp-state="critical"] .qb-exp-hp-value { color: var(--danger); }
-  .quickbar:not(.collapsed) .qb-expanded-hp[data-hp-state="critical"] {
-    border-color: rgba(216,138,151,0.4);
-    animation: hp-critical-pulse 1.5s ease-in-out infinite;
-  }
-  
-  /* Hide center zone container but show More menu */
-  .quickbar:not(.collapsed) .qb-center {
-    display: contents !important;
-    width: auto !important;
-  }
-  
+  /* Center zone layout */
   .quickbar:not(.collapsed) .qb-center-inline {
-    display: contents;
-  }
-  
-  .quickbar:not(.collapsed) .qb-actions {
-    display: contents;
-  }
-  
-  /* More menu */
-  .quickbar:not(.collapsed) .qb-more {
     display: flex !important;
-    flex-shrink: 0;
-    order: 3;
-  }
-  
-  .quickbar:not(.collapsed) .qb-more .qb-btn {
-    padding: 0 10px;
-    min-height: 32px;
-    font-size: 0.72rem;
-  }
-  
-  /* Right zone: Edit/Play + Settings */
-  .quickbar:not(.collapsed) .qb-right {
-    display: flex !important;
+    flex-direction: column !important;
     align-items: center !important;
-    gap: 4px !important;
-    margin-left: auto !important;
-    flex-shrink: 0 !important;
-    order: 10 !important;
-    width: auto !important;
+    width: 100% !important;
+    gap: 12px !important;
   }
   
+  /* More button - prominent */
+  .quickbar:not(.collapsed) .qb-more {
+    width: 100% !important;
+  }
+  
+  .quickbar:not(.collapsed) .qb-more #qbMoreBtn {
+    width: 100% !important;
+    min-height: 56px !important;
+    padding: 14px 20px !important;
+    font-size: 1rem !important;
+    background: rgba(255, 255, 255, 0.08) !important;
+    border: 1px solid rgba(255, 255, 255, 0.15) !important;
+    border-radius: 14px !important;
+    justify-content: center !important;
+  }
+  
+  /* Mode segment - Edit/Play toggle */
   .quickbar:not(.collapsed) #modeSeg {
-    flex-shrink: 0;
+    width: 100% !important;
+    display: flex !important;
+    gap: 8px !important;
   }
   
-  .quickbar:not(.collapsed) .qb-seg-btn {
-    padding: 0 8px;
-    min-height: 30px;
-    font-size: 0.65rem;
+  .quickbar:not(.collapsed) #modeSeg .qb-segbtn {
+    flex: 1 !important;
+    min-height: 52px !important;
+    font-size: 0.95rem !important;
+    border-radius: 12px !important;
+    background: rgba(255, 255, 255, 0.06) !important;
+    border: 1px solid rgba(255, 255, 255, 0.12) !important;
   }
   
-  /* Compact character picker */
-  .quickbar:not(.collapsed) .qb-charbtn {
-    padding: 0 8px;
-    min-height: 32px;
-    max-width: 100px;
+  .quickbar:not(.collapsed) #modeSeg .qb-segbtn.active {
+    background: linear-gradient(135deg, var(--accent-tertiary), var(--accent-primary)) !important;
+    border-color: var(--accent-secondary) !important;
+    color: white !important;
   }
   
-  .quickbar:not(.collapsed) .qb-charname {
-    font-size: 0.75rem;
-    max-width: 70px;
+  /* Settings button */
+  .quickbar:not(.collapsed) #settingsWrap {
+    width: 100% !important;
   }
   
-  /* Settings button compact */
-  .quickbar:not(.collapsed) #qbSettingsBtn {
-    padding: 0 8px;
-    min-height: 30px;
+  .quickbar:not(.collapsed) #settingsBtn {
+    width: 100% !important;
+    min-height: 52px !important;
+    padding: 14px 20px !important;
+    font-size: 0.95rem !important;
+    background: rgba(255, 255, 255, 0.06) !important;
+    border: 1px solid rgba(255, 255, 255, 0.12) !important;
+    border-radius: 12px !important;
+    justify-content: center !important;
   }
   
-  /* Collapse toggle at end */
-  .quickbar:not(.collapsed) .qb-collapse-toggle {
-    position: static;
-    transform: none;
-    width: 30px;
-    height: 30px;
-    border-radius: 6px;
-    border: 1px solid var(--card-border);
-    flex-shrink: 0;
-    order: 99;
+  /* Popovers become bottom sheets */
+  .quickbar:not(.collapsed) .qb-pop {
+    position: static !important;
+    width: 100% !important;
+  }
+  
+  .quickbar:not(.collapsed) .qb-charpicker.open > .qb-popover,
+  .quickbar:not(.collapsed) .qb-more.open > .qb-popover,
+  .quickbar:not(.collapsed) .qb-pop.open > .qb-popover,
+  .quickbar:not(.collapsed) #settingsWrap.open > .qb-popover {
+    position: fixed !important;
+    top: auto !important;
+    bottom: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    max-height: 70vh !important;
+    border-radius: 20px 20px 0 0 !important;
+    z-index: 10003 !important;
+    display: block !important;
+    background: var(--panel-bg) !important;
+    border: 1px solid var(--glass-border) !important;
+    border-bottom: none !important;
+  }
+  
+  /* Backdrop for open popovers */
+  .quickbar:not(.collapsed) .qb-pop.open::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.4);
+    z-index: 10002;
   }
 }
 
@@ -10454,8 +10546,8 @@ body.reduced-motion .help-modal-content {
     overflow-x: auto;
     overflow-y: hidden;
     gap: 4px;
-    padding: 8px 12px;
-    margin: 0 -12px;
+    padding: 8px 0; /* Vertical padding only */
+    margin: 0; /* No negative margins */
     -webkit-overflow-scrolling: touch;
     scroll-snap-type: x mandatory;
   }
@@ -10469,17 +10561,34 @@ body.reduced-motion .help-modal-content {
     white-space: nowrap;
   }
   
+  /* First tab gets left margin for scroll start room */
+  .tab-btn:first-child {
+    margin-left: 16px;
+  }
+  
+  /* Last tab gets right margin for scroll end room */
+  .tab-btn:last-child {
+    margin-right: 16px;
+  }
+  
   /* Section jump controls: horizontal scroll */
   .section-jump {
     display: flex;
     flex-wrap: nowrap;
     overflow-x: auto;
     gap: 4px;
-    padding: 8px 0;
-    margin: 0 -8px;
-    padding-left: 8px;
-    padding-right: 8px;
+    padding: 8px 0; /* Vertical padding only */
+    margin: 0; /* No negative margins */
     -webkit-overflow-scrolling: touch;
+  }
+  
+  /* First/last items get margin for scroll room */
+  .section-jump-btn:first-of-type {
+    margin-left: 16px;
+  }
+  
+  .section-jump-btn:last-of-type {
+    margin-right: 16px;
   }
   
   .section-jump-label {
@@ -11029,7 +11138,7 @@ body.reduced-motion .help-modal-content {
    ========================= */
 @media (max-width: 520px) {
   #boot {
-    padding: calc(32px + var(--safe-area-top)) 16px calc(16px + var(--safe-area-bottom));
+    padding: calc(48px + var(--safe-area-top)) 16px calc(16px + var(--safe-area-bottom));
     justify-content: flex-start;
     overflow-y: auto;
     overflow-x: hidden !important;
@@ -11077,7 +11186,8 @@ body.reduced-motion .help-modal-content {
   }
 
   .boot-zone-top {
-    padding-top: 8px; /* Light element provides visual spacing */
+    padding-top: 16px; /* Increased padding to prevent logo cutoff */
+    margin-top: 8px; /* Additional margin for better spacing */
   }
 
   /* Celestial light on mobile - slightly larger for visibility */
@@ -11197,22 +11307,30 @@ body.reduced-motion .help-modal-content {
     gap: 8px;
     opacity: 0;
     pointer-events: none;
-    transition: opacity 0.2s ease;
+    transition: opacity 0.2s ease, visibility 0.2s ease;
+    width: 100%; /* Ensure full width for centering */
+    visibility: hidden; /* Completely hide when collapsed */
+    height: 0; /* Remove from layout when collapsed */
+    overflow: hidden;
   }
   
   .boot-footer-row.expanded .boot-footer-left,
   .boot-footer-row.expanded .boot-footer-right {
     opacity: 1;
     pointer-events: auto;
+    visibility: visible;
+    height: auto;
   }
 
-  /* Footer buttons: 2x2 grid */
+  /* Footer buttons: 2x2 grid - centered */
   .boot-footer-right {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     gap: 8px;
     width: 100%;
     max-width: 320px;
+    margin: 0 auto; /* Center the grid */
+    justify-items: stretch; /* Stretch items to fill cells */
   }
 
   .boot-footer-link {
@@ -11220,15 +11338,24 @@ body.reduced-motion .help-modal-content {
     padding: 10px 12px;
     min-height: 44px;
     justify-content: center;
+    width: 100%; /* Fill grid cell */
+  }
+  
+  /* Center the last item if it's alone in its row (odd child) */
+  .boot-footer-right .boot-footer-link:last-child:nth-child(odd) {
+    grid-column: 1 / -1; /* Span both columns */
+    max-width: 50%; /* Keep it same width as others */
+    justify-self: center; /* Center it */
   }
 
-  /* Skip and Don't show again: separate row */
+  /* Skip and Don't show again: separate row - centered */
   .boot-footer-left {
     order: 1;
     width: 100%;
     max-width: 320px;
+    margin: 0 auto; /* Center the container */
     display: flex;
-    justify-content: space-between;
+    justify-content: center; /* Center items when visible */
   }
 
   .boot-footer-version {
@@ -11394,14 +11521,24 @@ body.reduced-motion .help-modal-content {
     -webkit-overflow-scrolling: touch;
     scroll-snap-type: x mandatory;
     gap: 6px;
-    padding: 8px 12px;
-    margin: 0 0 16px; /* Remove negative margins that cause offset */
-    justify-content: center; /* Center tabs when they fit */
+    padding: 8px 0; /* Vertical padding only */
+    margin: 0 0 16px; /* No negative margins */
+    justify-content: flex-start; /* Start aligned for scroll */
     scrollbar-width: none; /* Firefox */
   }
 
   .tabs::-webkit-scrollbar {
     display: none;
+  }
+  
+  /* First tab gets left margin for scroll start room */
+  .tabs .tab-btn:first-child {
+    margin-left: 16px;
+  }
+  
+  /* Last tab gets right margin for scroll end room */
+  .tabs .tab-btn:last-child {
+    margin-right: 16px;
   }
 
   .tab-btn {
@@ -11419,8 +11556,8 @@ body.reduced-motion .help-modal-content {
     overflow-x: auto;
     overflow-y: hidden;
     -webkit-overflow-scrolling: touch;
-    padding: 6px 10px;
-    margin: 0 -12px 12px;
+    padding: 6px 0; /* Vertical padding only - margins on children for scroll */
+    margin: 0 0 12px; /* No negative margins */
     gap: 6px;
     scrollbar-width: none;
     top: calc(var(--quickbar-h, 68px) + 4px);
@@ -11441,6 +11578,15 @@ body.reduced-motion .help-modal-content {
     min-height: 36px;
     font-size: 0.68rem;
   }
+  
+  /* First/last jump buttons get margin for scroll room */
+  .section-jump-btn:first-of-type {
+    margin-left: 16px;
+  }
+  
+  .section-jump-btn:last-of-type {
+    margin-right: 16px;
+  }
 }
 
 /* =========================
@@ -11451,12 +11597,12 @@ body.reduced-motion .help-modal-content {
   /* Combined navigation container - compact vertical stacking */
   .tabs {
     margin-bottom: 4px;
-    padding: 6px 10px;
+    padding: 6px 0; /* Vertical padding only - margins on children for scroll */
     background: var(--panel-bg);
     border-radius: var(--card-radius);
     position: relative;
     z-index: 100; /* High enough to be above card content */
-    justify-content: center; /* Center the tabs */
+    justify-content: flex-start; /* Start-aligned for scroll, not center */
   }
   
   .tab-btn {
@@ -11468,7 +11614,7 @@ body.reduced-motion .help-modal-content {
   
   /* Section jump: collapsed by default on mobile - uses data-expanded attribute */
   .section-jump {
-    padding: 0;
+    padding: 0 16px; /* Keep side padding for scroll */
     margin: 0 0 8px;
     background: var(--panel-bg);
     border-radius: 6px;
@@ -11477,6 +11623,7 @@ body.reduced-motion .help-modal-content {
     transition: max-height 0.25s ease, padding 0.25s ease;
     position: relative;
     z-index: 90;
+    scroll-padding: 0 16px;
   }
   
   /* Create a toggle button via ::before pseudo-element */
@@ -11857,9 +12004,9 @@ body.reduced-motion .help-modal-content {
 
 /* Very narrow mobile (320px and below) */
 @media (max-width: 380px) {
-  /* Even more compact boot screen */
+  /* Even more compact boot screen - but keep adequate top padding */
   #boot {
-    padding: calc(12px + var(--safe-area-top)) 12px calc(12px + var(--safe-area-bottom));
+    padding: calc(40px + var(--safe-area-top)) 12px calc(12px + var(--safe-area-bottom));
   }
 
   /* H: Ensure logo readable at minimum sizes (24-32px) */
@@ -11915,13 +12062,35 @@ body.reduced-motion .help-modal-content {
     height: 44px;
   }
 
-  /* Footer: single column */
+  /* Footer: single column on very narrow screens */
   .boot-footer-right {
     grid-template-columns: 1fr;
+  }
+  
+  /* Reset the orphan centering for single column */
+  .boot-footer-right .boot-footer-link:last-child:nth-child(odd) {
+    grid-column: auto;
+    max-width: 100%;
+    justify-self: stretch;
   }
 
   .boot-footer-link {
     font-size: 0.75rem;
+  }
+  
+  /* Ensure expanded state works at narrow widths */
+  .boot-footer-row.expanded .boot-footer-left,
+  .boot-footer-row.expanded .boot-footer-right {
+    opacity: 1;
+    pointer-events: auto;
+    visibility: visible;
+    height: auto;
+    overflow: visible;
+  }
+  
+  /* Increase max-height for single column content */
+  .boot-footer-row.expanded {
+    max-height: 420px; /* More room for 5 single-column buttons */
   }
 }
 
@@ -12240,13 +12409,23 @@ body.reduced-motion .help-modal-content {
     flex-wrap: nowrap !important;
     overflow-x: auto !important;
     gap: 8px !important;
-    padding: 4px 0 !important;
+    padding: 4px 0 !important; /* Vertical padding only */
     margin-bottom: 12px !important;
     scrollbar-width: none !important;
   }
   
   .tabs::-webkit-scrollbar {
     display: none !important;
+  }
+  
+  /* First tab gets left margin for scroll start room */
+  .tabs .tab-btn:first-child {
+    margin-left: 16px !important;
+  }
+  
+  /* Last tab gets right margin for scroll end room */
+  .tabs .tab-btn:last-child {
+    margin-right: 16px !important;
   }
   
   .tab-btn {
@@ -13502,343 +13681,276 @@ body.reduced-motion .help-modal-content {
   
   /* =====================
      EXPANDED STATE 
-     Single row layout: [Char &#x25BC;] [- HP +] [More &#x25BC;] [Edit|Play] [&#x2699;]
+     Full-screen glass overlay menu
      ===================== */
-  .quickbar:not(.collapsed) {
+  .quickbar:not(.collapsed),
+  .quickbar.mobile-expanded {
+    position: fixed !important;
+    inset: 0 !important;
+    width: 100% !important;
+    height: 100vh !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    background: rgba(10, 10, 18, 0.88) !important;
+    backdrop-filter: blur(24px) saturate(180%) !important;
+    -webkit-backdrop-filter: blur(24px) saturate(180%) !important;
+    border: none !important;
+    border-radius: 0 !important;
     display: flex !important;
-    flex-direction: row !important;
-    flex-wrap: wrap !important;
+    flex-direction: column !important;
     align-items: center !important;
-    justify-content: flex-start !important;
-    height: auto !important;
-    min-height: unset !important;
-    padding: 10px 12px !important;
-    padding-top: calc(10px + env(safe-area-inset-top, 0px)) !important;
-    gap: 8px !important;
-    background: linear-gradient(180deg, rgba(14,16,24,0.98) 0%, rgba(18,20,30,0.96) 100%) !important;
-    border-bottom: 1px solid var(--accent-glow) !important;
-    backdrop-filter: blur(14px) !important;
-    -webkit-backdrop-filter: blur(14px) !important;
+    justify-content: center !important;
+    overflow: hidden !important;
+    z-index: 10000 !important;
+    /* Reset any grid settings */
     grid-template-columns: unset !important;
+    grid-template-rows: unset !important;
+    grid-auto-flow: unset !important;
   }
   
-  /* ===== EXPANDED STATE ZONES - Show with proper layout ===== */
-  /* FIXED: Don't hide zones - show them with flex layout */
-  .quickbar:not(.collapsed) .qb-zone {
+  /* Hide ALL children by default */
+  .quickbar:not(.collapsed) > *,
+  .quickbar.mobile-expanded > * {
+    display: none !important;
+    flex: 0 0 auto !important;
+    height: auto !important;
+    max-height: none !important;
+    min-height: 0 !important;
+  }
+  
+  /* Show and style the elements we need */
+  .quickbar:not(.collapsed) .qb-collapse-toggle,
+  .quickbar.mobile-expanded .qb-collapse-toggle {
+    display: flex !important;
+    position: fixed !important;
+    top: calc(16px + env(safe-area-inset-top, 0px)) !important;
+    right: 16px !important;
+    left: auto !important;
+    bottom: auto !important;
+    width: 44px !important;
+    height: 44px !important;
+    background: rgba(255, 255, 255, 0.1) !important;
+    border: 1px solid rgba(255, 255, 255, 0.2) !important;
+    border-radius: 50% !important;
+    color: var(--text-primary) !important;
+    font-size: 1rem !important;
+    align-items: center !important;
+    justify-content: center !important;
+    cursor: pointer !important;
+    z-index: 10002 !important;
+    transform: rotate(180deg) !important;
+  }
+  
+  .quickbar:not(.collapsed) .qb-expanded-hp,
+  .quickbar.mobile-expanded .qb-expanded-hp,
+  .quickbar:not(.collapsed) > #qbExpandedHp,
+  .quickbar.mobile-expanded > #qbExpandedHp {
+    display: flex !important;
+    flex: 0 0 auto !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 10px !important;
+    padding: 12px 20px !important;
+    margin-bottom: 12px !important;
+    background: rgba(255, 255, 255, 0.08) !important;
+    border: 1px solid rgba(255, 255, 255, 0.15) !important;
+    border-radius: 14px !important;
+    /* Reset grid positioning */
+    grid-column: unset !important;
+    grid-row: unset !important;
+  }
+  
+  .quickbar:not(.collapsed) .qb-expanded-hp .qb-hp-adjust,
+  .quickbar.mobile-expanded .qb-expanded-hp .qb-hp-adjust,
+  .quickbar:not(.collapsed) > #qbExpandedHp .qb-hp-adjust,
+  .quickbar.mobile-expanded > #qbExpandedHp .qb-hp-adjust {
+    width: 40px !important;
+    height: 40px !important;
     display: flex !important;
     align-items: center !important;
-    gap: 6px !important;
-  }
-  
-  /* Left zone: Character picker only */
-  .quickbar:not(.collapsed) .qb-left {
-    order: 1 !important;
-    flex: 0 0 auto !important;
-  }
-  
-  /* Hide New and Menu buttons on mobile expanded */
-  .quickbar:not(.collapsed) #charNewBtn,
-  .quickbar:not(.collapsed) .qb-pop:has(#charMenuBtn) {
-    display: none !important;
-  }
-  
-  /* Character picker compact */
-  .quickbar:not(.collapsed) .qb-charbtn {
-    padding: 0 10px !important;
-    min-height: 36px !important;
-    max-width: 100px !important;
+    justify-content: center !important;
+    background: rgba(255, 255, 255, 0.08) !important;
+    border: 1px solid rgba(255, 255, 255, 0.18) !important;
     border-radius: 10px !important;
+    font-size: 1.2rem !important;
+    cursor: pointer !important;
   }
   
-  .quickbar:not(.collapsed) .qb-charname {
-    font-size: 0.72rem !important;
-    max-width: 65px !important;
+  .quickbar:not(.collapsed) .qb-expanded-hp .qb-hp-adjust.minus,
+  .quickbar.mobile-expanded .qb-expanded-hp .qb-hp-adjust.minus { color: var(--danger) !important; }
+  .quickbar:not(.collapsed) .qb-expanded-hp .qb-hp-adjust.plus,
+  .quickbar.mobile-expanded .qb-expanded-hp .qb-hp-adjust.plus { color: var(--success) !important; }
+  
+  .quickbar:not(.collapsed) .qb-exp-hp-value,
+  .quickbar.mobile-expanded .qb-exp-hp-value,
+  .quickbar:not(.collapsed) #qbExpHpValue,
+  .quickbar.mobile-expanded #qbExpHpValue {
+    font-family: var(--font-mono) !important;
+    font-size: 1.2rem !important;
+    font-weight: 700 !important;
+    min-width: 60px !important;
+    text-align: center !important;
   }
   
-  /* Center zone: Show More menu only */
-  .quickbar:not(.collapsed) .qb-center {
-    order: 3 !important;
-    display: contents !important;
+  .quickbar:not(.collapsed) .qb-expanded-hp[data-hp-state="healthy"] .qb-exp-hp-value,
+  .quickbar.mobile-expanded .qb-expanded-hp[data-hp-state="healthy"] .qb-exp-hp-value { color: var(--success) !important; }
+  .quickbar:not(.collapsed) .qb-expanded-hp[data-hp-state="bloodied"] .qb-exp-hp-value,
+  .quickbar.mobile-expanded .qb-expanded-hp[data-hp-state="bloodied"] .qb-exp-hp-value { color: var(--warning) !important; }
+  .quickbar:not(.collapsed) .qb-expanded-hp[data-hp-state="critical"] .qb-exp-hp-value,
+  .quickbar.mobile-expanded .qb-expanded-hp[data-hp-state="critical"] .qb-exp-hp-value { color: var(--danger) !important; }
+  
+  /* Show zones but keep them compact */
+  .quickbar:not(.collapsed) .qb-left,
+  .quickbar:not(.collapsed) .qb-center,
+  .quickbar:not(.collapsed) .qb-right,
+  .quickbar.mobile-expanded .qb-left,
+  .quickbar.mobile-expanded .qb-center,
+  .quickbar.mobile-expanded .qb-right {
+    display: flex !important;
+    flex: 0 0 auto !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    width: 280px !important;
+    height: auto !important;
+    max-height: none !important;
+    padding: 0 !important;
+    margin-bottom: 10px !important;
+    /* Reset grid positioning */
+    grid-column: unset !important;
+    grid-row: unset !important;
   }
   
-  .quickbar:not(.collapsed) .qb-center-inline,
-  .quickbar:not(.collapsed) .qb-actions {
-    display: contents !important;
+  .quickbar:not(.collapsed) .qb-right,
+  .quickbar.mobile-expanded .qb-right {
+    margin-bottom: 0 !important;
   }
   
-  /* Hide stats and most action buttons */
+  /* Hide specific items */
+  .quickbar:not(.collapsed) #charNewBtn,
+  .quickbar:not(.collapsed) .qb-pop:has(#charMenuBtn),
   .quickbar:not(.collapsed) #qbStatsInline,
   .quickbar:not(.collapsed) #qbHealDmgBtn,
   .quickbar:not(.collapsed) #qbTempBtn,
   .quickbar:not(.collapsed) #qbShortRestDirect,
   .quickbar:not(.collapsed) #qbLongRestDirect,
-  .quickbar:not(.collapsed) #rollModeSeg {
-    display: none !important;
-  }
-  
-  /* More menu visible */
-  .quickbar:not(.collapsed) .qb-more {
-    display: flex !important;
-    order: 3 !important;
-  }
-  
-  .quickbar:not(.collapsed) .qb-more .qb-btn {
-    min-height: 36px !important;
-    padding: 0 12px !important;
-    font-size: 0.75rem !important;
-    border-radius: 10px !important;
-  }
-  
-  /* Right zone: Edit/Play + Settings */
-  .quickbar:not(.collapsed) .qb-right {
-    order: 10 !important;
-    flex: 0 0 auto !important;
-    margin-left: auto !important;
-  }
-  
-  /* Hide save status and undo on mobile */
+  .quickbar:not(.collapsed) #rollModeSeg,
   .quickbar:not(.collapsed) #saveStatus,
-  .quickbar:not(.collapsed) #undoBtn {
-    display: none !important;
-  }
+  .quickbar:not(.collapsed) #undoBtn,
+  .quickbar.mobile-expanded #charNewBtn,
+  .quickbar.mobile-expanded .qb-pop:has(#charMenuBtn),
+  .quickbar.mobile-expanded #qbStatsInline,
+  .quickbar.mobile-expanded #qbHealDmgBtn,
+  .quickbar.mobile-expanded #qbTempBtn,
+  .quickbar.mobile-expanded #qbShortRestDirect,
+  .quickbar.mobile-expanded #qbLongRestDirect,
+  .quickbar.mobile-expanded #rollModeSeg,
+  .quickbar.mobile-expanded #saveStatus,
+  .quickbar.mobile-expanded #undoBtn { display: none !important; }
   
-  /* Mode toggle compact */
-  .quickbar:not(.collapsed) #modeSeg {
-    display: flex !important;
-  }
-  
-  .quickbar:not(.collapsed) .qb-seg-btn {
-    padding: 0 10px !important;
-    min-height: 34px !important;
-    font-size: 0.7rem !important;
-    border-radius: 8px !important;
-  }
-  
-  /* Settings button */
-  .quickbar:not(.collapsed) #settingsWrap {
-    display: flex !important;
-  }
-  
-  .quickbar:not(.collapsed) #settingsBtn {
-    width: 36px !important;
-    min-width: 36px !important;
-    height: 36px !important;
-    padding: 0 !important;
-    border-radius: 10px !important;
-  }
-  
-  /* Hide dividers and minimal hud */
-  .quickbar:not(.collapsed) .qb-vdiv,
-  .quickbar:not(.collapsed) .qb-minimal-hud {
-    display: none !important;
-  }
-  
-  /* Show collapse toggle as inline button in expanded state */
-  .quickbar:not(.collapsed) .qb-collapse-toggle {
-    position: static !important;
-    transform: none !important;
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    width: 36px !important;
-    height: 36px !important;
-    background: var(--accent-glow) !important;
-    border: 1px solid var(--accent-glow) !important;
-    border-radius: 10px !important;
-    font-size: 0.7rem !important;
-    color: var(--accent-secondary) !important;
-    cursor: pointer !important;
-    order: 11 !important;
-  }
-  
-  .quickbar:not(.collapsed) .qb-collapse-toggle:active {
-    background: var(--accent-glow) !important;
-  }
-  
-  /* Show expanded HP widget */
-  .quickbar:not(.collapsed) .qb-expanded-hp {
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    gap: 6px !important;
-    padding: 8px 12px !important;
-    background: rgba(0,0,0,0.3) !important;
-    border: 1.5px solid var(--accent-glow) !important;
-    border-radius: 14px !important;
-    order: 2 !important;
-  }
-  
-  .quickbar:not(.collapsed) .qb-expanded-hp .qb-hp-adjust {
-    width: 36px !important;
-    height: 36px !important;
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    background: rgba(255,255,255,0.06) !important;
-    border: 1px solid rgba(255,255,255,0.12) !important;
-    border-radius: 10px !important;
-    font-size: 1.2rem !important;
-    font-weight: 600 !important;
-    cursor: pointer !important;
-  }
-  
-  .quickbar:not(.collapsed) .qb-expanded-hp .qb-hp-adjust.minus {
-    color: var(--danger) !important;
-  }
-  .quickbar:not(.collapsed) .qb-expanded-hp .qb-hp-adjust.minus:active {
-    background: rgba(216,138,151,0.2) !important;
-    border-color: var(--danger) !important;
-  }
-  
-  .quickbar:not(.collapsed) .qb-expanded-hp .qb-hp-adjust.plus {
-    color: var(--success) !important;
-  }
-  .quickbar:not(.collapsed) .qb-expanded-hp .qb-hp-adjust.plus:active {
-    background: rgba(141,212,168,0.2) !important;
-    border-color: var(--success) !important;
-  }
-  
-  .quickbar:not(.collapsed) .qb-exp-hp-value {
-    font-family: var(--font-mono) !important;
-    font-size: 1.1rem !important;
-    font-weight: 700 !important;
-    min-width: 70px !important;
-    text-align: center !important;
-    padding: 0 8px !important;
-  }
-  
-  /* HP States for expanded */
-  .quickbar:not(.collapsed) .qb-expanded-hp[data-hp-state="healthy"] .qb-exp-hp-value {
-    color: var(--success) !important;
-  }
-  .quickbar:not(.collapsed) .qb-expanded-hp[data-hp-state="bloodied"] {
-    border-color: rgba(212,200,138,0.35) !important;
-  }
-  .quickbar:not(.collapsed) .qb-expanded-hp[data-hp-state="bloodied"] .qb-exp-hp-value {
-    color: var(--warning) !important;
-  }
-  .quickbar:not(.collapsed) .qb-expanded-hp[data-hp-state="critical"] {
-    border-color: rgba(216,138,151,0.45) !important;
-    animation: mobile-hp-crit 1.5s ease-in-out infinite !important;
-  }
-  .quickbar:not(.collapsed) .qb-expanded-hp[data-hp-state="critical"] .qb-exp-hp-value {
-    color: var(--danger) !important;
-  }
-  
-  /* ===== MOBILE ROW CONTAINERS ===== */
-  /* We need to add these via JS, but style them here */
-  .quickbar:not(.collapsed) .mobile-qb-row {
-    display: flex !important;
-    align-items: center !important;
-    gap: 8px !important;
+  /* Button styles */
+  .quickbar:not(.collapsed) .qb-charpicker,
+  .quickbar.mobile-expanded .qb-charpicker { width: 100% !important; display: flex !important; }
+  .quickbar:not(.collapsed) .qb-charbtn,
+  .quickbar.mobile-expanded .qb-charbtn {
     width: 100% !important;
-  }
-  
-  .quickbar:not(.collapsed) .mobile-qb-row-1 {
-    justify-content: space-between !important;
-  }
-  
-  .quickbar:not(.collapsed) .mobile-qb-row-2 {
-    justify-content: stretch !important;
-  }
-  
-  /* Segment Controls - Shared styles */
-  .quickbar:not(.collapsed) .mobile-segment {
-    display: flex !important;
-    align-items: stretch !important;
-    background: rgba(0,0,0,0.3) !important;
-    border: 1px solid rgba(255,255,255,0.1) !important;
+    min-height: 48px !important;
+    max-width: unset !important;
+    height: auto !important;
+    padding: 10px 18px !important;
+    background: rgba(255, 255, 255, 0.08) !important;
+    border: 1px solid rgba(255, 255, 255, 0.15) !important;
     border-radius: 12px !important;
-    padding: 4px !important;
-    gap: 4px !important;
+    justify-content: center !important;
+  }
+  .quickbar:not(.collapsed) .qb-charname,
+  .quickbar.mobile-expanded .qb-charname { font-size: 0.9rem !important; max-width: unset !important; }
+  
+  .quickbar:not(.collapsed) .qb-center-inline,
+  .quickbar:not(.collapsed) .qb-actions,
+  .quickbar.mobile-expanded .qb-center-inline,
+  .quickbar.mobile-expanded .qb-actions {
+    display: flex !important;
+    flex-direction: column !important;
+    width: 100% !important;
+    gap: 10px !important;
   }
   
-  .quickbar:not(.collapsed) .mobile-seg-btn {
+  .quickbar:not(.collapsed) .qb-more,
+  .quickbar.mobile-expanded .qb-more { width: 100% !important; display: flex !important; }
+  .quickbar:not(.collapsed) .qb-more .qb-btn,
+  .quickbar.mobile-expanded .qb-more .qb-btn {
+    width: 100% !important;
+    min-height: 48px !important;
+    padding: 10px 18px !important;
+    font-size: 0.9rem !important;
+    background: rgba(255, 255, 255, 0.08) !important;
+    border: 1px solid rgba(255, 255, 255, 0.15) !important;
+    border-radius: 12px !important;
+    justify-content: center !important;
+  }
+  
+  .quickbar:not(.collapsed) #modeSeg,
+  .quickbar.mobile-expanded #modeSeg { width: 100% !important; display: flex !important; gap: 8px !important; }
+  .quickbar:not(.collapsed) .qb-seg-btn,
+  .quickbar.mobile-expanded .qb-seg-btn {
     flex: 1 !important;
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    padding: 10px 14px !important;
-    min-height: 38px !important;
-    background: transparent !important;
-    border: none !important;
-    border-radius: 8px !important;
+    min-height: 44px !important;
+    padding: 10px 12px !important;
     font-size: 0.85rem !important;
-    font-weight: 500 !important;
-    color: var(--text-secondary) !important;
-    cursor: pointer !important;
-    transition: all 0.15s ease !important;
+    border-radius: 10px !important;
+    background: rgba(255, 255, 255, 0.06) !important;
+    border: 1px solid rgba(255, 255, 255, 0.12) !important;
+  }
+  .quickbar:not(.collapsed) .qb-seg-btn.active,
+  .quickbar.mobile-expanded .qb-seg-btn.active {
+    background: linear-gradient(135deg, var(--accent-tertiary), var(--accent-primary)) !important;
+    color: white !important;
   }
   
-  .quickbar:not(.collapsed) .mobile-seg-btn:active {
-    background: rgba(255,255,255,0.08) !important;
-  }
-  
-  .quickbar:not(.collapsed) .mobile-seg-btn[aria-pressed="true"] {
-    background: var(--accent-primary) !important;
-    color: #fff !important;
-    font-weight: 600 !important;
-    box-shadow: 0 2px 8px var(--accent-glow) !important;
-  }
-  
-  /* Roll mode segment - full width */
-  .quickbar:not(.collapsed) .mobile-roll-segment {
-    flex: 1 1 auto !important;
-  }
-  
-  .quickbar:not(.collapsed) .mobile-roll-segment .mobile-seg-btn.adv[aria-pressed="true"] {
-    background: var(--success) !important;
-    box-shadow: 0 2px 8px rgba(141,212,168,0.25) !important;
-  }
-  
-  .quickbar:not(.collapsed) .mobile-roll-segment .mobile-seg-btn.dis[aria-pressed="true"] {
-    background: var(--danger) !important;
-    box-shadow: 0 2px 8px rgba(216,138,151,0.25) !important;
-  }
-  
-  /* Mode segment - compact */
-  .quickbar:not(.collapsed) .mobile-mode-segment {
-    flex: 0 0 auto !important;
-  }
-  
-  /* Icon buttons */
-  .quickbar:not(.collapsed) .mobile-icon-btn {
-    display: flex !important;
-    align-items: center !important;
+  .quickbar:not(.collapsed) #settingsWrap,
+  .quickbar.mobile-expanded #settingsWrap { width: 100% !important; display: flex !important; margin-top: 10px !important; }
+  .quickbar:not(.collapsed) #settingsBtn,
+  .quickbar.mobile-expanded #settingsBtn {
+    width: 100% !important;
+    min-height: 44px !important;
+    padding: 10px 18px !important;
+    font-size: 0.85rem !important;
+    background: rgba(255, 255, 255, 0.06) !important;
+    border: 1px solid rgba(255, 255, 255, 0.12) !important;
+    border-radius: 10px !important;
     justify-content: center !important;
-    width: 40px !important;
-    height: 40px !important;
-    background: rgba(255,255,255,0.06) !important;
-    border: 1px solid rgba(255,255,255,0.12) !important;
-    border-radius: 12px !important;
-    font-size: 1rem !important;
-    color: var(--text-secondary) !important;
-    cursor: pointer !important;
   }
   
-  .quickbar:not(.collapsed) .mobile-icon-btn:active {
-    background: var(--accent-glow) !important;
-    border-color: var(--accent-tertiary) !important;
+  /* Popovers */
+  .quickbar:not(.collapsed) .qb-pop,
+  .quickbar.mobile-expanded .qb-pop { position: static !important; width: 100% !important; }
+  .quickbar:not(.collapsed) .qb-charpicker.open > .qb-popover,
+  .quickbar:not(.collapsed) .qb-more.open > .qb-popover,
+  .quickbar:not(.collapsed) .qb-pop.open > .qb-popover,
+  .quickbar:not(.collapsed) #settingsWrap.open > .qb-popover,
+  .quickbar.mobile-expanded .qb-charpicker.open > .qb-popover,
+  .quickbar.mobile-expanded .qb-more.open > .qb-popover,
+  .quickbar.mobile-expanded .qb-pop.open > .qb-popover,
+  .quickbar.mobile-expanded #settingsWrap.open > .qb-popover {
+    position: fixed !important;
+    bottom: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    width: 100% !important;
+    max-height: 70vh !important;
+    border-radius: 20px 20px 0 0 !important;
+    z-index: 10003 !important;
   }
   
-  /* Collapse button */
-  .quickbar:not(.collapsed) .mobile-collapse-btn {
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    width: 40px !important;
-    height: 40px !important;
-    background: var(--accent-glow) !important;
-    border: 1px solid var(--accent-glow) !important;
-    border-radius: 12px !important;
-    font-size: 0.7rem !important;
-    color: var(--accent-secondary) !important;
-    cursor: pointer !important;
+  .quickbar:not(.collapsed) .qb-pop.open::before,
+  .quickbar.mobile-expanded .qb-pop.open::before {
+    content: '' !important;
+    position: fixed !important;
+    inset: 0 !important;
+    background: rgba(0, 0, 0, 0.5) !important;
+    z-index: 10002 !important;
   }
   
-  .quickbar:not(.collapsed) .mobile-collapse-btn:active {
-    background: var(--accent-glow) !important;
-  }
 }
 
 /* =========================
@@ -14375,8 +14487,8 @@ body {
     <button class="boot-footer-link boot-settings-btn" id="bootSettingsBtn" type="button" title="Settings">&#x2699; Settings</button>
   </div>
   <div class="boot-footer-version">
-    <span class="boot-version">v6.0</span>
-    <span class="boot-build">Build 2025.12.28</span>
+    <span class="boot-version">v6.6</span>
+    <span class="boot-build">Build 2025.12.29</span>
   </div>
 </footer>
   
