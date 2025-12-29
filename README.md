@@ -85,7 +85,7 @@ Each theme includes animated particle backgrounds (optional).
 ### Option 2: Local Development Server
 ```bash
 # Clone the repo
-git clone https://github.com/zagreous/player-almanac.git
+git clone https://github.com/Kylemaddenar/player-almanac.git
 cd player-almanac
 
 # Serve with Python
@@ -249,7 +249,8 @@ For commercial licensing: [Kinzle.MA@gmail.com](mailto:Kinzle.MA@gmail.com)
 </p>
 
 <p align="center">
-  <a href="https://github.com/zagreous/player-almanac">⭐ Star on GitHub</a> •
-  <a href="https://github.com/zagreous/player-almanac/issues">🐛 Report Bug</a> •
-  <a href="https://github.com/zagreous/player-almanac/discussions">💬 Discussions</a>
+  <a href="https://github.com/Kylemaddenar/player-almanac">⭐ Star on GitHub</a> •
+  <a href="https://github.com/Kylemaddenar/player-almanac/issues">🐛 Report Bug</a> •
+  <a href="https://github.com/Kylemaddenar/player-almanac/discussions">💬 Discussions</a>
 </p>
+
