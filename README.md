@@ -99,11 +99,7 @@ npx serve .
 
 ---
 
-## 📸 Screenshots
 
-| Boot Screen | Character Sheet | Mobile View |
-|-------------|-----------------|-------------|
-| ![Boot](docs/boot.png) | ![Sheet](docs/sheet.png) | ![Mobile](docs/mobile.png) |
 
 ---
 
