@@ -16,9 +16,9 @@
 ================================================================================
 -->
 <!--
-  Player Almanac Character Sheet - v6.16.0 OFFLINE BUILD (No External Dependencies)
+  Player Almanac Character Sheet - v6.16.1 OFFLINE BUILD (No External Dependencies)
   
-  CURRENT VERSION: v6.16.0 - December 29, 2025
+  CURRENT VERSION: v6.16.1 - January 1, 2026
   
   For complete version history, see: CHANGELOG.txt
 -->
@@ -2395,6 +2395,25 @@ body.high-contrast .watermark {
   background:rgba(200,150,50,0.25);
   border-color:rgba(200,150,50,0.5);
   color:#f0d090;
+}
+
+/* PWA Install button - distinct styling to attract attention */
+.boot-install-btn{
+  background:linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+  border-color:var(--accent-primary);
+  color:white;
+  font-weight:600;
+  animation:install-pulse 2s ease-in-out infinite;
+}
+.boot-install-btn:hover{
+  background:linear-gradient(135deg, var(--accent-secondary), var(--accent-primary));
+  transform:translateY(-2px) scale(1.03);
+  box-shadow:0 4px 20px var(--accent-glow);
+  animation:none;
+}
+@keyframes install-pulse{
+  0%,100%{box-shadow:0 0 0 0 var(--accent-glow)}
+  50%{box-shadow:0 0 15px 3px var(--accent-glow)}
 }
 
 /* Section 12/7: Boot Settings Panel */
@@ -5083,6 +5102,10 @@ textarea::placeholder{color:var(--text-muted);opacity:0.6}
 .act-btn svg{width:24px;height:24px}
 .act-btn .tip{position:absolute;right:60px;background:var(--bg-dark);border:1px solid var(--glass-border);padding:4px 8px;border-radius:4px;font-size:0.8rem;white-space:nowrap;opacity:0;pointer-events:none}
 .act-btn:hover .tip{opacity:1}
+/* Home button in actions rail - styled to stand out */
+.act-btn.act-home{background:var(--accent-primary);border-color:var(--accent-secondary)}
+.act-btn.act-home svg{fill:white}
+.act-btn.act-home:hover{background:var(--accent-secondary);transform:scale(1.15);box-shadow:0 0 25px var(--accent-glow)}
 .motion-toggle{position:fixed;top:16px;right:16px;z-index:100;display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}
 .motion-toggle button{background:var(--glass-bg);border:1px solid var(--glass-border);backdrop-filter:blur(var(--panel-blur));color:var(--text-secondary);padding:10px 14px;border-radius:999px;font-family:var(--font-display);font-size:0.78rem;text-transform:uppercase;letter-spacing:0.12em;cursor:pointer;min-height:40px}
 .motion-toggle button:hover{border-color:var(--accent-primary);color:var(--text-primary)}
@@ -13313,6 +13336,8 @@ body.reduced-motion .help-modal-content {
   .actions[data-expanded="true"] .act-btn:nth-child(5) { transition-delay: 0.12s; }
   .actions[data-expanded="true"] .act-btn:nth-child(6) { transition-delay: 0.15s; }
   .actions[data-expanded="true"] .act-btn:nth-child(7) { transition-delay: 0.18s; }
+  .actions[data-expanded="true"] .act-btn:nth-child(8) { transition-delay: 0.21s; }
+  .actions[data-expanded="true"] .act-btn:nth-child(9) { transition-delay: 0.24s; }
   
   /* Rotate FAB icon when expanded */
   .actions[data-expanded="true"] .act-fab-toggle svg {
@@ -15982,8 +16007,8 @@ body {
         <button class="boot-action-btn boot-continue boot-primary" id="bootContinue" type="button">
           <span class="boot-action-icon">&#x1F4CB;</span>
           <span class="boot-action-text">
-            <span class="boot-action-label">Continue</span>
-            <span class="boot-action-char" id="bootCharName">Last Character</span>
+            <span class="boot-action-label" data-i18n="boot.continue">Continue</span>
+            <span class="boot-action-char" id="bootCharName" data-i18n="boot.lastCharacter">Last Character</span>
             <span class="boot-action-subtext" id="bootCharSubtext"></span>
           </span>
         </button>
@@ -16028,8 +16053,8 @@ body {
       <!-- Section 12/2: Recent Characters Panel -->
       <div class="boot-recent" id="bootRecent" hidden>
         <div class="boot-recent-header">
-          <span class="boot-recent-title">Recent Characters</span>
-          <button class="boot-recent-viewall" id="bootViewAll" type="button">View All</button>
+          <span class="boot-recent-title" data-i18n="boot.recentCharacters">Recent Characters</span>
+          <button class="boot-recent-viewall" id="bootViewAll" type="button" data-i18n="boot.viewAll">View All</button>
         </div>
         <div class="boot-recent-cards" id="bootRecentCards">
           <!-- Cards populated by JS -->
@@ -16052,6 +16077,8 @@ body {
     <button class="boot-skip-btn" id="bootSkip" type="button" hidden>Skip Intro</button>
   </div>
   <div class="boot-footer-right">
+    <!-- PWA Install Button - shown when app can be installed -->
+    <button class="boot-footer-link boot-install-btn" id="bootInstallBtn" type="button" title="Install app to your device" hidden>&#x1F4F2; Install App</button>
     <!-- P0-1: Recovery button always accessible for data export -->
     <button class="boot-footer-link boot-recovery-btn" id="bootRecoveryBtn" type="button" title="Emergency data recovery - export all data">&#x1F6E0; Recovery</button>
     <button class="boot-footer-link" id="bootExportAll" type="button" title="Export all characters">Export All</button>
@@ -16243,14 +16270,6 @@ body {
 
   <!-- Left: Character management -->
   <div class="qb-zone qb-left" role="group" aria-label="Character management" data-no-mode-disable="1">
-    <!-- Home button with logo - returns to main menu -->
-    <button class="qb-home-btn" id="homeBtn" type="button" title="Return to main menu" aria-label="Return to main menu" data-no-mode-disable="1" data-tip="Return to character selection">
-      <svg viewBox="0 0 24 24" role="img" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
-        <path d="M12 3L2 12h3v9h6v-6h2v6h6v-9h3L12 3zm0 2.84L19 12h-1v8h-4v-6H10v6H6v-8H5l7-6.16z"/>
-      </svg>
-      <span class="qb-home-label">Menu</span>
-    </button>
-    
     <!-- Hidden native select remains the source of truth for ID selection -->
     <select class="qb-select qb-hidden" id="charSelect" title="Select character" data-no-mode-disable="1" aria-hidden="true" tabindex="-1"></select>
 
@@ -16372,8 +16391,8 @@ body {
     <button class="qb-btn secondary" id="undoBtn" type="button" title="Undo last change (Ctrl/Cmd+Z)" data-tip="Undo last change (Ctrl+Z)" aria-label="Undo last change">Undo</button>
 
     <div class="qb-seg" id="modeSeg" role="group" aria-label="Mode">
-      <button class="qb-seg-btn" id="modeEditBtn" type="button" data-mode="edit" aria-pressed="true" title="Edit mode" data-tip="Edit mode: change all fields" aria-label="Edit mode">Edit</button>
-      <button class="qb-seg-btn" id="modePlayBtn" type="button" data-mode="play" aria-pressed="false" title="Play mode (locks editing)" data-tip="Play mode: locks editing, quick actions only" aria-label="Play mode - locks editing">&#x1F512; Play</button>
+      <button class="qb-seg-btn" id="modeEditBtn" type="button" data-mode="edit" aria-pressed="true" title="Edit mode" data-tip="Edit mode: change all fields" aria-label="Edit mode"><span data-i18n="mode.edit">Edit</span></button>
+      <button class="qb-seg-btn" id="modePlayBtn" type="button" data-mode="play" aria-pressed="false" title="Play mode (locks editing)" data-tip="Play mode: locks editing, quick actions only" aria-label="Play mode - locks editing">&#x1F512; <span data-i18n="mode.play">Play</span></button>
     </div>
 
     <div class="qb-pop" id="settingsWrap">
@@ -16667,12 +16686,12 @@ body {
 <!-- Row 3: Weapons & Features -->
 <div class="core-other-row">
   <div class="card" data-section="core-weapons"><h2 class="card-title">Weapons & Attacks</h2>
-    <table><thead><tr><th>Name</th><th>Atk</th><th>Damage</th><th>Notes</th><th></th></tr></thead><tbody id="weapons"></tbody></table>
+    <table><thead><tr><th data-i18n="table.name">Name</th><th>Atk</th><th>Damage</th><th data-i18n="table.notes">Notes</th><th></th></tr></thead><tbody id="weapons"></tbody></table>
     <!-- Mobile weapon list (visible on mobile only) -->
     <div class="weapon-mobile-list" id="weaponMobileList"></div>
     <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:8px">
       <select id="weapon-select" style="flex:1;min-width:140px;background:transparent;border:1px solid var(--glass-border);color:var(--text-primary);padding:6px;border-radius:4px;font-size:0.85rem">
-        <option value="">-- Select 5E Weapon --</option>
+        <option value="" data-i18n="select.weapon5e">-- Select 5E Weapon --</option>
         <optgroup label="Simple Melee">
           <option value="Club">Club</option>
           <option value="Dagger">Dagger</option>
@@ -16796,7 +16815,7 @@ body {
   <input type="number" id="spell-dc" min="1" max="30" style="font-family:var(--font-mono);font-size:1.5rem;color:var(--accent-secondary);background:transparent;border:1px solid var(--glass-border);border-radius:4px;width:60px;text-align:center;padding:4px" value="">
   <div style="margin-top:8px">
     <label style="font-size:0.7rem;color:var(--text-muted);cursor:pointer;display:inline-flex;align-items:center;gap:4px">
-      <input type="checkbox" id="spell-dc-auto" checked> Auto-calculate
+      <input type="checkbox" id="spell-dc-auto" checked data-no-mode-disable="1"> Auto-calculate
     </label>
   </div>
 </div>
@@ -16824,17 +16843,17 @@ body {
   </div>
   <div class="compact-toggle">
     <input type="checkbox" id="spellsCompact" />
-    <label for="spellsCompact">Compact</label>
+    <label for="spellsCompact"><span data-i18n="spells.compact">Compact</span></label>
   </div>
 </div>
 <div class="spells-table-wrap">
-<table><thead><tr><th>Lvl</th><th>Name</th><th>Cast</th><th>Range</th><th>C</th><th>R</th><th title="Prepared">P</th><th>Notes</th><th></th></tr></thead><tbody id="spells-list"></tbody></table>
+<table><thead><tr><th data-i18n="table.lvl">Lvl</th><th data-i18n="table.name">Name</th><th data-i18n="table.cast">Cast</th><th data-i18n="table.range">Range</th><th>C</th><th>R</th><th title="Prepared">P</th><th data-i18n="table.notes">Notes</th><th></th></tr></thead><tbody id="spells-list"></tbody></table>
 </div>
 <!-- Mobile spell list (visible on mobile only) -->
 <div class="spell-mobile-list" id="spellMobileList"></div>
 <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:8px">
   <select id="spell-select" style="flex:1;min-width:140px;background:transparent;border:1px solid var(--glass-border);color:var(--text-primary);padding:6px;border-radius:4px;font-size:0.85rem">
-    <option value="">-- Select 5E Spell --</option>
+    <option value="" data-i18n="select.spell5e">-- Select 5E Spell --</option>
     <optgroup label="Cantrips">
       <option value="Acid Splash">Acid Splash</option>
       <option value="Chill Touch">Chill Touch</option>
@@ -16986,7 +17005,7 @@ body {
 <div class="prof-cat"><div class="prof-cat-title">Languages</div>
 <div style="margin-bottom:8px;display:flex;gap:4px;flex-wrap:wrap;align-items:center">
   <select id="lang-select" style="flex:1;min-width:140px;background:transparent;border:1px solid var(--glass-border);color:var(--text-primary);padding:6px;border-radius:4px;font-size:0.85rem">
-    <option value="">+ Add Language</option>
+    <option value="" data-i18n="language.add">+ Add Language</option>
     <optgroup label="Standard Languages">
       <option value="Common">Common</option>
       <option value="Dwarvish">Dwarvish</option>
@@ -17050,6 +17069,7 @@ body {
 </div>
 <div class="actions" id="actionsRail">
 <button class="act-btn act-fab-toggle" id="actionsFabToggle" type="button" title="Actions" aria-haspopup="menu" aria-expanded="false" aria-label="Toggle actions menu"><span class="tip">Actions</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="1"/><circle cx="12" cy="5" r="1"/><circle cx="12" cy="19" r="1"/></svg></button>
+<button class="act-btn act-home" id="homeBtn" type="button" title="Return to main menu" data-tip="Return to character selection" aria-label="Return to main menu" data-tip-pos="left"><span class="tip">Menu</span><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 3L2 12h3v9h6v-6h2v6h6v-9h3L12 3zm0 2.84L19 12h-1v8h-4v-6H10v6H6v-8H5l7-6.16z"/></svg></button>
 <button class="act-btn" id="mapBtn" type="button" title="Map" data-tip="Open campaign map" aria-label="Open map" data-tip-pos="left"><span class="tip">Map</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 6v16l7-4 8 4 7-4V2l-7 4-8-4-7 4z"/><path d="M8 2v16"/><path d="M16 6v16"/></svg></button>
 <button class="act-btn" id="saveBtn" type="button" title="Save" data-tip="Save character (auto-saves)" aria-label="Save character" data-tip-pos="left"><span class="tip">Save</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg></button>
 <button class="act-btn" id="exportBtn" type="button" data-tip="Export character to file" aria-label="Export character" data-tip-pos="left"><span class="tip">Export</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></button>
@@ -17067,9 +17087,9 @@ body {
     </div>
     <!-- Section 7: Character Context Selector -->
     <div class="map-topbar-center">
-      <label class="map-character-label" for="mapCharacterSelect">Placing for:</label>
+      <label class="map-character-label" for="mapCharacterSelect"><span data-i18n="map.placingFor">Placing for:</span></label>
       <select class="map-character-select" id="mapCharacterSelect" title="Select character for Origin/Last Seen pins">
-        <option value="">Current Character</option>
+        <option value="" data-i18n="map.currentCharacter">Current Character</option>
       </select>
     </div>
     <div class="map-topbar-right">
@@ -17144,10 +17164,10 @@ body {
       <div class="map-empty" id="mapEmpty">
         <div class="map-empty-icon">&#x1F5FA;&#xFE0F;</div>
         <div class="map-empty-title">No Map Loaded</div>
-        <div class="map-empty-text">Upload an image to get started with your campaign map.</div>
+        <div class="map-empty-text" data-i18n="map.emptyText">Upload an image to get started with your campaign map.</div>
         <label class="map-upload-btn">
           <input type="file" id="mapUploadInput" accept="image/png,image/jpeg,image/webp" />
-          Upload Map
+          <span data-i18n="map.uploadMap">Upload Map</span>
         </label>
       </div>
       
@@ -17211,7 +17231,7 @@ body {
             <button class="map-panel-btn secondary" id="mapRemoveBtn" type="button" data-tip="Remove the current map" aria-label="Remove map image">Remove</button>
           </div>
           <label class="map-panel-label">Map Name</label>
-          <input class="map-panel-input" id="mapNameInput" type="text" placeholder="Campaign Map" maxlength="60" />
+          <input class="map-panel-input" id="mapNameInput" type="text" placeholder="Campaign Map" data-i18n-placeholder="map.defaultMapName" maxlength="60" />
         </div>
       </div>
       
@@ -17219,11 +17239,11 @@ body {
         <div class="map-panel-title">Origin</div>
         <div class="map-panel-content">
           <label class="map-panel-label">Name</label>
-          <input class="map-panel-input" id="mapOriginName" type="text" placeholder="Hometown" maxlength="60" />
+          <input class="map-panel-input" id="mapOriginName" type="text" placeholder="Hometown" data-i18n-placeholder="origin.defaultName" maxlength="60" />
           <label class="map-panel-label">Region</label>
-          <input class="map-panel-input" id="mapOriginRegion" type="text" placeholder="Northern Province" maxlength="60" />
+          <input class="map-panel-input" id="mapOriginRegion" type="text" placeholder="Northern Province" data-i18n-placeholder="origin.defaultRegion" maxlength="60" />
           <label class="map-panel-label">Notes</label>
-          <textarea class="map-panel-textarea" id="mapOriginNotes" placeholder="Details about your origin..." maxlength="500"></textarea>
+          <textarea class="map-panel-textarea" id="mapOriginNotes" placeholder="Details about your origin..." data-i18n-placeholder="origin.defaultNotes" maxlength="500"></textarea>
         </div>
       </div>
       
@@ -17232,7 +17252,7 @@ body {
         <div class="map-panel-content">
           <!-- Section 8: Enhanced scale calibration -->
           <div class="map-scale-info" id="mapScaleInfo">
-            <span class="map-scale-status">Not calibrated</span>
+            <span class="map-scale-status"><span data-i18n="scale.notCalibrated">Not calibrated</span></span>
           </div>
           <div class="map-scale-instructions" id="mapScaleInstructions" hidden>
             <p>1. Click the Scale tool in the toolbar</p>
@@ -17242,7 +17262,7 @@ body {
           </div>
           <div class="map-scale-line-status" id="mapScaleLineStatus" hidden>
             <span class="map-scale-line-indicator">&#x1F4CD;</span>
-            <span>Reference line: <strong id="mapScaleLinePixels">0</strong> px</span>
+            <span><span data-i18n="scale.referenceLine">Reference line:</span> <strong id="mapScaleLinePixels">0</strong> px</span>
           </div>
           <label class="map-panel-label">Distance</label>
           <div class="map-panel-row">
@@ -17324,7 +17344,7 @@ body {
           </select>
           
           <label class="map-panel-label">Region</label>
-          <input class="map-panel-input" id="mapPinRegion" type="text" placeholder="Northern Province" maxlength="60" />
+          <input class="map-panel-input" id="mapPinRegion" type="text" placeholder="Northern Province" data-i18n-placeholder="origin.defaultRegion" maxlength="60" />
           
           <div class="map-panel-row">
             <div style="flex:1">
@@ -18445,12 +18465,27 @@ body {
       'weapon.damage': 'Damage',
       'weapon.notes': 'Notes',
       'weapon.add': '+ Add Weapon',
+      'select.weapon5e': '-- Select 5E Weapon --',
+      'select.spell5e': '-- Select 5E Spell --',
+      
+      // Table headers
+      'table.lvl': 'Lvl',
+      'table.name': 'Name',
+      'table.cast': 'Cast',
+      'table.range': 'Range',
+      'table.notes': 'Notes',
+      
+      // Spells
+      'spells.compact': 'Compact',
       
       // Features
       'feature.add': '+ Add Feature',
       
       // Equipment
       'equip.add': '+ Add Item',
+      
+      // Languages
+      'language.add': '+ Add Language',
       
       // Feats
       'feat.add': '+ Add Feat',
@@ -18498,6 +18533,10 @@ body {
       'boot.restoreBackup': 'Restore Backup',
       'boot.settingsBtn': 'Settings',
       'boot.addons': 'Addons',
+      'boot.continue': 'Continue',
+      'boot.recentCharacters': 'Recent Characters',
+      'boot.viewAll': 'View All',
+      'boot.lastCharacter': 'Last Character',
       
       // Boot Settings Panel
       'bootSettings.title': 'Settings',
@@ -18692,6 +18731,7 @@ body {
       'map.title': 'Campaign Map',
       'map.noMapLoaded': 'No map loaded',
       'map.placingFor': 'Placing for:',
+      'map.currentCharacter': 'Current Character',
       'map.current': '(Current)',
       'map.settings': 'Map Settings',
       'map.campaign': 'Campaign',
@@ -18708,7 +18748,7 @@ body {
       'map.mapNamePlaceholder': 'Campaign Map',
       'map.scale': 'Scale',
       'map.notCalibrated': 'Not calibrated',
-      'map.referenceLine': 'Reference line:',
+      'map.referenceLine': '<span data-i18n="scale.referenceLine">Reference line:</span>',
       'map.distance': 'Distance',
       'map.setScale': 'Set Scale',
       'map.clear': 'Clear',
@@ -18838,7 +18878,145 @@ body {
       'printSheet.conditions': 'Conditions',
       'printSheet.unnamed': 'Unnamed Character',
       'printSheet.footer': 'Player Almanac • Character Sheet',
-    },
+    
+      'alert.emergencyExportFailed': "Emergency export failed:",
+      'alert.exportFailed': "Export failed:",
+      'alert.failedToResetCompletelyPleaseTryClearingYour': "Failed to reset completely. Please try clearing your browser data manually.",
+      'alert.failedToResetPleaseTryClearingYourBrowser': "Failed to reset. Please try clearing your browser data manually.",
+      'alert.importFailed': "Import failed:",
+      'alert.pressCtrlCToCopy': "Press Ctrl+C to copy",
+      'confirm.aNewVersionOfPlayerAlmanacIsAvailable': "A new version of Player Almanac is available. Reload to update?",
+      'confirm.clearTheScaleCalibrationMeasurementsWillShowIn': "Clear the scale calibration? Measurements will show in pixels.",
+      'confirm.deleteAllData': "Delete ALL data?",
+      'confirm.removeThisMapImagePinsAndRoutesWill': "Remove this map image? Pins and routes will be preserved.",
+      'confirm.x26a0Xfe0fThisWillPermanentlyDeleteAllSaved': "&#x26A0;&#xFE0F; This will permanently delete ALL saved characters and settings. This cannot be undone. Are you sure?",
+      'confirm.youHaveUnsavedChangesAreYouSureYou': "You have unsaved changes. Are you sure you want to cancel?",
+      'prompt.campaignName': "Campaign name:",
+      'default.newCampaign': "New Campaign",
+      'toast.addonNotFound': "Addon not found",
+      'toast.backgroundDataNotFound': "Background data not found",
+      'toast.backupNotFound': "Backup not found",
+      'toast.backupRestoredReloading': "Backup restored! Reloading...",
+      'toast.campaignCreated': "Campaign created",
+      'toast.campaignDeleted': "Campaign deleted",
+      'toast.campaignExported': "Campaign exported",
+      'toast.campaignImported': "Campaign imported",
+      'toast.changeUndone': "Change undone",
+      'toast.characterDeleted': "Character deleted",
+      'toast.characterDuplicated': "Character duplicated",
+      'toast.compressingLargeImage': "Compressing large image...",
+      'toast.copied': "Copied!",
+      'toast.enableTheAddonFirst': "Enable the addon first",
+      'toast.enterAValidDistance': "Enter a valid distance",
+      'toast.equipmentRemoved': "Equipment removed",
+      'toast.equipmentUpdated': "Equipment updated",
+      'toast.errorGeneratingPrintSheet': "Error generating print sheet:",
+      'toast.errorPrintSheetContainerNotFound': "Error: Print sheet container not found",
+      'toast.errorPrintSheetElementNotFound': "Error: Print sheet element not found",
+      'toast.exported': "Exported",
+      'toast.exportedWithMap': "Exported with map",
+      'toast.exportingCampaign': "Exporting campaign...",
+      'toast.failedToImportCampaign': "Failed to import campaign",
+      'toast.failedToSaveMapImage': "Failed to save map image",
+      'toast.fileTooLargeMax50mb': "File too large (max 50MB)",
+      'toast.firstDrawAReferenceLineWithTheScale': "First draw a reference line with the Scale tool",
+      'toast.importFailed': "Import failed:",
+      'toast.imported': "Imported",
+      'toast.importingCampaign': "Importing campaign...",
+      'toast.invalidCampaignFile': "Invalid campaign file",
+      'toast.mapFeatureIsUnavailable': "Map feature is unavailable",
+      'toast.mapImageImported': "Map image imported",
+      'toast.mapRemoved': "Map removed",
+      'toast.mapUploaded': "Map uploaded",
+      'toast.needAtLeast2PointsForARoute': "Need at least 2 points for a route",
+      'toast.noActiveCharacter': "No active character",
+      'toast.noBackgroundSelected': "No background selected",
+      'toast.noCampaignSelected': "No campaign selected",
+      'toast.noCampaignToExport': "No campaign to export",
+      'toast.noCharactersToExport': "No characters to export",
+      'toast.noEnhancementAvailable': "No enhancement available",
+      'toast.noEnhancementsAvailable': "No enhancements available",
+      'toast.noScaleToClear': "No scale to clear",
+      'toast.notAValidBackupFileUseImportFor': "Not a valid backup file. Use \"Import\" for single characters.",
+      'toast.nothingToUndo': "Nothing to undo",
+      'toast.pinDeletedCtrlZToUndo': "Pin deleted (Ctrl+Z to undo)",
+      'toast.pinRestored': "Pin restored",
+      'toast.pleaseUploadAnImageFilePngJpgOr': "Please upload an image file (PNG, JPG, or WebP)",
+      'toast.portraitCleared': "Portrait cleared",
+      'toast.portraitNotSavedIdbBlocked': "Portrait not saved (IDB blocked?)",
+      'toast.portraitUpdated': "Portrait updated",
+      'toast.restoreFailed': "Restore failed:",
+      'toast.returnedToMainMenu': "Returned to main menu",
+      'toast.rollLogCleared': "Roll log cleared",
+      'toast.routeCancelled': "Route cancelled",
+      'toast.routeDeleted': "Route deleted",
+      'toast.saveFailedStorageBlocked': "Save failed (storage blocked?)",
+      'toast.scaleCleared': "Scale cleared",
+      'toast.selectAValidUnit': "Select a valid unit",
+      'toast.selectHitDiceToRoll': "Select hit dice to roll",
+      'toast.spellAbilityIsNotSet': "Spell ability is not set",
+      'toast.spellEnhancedWithSystemData': "Spell enhanced with system data",
+      'toast.spellRemoved': "Spell removed",
+      'toast.switchedCharacter': "Switched character",
+      'toast.undone': "Undone",
+      'toast.unknownCharacter': "Unknown character",
+      'toast.unsupportedFileType': "Unsupported file type",
+      'toast.weaponEnhancedWithSystemData': "Weapon enhanced with system data",
+      'toast.weaponRemoved': "Weapon removed",
+
+      'abbr.hp': "HP",
+      'toast.added': "Added",
+      'toast.addonFailedDisabledPrefix': "Addon",
+      'toast.addonInstalledSuccessfully': "installed successfully",
+      'toast.addonRemoved': "removed",
+      'toast.backgroundApplied': "background applied!",
+      'toast.canBeEnhancedWithSystemData': "can be enhanced with system data",
+      'toast.character': "character",
+      'toast.characters': "characters",
+      'toast.damage': "damage",
+      'toast.enhanced': "Enhanced",
+      'toast.enhancedWithSystemData': "with system data",
+      'toast.failedAndDisabled': "failed and was disabled:",
+      'toast.failedToLaunch': "Failed to launch",
+      'toast.healed': "Healed",
+      'toast.importedAs': "Imported as",
+      'toast.item': "item",
+      'toast.items': "items",
+      'toast.lastSeenMarkedFor': "Last seen marked for",
+      'toast.masteryLabel': "mastery",
+      'toast.originPlacedFor': "Origin placed for",
+      'toast.phb2014': "2014 PHB",
+      'toast.phb2024': "2024 PHB",
+      'toast.rolled': "Rolled",
+      'toast.routeSaved': "Route saved",
+      'toast.rules2014': "(2014 rules)",
+      'toast.rulesLabel': "Rules:",
+      'toast.scaleCalibrated': "Scale calibrated:",
+      'toast.storageFullFailedToSave': "Storage full! Failed to save",
+      'toast.tempAbsorbed': "(temp absorbed)",
+      'toast.tempHpSetTo': "Temp HP set to",
+      'toast.themeLabel': "Theme:",
+      'toast.tookDamage': "Took",
+      'toast.withMastery': "with",
+      'ui.noCampaigns': 'No campaigns',
+      'ui.replace': 'Replace',
+      'ui.none': 'None',
+      'ui.autoCalculate': 'Auto-calculate',
+      'ui.conditions': 'Conditions',
+      'ui.passivePerception': 'Passive Perception',
+      'ui.lightArmor': 'Light',
+      'ui.mediumArmor': 'Medium',
+      'ui.heavyArmor': 'Heavy',
+      'ui.shields': 'Shields',
+      'ui.select5eGear': '-- Select 5E Gear --',
+      'ui.add5e': 'ADD 5E',
+      'ui.addItem': '+ Add Item',
+      'ui.addLanguage': '+ Add Language',
+      'ui.add': 'ADD',
+      'ui.saved': 'Saved',
+      'ui.edit': 'Edit',
+      'ui.play': 'Play',
+},
     de: {
       // Settings Menu
       'settings.theme': 'Design',
@@ -19409,7 +19587,172 @@ body {
       'printSheet.conditions': 'Zustände',
       'printSheet.unnamed': 'Unbenannter Charakter',
       'printSheet.footer': 'Player Almanac • Charakterbogen',
-    }
+    
+      'alert.emergencyExportFailed': "Notfall-Export fehlgeschlagen:",
+      'alert.exportFailed': "Export fehlgeschlagen:",
+      'alert.failedToResetCompletelyPleaseTryClearingYour': "Komplettes Zurücksetzen fehlgeschlagen. Bitte lösche deine Browserdaten manuell.",
+      'alert.failedToResetPleaseTryClearingYourBrowser': "Zurücksetzen fehlgeschlagen. Bitte lösche deine Browserdaten manuell.",
+      'alert.importFailed': "Import fehlgeschlagen:",
+      'alert.pressCtrlCToCopy': "Drücke Strg+C zum Kopieren",
+      'confirm.aNewVersionOfPlayerAlmanacIsAvailable': "Eine neue Version von Player Almanac ist verfügbar. Zum Aktualisieren neu laden?",
+      'confirm.clearTheScaleCalibrationMeasurementsWillShowIn': "Skalierung zurücksetzen? Messungen werden in Pixeln angezeigt.",
+      'confirm.deleteAllData': "ALLE Daten löschen?",
+      'confirm.removeThisMapImagePinsAndRoutesWill': "Dieses Kartenbild entfernen? Pins und Routen bleiben erhalten.",
+      'confirm.x26a0Xfe0fThisWillPermanentlyDeleteAllSaved': "&#x26A0;&#xFE0F; Dadurch werden ALLE gespeicherten Charaktere und Einstellungen dauerhaft gelöscht. Das kann nicht rückgängig gemacht werden. Bist du sicher?",
+      'confirm.youHaveUnsavedChangesAreYouSureYou': "Du hast ungespeicherte Änderungen. Wirklich abbrechen?",
+      'prompt.campaignName': "Kampagnenname:",
+      'default.newCampaign': "Neue Kampagne",
+      'toast.addonNotFound': "Add-on nicht gefunden",
+      'toast.backgroundDataNotFound': "Hintergrunddaten nicht gefunden",
+      'toast.backupNotFound': "Backup nicht gefunden",
+      'toast.backupRestoredReloading': "Backup wiederhergestellt. Neu laden...",
+      'toast.campaignCreated': "Kampagne erstellt",
+      'toast.campaignDeleted': "Kampagne gelöscht",
+      'toast.campaignExported': "Kampagne exportiert",
+      'toast.campaignImported': "Kampagne importiert",
+      'toast.changeUndone': "Änderung rückgängig gemacht",
+      'toast.characterDeleted': "Charakter gelöscht",
+      'toast.characterDuplicated': "Charakter dupliziert",
+      'toast.compressingLargeImage': "Großes Bild wird komprimiert...",
+      'toast.copied': "Kopiert!",
+      'toast.enableTheAddonFirst': "Add-on zuerst aktivieren",
+      'toast.enterAValidDistance': "Gib eine gültige Entfernung ein",
+      'toast.equipmentRemoved': "Ausrüstung entfernt",
+      'toast.equipmentUpdated': "Ausrüstung aktualisiert",
+      'toast.errorGeneratingPrintSheet': "Fehler beim Erstellen des Druckblatts:",
+      'toast.errorPrintSheetContainerNotFound': "Fehler: Container für Druckblatt nicht gefunden",
+      'toast.errorPrintSheetElementNotFound': "Fehler: Druckblatt-Element nicht gefunden",
+      'toast.exported': "Exportiert",
+      'toast.exportedWithMap': "Mit Karte exportiert",
+      'toast.exportingCampaign': "Kampagne wird exportiert...",
+      'toast.failedToImportCampaign': "Import der Kampagne fehlgeschlagen",
+      'toast.failedToSaveMapImage': "Kartenbild konnte nicht gespeichert werden",
+      'toast.fileTooLargeMax50mb': "Datei zu groß (max. 50 MB)",
+      'toast.firstDrawAReferenceLineWithTheScale': "Zeichne zuerst eine Referenzlinie mit dem Skalierungswerkzeug",
+      'toast.importFailed': "Import fehlgeschlagen:",
+      'toast.imported': "Importiert",
+      'toast.importingCampaign': "Kampagne wird importiert...",
+      'toast.invalidCampaignFile': "Ungültige Kampagnendatei",
+      'toast.mapFeatureIsUnavailable': "Kartenfunktion ist nicht verfügbar",
+      'toast.mapImageImported': "Kartenbild importiert",
+      'toast.mapRemoved': "Karte entfernt",
+      'toast.mapUploaded': "Karte hochgeladen",
+      'toast.needAtLeast2PointsForARoute': "Für eine Route brauchst du mindestens 2 Punkte",
+      'toast.noActiveCharacter': "Kein aktiver Charakter",
+      'toast.noBackgroundSelected': "Kein Hintergrund ausgewählt",
+      'toast.noCampaignSelected': "Keine Kampagne ausgewählt",
+      'toast.noCampaignToExport': "Keine Kampagne zum Exportieren",
+      'toast.noCharactersToExport': "Keine Charaktere zum Exportieren",
+      'toast.noEnhancementAvailable': "Keine Verbesserung verfügbar",
+      'toast.noEnhancementsAvailable': "Keine Verbesserungen verfügbar",
+      'toast.noScaleToClear': "Keine Skalierung zum Zurücksetzen",
+      'toast.notAValidBackupFileUseImportFor': "Keine gültige Backup-Datei. Nutze „Import“ für einzelne Charaktere.",
+      'toast.nothingToUndo': "Nichts zum Rückgängig machen",
+      'toast.pinDeletedCtrlZToUndo': "Pin gelöscht (Strg+Z zum Rückgängig machen)",
+      'toast.pinRestored': "Pin wiederhergestellt",
+      'toast.pleaseUploadAnImageFilePngJpgOr': "Bitte lade eine Bilddatei hoch (PNG, JPG oder WebP)",
+      'toast.portraitCleared': "Portrait gelöscht",
+      'toast.portraitNotSavedIdbBlocked': "Portrait nicht gespeichert (IndexedDB blockiert?)",
+      'toast.portraitUpdated': "Portrait aktualisiert",
+      'toast.restoreFailed': "Wiederherstellen fehlgeschlagen:",
+      'toast.returnedToMainMenu': "Zurück zum Hauptmenü",
+      'toast.rollLogCleared': "Wurfprotokoll geleert",
+      'toast.routeCancelled': "Route abgebrochen",
+      'toast.routeDeleted': "Route gelöscht",
+      'toast.saveFailedStorageBlocked': "Speichern fehlgeschlagen (Speicher blockiert?)",
+      'toast.scaleCleared': "Skalierung zurückgesetzt",
+      'toast.selectAValidUnit': "Wähle eine gültige Einheit",
+      'toast.selectHitDiceToRoll': "Wähle Trefferwürfel zum Würfeln",
+      'toast.spellAbilityIsNotSet': "Zauberattribut ist nicht gesetzt",
+      'toast.spellEnhancedWithSystemData': "Zauber mit Systemdaten verbessert",
+      'toast.spellRemoved': "Zauber entfernt",
+      'toast.switchedCharacter': "Charakter gewechselt",
+      'toast.undone': "Rückgängig gemacht",
+      'toast.unknownCharacter': "Unbekannter Charakter",
+      'toast.unsupportedFileType': "Nicht unterstützter Dateityp",
+      'toast.weaponEnhancedWithSystemData': "Waffe mit Systemdaten verbessert",
+      'toast.weaponRemoved': "Waffe entfernt",
+
+      'abbr.hp': "TP",
+      'toast.added': "Hinzugefügt",
+      'toast.addonFailedDisabledPrefix': "Add-on",
+      'toast.addonInstalledSuccessfully': "erfolgreich installiert",
+      'toast.addonRemoved': "entfernt",
+      'toast.backgroundApplied': "Hintergrund angewendet!",
+      'toast.canBeEnhancedWithSystemData': "kann mit Systemdaten verbessert werden",
+      'toast.character': "Charakter",
+      'toast.characters': "Charaktere",
+      'toast.damage': "Schaden genommen",
+      'toast.enhanced': "Verbessert",
+      'toast.enhancedWithSystemData': "mit Systemdaten",
+      'toast.failedAndDisabled': "ist fehlgeschlagen und wurde deaktiviert:",
+      'toast.failedToLaunch': "Start fehlgeschlagen für",
+      'toast.healed': "Geheilt",
+      'toast.importedAs': "Importiert als",
+      'toast.item': "Element",
+      'toast.items': "Elemente",
+      'toast.lastSeenMarkedFor': "Zuletzt gesehen markiert für",
+      'toast.masteryLabel': "Meisterschaft",
+      'toast.originPlacedFor': "Ursprung gesetzt für",
+      'toast.phb2014': "2014 PHB",
+      'toast.phb2024': "2024 PHB",
+      'toast.rolled': "Gewürfelt",
+      'toast.routeSaved': "Route gespeichert",
+      'toast.rules2014': "(2014-Regeln)",
+      'toast.rulesLabel': "Regeln:",
+      'toast.scaleCalibrated': "Skalierung kalibriert:",
+      'toast.storageFullFailedToSave': "Speicher voll! Konnte nicht speichern",
+      'toast.tempAbsorbed': "(Temp absorbiert)",
+      'toast.tempHpSetTo': "Temporäre TP auf",
+      'toast.themeLabel': "Design:",
+      'toast.tookDamage': "Hat",
+      'toast.withMastery': "mit",
+
+        "map.emptyText": "Lade ein Bild hoch, um mit deiner Kampagnenkarte zu starten.",
+        "map.uploadMap": "Karte hochladen",
+        "boot.recentCharacters": "Letzte Charaktere",
+        "boot.viewAll": "Alle ansehen",
+        "boot.continue": "Fortfahren",
+        "boot.lastCharacter": "Letzter Charakter",
+        "map.defaultMapName": "Kampagnenkarte",
+        "origin.defaultName": "Heimatstadt",
+        "origin.defaultRegion": "Nördliche Provinz",
+        "origin.defaultNotes": "Details zu deinem Ursprung...",
+        "map.replaceButton": "Ersetzen",
+        "map.placingFor": "Platzieren für:",
+        "map.currentCharacter": "Aktueller Charakter",
+        "scale.notCalibrated": "Nicht kalibriert",
+        "scale.referenceLine": "Referenzlinie:",
+        "mode.edit": "Bearbeiten",
+        "mode.play": "Spielen",
+        "spells.compact": "Kompakt",
+        "table.lvl": "Stufe",
+        "table.name": "Name",
+        "table.cast": "Wirkzeit",
+        "table.range": "Reichweite",
+        "table.notes": "Notizen",
+        "select.spell5e": "-- 5E-Zauber wählen --",
+        "select.weapon5e": "-- 5E-Waffe wählen --",
+        "language.add": "+ Sprache hinzufügen",
+      'ui.noCampaigns': 'Keine Kampagnen',
+      'ui.replace': 'Ersetzen',
+      'ui.none': 'Keine',
+      'ui.autoCalculate': 'Auto-berechnen',
+      'ui.conditions': 'Zustände',
+      'ui.passivePerception': 'Passive Wahrnehmung',
+      'ui.lightArmor': 'Leicht',
+      'ui.mediumArmor': 'Mittel',
+      'ui.heavyArmor': 'Schwer',
+      'ui.shields': 'Schilde',
+      'ui.select5eGear': '-- 5E-Ausrüstung wählen --',
+      'ui.add5e': '5E HINZUFÜGEN',
+      'ui.addItem': '+ GEGENSTAND HINZUFÜGEN',
+      'ui.addLanguage': '+ Sprache hinzufügen',
+      'ui.add': 'HINZUFÜGEN',
+      'ui.saved': 'Gespeichert',
+      'ui.edit': 'Bearbeiten',
+      'ui.play': 'Spielen',
+}
   };
 
   // Current language (defaults to English)
@@ -20552,7 +20895,7 @@ body {
           window.__PA_INSTANCE.showExportNowModal(key, value, stats);
         } else if (window.__PA_INSTANCE && typeof window.__PA_INSTANCE.toast === 'function') {
           window.__PA_INSTANCE.toast(
-            `Storage full! Failed to save "${key.split('_').pop()}". ` +
+            `${t('toast.storageFullFailedToSave')} "${key.split('_').pop()}". ` +
             `Export your data and delete old characters to free space.`, 
             'error'
           );
@@ -23469,7 +23812,7 @@ body {
           this.updateQuickBar(); // Update minimal HUD badge
           this.updateExhaustionEffects(); // Update exhaustion display for edition
           this.renderConds(); // Re-render condition tags with edition-specific effects
-          this.toast(`Rules: ${sel.value === '2024' ? "2024 PHB" : "2014 PHB"}`);
+          this.toast(`${t('toast.rulesLabel')} ${sel.value === '2024' ? t('toast.phb2024') : t('toast.phb2014')}`);
         });
       }
 
@@ -23753,7 +24096,7 @@ body {
           // Section 12: Check for active flow before closing modals
           if (this._activeFlow && this._unsavedFlowData) {
             // If in active flow with unsaved data, confirm before closing
-            if (!confirm('You have unsaved changes. Are you sure you want to cancel?')) {
+            if (!confirm(t('confirm.youHaveUnsavedChangesAreYouSureYou'))) {
               e.preventDefault();
               return;
             }
@@ -24189,7 +24532,7 @@ body {
           this.scheduleSave();
           
           if (is2024 && weapon.mastery) {
-            this.toast(`Added ${weapon.name} with ${weapon.mastery} mastery`);
+            this.toast(`${t('toast.added')} ${weapon.name} ${t('toast.withMastery')} ${t('toast.masteryLabel')} "${weapon.mastery}"`);
           }
         });
       }
@@ -24228,7 +24571,7 @@ body {
           
           // Show toast indicating which version was used
           if (override) {
-            this.toast(`Added ${spellName} (2014 rules)`);
+            this.toast(`${t('toast.added')} ${spellName} ${t('toast.rules2014')}`);
           }
         });
       }
@@ -24347,6 +24690,7 @@ body {
       }
       if (this.dom.spellDcAuto) {
         this.dom.spellDcAuto.addEventListener('change', (e) => {
+          e.stopPropagation(); // Prevent delegated handler from running
           this.beginUndoPoint();
           const auto = /** @type {HTMLInputElement} */(e.target).checked;
           if (auto) {
@@ -24357,6 +24701,9 @@ body {
               const pb = profBonus(this.state.level);
               const m = getMod(this.state.abilities[this.state.spellAb].score);
               this.state.spellDcOverride = 8 + pb + m;
+            } else {
+              // Even without spellcasting ability, allow manual DC entry
+              this.state.spellDcOverride = 10; // Default value
             }
           }
           this.updateDerived();
@@ -25034,7 +25381,7 @@ body {
 
     undo() {
       if (!this.undoStack.length) {
-        this.toast('Nothing to undo');
+        this.toast(t('toast.nothingToUndo'));
         return;
       }
       const snap = this.undoStack.pop();
@@ -25053,7 +25400,7 @@ body {
       this.undoArmed = true;
       this.updateUndoUI();
       this.scheduleSave();
-      this.toast('Undone');
+      this.toast(t('toast.undone'));
     }
 
     setSaveStatus(kind) {
@@ -25441,7 +25788,7 @@ body {
       const nextId = String(id || '');
       if (!nextId || nextId === this.activeCharId) return;
       if (!this.charIndex.some(c => c.id === nextId)) {
-        this.toast('Unknown character');
+        this.toast(t('toast.unknownCharacter'));
         return;
       }
 
@@ -25483,7 +25830,7 @@ body {
       // Section 9: Restore tab preference for this character
       this.restoreTabPreference();
       
-      if (!opts.quiet) this.toast('Switched character');
+      if (!opts.quiet) this.toast(t('toast.switchedCharacter'));
     }
 
     async createNewCharacter() {
@@ -25537,7 +25884,7 @@ body {
         window.gsap.from(boot, { opacity: 0, duration: 0.3, ease: 'power2.out' });
       }
       
-      this.toast('Returned to main menu');
+      this.toast(t('toast.returnedToMainMenu'));
     }
 
     async duplicateActiveCharacter() {
@@ -25619,7 +25966,7 @@ body {
       if (!opts.force && !this.pendingSave) return;
       if (!this.activeCharId) {
         this.setSaveStatus('error');
-        if (opts.toast) this.toast('No active character');
+        if (opts.toast) this.toast(t('toast.noActiveCharacter'));
         return;
       }
 
@@ -25638,7 +25985,7 @@ body {
         if (opts.toast) this.toast('Saved');
       } else {
         this.setSaveStatus('error');
-        if (opts.toast) this.toast('Save failed (storage blocked?)');
+        if (opts.toast) this.toast(t('toast.saveFailedStorageBlocked'));
       }
     }
 
@@ -25702,7 +26049,7 @@ body {
         a.click();
 
         URL.revokeObjectURL(url);
-        this.toast('Exported');
+        this.toast(t('toast.exported'));
       } finally {
         // Reset flag after a brief delay to allow download to start
         setTimeout(() => { this._exportingJSON = false; }, 500);
@@ -25777,7 +26124,7 @@ body {
         a.click();
 
         URL.revokeObjectURL(url);
-        this.toast('Exported with map');
+        this.toast(t('toast.exportedWithMap'));
       } finally {
         setTimeout(() => { this._exportingWithMap = false; }, 500);
       }
@@ -26074,7 +26421,7 @@ body {
       }
 
       // Subtle toast feedback
-      if (persist) this.toast(`Theme: ${theme.name}`);
+      if (persist) this.toast(`${t('toast.themeLabel')} ${theme.name}`);
     }
 
     applyLanguage(langCode, opts = {}) {
@@ -26810,10 +27157,10 @@ body {
         const text = btn.textContent.trim().toUpperCase();
         if (text === '+ NEW' || text === '+ NEU') btn.textContent = t('map.new');
         else if (text === 'DELETE' || text === 'LÖSCHEN') btn.textContent = t('map.delete');
-        else if (text === 'EXPORT' || text === 'EXPORTIEREN') btn.textContent = t('map.export');
-        else if (text === 'IMPORT' || text === 'IMPORTIEREN') btn.textContent = t('map.import');
-        else if (text === 'REPLACE' || text === 'ERSETZEN') btn.textContent = t('map.replace');
-        else if (text === 'REMOVE' || text === 'ENTFERNEN') btn.textContent = t('map.remove');
+        else if (text === 'EXPORT' || text === 'Export' || text === 'EXPORTIEREN') btn.textContent = t('map.export');
+        else if (text === 'IMPORT' || text === 'Import' || text === 'IMPORTIEREN') btn.textContent = t('map.import');
+        else if (text === 'REPLACE' || text === 'Replace' || text === 'ERSETZEN') btn.textContent = t('map.replace');
+        else if (text === 'REMOVE' || text === 'Remove' || text === 'ENTFERNEN') btn.textContent = t('map.remove');
         else if (text === 'SET SCALE' || text === 'MASSSTAB SETZEN') btn.textContent = t('map.setScale');
         else if (text === 'CLEAR' || text === 'LÖSCHEN') btn.textContent = t('map.clear');
         else if (text === 'UPLOAD MAP' || text === 'KARTE HOCHLADEN') btn.textContent = t('map.uploadMap');
@@ -27334,7 +27681,7 @@ body {
           container.innerHTML = html;
         } else {
           console.error('[PlayerAlmanac] Print sheet container not found');
-          this.toast('Error: Print sheet container not found');
+          this.toast(t('toast.errorPrintSheetContainerNotFound'));
           return;
         }
         
@@ -27346,7 +27693,7 @@ body {
           this.toast(t('printSheet.ready'));
         } else {
           console.error('[PlayerAlmanac] Print sheet element not found');
-          this.toast('Error: Print sheet element not found');
+          this.toast(t('toast.errorPrintSheetElementNotFound'));
           return;
         }
         
@@ -27820,7 +28167,7 @@ NOW CREATE THE CHARACTER FILE:`;
         console.error('Failed to copy:', err);
         // Fallback: select the text
         this.dom.charBuilderPromptOutput?.select();
-        alert('Press Ctrl+C to copy');
+        alert(t('alert.pressCtrlCToCopy'));
       }
     }
     
@@ -27957,7 +28304,7 @@ NOW CREATE THE CHARACTER FILE:`;
       if (this.dom.mapSection && !this.dom.mapSection.hidden) {
         // Switch to a different tab
         this.showTab('stats');
-        this.toast('Map feature is unavailable', 'warning');
+        this.toast(t('toast.mapFeatureIsUnavailable'), 'warning');
       }
     }
     
@@ -28990,7 +29337,7 @@ Actions:
       
       // Validate file type
       if (!file.type.startsWith('image/')) {
-        this.toast('Please upload an image file (PNG, JPG, or WebP)');
+        this.toast(t('toast.pleaseUploadAnImageFilePngJpgOr'));
         input.value = '';
         return;
       }
@@ -28998,7 +29345,7 @@ Actions:
       // Compress if needed
       let blob = file;
       if (file.size > MAP_MAX_SIZE) {
-        this.toast('Compressing large image...');
+        this.toast(t('toast.compressingLargeImage'));
         blob = await this.mapStore.compress(file);
       }
       
@@ -29034,7 +29381,7 @@ Actions:
       // Store in IndexedDB
       const stored = await this.mapStore.put(blob, imageKey);
       if (!stored) {
-        this.toast('Failed to save map image');
+        this.toast(t('toast.failedToSaveMapImage'));
         input.value = '';
         return;
       }
@@ -29074,7 +29421,7 @@ Actions:
       
       // Save state
       this.persist({ toast: false, force: true });
-      this.toast('Map uploaded');
+      this.toast(t('toast.mapUploaded'));
       
       // Clear input
       input.value = '';
@@ -29107,14 +29454,14 @@ Actions:
       
       // Save state
       this.persist({ toast: false, force: true });
-      this.toast('Map removed');
+      this.toast(t('toast.mapRemoved'));
     }
     
     // Section G: Confirmation wrapper for remove map
     confirmRemoveMap() {
       const campaign = this.getActiveCampaign();
       if (!campaign?.imageKey && !this.state.map?.imageKey) return;
-      if (confirm('Remove this map image? Pins and routes will be preserved.')) {
+      if (confirm(t('confirm.removeThisMapImagePinsAndRoutesWill'))) {
         this.removeMap();
       }
     }
@@ -29169,7 +29516,7 @@ Actions:
      * Create a new campaign
      */
     createNewCampaign() {
-      const name = prompt('Campaign name:', 'New Campaign');
+      const name = prompt(t('prompt.campaignName'), t('default.newCampaign'));
       if (!name) return;
       
       const campaign = {
@@ -29190,7 +29537,7 @@ Actions:
       this.updateCampaignSelector();
       this.loadActiveCampaignMap();
       this.persist({ toast: false, force: true });
-      this.toast('Campaign created');
+      this.toast(t('toast.campaignCreated'));
     }
     
     /**
@@ -29199,7 +29546,7 @@ Actions:
     confirmDeleteCampaign() {
       const campaign = this.getActiveCampaign();
       if (!campaign) {
-        this.toast('No campaign selected');
+        this.toast(t('toast.noCampaignSelected'));
         return;
       }
       
@@ -29235,7 +29582,7 @@ Actions:
       this.updateCampaignSelector();
       this.loadActiveCampaignMap();
       this.persist({ toast: false, force: true });
-      this.toast('Campaign deleted');
+      this.toast(t('toast.campaignDeleted'));
     }
     
     /**
@@ -29244,11 +29591,11 @@ Actions:
     async exportCurrentCampaign() {
       const campaign = this.getActiveCampaign();
       if (!campaign) {
-        this.toast('No campaign to export');
+        this.toast(t('toast.noCampaignToExport'));
         return;
       }
       
-      this.toast('Exporting campaign...');
+      this.toast(t('toast.exportingCampaign'));
       
       const exported = await this.mapStore.exportCampaign(campaign);
       
@@ -29270,7 +29617,7 @@ Actions:
       a.click();
       
       URL.revokeObjectURL(url);
-      this.toast('Campaign exported');
+      this.toast(t('toast.campaignExported'));
     }
     
     /**
@@ -29285,17 +29632,17 @@ Actions:
         const data = JSON.parse(text);
         
         if (data.type !== 'player_almanac_campaign') {
-          this.toast('Invalid campaign file');
+          this.toast(t('toast.invalidCampaignFile'));
           return;
         }
         
-        this.toast('Importing campaign...');
+        this.toast(t('toast.importingCampaign'));
         
         const newId = 'campaign_' + Date.now() + '_' + Math.random().toString(36).slice(2, 8);
         const result = await this.mapStore.importCampaign(data, newId);
         
         if (!result.success || !result.campaign) {
-          this.toast('Failed to import campaign');
+          this.toast(t('toast.failedToImportCampaign'));
           return;
         }
         
@@ -29306,11 +29653,11 @@ Actions:
         this.updateCampaignSelector();
         this.loadActiveCampaignMap();
         this.persist({ toast: false, force: true });
-        this.toast('Campaign imported');
+        this.toast(t('toast.campaignImported'));
         
       } catch (err) {
         console.error('[Map] Import failed:', err);
-        this.toast('Failed to import campaign');
+        this.toast(t('toast.failedToImportCampaign'));
       }
       
       // Clear input
@@ -29414,7 +29761,7 @@ Actions:
       this.updatePinFilters();
       this.updateMapStatus();
       this.persist({ toast: false, force: false });
-      this.toast(`Origin placed for ${charName || 'character'}`);
+      this.toast(`${t('toast.originPlacedFor')} ${charName || t('toast.character')}`);
       
       // Switch back to select tool
       this.setMapTool('select');
@@ -29485,7 +29832,7 @@ Actions:
       this.updatePinFilters();
       this.updateMapStatus();
       this.persist({ toast: false, force: false });
-      this.toast(`Last seen marked for ${charName || 'character'}`);
+      this.toast(`${t('toast.lastSeenMarkedFor')} ${charName || t('toast.character')}`);
       
       // Switch back to select tool
       this.setMapTool('select');
@@ -29567,7 +29914,7 @@ Actions:
         if (this._measurePoints.length >= 2) {
           this.saveRoute();
         } else {
-          this.toast('Need at least 2 points for a route');
+          this.toast(t('toast.needAtLeast2PointsForARoute'));
         }
         return true;
       }
@@ -29611,13 +29958,13 @@ Actions:
       if (this.dom.mapMeasureDisplay) {
         this.dom.mapMeasureDisplay.hidden = true;
       }
-      this.toast('Route cancelled');
+      this.toast(t('toast.routeCancelled'));
     }
     
     // Section 10: Save the current route
     saveRoute() {
       if (this._measurePoints.length < 2) {
-        this.toast('Need at least 2 points for a route');
+        this.toast(t('toast.needAtLeast2PointsForARoute'));
         return;
       }
       
@@ -29684,7 +30031,7 @@ Actions:
       
       // Format distance for toast
       const distStr = this.formatRouteDistance(distance);
-      this.toast(`Route saved (${distStr})`);
+      this.toast(`${t('toast.routeSaved')} (${distStr})`);
       
       // Select the new route
       this.selectRoute(route.id);
@@ -30123,7 +30470,7 @@ Actions:
       this.renderSavedRoutes();
       this.renderRouteList();
       this.persist({ toast: false, force: true });
-      this.toast('Route deleted');
+      this.toast(t('toast.routeDeleted'));
     }
     
     renderMeasurementSvg() {
@@ -30271,18 +30618,18 @@ Actions:
       const validUnits = ['mi', 'km', 'ft', 'm', 'hex', 'sq', 'lg'];
       
       if (!distance || distance <= 0) {
-        this.toast('Enter a valid distance');
+        this.toast(t('toast.enterAValidDistance'));
         return;
       }
       
       if (!validUnits.includes(unit)) {
-        this.toast('Select a valid unit');
+        this.toast(t('toast.selectAValidUnit'));
         return;
       }
       
       // Check if we have a calibration line drawn
       if (this._measureMode !== 'scale' || this._measurePoints.length !== 2) {
-        this.toast('First draw a reference line with the Scale tool');
+        this.toast(t('toast.firstDrawAReferenceLineWithTheScale'));
         return;
       }
       
@@ -30305,7 +30652,7 @@ Actions:
       
       // Get unit label for display
       const unitLabels = { mi: 'miles', km: 'km', ft: 'feet', m: 'meters', hex: 'hexes', sq: 'squares', lg: 'leagues' };
-      this.toast(`Scale calibrated: ${distance} ${unitLabels[unit] || unit}`);
+      this.toast(`${t('toast.scaleCalibrated')} ${distance} ${unitLabels[unit] || unit}`);
       
       // Clear calibration line
       this.clearMeasurement();
@@ -30315,11 +30662,11 @@ Actions:
     // Section 8: Clear scale calibration
     clearScaleCalibration() {
       if (!this.state.map?.scale) {
-        this.toast('No scale to clear');
+        this.toast(t('toast.noScaleToClear'));
         return;
       }
       
-      if (!confirm('Clear the scale calibration? Measurements will show in pixels.')) {
+      if (!confirm(t('confirm.clearTheScaleCalibrationMeasurementsWillShowIn'))) {
         return;
       }
       
@@ -30328,7 +30675,7 @@ Actions:
       this.updateMapPanel();
       this.updateMapStatus();
       this.persist({ toast: false, force: true });
-      this.toast('Scale cleared');
+      this.toast(t('toast.scaleCleared'));
     }
     
     // F.13: Pins library
@@ -30503,7 +30850,7 @@ Actions:
     
     undoLastAction() {
       if (this._undoStack.length === 0) {
-        this.toast('Nothing to undo');
+        this.toast(t('toast.nothingToUndo'));
         return;
       }
       
@@ -30517,7 +30864,7 @@ Actions:
         this.renderPinList();
         this.updateMapStatus();
         this.persist({ toast: false, force: false });
-        this.toast('Pin restored');
+        this.toast(t('toast.pinRestored'));
       } else if (action.type === 'pin' && action.action === 'update') {
         // Restore previous pin state
         const idx = this.state.map.pins.findIndex(p => p.id === action.pinId);
@@ -30529,7 +30876,7 @@ Actions:
             this.showPinInspector(action.data);
           }
           this.persist({ toast: false, force: false });
-          this.toast('Change undone');
+          this.toast(t('toast.changeUndone'));
         }
       }
     }
@@ -30546,7 +30893,7 @@ Actions:
       if (confirm(`Delete "${pin.name}"? This can be undone.`)) {
         this.pushPinDeleteUndo(pin);
         this.deletePin(pinId);
-        this.toast('Pin deleted (Ctrl+Z to undo)');
+        this.toast(t('toast.pinDeletedCtrlZToUndo'));
       }
     }
     
@@ -30782,7 +31129,7 @@ Actions:
           this.closeImportModal();
           this.loadPortrait();
           this.renderAll();
-          this.toast(`Imported as "${name}"`);
+          this.toast(`${t('toast.importedAs')} "${name}"`);
           return;
         }
         
@@ -30799,7 +31146,7 @@ Actions:
             // Store in IndexedDB
             const stored = await this.mapStore.put(blob, this.state.map.imageKey);
             if (stored) {
-              this.toast('Map image imported');
+              this.toast(t('toast.mapImageImported'));
             }
           } catch (mapErr) {
             console.warn('[PlayerAlmanac] Failed to import map image:', mapErr);
@@ -30830,7 +31177,7 @@ Actions:
         this.persist({ toast: false, force: true });
         this.closeImportModal();
         this.renderAll();
-        this.toast('Imported');
+        this.toast(t('toast.imported'));
       } catch (e) {
         this.setImportError('Import failed: ' + (e && e.message ? e.message : String(e)));
       } finally {
@@ -30893,7 +31240,7 @@ Actions:
       if (weaponCount > 0) parts.push(`${weaponCount} weapon${weaponCount !== 1 ? 's' : ''}`);
       
       if (parts.length > 0) {
-        this.toast(`${parts.join(' and ')} can be enhanced with system data`);
+        this.toast(`${parts.join(currentLanguage==='de' ? ' und ' : ' and ')} ${t('toast.canBeEnhancedWithSystemData')}`);
       }
     }
 
@@ -30907,7 +31254,7 @@ Actions:
       const enhancement = enhancements.spells[index];
       
       if (!enhancement) {
-        this.toast('No enhancement available');
+        this.toast(t('toast.noEnhancementAvailable'));
         return;
       }
       
@@ -30924,7 +31271,7 @@ Actions:
       
       this.renderSpells();
       this.scheduleSave();
-      this.toast('Spell enhanced with system data');
+      this.toast(t('toast.spellEnhancedWithSystemData'));
     }
 
     /**
@@ -30937,7 +31284,7 @@ Actions:
       const enhancement = enhancements.weapons[index];
       
       if (!enhancement) {
-        this.toast('No enhancement available');
+        this.toast(t('toast.noEnhancementAvailable'));
         return;
       }
       
@@ -30955,7 +31302,7 @@ Actions:
       
       this.renderWeapons();
       this.scheduleSave();
-      this.toast('Weapon enhanced with system data');
+      this.toast(t('toast.weaponEnhancedWithSystemData'));
     }
 
     /**
@@ -30964,7 +31311,7 @@ Actions:
     applyAllSystemEnhancements() {
       const enhancements = this._systemEnhancements || this.checkSystemEnhancements();
       if (enhancements.totalCount === 0) {
-        this.toast('No enhancements available');
+        this.toast(t('toast.noEnhancementsAvailable'));
         return;
       }
       
@@ -31006,7 +31353,7 @@ Actions:
       this.renderSpells();
       this.renderWeapons();
       this.scheduleSave();
-      this.toast(`Enhanced ${count} item${count !== 1 ? 's' : ''} with system data`);
+      this.toast(`${t('toast.enhanced')} ${count} ${count !== 1 ? t('toast.items') : t('toast.item')} ${t('toast.enhancedWithSystemData')}`);
     }
 
     /**
@@ -31283,14 +31630,14 @@ Actions:
           remaining -= absorbedByTemp;
         }
         hp.cur = Math.max(0, hp.cur - remaining);
-        this.toast(`-${val} HP${tmp > 0 ? ' (temp absorbed)' : ''}`, 'error');
+        this.toast(`-${val} ${t('abbr.hp')}${tmp > 0 ? ' ' + t('toast.tempAbsorbed') : ''}`, 'error');
       } else {
         // Heal: add to current, cap at max
         const oldCur = hp.cur;
         hp.cur = Math.min(hp.max, hp.cur + val);
         const actualHeal = hp.cur - oldCur;
         if (actualHeal > 0) {
-          this.toast(`+${actualHeal} HP`, 'success');
+          this.toast(`+${actualHeal} ${t('abbr.hp')}`, 'success');
         }
       }
       
@@ -31798,7 +32145,7 @@ Actions:
 
     rollShortRestDice() {
       if (this._shortRestSelected.length === 0) {
-        this.toast('Select hit dice to roll');
+        this.toast(t('toast.selectHitDiceToRoll'));
         return;
       }
 
@@ -31824,7 +32171,7 @@ Actions:
       this.dom.shortRestTotal.textContent = `+${total} HP`;
       this.dom.shortRestRollResult.hidden = false;
 
-      this.toast(`Rolled ${this._shortRestSelected.length}${die}: +${total} HP`);
+      this.toast(`${t('toast.rolled')} ${this._shortRestSelected.length}${die}: +${total} ${t('abbr.hp')}`);
     }
 
     renderShortRestResets() {
@@ -32194,7 +32541,7 @@ Actions:
       this.renderHP();
       this.updateQuickBar();
       this.scheduleSave();
-      this.toast(`Healed ${amt} HP`);
+      this.toast(`${t('toast.healed')} ${amt} ${t('abbr.hp')}`);
       this.closeQuickModal();
     }
 
@@ -32215,7 +32562,7 @@ Actions:
       this.renderHP();
       this.updateQuickBar();
       this.scheduleSave();
-      this.toast(`Took ${amt} damage`);
+      this.toast(`${t('toast.tookDamage')} ${amt} ${t('toast.damage')}`);
       this.closeQuickModal();
       this.maybePromptConcentration(amt);
     }
@@ -32229,7 +32576,7 @@ Actions:
       this.renderHP();
       this.updateQuickBar();
       this.scheduleSave();
-      this.toast(`Temp HP set to ${amt}`);
+      this.toast(`${t('toast.tempHpSetTo')} ${amt}`);
       this.closeQuickModal();
     }
 
@@ -32432,7 +32779,7 @@ Actions:
       this.rollLog = [];
       storageSet(ROLL_LOG_KEY, JSON.stringify([]));
       this.renderRollLog();
-      this.toast('Roll log cleared');
+      this.toast(t('toast.rollLogCleared'));
     }
 
     toggleRollLog() {
@@ -32529,7 +32876,7 @@ Actions:
         copyBtn.addEventListener('click', () => {
           const copyText = it.msg + (it.result !== undefined ? ' \u2192 ' + it.result : '');
           navigator.clipboard?.writeText(copyText).then(() => {
-            this.toast('Copied!');
+            this.toast(t('toast.copied'));
           }).catch(() => {});
         });
 
@@ -32634,7 +32981,7 @@ Actions:
     rollSpellAttack() {
       const spellAb = this.state.spellAb || 'none';
       if (spellAb === 'none') {
-        this.toast('Spell ability is not set');
+        this.toast(t('toast.spellAbilityIsNotSet'));
         return;
       }
       const pb = profBonus(this.state.level);
@@ -32792,12 +33139,22 @@ Actions:
           this.dom.spellDc.disabled = (this.state.spellDcOverride === null);
         }
       } else {
-        this.dom.spellDc.value = '';
-        this.dom.spellAtk.textContent = '\u2014';
-        if (this.dom.spellDcAuto) {
-          this.dom.spellDcAuto.checked = true;
-          this.dom.spellDc.disabled = true;
+        // No spell ability selected
+        if (this.state.spellDcOverride !== null) {
+          // Manual override is set, use it
+          this.dom.spellDc.value = String(this.state.spellDcOverride);
+          if (this.dom.spellDcAuto) {
+            this.dom.spellDcAuto.checked = false;
+            this.dom.spellDc.disabled = false;
+          }
+        } else {
+          this.dom.spellDc.value = '';
+          if (this.dom.spellDcAuto) {
+            this.dom.spellDcAuto.checked = true;
+            this.dom.spellDc.disabled = true;
+          }
         }
+        this.dom.spellAtk.textContent = '\u2014';
       }
 
       // Calculate passive perception: 10 + WIS mod + proficiency (if proficient) + expertise (if expert) + misc
@@ -34089,7 +34446,7 @@ Actions:
         this.state.spells.splice(i, 1);
         this.renderSpells();
         this.scheduleSave();
-        this.toast('Spell removed', 'success');
+        this.toast(t('toast.spellRemoved'), 'success');
       }
     }
 
@@ -34193,7 +34550,7 @@ Actions:
         this.state.weapons.splice(i, 1);
         this.renderWeapons();
         this.scheduleSave();
-        this.toast('Weapon removed', 'success');
+        this.toast(t('toast.weaponRemoved'), 'success');
       }
     }
 
@@ -34266,7 +34623,7 @@ Actions:
       this.renderEquip();
       this.scheduleSave();
       this.closeEquipDetailModal();
-      this.toast('Equipment updated', 'success');
+      this.toast(t('toast.equipmentUpdated'), 'success');
     }
     
     // Delete equipment from modal
@@ -34282,7 +34639,7 @@ Actions:
         this.state.equip.splice(i, 1);
         this.renderEquip();
         this.scheduleSave();
-        this.toast('Equipment removed', 'success');
+        this.toast(t('toast.equipmentRemoved'), 'success');
       }
     }
 
@@ -34295,7 +34652,7 @@ Actions:
       const bgData = is2024 ? BACKGROUNDS_2024[bgKey] : BACKGROUNDS_2014[bgKey];
       
       if (!bgData) {
-        this.toast('Background data not found', 'error');
+        this.toast(t('toast.backgroundDataNotFound'), 'error');
         return;
       }
       
@@ -34554,7 +34911,7 @@ Actions:
       const is2024 = this._is2024Background;
       
       if (!bgKey || !bgData) {
-        this.toast('No background selected', 'error');
+        this.toast(t('toast.noBackgroundSelected'), 'error');
         return;
       }
       
@@ -34677,7 +35034,7 @@ Actions:
       this.closeBackgroundModal();
       
       const displayName = bgKey.replace(' (2024)', '');
-      this.toast(`${displayName} background applied!`, 'success');
+      this.toast(`${displayName} ${t('toast.backgroundApplied')}`, 'success');
     }
 
     renderEquip() {
@@ -34981,7 +35338,7 @@ Actions:
         });
         
         document.getElementById('bootErrorReset')?.addEventListener('click', () => {
-          if (confirm('&#x26A0;&#xFE0F; This will permanently delete ALL saved characters and settings. This cannot be undone. Are you sure?')) {
+          if (confirm(t('confirm.x26a0Xfe0fThisWillPermanentlyDeleteAllSaved'))) {
             this.hideBootErrorModal();
             this.resetAllStorage();
           }
@@ -35045,7 +35402,7 @@ Actions:
         window.location.reload();
       } catch (e) {
         console.error('[PlayerAlmanac] Failed to reset characters:', e);
-        alert('Failed to reset. Please try clearing your browser data manually.');
+        alert(t('alert.failedToResetPleaseTryClearingYourBrowser'));
       }
     }
 
@@ -35073,7 +35430,7 @@ Actions:
         window.location.reload();
       } catch (e) {
         console.error('[PlayerAlmanac] Failed to reset all storage:', e);
-        alert('Failed to reset completely. Please try clearing your browser data manually.');
+        alert(t('alert.failedToResetCompletelyPleaseTryClearingYour'));
       }
     }
 
@@ -35467,7 +35824,7 @@ Actions:
     restoreFromAutoBackup(index = 0) {
       const backups = this.getAutoBackups();
       if (index < 0 || index >= backups.length) {
-        this.toast('Backup not found', 'error');
+        this.toast(t('toast.backupNotFound'), 'error');
         return false;
       }
       
@@ -35494,7 +35851,7 @@ Actions:
           localStorage.setItem(CHAR_ACTIVE_KEY, backup.activeCharId);
         }
         
-        this.toast('Backup restored! Reloading...', 'success');
+        this.toast(t('toast.backupRestoredReloading'), 'success');
         setTimeout(() => window.location.reload(), 1000);
         return true;
       } catch (e) {
@@ -36122,7 +36479,7 @@ Actions:
       
       // Refresh the recent cards
       this.updateBootCharacterName();
-      this.toast('Character duplicated');
+      this.toast(t('toast.characterDuplicated'));
     }
 
     // Section 12/2: Export character from boot
@@ -36142,7 +36499,7 @@ Actions:
     // Section 12/6: Export all characters as a single file
     bootExportAllCharacters() {
       if (!this.charIndex || this.charIndex.length === 0) {
-        this.toast('No characters to export');
+        this.toast(t('toast.noCharactersToExport'));
         return;
       }
       
@@ -36178,7 +36535,7 @@ Actions:
       a.click();
       URL.revokeObjectURL(url);
       
-      this.toast(`Exported ${allCharacters.length} character${allCharacters.length !== 1 ? 's' : ''}`);
+      this.toast(`${t('toast.exported')} ${allCharacters.length} ${allCharacters.length !== 1 ? t('toast.characters') : t('toast.character')}`);
     }
 
     /**
@@ -36359,7 +36716,7 @@ Actions:
         if (!file) return;
         
         if (file.size > 50 * 1024 * 1024) {
-          this.toast('File too large (max 50MB)');
+          this.toast(t('toast.fileTooLargeMax50mb'));
           return;
         }
         
@@ -36369,7 +36726,7 @@ Actions:
           
           // Validate it's a backup bundle
           if (!data.characters || !Array.isArray(data.characters)) {
-            this.toast('Not a valid backup file. Use "Import" for single characters.');
+            this.toast(t('toast.notAValidBackupFileUseImportFor'));
             return;
           }
           
@@ -36408,7 +36765,7 @@ Actions:
           
           this.saveCharIndex();
           this.updateBootCharacterName();
-          this.toast(`Imported ${imported} character${imported !== 1 ? 's' : ''}`);
+          this.toast(`${t('toast.imported')} ${imported} ${imported !== 1 ? t('toast.characters') : t('toast.character')}`);
           
         } catch (err) {
           console.error('[PlayerAlmanac] Import failed:', err);
@@ -36470,7 +36827,7 @@ Actions:
       
       this.saveCharIndex();
       this.updateBootCharacterName();
-      this.toast('Character deleted');
+      this.toast(t('toast.characterDeleted'));
     }
 
     // Section 12/2: Load character state by ID
@@ -36887,7 +37244,7 @@ Actions:
       this.renderAddonsList();
       
       // Show success toast
-      this.toast(`Addon "${manifest.name}" installed successfully`, 'success');
+      this.toast(`Add-on "${manifest.name}" ${t('toast.addonInstalledSuccessfully')}`, 'success');
       
       console.log('[PlayerAlmanac] Addon installed:', manifest);
     }
@@ -37147,12 +37504,12 @@ Actions:
     async launchAddonSandboxed(id) {
       const addon = this.getAddonById(id);
       if (!addon) {
-        this.toast('Addon not found', 'error');
+        this.toast(t('toast.addonNotFound'), 'error');
         return;
       }
       
       if (!addon.enabled) {
-        this.toast('Enable the addon first', 'error');
+        this.toast(t('toast.enableTheAddonFirst'), 'error');
         return;
       }
       
@@ -37207,7 +37564,7 @@ Actions:
       } catch (e) {
         console.error('[PlayerAlmanac] Failed to launch addon:', e);
         this.updateAddonInRegistry(id, { lastError: e.message });
-        this.toast(`Failed to launch "${addon.name}": ${e.message}`, 'error');
+        this.toast(`${t('toast.failedToLaunch')} "${addon.name}": ${e.message}`, 'error');
       }
     }
     
@@ -37662,7 +38019,7 @@ console.log('[PA Addon] Host API bridge initialized for addon:', window.PA.addon
         this.renderAddonsList();
         
         // Show success toast
-        this.toast(`Addon "${addon.name}" removed`, 'info');
+        this.toast(`Add-on "${addon.name}" ${t('toast.addonRemoved')}`, 'info');
         
         console.log('[PlayerAlmanac] Addon removed:', id);
       } catch (e) {
@@ -37710,7 +38067,7 @@ console.log('[PA Addon] Host API bridge initialized for addon:', window.PA.addon
           });
           
           // Non-blocking toast notification
-          this.toast(`Addon "${addon.name}" failed and was disabled: ${errorMsg}`, 'error');
+          this.toast(`Add-on "${addon.name}" ${t('toast.failedAndDisabled')} ${errorMsg}`, 'error');
         }
         
         // Continue with next addon regardless of success/failure
@@ -37971,7 +38328,7 @@ console.log('[PA Addon] Host API bridge initialized for addon:', window.PA.addon
       const isVid = type.startsWith('video/');
 
       if (!isImg && !isVid) {
-        this.toast('Unsupported file type');
+        this.toast(t('toast.unsupportedFileType'));
         return;
       }
 
@@ -37979,7 +38336,7 @@ console.log('[PA Addon] Host API bridge initialized for addon:', window.PA.addon
       const meta = { type, name: file.name || 'portrait', ts: Date.now() };
       const key = this.activeCharId ? this.portraitKey(this.activeCharId) : null;
       const ok = key ? await this.portrait.put({ blob: file, meta }, key) : false;
-      if (!ok) this.toast('Portrait not saved (IDB blocked?)');
+      if (!ok) this.toast(t('toast.portraitNotSavedIdbBlocked'));
 
       this.state.portraitMeta = meta;
 
@@ -38004,7 +38361,7 @@ console.log('[PA Addon] Host API bridge initialized for addon:', window.PA.addon
 
       this.autoSizePortraitFrame();
       this.applyPortraitView(true);
-      this.toast('Portrait updated');
+      this.toast(t('toast.portraitUpdated'));
     }
 
     async restorePortraitFromIDB() {
@@ -38059,7 +38416,7 @@ console.log('[PA Addon] Host API bridge initialized for addon:', window.PA.addon
       }
       if (this.dom.portraitPlaceholder) this.dom.portraitPlaceholder.style.display = 'grid';
 
-      this.toast('Portrait cleared');
+      this.toast(t('toast.portraitCleared'));
     }
   }
 
@@ -38722,7 +39079,7 @@ console.log('[PA Addon] Host API bridge initialized for addon:', window.PA.addon
               <div style="display:flex; gap:12px; flex-wrap:wrap; justify-content:center;">
                 <button onclick="window.__PA_EMERGENCY_EXPORT?.()" style="padding:12px 20px; border:1px solid #5a5; background:rgba(90,170,90,0.2); color:#8f8; border-radius:8px; cursor:pointer; font-weight:600;">💾 Export All Data</button>
                 <button onclick="location.reload()" style="padding:12px 20px; border:1px solid #888; background:rgba(255,255,255,0.05); color:#fff; border-radius:8px; cursor:pointer;">🔔 Retry</button>
-                <button onclick="if(confirm('Delete ALL data?')){localStorage.clear();indexedDB.deleteDatabase('PlayerAlmanacPortraits');location.reload()}" style="padding:12px 20px; border:1px solid #a55; background:rgba(170,90,90,0.2); color:#f88; border-radius:8px; cursor:pointer;">🗑️ Reset All</button>
+                <button onclick="if(confirm(t('confirm.deleteAllData'))){localStorage.clear();indexedDB.deleteDatabase('PlayerAlmanacPortraits');location.reload()}" style="padding:12px 20px; border:1px solid #a55; background:rgba(170,90,90,0.2); color:#f88; border-radius:8px; cursor:pointer;">🗑️ Reset All</button>
               </div>
             </div>
           </div>
@@ -39727,7 +40084,7 @@ console.log('[PA Addon] Host API bridge initialized for addon:', window.PA.addon
                   localStorage.removeItem('cmCharState_v1:' + charId);
                   try { app.portrait.del('cm_portrait_' + charId); } catch(err) {}
                   app.renderCharacterSelect();
-                  app.toast('Character deleted');
+                  app.toast(t('toast.characterDeleted'));
                   console.log('[Delete v6.16.0] Character removed from charIndex');
                   
                   // Remove from UI
@@ -39894,7 +40251,7 @@ console.log('[PA Addon] Host API bridge initialized for addon:', window.PA.addon
         </p>
         <p class="credits-text" style="margin-top: 8px;">
           For commercial licensing inquiries:<br>
-          <a href="mailto:kylemaddenar@gmail.com">kylemaddenar@gmail.com</a>
+          <a href="/cdn-cgi/l/email-protection#99f2e0f5fcf4f8fdfdfcf7f8ebd9fef4f8f0f5b7faf6f4"><span class="__cf_email__" data-cfemail="147f6d787179757070717a7566547379757d783a777b79">[email&#160;protected]</span></a>
         </p>
       </div>
       
@@ -39941,7 +40298,7 @@ console.log('[PA Addon] Host API bridge initialized for addon:', window.PA.addon
 Copyright (c) 2025 Zagreous
 
 Official project page: https://github.com/Kylemaddenar/player-almanac
-Commercial licensing contact: <a href="mailto:kylemaddenar@gmail.com">kylemaddenar@gmail.com</a>
+Commercial licensing contact: <a href="/cdn-cgi/l/email-protection#482331242d25292c2c2d26293a082f25292124662b2725"><span class="__cf_email__" data-cfemail="85eefce9e0e8e4e1e1e0ebe4f7c5e2e8e4ece9abe6eae8">[email&#160;protected]</span></a>
 
 TERMS AND CONDITIONS
 
@@ -40148,7 +40505,7 @@ You must:
 5. COMMERCIAL LICENSING
 
 For Commercial Use permissions, contact:
-<a href="mailto:kylemaddenar@gmail.com">kylemaddenar@gmail.com</a>
+<a href="/cdn-cgi/l/email-protection#f19a889d949c909595949f9083b1969c90989ddf929e9c"><span class="__cf_email__" data-cfemail="dbb0a2b7beb6babfbfbeb5baa99bbcb6bab2b7f5b8b4b6">[email&#160;protected]</span></a>
 
 6. THIRD-PARTY MATERIALS
 
@@ -40214,7 +40571,7 @@ END OF ZNAL v1.1</pre>
 <!-- =============================================
      FOOTER & CREDITS JAVASCRIPT
      ============================================= -->
-<script>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
 /*
  * Player Almanac by Zagreous
  * ZNAL v1.1 (Noncommercial, Attribution + Link-back Required)
@@ -40514,6 +40871,72 @@ END OF ZNAL v1.1</pre>
 })();
 </script>
 
+<!-- PWA Install Prompt Handler -->
+<script>
+(function() {
+  'use strict';
+  
+  // Store the deferred install prompt
+  let deferredPrompt = null;
+  const installBtn = document.getElementById('bootInstallBtn');
+  
+  // Listen for the beforeinstallprompt event
+  window.addEventListener('beforeinstallprompt', (e) => {
+    // Prevent Chrome 67 and earlier from automatically showing the prompt
+    e.preventDefault();
+    // Stash the event so it can be triggered later
+    deferredPrompt = e;
+    // Show the install button
+    if (installBtn) {
+      installBtn.hidden = false;
+      console.log('[PWA] Install prompt available - showing install button');
+    }
+  });
+  
+  // Handle install button click
+  if (installBtn) {
+    installBtn.addEventListener('click', async () => {
+      if (!deferredPrompt) {
+        // If no prompt, show a helpful message
+        alert('To install Player Almanac:\n\n• On iOS: Tap Share → "Add to Home Screen"\n• On Android: Tap the menu (⋮) → "Add to Home Screen" or "Install App"\n• On Desktop: Click the install icon in the address bar');
+        return;
+      }
+      
+      // Show the install prompt
+      deferredPrompt.prompt();
+      
+      // Wait for the user to respond to the prompt
+      const { outcome } = await deferredPrompt.userChoice;
+      console.log('[PWA] Install prompt outcome:', outcome);
+      
+      // Clear the deferred prompt - it can only be used once
+      deferredPrompt = null;
+      
+      // Hide the install button after the prompt
+      installBtn.hidden = true;
+    });
+  }
+  
+  // Hide button if app is already installed (standalone mode)
+  if (window.matchMedia('(display-mode: standalone)').matches || 
+      window.navigator.standalone === true) {
+    if (installBtn) {
+      installBtn.hidden = true;
+    }
+    console.log('[PWA] App is running in standalone mode');
+  }
+  
+  // Listen for successful app install
+  window.addEventListener('appinstalled', () => {
+    console.log('[PWA] App installed successfully!');
+    if (installBtn) {
+      installBtn.hidden = true;
+    }
+    deferredPrompt = null;
+  });
+})();
+</script>
+
 <!-- Service Worker Registration for PWA -->
 <script>
 if ('serviceWorker' in navigator) {
@@ -40528,7 +40951,7 @@ if ('serviceWorker' in navigator) {
           newWorker.addEventListener('statechange', () => {
             if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
               console.log('[PWA] New version available!');
-              if (window.confirm('A new version of Player Almanac is available. Reload to update?')) {
+              if (window.confirm(t('confirm.aNewVersionOfPlayerAlmanacIsAvailable'))) {
                 window.location.reload();
               }
             }
@@ -40538,7 +40961,44 @@ if ('serviceWorker' in navigator) {
       .catch(err => console.error('[PWA] Service worker registration failed:', err));
   });
 }
-</script>
 
-</body>
-</html>
+/* --- i18n: sweep leftover hardcoded English labels (buttons/options/headers) --- */
+function translateCommonText(root=document) {
+  if (!root) return;
+  const map = new Map([
+    ['No campaigns', t('ui.noCampaigns')],
+    ['REPLACE', t('ui.replace')], ['Replace', t('ui.replace')],
+    ['None', t('ui.none')],
+    ['Auto-calculate', t('ui.autoCalculate')],
+    ['Conditions', t('ui.conditions')],
+    ['Passive Perception', t('ui.passivePerception')],
+    ['Light', t('ui.lightArmor')], ['Medium', t('ui.mediumArmor')], ['Heavy', t('ui.heavyArmor')], ['Shields', t('ui.shields')],
+    ['-- Select 5E Gear --', t('ui.select5eGear')],
+    ['ADD 5E', t('ui.add5e')],
+    ['+ Add Item', t('ui.addItem')],
+    ['+ Add Language', t('ui.addLanguage')],
+    ['ADD', t('ui.add')],
+    ['Saved', t('ui.saved')],
+    ['EDIT', t('ui.edit')], ['Edit', t('ui.edit')],
+    ['PLAY', t('ui.play')], ['Play', t('ui.play')],
+  ]);
+
+  const isEditable = (el) => el && (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA');
+  const candidates = root.querySelectorAll ? root.querySelectorAll('*') : [];
+  candidates.forEach(el => {
+    if (!el || isEditable(el)) return;
+    if (el.hasAttribute && (el.hasAttribute('data-i18n') || el.hasAttribute('data-i18n-placeholder') || el.hasAttribute('data-i18n-title'))) return;
+
+    if (el.tagName === 'OPTION') {
+      const raw = (el.textContent || '').trim();
+      if (map.has(raw)) el.textContent = map.get(raw);
+      return;
+    }
+    if (el.childElementCount === 0) {
+      const raw = (el.textContent || '').trim();
+      if (map.has(raw)) el.textContent = map.get(raw);
+    }
+  });
+}
+
+let __i18nObserverInstalled = 
