@@ -16,9 +16,9 @@
 ================================================================================
 -->
 <!--
-  Player Almanac Character Sheet - v6.16.1 OFFLINE BUILD (No External Dependencies)
+  Player Almanac Character Sheet - v6.16.2 OFFLINE BUILD (No External Dependencies)
   
-  CURRENT VERSION: v6.16.1 - January 1, 2026
+  CURRENT VERSION: v6.16.2 - January 1, 2026
   
   For complete version history, see: CHANGELOG.txt
 -->
@@ -18234,7 +18234,7 @@ body {
   const CHAR_INDEX_KEY = 'cmCharIndex_v1';
   const CHAR_ACTIVE_KEY = 'cmCharActive_v1';
   const CHAR_STATE_PREFIX = 'cmCharState_v1:';
-  const MOTION_KEY = 'motion';
+  const MOTION_KEY = 'cmMotion_v1';
   const CONTRAST_KEY = 'contrastHigh';
   const THEME_KEY = 'cmTheme_v1';
   const LANGUAGE_KEY = 'cmLanguage_v1';
@@ -23850,7 +23850,7 @@ body {
       // Popovers
       if (this.dom.charPickerBtn && this.dom.charPickerMenu) this.registerPopover(this.dom.charPickerBtn, this.dom.charPickerMenu);
       if (this.dom.charMenuBtn && this.dom.charMenu) this.registerPopover(this.dom.charMenuBtn, this.dom.charMenu);
-      if (this.dom.settingsBtn && this.dom.settingsMenu) this.registerPopover(this.dom.settingsBtn, this.dom.settingsMenu);
+      if (this.dom.settingsBtn && this.dom.settingsMenu) this.registerPopover(this.dom.settingsBtn, this.dom.settingsMenu, () => this.syncSettingsUI());
       if (this.dom.qbMoreBtn && this.dom.qbMoreMenu) this.registerPopover(this.dom.qbMoreBtn, this.dom.qbMoreMenu);
 
       // Character picker interactions
@@ -26252,7 +26252,7 @@ body {
 
     
     // ===== Top bar popovers =====
-    registerPopover(btn, menu) {
+    registerPopover(btn, menu, onOpen) {
       if (!btn || !menu) return;
       const wrap = btn.closest('.qb-pop');
       if (!wrap) return;
@@ -26266,6 +26266,8 @@ body {
           btn.setAttribute('aria-expanded', 'true');
           const search = wrap.querySelector('input[type="search"]');
           if (search) setTimeout(() => search.focus(), 0);
+          // Call onOpen callback if provided
+          if (onOpen) onOpen();
         }
       });
 
@@ -26327,6 +26329,39 @@ body {
     }
 
     // ===== Settings helpers =====
+    
+    /**
+     * Sync all settings UI elements with current app state
+     * Called when settings popover opens to ensure checkboxes reflect actual state
+     */
+    syncSettingsUI() {
+      // Motion toggle
+      if (this.dom.motionToggle) this.dom.motionToggle.checked = !!this.motion;
+      
+      // Performance/Lite mode toggle
+      if (this.dom.perfModeToggle) {
+        const isEnabled = document.body.classList.contains('performance-mode');
+        this.dom.perfModeToggle.checked = isEnabled;
+      }
+      
+      // Print mode toggle
+      if (this.dom.printModeToggle) this.dom.printModeToggle.checked = !!this.printMode;
+      
+      // Contrast select
+      if (this.dom.contrastSelect) this.dom.contrastSelect.value = this.highContrast ? 'high' : 'normal';
+      
+      // Theme select
+      if (this.dom.themeSelect) this.dom.themeSelect.value = this.currentTheme || 'arcane';
+      
+      // Language select
+      if (this.dom.languageSelect) this.dom.languageSelect.value = currentLanguage || 'en';
+      
+      // Rules version select
+      if (this.dom.rulesVersionSelect && this.state) {
+        this.dom.rulesVersionSelect.value = this.state.rulesVersion || '2014';
+      }
+    }
+    
     setMotion(on, opts = {}) {
       const persist = (opts && opts.persist === false) ? false : true;
       this.motion = !!on;
