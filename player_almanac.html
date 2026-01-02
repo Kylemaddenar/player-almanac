@@ -16,13 +16,12 @@
 ================================================================================
 -->
 <!--
-  Player Almanac Character Sheet - v6.17.0 OFFLINE BUILD (No External Dependencies)
+  Player Almanac Character Sheet - v6.17.1 OFFLINE BUILD (No External Dependencies)
   
-  CURRENT VERSION: v6.17.0 - January 1, 2026
+  CURRENT VERSION: v6.17.1 - January 1, 2026
   
-  NEW IN v6.17.0:
-  - Added AI-powered character generation via Cloudflare Worker endpoint
-  - Character Builder now has "Generate with AI" button for direct creation
+  NEW IN v6.17.1:
+  - Version bump for GitHub deployment (no functional changes)
   
   For complete version history, see: CHANGELOG.txt
 -->
@@ -49,7 +48,7 @@
   style-src 'self' 'unsafe-inline';
   font-src 'self' data:;
   img-src 'self' data: blob:;
-  connect-src 'self' blob: https://api.playeralmanac.com;
+  connect-src 'self' blob: https://player-almanac-api.killer42650.workers.dev;
   object-src 'none';
   base-uri 'self';
   form-action 'self';
@@ -28004,7 +28003,7 @@ body {
       }
       
       try {
-        const response = await fetch('https://api.playeralmanac.com/generate', {
+        const response = await fetch('https://player-almanac-api.killer42650.workers.dev/generate', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(answers)
