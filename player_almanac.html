@@ -1212,6 +1212,1673 @@ body.high-contrast .watermark {
 }
 
 /* =============================================
+   13b. BOOT ATMOSPHERE LAYER
+   Premium ambient effects for boot screen
+   Theme-aware floating elements
+   ============================================= */
+
+/* Boot-specific atmosphere container */
+.boot-atmosphere {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+  z-index: 1;
+}
+
+/* Ambient motes - theme-colored floating particles */
+.boot-mote {
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: rgba(var(--particle-color), 0.6);
+  box-shadow: 
+    0 0 8px rgba(var(--particle-color), 0.4),
+    0 0 16px rgba(var(--particle-color), 0.2);
+  opacity: 0;
+  animation: mote-drift 20s ease-in-out infinite;
+}
+
+/* Staggered motes with varied sizes and positions */
+.boot-mote:nth-child(1) {
+  left: 15%; top: 20%;
+  animation-delay: 0s;
+  animation-duration: 25s;
+}
+.boot-mote:nth-child(2) {
+  left: 75%; top: 30%;
+  width: 3px; height: 3px;
+  animation-delay: -4s;
+  animation-duration: 22s;
+}
+.boot-mote:nth-child(3) {
+  left: 25%; top: 60%;
+  width: 5px; height: 5px;
+  animation-delay: -8s;
+  animation-duration: 28s;
+}
+.boot-mote:nth-child(4) {
+  left: 85%; top: 70%;
+  animation-delay: -12s;
+  animation-duration: 24s;
+}
+.boot-mote:nth-child(5) {
+  left: 50%; top: 15%;
+  width: 3px; height: 3px;
+  animation-delay: -3s;
+  animation-duration: 26s;
+}
+.boot-mote:nth-child(6) {
+  left: 10%; top: 80%;
+  animation-delay: -7s;
+  animation-duration: 23s;
+}
+.boot-mote:nth-child(7) {
+  left: 65%; top: 50%;
+  width: 5px; height: 5px;
+  animation-delay: -15s;
+  animation-duration: 27s;
+}
+.boot-mote:nth-child(8) {
+  left: 40%; top: 85%;
+  width: 3px; height: 3px;
+  animation-delay: -10s;
+  animation-duration: 21s;
+}
+
+@keyframes mote-drift {
+  0% {
+    opacity: 0;
+    transform: translateY(0) scale(0.5);
+  }
+  10% {
+    opacity: 0.7;
+  }
+  50% {
+    opacity: 1;
+    transform: translateY(-40px) scale(1);
+  }
+  90% {
+    opacity: 0.7;
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-80px) scale(0.5);
+  }
+}
+
+/* Radial gradient ground effect - anchors the scene */
+.boot-ground-glow {
+  position: absolute;
+  bottom: -20%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 150%;
+  height: 50%;
+  background: radial-gradient(
+    ellipse 60% 40% at 50% 100%,
+    rgba(var(--gradient-color1), 0.15) 0%,
+    rgba(var(--gradient-color2), 0.08) 40%,
+    transparent 70%
+  );
+  pointer-events: none;
+  animation: ground-breathe 8s ease-in-out infinite;
+}
+
+@keyframes ground-breathe {
+  0%, 100% { opacity: 0.7; transform: translateX(-50%) scaleY(1); }
+  50% { opacity: 1; transform: translateX(-50%) scaleY(1.1); }
+}
+
+/* Zenith glow - subtle top illumination */
+.boot-zenith-glow {
+  position: absolute;
+  top: -10%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80%;
+  height: 40%;
+  background: radial-gradient(
+    ellipse 50% 30% at 50% 0%,
+    rgba(var(--particle-color), 0.08) 0%,
+    transparent 60%
+  );
+  pointer-events: none;
+  animation: zenith-pulse 10s ease-in-out infinite;
+}
+
+@keyframes zenith-pulse {
+  0%, 100% { opacity: 0.5; }
+  50% { opacity: 0.8; }
+}
+
+/* =============================================
+   13c. LOGO AURA SYSTEM
+   Breathing glow effect behind the dragon logo
+   ============================================= */
+
+/* Aura container wraps the logo */
+.boot-logo {
+  position: relative;
+}
+
+/* Primary aura ring - soft breathing glow */
+.boot-logo::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 140%;
+  height: 140%;
+  transform: translate(-50%, -50%);
+  background: radial-gradient(
+    circle,
+    rgba(var(--gradient-color2), 0.3) 0%,
+    rgba(var(--gradient-color1), 0.15) 40%,
+    transparent 70%
+  );
+  border-radius: 50%;
+  animation: aura-breathe 4s ease-in-out infinite;
+  pointer-events: none;
+  z-index: -1;
+}
+
+/* Secondary aura - outer pulse */
+.boot-logo::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 180%;
+  height: 180%;
+  transform: translate(-50%, -50%);
+  background: radial-gradient(
+    circle,
+    transparent 50%,
+    rgba(var(--particle-color), 0.08) 70%,
+    transparent 100%
+  );
+  border-radius: 50%;
+  animation: aura-pulse 6s ease-in-out infinite;
+  pointer-events: none;
+  z-index: -2;
+}
+
+@keyframes aura-breathe {
+  0%, 100% {
+    opacity: 0.6;
+    transform: translate(-50%, -50%) scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1.08);
+  }
+}
+
+@keyframes aura-pulse {
+  0%, 100% {
+    opacity: 0.3;
+    transform: translate(-50%, -50%) scale(1);
+  }
+  50% {
+    opacity: 0.6;
+    transform: translate(-50%, -50%) scale(1.15);
+  }
+}
+
+/* Enhanced dragon logo glow on hover */
+.pa-hero:hover .zagerous-logo {
+  filter: drop-shadow(0 0 12px var(--accent-glow)) drop-shadow(0 0 24px var(--accent-glow));
+  transition: filter 0.4s ease;
+}
+
+.zagerous-logo {
+  transition: filter 0.4s ease;
+}
+
+/* =============================================
+   13d. TITLE SHIMMER EFFECT
+   Subtle prestige treatment for typography
+   ============================================= */
+
+.boot-title {
+  position: relative;
+  background: linear-gradient(
+    135deg,
+    var(--accent-secondary) 0%,
+    var(--text-primary) 50%,
+    var(--accent-secondary) 100%
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-size: 200% 100%;
+  animation: title-shimmer 8s ease-in-out infinite;
+}
+
+@keyframes title-shimmer {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+/* Tagline fade-in enhancement */
+.boot-tagline {
+  position: relative;
+}
+
+.boot-tagline::after {
+  content: "";
+  position: absolute;
+  bottom: -8px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60px;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    var(--accent-glow) 50%,
+    transparent 100%
+  );
+  opacity: 0.6;
+}
+
+/* =============================================
+   13e. PRIMARY BUTTON HEARTBEAT
+   Welcoming pulse for the Continue button
+   ============================================= */
+
+.boot-primary {
+  position: relative;
+  overflow: visible;
+}
+
+/* Heartbeat glow ring */
+.boot-primary::before {
+  content: "";
+  position: absolute;
+  inset: -3px;
+  background: transparent;
+  border: 2px solid var(--accent-secondary);
+  border-radius: 14px;
+  opacity: 0;
+  animation: heartbeat-ring 3s ease-in-out infinite;
+  pointer-events: none;
+}
+
+@keyframes heartbeat-ring {
+  0%, 100% {
+    opacity: 0;
+    transform: scale(1);
+  }
+  20% {
+    opacity: 0.6;
+    transform: scale(1);
+  }
+  40% {
+    opacity: 0;
+    transform: scale(1.08);
+  }
+}
+
+/* Ambient glow beneath button */
+.boot-primary::after {
+  content: "";
+  position: absolute;
+  bottom: -8px;
+  left: 10%;
+  right: 10%;
+  height: 20px;
+  background: radial-gradient(
+    ellipse 50% 100% at 50% 0%,
+    var(--accent-glow) 0%,
+    transparent 80%
+  );
+  opacity: 0.5;
+  filter: blur(8px);
+  pointer-events: none;
+  animation: button-glow-breathe 4s ease-in-out infinite;
+}
+
+@keyframes button-glow-breathe {
+  0%, 100% { opacity: 0.3; }
+  50% { opacity: 0.6; }
+}
+
+/* Hover state enhancement */
+.boot-primary:hover::before {
+  animation: none;
+  opacity: 0.8;
+  transform: scale(1.02);
+  transition: all 0.3s ease;
+}
+
+.boot-primary:hover::after {
+  opacity: 0.8;
+  animation: none;
+}
+
+/* =============================================
+   13f. SOCIAL LINKS BAR
+   Placeholder styling for future social links
+   ============================================= */
+
+.boot-social-links {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: auto;
+}
+
+.boot-social-link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 8px;
+  color: var(--text-muted);
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-decoration: none;
+}
+
+.boot-social-link:hover {
+  background: var(--accent-glow);
+  border-color: var(--accent-tertiary);
+  color: var(--accent-secondary);
+  transform: translateY(-2px);
+}
+
+.boot-social-link:focus {
+  outline: none;
+}
+
+.boot-social-link:focus-visible {
+  outline: 2px solid var(--accent-secondary);
+  outline-offset: 2px;
+}
+
+/* Social links divider */
+.boot-social-divider {
+  width: 1px;
+  height: 20px;
+  background: rgba(255, 255, 255, 0.1);
+  margin: 0 4px;
+}
+
+/* Responsive: Stack social links on very small screens */
+@media (max-width: 480px) {
+  .boot-social-links {
+    margin-left: 0;
+    justify-content: center;
+    width: 100%;
+    order: -1;
+    padding-bottom: 8px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    margin-bottom: 8px;
+  }
+}
+
+/* =============================================
+   13g. REDUCED MOTION SUPPORT
+   Respect user preferences
+   ============================================= */
+
+@media (prefers-reduced-motion: reduce) {
+  .boot-mote,
+  .boot-ground-glow,
+  .boot-zenith-glow,
+  .boot-logo::before,
+  .boot-logo::after,
+  .boot-title,
+  .boot-primary::before,
+  .boot-primary::after {
+    animation: none !important;
+  }
+  
+  .boot-mote { opacity: 0.5; }
+  .boot-ground-glow { opacity: 0.8; }
+  .boot-zenith-glow { opacity: 0.6; }
+  .boot-logo::before { opacity: 0.8; }
+  .boot-logo::after { opacity: 0.4; }
+  .boot-title { background-position: 50% 50%; }
+  .boot-primary::before { opacity: 0; }
+  .boot-primary::after { opacity: 0.4; }
+}
+
+/* =============================================
+   13h. PHASE 2: ONBOARDING PANEL ENHANCEMENT
+   Transform the welcome panel into an invitation
+   ============================================= */
+
+.boot-onboarding {
+  position: relative;
+  background: 
+    linear-gradient(135deg, rgba(var(--gradient-color1), 0.08) 0%, transparent 50%),
+    rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(var(--particle-color), 0.15);
+  overflow: visible;
+}
+
+/* Decorative corner flourishes */
+.boot-onboarding::before,
+.boot-onboarding::after {
+  content: "";
+  position: absolute;
+  width: 24px;
+  height: 24px;
+  border-color: var(--accent-tertiary);
+  border-style: solid;
+  opacity: 0.6;
+}
+
+.boot-onboarding::before {
+  top: -1px;
+  left: -1px;
+  border-width: 2px 0 0 2px;
+  border-radius: 8px 0 0 0;
+}
+
+.boot-onboarding::after {
+  bottom: -1px;
+  right: -1px;
+  border-width: 0 2px 2px 0;
+  border-radius: 0 0 8px 0;
+}
+
+/* Inner glow vignette */
+.boot-onboarding-inner {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    ellipse 80% 60% at 50% 30%,
+    rgba(var(--particle-color), 0.06) 0%,
+    transparent 60%
+  );
+  pointer-events: none;
+  border-radius: inherit;
+}
+
+/* Enhanced scroll icon */
+.boot-onboarding-icon {
+  position: relative;
+  display: inline-block;
+  animation: icon-float 4s ease-in-out infinite;
+}
+
+@keyframes icon-float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-4px); }
+}
+
+/* Title enhancement */
+.boot-onboarding-title {
+  position: relative;
+  background: linear-gradient(
+    135deg,
+    var(--accent-secondary) 0%,
+    var(--text-primary) 50%,
+    var(--accent-secondary) 100%
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-size: 200% 100%;
+  animation: title-shimmer 8s ease-in-out infinite;
+}
+
+/* Text styling */
+.boot-onboarding-text {
+  position: relative;
+  z-index: 1;
+}
+
+/* Sparkle motes inside panel */
+.boot-onboarding-sparkle {
+  position: absolute;
+  width: 3px;
+  height: 3px;
+  background: var(--accent-secondary);
+  border-radius: 50%;
+  opacity: 0;
+  animation: sparkle-drift 6s ease-in-out infinite;
+  pointer-events: none;
+}
+
+.boot-onboarding-sparkle:nth-child(1) {
+  top: 20%; left: 15%;
+  animation-delay: 0s;
+}
+.boot-onboarding-sparkle:nth-child(2) {
+  top: 60%; right: 20%;
+  animation-delay: -2s;
+}
+.boot-onboarding-sparkle:nth-child(3) {
+  bottom: 25%; left: 30%;
+  animation-delay: -4s;
+}
+
+@keyframes sparkle-drift {
+  0%, 100% { opacity: 0; transform: scale(0.5); }
+  50% { opacity: 0.8; transform: scale(1); }
+}
+
+/* =============================================
+   13i. PHASE 2: ACTION BUTTON POLISH
+   Enhanced visual hierarchy for CTAs
+   ============================================= */
+
+/* Primary button icon container glow */
+.boot-primary .boot-action-icon {
+  position: relative;
+  box-shadow: 
+    0 0 20px rgba(var(--particle-color), 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+
+/* Subtext visibility improvement */
+.boot-action-subtext {
+  color: rgba(255, 255, 255, 0.7);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+.boot-primary .boot-action-subtext {
+  color: rgba(255, 255, 255, 0.85);
+}
+
+/* Visual gap between button tiers */
+.boot-actions {
+  gap: var(--space-md);
+}
+
+/* Tertiary/Secondary button improvements */
+.boot-secondary,
+.boot-tertiary {
+  border-color: rgba(var(--particle-color), 0.2);
+  transition: all 0.25s ease;
+}
+
+.boot-secondary:hover,
+.boot-tertiary:hover {
+  border-color: rgba(var(--particle-color), 0.4);
+  box-shadow: 0 0 20px rgba(var(--particle-color), 0.1);
+}
+
+/* Import button subtle enhancement */
+.boot-import {
+  position: relative;
+}
+
+.boot-import::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: linear-gradient(
+    135deg,
+    transparent 0%,
+    rgba(var(--gradient-color1), 0.05) 100%
+  );
+  pointer-events: none;
+}
+
+/* =============================================
+   13j. PHASE 2: DECORATIVE DIVIDERS
+   Fantasy-style ornamental separators
+   ============================================= */
+
+/* Divider between logo zone and actions */
+.boot-actions-zone {
+  position: relative;
+  margin-top: 12px;
+  padding-top: 24px;
+  border-top: none;
+}
+
+.boot-actions-zone::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 10%;
+  right: 10%;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(var(--particle-color), 0.3) 20%,
+    var(--accent-tertiary) 50%,
+    rgba(var(--particle-color), 0.3) 80%,
+    transparent 100%
+  );
+}
+
+/* Center diamond ornament */
+.boot-actions-zone::after {
+  content: "";
+  position: absolute;
+  top: -4px;
+  left: 50%;
+  transform: translateX(-50%) rotate(45deg);
+  width: 8px;
+  height: 8px;
+  background: var(--accent-tertiary);
+  border: 1px solid var(--accent-primary);
+  box-shadow: 0 0 8px var(--accent-glow);
+}
+
+/* =============================================
+   13k. PHASE 2: FOOTER COHESION
+   Unified footer design
+   ============================================= */
+
+.boot-footer-row {
+  background: linear-gradient(
+    to top,
+    rgba(var(--gradient-color1), 0.15) 0%,
+    rgba(10, 10, 18, 0.95) 30%,
+    rgba(10, 10, 18, 0.7) 70%,
+    transparent 100%
+  );
+  border-top: 1px solid rgba(var(--particle-color), 0.1);
+}
+
+/* Social links container styling */
+.boot-social-links {
+  padding: 4px 8px;
+  background: rgba(255, 255, 255, 0.02);
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+/* Social link hover enhancement */
+.boot-social-link:not([style*="opacity: 0.4"]):hover {
+  background: rgba(var(--particle-color), 0.2);
+  border-color: rgba(var(--particle-color), 0.3);
+  box-shadow: 0 0 12px rgba(var(--particle-color), 0.2);
+}
+
+/* Version badge styling */
+.boot-footer-version {
+  background: rgba(0, 0, 0, 0.3);
+  padding: 4px 10px;
+  border-radius: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.boot-version {
+  color: var(--accent-secondary);
+  opacity: 0.8;
+}
+
+.boot-build {
+  opacity: 0.5;
+}
+
+/* Footer button grouping */
+.boot-footer-right {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  padding: 4px;
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 8px;
+}
+
+/* =============================================
+   13l. PHASE 2: CHARACTER CARD FRAMES
+   Decorative portrait styling for when characters exist
+   ============================================= */
+
+.boot-char-card {
+  position: relative;
+  overflow: visible;
+}
+
+/* Card corner flourishes */
+.boot-char-card::before {
+  content: "";
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  width: 16px;
+  height: 16px;
+  border-top: 2px solid var(--accent-tertiary);
+  border-left: 2px solid var(--accent-tertiary);
+  border-radius: 6px 0 0 0;
+  opacity: 0.5;
+  transition: opacity 0.2s ease;
+}
+
+.boot-char-card::after {
+  content: "";
+  position: absolute;
+  bottom: -2px;
+  right: -2px;
+  width: 16px;
+  height: 16px;
+  border-bottom: 2px solid var(--accent-tertiary);
+  border-right: 2px solid var(--accent-tertiary);
+  border-radius: 0 0 6px 0;
+  opacity: 0.5;
+  transition: opacity 0.2s ease;
+}
+
+.boot-char-card:hover::before,
+.boot-char-card:hover::after {
+  opacity: 1;
+  border-color: var(--accent-primary);
+}
+
+/* Portrait frame enhancement */
+.boot-char-portrait {
+  position: relative;
+  border: 2px solid rgba(var(--particle-color), 0.2);
+  box-shadow: 
+    inset 0 0 10px rgba(0, 0, 0, 0.3),
+    0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.boot-char-portrait::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.1) 0%,
+    transparent 50%
+  );
+  pointer-events: none;
+  border-radius: inherit;
+}
+
+/* Character name with subtle glow on hover */
+.boot-char-card:hover .boot-char-name {
+  text-shadow: 0 0 8px var(--accent-glow);
+}
+
+/* Activity indicator - last played styling */
+.boot-char-meta .last-played {
+  position: relative;
+  padding-left: 12px;
+}
+
+.boot-char-meta .last-played::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--text-muted);
+  opacity: 0.5;
+}
+
+/* Recent activity glow (would need JS to add .recent class) */
+.boot-char-card.recent .last-played::before {
+  background: var(--success);
+  opacity: 1;
+  box-shadow: 0 0 6px var(--success);
+  animation: activity-pulse 2s ease-in-out infinite;
+}
+
+@keyframes activity-pulse {
+  0%, 100% { opacity: 0.6; }
+  50% { opacity: 1; }
+}
+
+/* Selected card enhanced state */
+.boot-char-card.selected {
+  box-shadow: 
+    0 0 0 3px var(--accent-glow),
+    0 4px 20px rgba(0, 0, 0, 0.3),
+    inset 0 0 30px rgba(var(--particle-color), 0.05);
+}
+
+.boot-char-card.selected::before,
+.boot-char-card.selected::after {
+  opacity: 1;
+  border-color: var(--accent-secondary);
+}
+
+/* =============================================
+   13m. PHASE 2: REDUCED MOTION ADDITIONS
+   ============================================= */
+
+@media (prefers-reduced-motion: reduce) {
+  .boot-onboarding-icon,
+  .boot-onboarding-sparkle,
+  .boot-char-card.recent .last-played::before {
+    animation: none !important;
+  }
+  
+  .boot-onboarding-icon { transform: translateY(0); }
+  .boot-onboarding-sparkle { opacity: 0.4; }
+}
+
+/* =============================================
+   13n. PHASE 3: GLASS MORPHISM SYSTEM
+   Premium frosted glass treatment
+   ============================================= */
+
+/* Logo zone - frosted glass panel */
+.boot-zone-top {
+  position: relative;
+  background: rgba(12, 12, 20, 0.6);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(var(--particle-color), 0.12);
+  border-radius: 20px;
+  box-shadow:
+    0 8px 32px rgba(0, 0, 0, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  overflow: hidden;
+}
+
+/* Top edge light catch - premium glass effect */
+.boot-zone-top::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 10%;
+  right: 10%;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.15) 20%,
+    rgba(255, 255, 255, 0.25) 50%,
+    rgba(255, 255, 255, 0.15) 80%,
+    transparent 100%
+  );
+  pointer-events: none;
+}
+
+/* Inner glow layer for depth */
+.boot-zone-top::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    ellipse 70% 50% at 50% 0%,
+    rgba(var(--particle-color), 0.08) 0%,
+    transparent 60%
+  );
+  pointer-events: none;
+  border-radius: inherit;
+}
+
+/* =============================================
+   13o. PHASE 3: ONBOARDING PANEL GLASS
+   Matching glass treatment for consistency
+   ============================================= */
+
+.boot-onboarding {
+  background: rgba(12, 12, 20, 0.5);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(var(--particle-color), 0.15);
+  border-radius: 16px;
+  box-shadow:
+    0 8px 32px rgba(0, 0, 0, 0.25),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  overflow: visible;
+}
+
+/* Top edge highlight */
+.boot-onboarding .boot-onboarding-inner::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 15%;
+  right: 15%;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.1) 30%,
+    rgba(255, 255, 255, 0.18) 50%,
+    rgba(255, 255, 255, 0.1) 70%,
+    transparent 100%
+  );
+}
+
+/* =============================================
+   13p. PHASE 3: ACTION BUTTON GLASS
+   Glass treatment for secondary buttons
+   ============================================= */
+
+.boot-action-btn {
+  background: rgba(12, 12, 20, 0.5);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(var(--particle-color), 0.15);
+  box-shadow:
+    0 4px 16px rgba(0, 0, 0, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.04);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.boot-action-btn:hover {
+  background: rgba(var(--gradient-color1), 0.3);
+  border-color: rgba(var(--particle-color), 0.3);
+  box-shadow:
+    0 8px 24px rgba(0, 0, 0, 0.3),
+    0 0 20px rgba(var(--particle-color), 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+
+/* Primary button - enhanced glass with color */
+.boot-primary {
+  background: linear-gradient(
+    135deg,
+    rgba(var(--gradient-color2), 0.7) 0%,
+    rgba(var(--gradient-color1), 0.8) 100%
+  );
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(var(--particle-color), 0.4);
+  box-shadow:
+    0 8px 32px rgba(0, 0, 0, 0.3),
+    0 0 30px rgba(var(--particle-color), 0.15),
+    inset 0 1px 0 rgba(255, 255, 255, 0.15);
+}
+
+.boot-primary:hover {
+  background: linear-gradient(
+    135deg,
+    rgba(var(--gradient-color2), 0.85) 0%,
+    rgba(var(--gradient-color1), 0.95) 100%
+  );
+  border-color: rgba(var(--particle-color), 0.6);
+  box-shadow:
+    0 12px 40px rgba(0, 0, 0, 0.4),
+    0 0 40px rgba(var(--particle-color), 0.25),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+
+/* =============================================
+   13q. PHASE 3: TYPOGRAPHY BREATHING
+   Refined spacing and rhythm
+   ============================================= */
+
+.boot-title {
+  letter-spacing: 0.12em;
+  margin-bottom: 10px;
+  text-shadow:
+    0 2px 4px rgba(0, 0, 0, 0.5),
+    0 0 30px rgba(var(--particle-color), 0.3);
+}
+
+.boot-tagline {
+  letter-spacing: 0.04em;
+  line-height: 1.6;
+  margin-bottom: 0;
+  opacity: 0.9;
+}
+
+/* Tagline underline - more delicate */
+.boot-tagline::after {
+  bottom: -12px;
+  width: 80px;
+  height: 1px;
+  opacity: 0.4;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    var(--accent-tertiary) 50%,
+    transparent 100%
+  );
+}
+
+.boot-onboarding-title {
+  letter-spacing: 0.06em;
+  margin-bottom: 12px;
+}
+
+.boot-onboarding-text {
+  letter-spacing: 0.01em;
+  line-height: 1.7;
+  opacity: 0.85;
+}
+
+/* Action button typography */
+.boot-action-label {
+  letter-spacing: 0.1em;
+}
+
+.boot-action-subtext {
+  letter-spacing: 0.02em;
+  line-height: 1.4;
+}
+
+/* =============================================
+   13r. PHASE 3: ANIMATION REFINEMENT
+   Premium timing and easing
+   ============================================= */
+
+/* Smoother, more expensive-feeling easing */
+:root {
+  --ease-premium: cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --ease-smooth: cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+
+/* Mote animations - slower, more ethereal */
+.boot-mote {
+  animation-timing-function: var(--ease-smooth);
+}
+
+/* Logo aura - longer, smoother breathing */
+.boot-logo::before {
+  animation: aura-breathe 5s var(--ease-smooth) infinite;
+}
+
+.boot-logo::after {
+  animation: aura-pulse 7s var(--ease-smooth) infinite;
+}
+
+/* Button heartbeat - slower, subtler */
+.boot-primary::before {
+  animation: heartbeat-ring 4s var(--ease-smooth) infinite;
+}
+
+/* Title shimmer - very slow, barely noticeable */
+.boot-title {
+  animation: title-shimmer 12s ease-in-out infinite;
+}
+
+.boot-onboarding-title {
+  animation: title-shimmer 15s ease-in-out infinite;
+  animation-delay: -5s;
+}
+
+/* Icon float - gentler motion */
+@keyframes icon-float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-3px); }
+}
+
+.boot-onboarding-icon {
+  animation: icon-float 5s var(--ease-smooth) infinite;
+}
+
+/* Sparkles - more delicate */
+@keyframes sparkle-drift {
+  0%, 100% { opacity: 0; transform: scale(0.3); }
+  50% { opacity: 0.6; transform: scale(1); }
+}
+
+.boot-onboarding-sparkle {
+  animation-duration: 8s;
+  animation-timing-function: var(--ease-smooth);
+}
+
+/* =============================================
+   13s. PHASE 3: MICRO-DETAIL POLISH
+   Subtle refinements that add up
+   ============================================= */
+
+/* Celestial light - softer, more ethereal */
+.boot-celestial-light::before {
+  height: 1px;
+  filter: blur(0.5px);
+}
+
+.boot-celestial-light::after {
+  width: 6px;
+  height: 6px;
+}
+
+/* Diamond divider - softer glow */
+.boot-actions-zone::after {
+  width: 6px;
+  height: 6px;
+  box-shadow: 0 0 12px rgba(var(--particle-color), 0.4);
+}
+
+/* Corner flourishes - more delicate */
+.boot-onboarding::before,
+.boot-onboarding::after {
+  width: 20px;
+  height: 20px;
+  border-width: 1px;
+  opacity: 0.4;
+}
+
+/* Footer - glass treatment */
+.boot-footer-row {
+  background: linear-gradient(
+    to top,
+    rgba(8, 8, 14, 0.85) 0%,
+    rgba(8, 8, 14, 0.6) 50%,
+    transparent 100%
+  );
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border-top: 1px solid rgba(var(--particle-color), 0.08);
+}
+
+/* Social links - glass pill */
+.boot-social-links {
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 10px;
+  padding: 6px 10px;
+}
+
+/* Footer buttons - consistent with design */
+.boot-footer-link {
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  transition: all 0.25s var(--ease-premium);
+}
+
+.boot-footer-link:hover {
+  background: rgba(var(--particle-color), 0.15);
+  border-color: rgba(var(--particle-color), 0.25);
+  box-shadow: 0 0 16px rgba(var(--particle-color), 0.1);
+}
+
+/* Version badge - subtle glass */
+.boot-footer-version {
+  background: rgba(0, 0, 0, 0.25);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  border: 1px solid rgba(255, 255, 255, 0.04);
+  border-radius: 8px;
+  padding: 6px 12px;
+}
+
+/* =============================================
+   13t. PHASE 3: MOBILE GLASS REFINEMENT
+   Ensure glass works beautifully on mobile
+   ============================================= */
+
+@media (max-width: 899px) {
+  .boot-zone-top {
+    border-radius: 16px;
+    margin: 0 auto;
+  }
+  
+  .boot-onboarding {
+    border-radius: 14px;
+  }
+  
+  /* Reduce blur on mobile for performance */
+  .boot-zone-top,
+  .boot-onboarding,
+  .boot-action-btn {
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+  }
+}
+
+/* =============================================
+   13u. PHASE 3: REDUCED MOTION - COMPLETE
+   ============================================= */
+
+@media (prefers-reduced-motion: reduce) {
+  .boot-logo::before,
+  .boot-logo::after,
+  .boot-primary::before,
+  .boot-title,
+  .boot-onboarding-title,
+  .boot-onboarding-icon,
+  .boot-onboarding-sparkle,
+  .boot-mote {
+    animation: none !important;
+  }
+  
+  /* Static fallback states */
+  .boot-logo::before { opacity: 0.7; transform: translate(-50%, -50%) scale(1); }
+  .boot-logo::after { opacity: 0.4; transform: translate(-50%, -50%) scale(1); }
+  .boot-primary::before { opacity: 0; }
+  .boot-title { background-position: 50% 50%; }
+  .boot-onboarding-title { background-position: 50% 50%; }
+  .boot-onboarding-icon { transform: translateY(0); }
+  .boot-onboarding-sparkle { opacity: 0.3; }
+  .boot-mote { opacity: 0.4; }
+}
+
+/* =============================================
+   13v. PHASE 4: MOBILE MENU FIX
+   Fix social links covering menu dropdown
+   ============================================= */
+
+/* Ensure menu is above social links */
+.boot-footer-row {
+  z-index: 100;
+}
+
+.boot-social-links {
+  z-index: 101;
+}
+
+/* Mobile menu container needs higher z-index */
+.boot-mobile-menu,
+.boot-menu-dropdown {
+  z-index: 200 !important;
+}
+
+/* Fix for mobile: push social links into footer properly */
+@media (max-width: 899px) {
+  .boot-footer-center {
+    order: -1;
+    width: 100%;
+    margin-bottom: var(--space-sm);
+  }
+  
+  .boot-social-links {
+    position: relative;
+    z-index: 50;
+  }
+  
+  /* Menu dropdown needs to be above everything */
+  .boot-menu-toggle,
+  .boot-menu-dropdown {
+    position: relative;
+    z-index: 200;
+  }
+  
+  .boot-menu-dropdown {
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    margin-bottom: 8px;
+  }
+}
+
+/* =============================================
+   13w. PHASE 4: THEME EMOTIONAL ATMOSPHERES
+   Each theme has distinct visual personality
+   ============================================= */
+
+/* 
+   Theme Emotional Goals:
+   - Arcane Purple: Wizard's sanctum at dusk - stars emerging, magic humming
+   - Ember & Flame: Tavern hearth after a long journey - embers rising, warmth
+   - Forest Grove: Moonlit glade - fireflies, organic breathing
+   - Ocean Deep: Beneath waves - bioluminescent, serene depths
+   - Blood Moon: Dramatic intensity - smoldering, controlled power
+   - Golden Dawn: First light of morning - hope, radiance rising
+   - Void Walker: Cosmic vastness - stars, nebulae, wonder
+   - Frost & Ice: Crystal cave, aurora - crisp, magical cold
+*/
+
+/* =============================================
+   13w-1. ARCANE PURPLE - Wizard's Sanctum
+   Stars emerging, magic humming
+   ============================================= */
+
+[data-theme="arcane"] .boot-mote {
+  /* Twinkling star behavior */
+  animation-name: mote-twinkle;
+  border-radius: 50%;
+  box-shadow: 0 0 4px currentColor;
+}
+
+[data-theme="arcane"] .boot-ground-glow {
+  /* Mystical floor glow */
+  background: radial-gradient(
+    ellipse 60% 30% at 50% 100%,
+    rgba(138, 43, 226, 0.2) 0%,
+    rgba(75, 0, 130, 0.1) 40%,
+    transparent 70%
+  );
+}
+
+[data-theme="arcane"] .boot-zenith-glow {
+  /* Stars emerging from above */
+  background: radial-gradient(
+    ellipse 80% 40% at 50% 0%,
+    rgba(147, 112, 219, 0.08) 0%,
+    transparent 60%
+  );
+}
+
+@keyframes mote-twinkle {
+  0%, 100% { opacity: 0.3; transform: translateY(0) scale(0.8); }
+  25% { opacity: 0.9; transform: translateY(-15vh) scale(1.2); }
+  50% { opacity: 0.5; transform: translateY(-30vh) scale(0.9); }
+  75% { opacity: 0.8; transform: translateY(-45vh) scale(1.1); }
+}
+
+/* =============================================
+   13w-2. EMBER & FLAME - Tavern Hearth
+   Embers drifting up, warm safety
+   ============================================= */
+
+[data-theme="ember"] .boot-mote {
+  /* Embers rising upward */
+  animation-name: mote-ember-rise;
+  border-radius: 2px;
+  box-shadow: 0 0 6px currentColor, 0 0 12px rgba(255, 100, 0, 0.3);
+}
+
+[data-theme="ember"] .boot-ground-glow {
+  /* Strong hearth glow from below */
+  background: radial-gradient(
+    ellipse 70% 35% at 50% 100%,
+    rgba(255, 100, 0, 0.25) 0%,
+    rgba(200, 50, 0, 0.15) 30%,
+    rgba(100, 20, 0, 0.08) 60%,
+    transparent 80%
+  );
+  animation: hearth-flicker 3s ease-in-out infinite;
+}
+
+[data-theme="ember"] .boot-zenith-glow {
+  /* Warm light rising */
+  background: radial-gradient(
+    ellipse 60% 30% at 50% 0%,
+    rgba(255, 150, 50, 0.06) 0%,
+    transparent 50%
+  );
+}
+
+@keyframes mote-ember-rise {
+  0% { opacity: 0.8; transform: translateY(20vh) scale(1); }
+  50% { opacity: 1; transform: translateY(-20vh) scale(0.8); }
+  100% { opacity: 0; transform: translateY(-60vh) scale(0.3); }
+}
+
+@keyframes hearth-flicker {
+  0%, 100% { opacity: 1; }
+  30% { opacity: 0.85; }
+  60% { opacity: 0.95; }
+  80% { opacity: 0.9; }
+}
+
+/* =============================================
+   13w-3. FOREST GROVE - Moonlit Glade
+   Fireflies, organic, natural breathing
+   ============================================= */
+
+[data-theme="forest"] .boot-mote {
+  /* Firefly blinking behavior */
+  animation-name: mote-firefly;
+  border-radius: 50%;
+  box-shadow: 0 0 8px currentColor;
+}
+
+[data-theme="forest"] .boot-ground-glow {
+  /* Soft moonlit grass glow */
+  background: radial-gradient(
+    ellipse 80% 25% at 50% 100%,
+    rgba(34, 139, 34, 0.12) 0%,
+    rgba(0, 100, 0, 0.06) 50%,
+    transparent 80%
+  );
+}
+
+[data-theme="forest"] .boot-zenith-glow {
+  /* Moonlight filtering through */
+  background: radial-gradient(
+    ellipse 50% 40% at 60% 10%,
+    rgba(200, 230, 200, 0.08) 0%,
+    transparent 50%
+  );
+}
+
+@keyframes mote-firefly {
+  0%, 100% { opacity: 0; transform: translate(0, 0) scale(0.5); }
+  10% { opacity: 0.9; transform: translate(5px, -10px) scale(1); }
+  20% { opacity: 0.3; transform: translate(-3px, -15px) scale(0.7); }
+  40% { opacity: 0.8; transform: translate(8px, -25px) scale(1.1); }
+  60% { opacity: 0.2; transform: translate(-5px, -35px) scale(0.6); }
+  80% { opacity: 0.7; transform: translate(3px, -45px) scale(0.9); }
+}
+
+/* =============================================
+   13w-4. OCEAN DEEP - Beneath the Waves
+   Bioluminescent, serene depths
+   ============================================= */
+
+[data-theme="ocean"] .boot-mote {
+  /* Slow bioluminescent drift */
+  animation-name: mote-bioluminescent;
+  animation-duration: 30s;
+  border-radius: 50%;
+  box-shadow: 0 0 10px currentColor, 0 0 20px rgba(0, 150, 200, 0.2);
+}
+
+[data-theme="ocean"] .boot-ground-glow {
+  /* Deep ocean floor glow */
+  background: radial-gradient(
+    ellipse 90% 40% at 50% 100%,
+    rgba(0, 100, 150, 0.15) 0%,
+    rgba(0, 50, 100, 0.08) 50%,
+    transparent 80%
+  );
+}
+
+[data-theme="ocean"] .boot-zenith-glow {
+  /* Surface light filtering down */
+  background: radial-gradient(
+    ellipse 100% 50% at 50% 0%,
+    rgba(100, 200, 255, 0.06) 0%,
+    rgba(0, 100, 150, 0.03) 40%,
+    transparent 70%
+  );
+}
+
+@keyframes mote-bioluminescent {
+  0% { opacity: 0.4; transform: translate(0, 0) scale(1); }
+  25% { opacity: 0.8; transform: translate(20px, -10vh) scale(1.3); }
+  50% { opacity: 0.5; transform: translate(-15px, -25vh) scale(0.9); }
+  75% { opacity: 0.7; transform: translate(10px, -40vh) scale(1.1); }
+  100% { opacity: 0.3; transform: translate(-5px, -55vh) scale(0.8); }
+}
+
+/* =============================================
+   13w-5. BLOOD MOON - Dramatic Intensity
+   Smoldering, controlled power
+   ============================================= */
+
+[data-theme="blood"] .boot-mote {
+  /* Intense pulsing particles */
+  animation-name: mote-smolder;
+  animation-duration: 18s;
+  border-radius: 50%;
+  box-shadow: 0 0 8px currentColor, 0 0 16px rgba(180, 0, 50, 0.4);
+}
+
+[data-theme="blood"] .boot-ground-glow {
+  /* Dramatic red glow */
+  background: radial-gradient(
+    ellipse 70% 35% at 50% 100%,
+    rgba(150, 0, 50, 0.2) 0%,
+    rgba(100, 0, 30, 0.12) 40%,
+    transparent 70%
+  );
+  animation: blood-pulse 4s ease-in-out infinite;
+}
+
+[data-theme="blood"] .boot-zenith-glow {
+  /* Ominous sky glow */
+  background: radial-gradient(
+    ellipse 70% 35% at 50% 0%,
+    rgba(180, 50, 80, 0.08) 0%,
+    transparent 50%
+  );
+}
+
+@keyframes mote-smolder {
+  0%, 100% { opacity: 0.5; transform: translateY(0) scale(1); }
+  25% { opacity: 0.9; transform: translateY(-15vh) scale(1.3); }
+  50% { opacity: 0.6; transform: translateY(-30vh) scale(0.9); }
+  75% { opacity: 0.8; transform: translateY(-45vh) scale(1.1); }
+}
+
+@keyframes blood-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.7; }
+}
+
+/* =============================================
+   13w-6. GOLDEN DAWN - First Light
+   Hope, radiance, new beginnings
+   ============================================= */
+
+[data-theme="golden"] .boot-mote {
+  /* Light rays rising */
+  animation-name: mote-sunrise;
+  border-radius: 1px;
+  width: 2px !important;
+  height: 8px !important;
+  box-shadow: 0 0 6px currentColor;
+}
+
+[data-theme="golden"] .boot-ground-glow {
+  /* Warm horizon glow */
+  background: radial-gradient(
+    ellipse 100% 30% at 50% 100%,
+    rgba(255, 200, 100, 0.15) 0%,
+    rgba(255, 150, 50, 0.08) 40%,
+    transparent 70%
+  );
+}
+
+[data-theme="golden"] .boot-zenith-glow {
+  /* Sun cresting the horizon */
+  background: 
+    radial-gradient(
+      ellipse 40% 20% at 50% 0%,
+      rgba(255, 220, 150, 0.12) 0%,
+      transparent 50%
+    ),
+    linear-gradient(
+      to bottom,
+      rgba(255, 200, 100, 0.04) 0%,
+      transparent 30%
+    );
+}
+
+@keyframes mote-sunrise {
+  0% { opacity: 0; transform: translateY(30vh) rotate(0deg) scale(0.5); }
+  50% { opacity: 0.8; transform: translateY(-10vh) rotate(5deg) scale(1); }
+  100% { opacity: 0; transform: translateY(-50vh) rotate(-5deg) scale(0.3); }
+}
+
+/* =============================================
+   13w-7. VOID WALKER - Cosmic Vastness
+   Stars, nebulae, wonder
+   ============================================= */
+
+[data-theme="void"] .boot-mote {
+  /* Distant stars */
+  animation-name: mote-cosmic;
+  animation-duration: 35s;
+  border-radius: 50%;
+  box-shadow: 0 0 3px currentColor, 0 0 8px rgba(150, 100, 200, 0.3);
+}
+
+[data-theme="void"] .boot-ground-glow {
+  /* Nebula glow from below */
+  background: radial-gradient(
+    ellipse 80% 40% at 30% 100%,
+    rgba(100, 50, 150, 0.12) 0%,
+    transparent 50%
+  ),
+  radial-gradient(
+    ellipse 60% 30% at 70% 100%,
+    rgba(50, 100, 150, 0.1) 0%,
+    transparent 40%
+  );
+}
+
+[data-theme="void"] .boot-zenith-glow {
+  /* Cosmic expanse above */
+  background: radial-gradient(
+    ellipse 100% 60% at 50% 0%,
+    rgba(80, 60, 120, 0.06) 0%,
+    transparent 50%
+  );
+}
+
+@keyframes mote-cosmic {
+  0%, 100% { opacity: 0.3; transform: translate(0, 0) scale(0.6); }
+  20% { opacity: 0.8; transform: translate(-10px, -10vh) scale(1); }
+  40% { opacity: 0.4; transform: translate(15px, -25vh) scale(0.7); }
+  60% { opacity: 0.9; transform: translate(-20px, -35vh) scale(1.2); }
+  80% { opacity: 0.5; transform: translate(5px, -50vh) scale(0.8); }
+}
+
+/* =============================================
+   13w-8. FROST & ICE - Crystal Cave
+   Aurora borealis, crisp magical cold
+   ============================================= */
+
+[data-theme="frost"] .boot-mote {
+  /* Ice crystals drifting down */
+  animation-name: mote-snowfall;
+  border-radius: 2px;
+  transform: rotate(45deg);
+  box-shadow: 0 0 6px currentColor, 0 0 12px rgba(150, 200, 255, 0.3);
+}
+
+[data-theme="frost"] .boot-ground-glow {
+  /* Icy floor reflection */
+  background: radial-gradient(
+    ellipse 80% 30% at 50% 100%,
+    rgba(150, 200, 255, 0.12) 0%,
+    rgba(100, 150, 200, 0.06) 50%,
+    transparent 80%
+  );
+}
+
+[data-theme="frost"] .boot-zenith-glow {
+  /* Aurora effect */
+  background: 
+    radial-gradient(
+      ellipse 40% 25% at 30% 0%,
+      rgba(100, 200, 255, 0.08) 0%,
+      transparent 50%
+    ),
+    radial-gradient(
+      ellipse 50% 30% at 70% 0%,
+      rgba(150, 255, 200, 0.06) 0%,
+      transparent 40%
+    );
+  animation: aurora-shift 8s ease-in-out infinite;
+}
+
+@keyframes mote-snowfall {
+  0% { opacity: 0; transform: translate(0, -20vh) rotate(45deg) scale(0.5); }
+  20% { opacity: 0.8; transform: translate(-10px, 0) rotate(90deg) scale(1); }
+  50% { opacity: 0.6; transform: translate(15px, 20vh) rotate(135deg) scale(0.8); }
+  80% { opacity: 0.4; transform: translate(-5px, 40vh) rotate(180deg) scale(0.6); }
+  100% { opacity: 0; transform: translate(10px, 60vh) rotate(225deg) scale(0.3); }
+}
+
+@keyframes aurora-shift {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.6; }
+}
+
+/* =============================================
+   13x. PHASE 4: THEME DATA ATTRIBUTES
+   Applied via JavaScript when theme changes
+   ============================================= */
+
+/* Fallback for when data-theme isn't set - use default mote-drift */
+.boot-mote {
+  animation-name: mote-drift;
+}
+
+/* =============================================
    14. BOOT SCREEN
    ============================================= */
 #boot {
@@ -1306,24 +2973,15 @@ body.high-contrast .watermark {
   width: 100%;
 }
 
-/* Hero container with gradient backing */
+/* Hero container - layout only, visual styling in Phase 3 (13n) */
 .boot-zone-top {
   flex: 0 0 auto;
-  padding: 14px 24px 16px;
-  background:
-    radial-gradient(ellipse 80% 60% at 50% 30%, var(--accent-glow) 0%, transparent 60%),
-    linear-gradient(180deg, 
-      rgba(8, 8, 16, 0.9) 0%,
-      rgba(8, 8, 16, 0.7) 50%,
-      rgba(8, 8, 16, 0.3) 85%,
-      transparent 100%
-    );
-  border-radius: 0 0 16px 16px;
+  padding: 18px 28px 20px;
   margin-bottom: 12px;
-  max-width: 360px;
+  max-width: 380px;
   width: 100%;
   box-sizing: border-box;
-  position: relative;
+  /* Visual styling handled by Phase 3 glass morphism */
 }
 
 /* =============================================
@@ -1482,24 +3140,7 @@ body.high-contrast .watermark {
   color: var(--text-secondary);
 }
 
-/* Gradient fade divider under hero */
-.boot-zone-top::after {
-  content: "";
-  position: absolute;
-  bottom: -6px;
-  left: 8%;
-  right: 8%;
-  height: 1px;
-  background: linear-gradient(90deg, 
-    transparent 0%,
-    var(--accent-glow) 15%,
-    var(--accent-primary) 50%,
-    var(--accent-glow) 85%,
-    transparent 100%
-  );
-  pointer-events: none;
-  box-shadow: 0 0 8px var(--accent-glow);
-}
+/* Note: Bottom divider replaced by diamond ornament in Phase 2 (.boot-actions-zone) */
 
 .boot-zone-middle {
   flex: 1 1 auto;
@@ -1806,7 +3447,7 @@ body.high-contrast .watermark {
 .boot-actions-zone {
   margin-top: 6px;
   padding-top: 20px;
-  border-top: 1px solid var(--accent-glow);
+  /* border-top replaced by diamond ornament in Phase 2 */
 }
 
 .boot-action-btn {
@@ -1815,14 +3456,11 @@ body.high-contrast .watermark {
   gap: var(--space-md);
   padding: var(--space-md) 18px;
   min-height: 52px;
-  background: var(--glass-bg);
-  border: 1px solid var(--glass-border);
   border-radius: 12px;
   color: var(--text-primary);
   cursor: pointer;
   text-align:left;
-  transition:all 0.2s ease;
-  backdrop-filter:blur(10px);
+  /* Visual styling (background, border, shadow) handled by Phase 3 (13p) */
 }
 
 /* Focus states for keyboard navigation */
@@ -1836,10 +3474,8 @@ body.high-contrast .watermark {
 }
 
 .boot-action-btn:hover{
-  background:var(--accent-glow);
-  border-color:var(--accent-primary);
   transform:translateY(-2px);
-  box-shadow:0 8px 24px rgba(0,0,0,0.3);
+  /* Visual hover effects handled by Phase 3 */
 }
 .boot-action-btn:active{
   transform:translateY(0);
@@ -1900,18 +3536,14 @@ body.high-contrast .watermark {
   opacity:0.85;
 }
 
-/* Primary CTA - most prominent - Start Screen #2: Visually dominant */
+/* Primary CTA - visual styling in Phase 3 (13p), only text colors here */
 .boot-primary{
-  border-color:var(--accent-secondary);
   border-width:2px;
-  background:linear-gradient(135deg,var(--accent-primary),var(--accent-tertiary));
-  box-shadow:0 6px 20px rgba(0,0,0,0.3), 0 0 24px var(--accent-glow);
+  /* Background and box-shadow handled by Phase 3 glass morphism */
 }
 .boot-primary:hover{
-  background:linear-gradient(135deg,var(--accent-secondary),var(--accent-primary));
-  border-color:var(--accent-secondary);
-  box-shadow:0 10px 36px rgba(0,0,0,0.4), 0 0 30px var(--accent-glow);
   transform:translateY(-3px);
+  /* Background, border, shadow handled by Phase 3 */
 }
 .boot-primary .boot-action-label{
   color:#fff;
@@ -1924,7 +3556,7 @@ body.high-contrast .watermark {
   width:48px;
   height:48px;
   font-size:1.4rem;
-  background:rgba(255,255,255,0.2);
+  background:rgba(255,255,255,0.15);
   border:none;
 }
 
@@ -2193,35 +3825,30 @@ body.high-contrast .watermark {
   font-size:0.9rem;
 }
 
-/* Section 12/2: Onboarding panel - P3 improved styling */
+/* Section 12/2: Onboarding panel - layout only, visual styling in Phase 2/3 */
 .boot-onboarding{
   text-align:center;
   padding:var(--space-xl) var(--space-lg);
   margin-top:var(--space-lg);
   max-width:400px;
   opacity:0;
-  background:rgba(255,255,255,0.02);
-  border:1px solid rgba(255,255,255,0.06);
-  border-radius:16px;
+  /* Visual styling handled by Phase 2 (13h) and Phase 3 (13o) */
 }
 .boot-onboarding-icon{
   font-size:2.8rem;
   margin-bottom:var(--space-md);
-  filter:grayscale(0.2) brightness(1.1);
+  filter:grayscale(0.1) brightness(1.05);
 }
 .boot-onboarding-title{
   font-family:var(--font-display);
   font-size:1.15rem;
   color:var(--accent-secondary);
-  margin-bottom:var(--space-sm);
-  letter-spacing:0.08em;
-  text-shadow:0 1px 4px rgba(0,0,0,0.3);
+  /* Letter-spacing and text-shadow handled by Phase 3 (13q) */
 }
 .boot-onboarding-text{
   font-size:0.9rem;
   color:var(--text-secondary);
-  line-height:1.6;
-  text-shadow:0 1px 2px rgba(0,0,0,0.2);
+  /* Line-height and letter-spacing handled by Phase 3 (13q) */
 }
 
 /* Section 12/2: Delete confirm modal */
@@ -16615,6 +18242,19 @@ body {
 
 <div id="bg"><div class="bg-grad"></div><div class="aurora"><div class="aurora-wave"></div><div class="aurora-wave"></div><div class="aurora-wave"></div></div><div class="orbs"><div class="orb"></div><div class="orb"></div><div class="orb"></div><div class="orb"></div></div><canvas id="particles"></canvas><div class="fog"></div><div class="vignette"></div><div class="grain"></div><div class="watermark">Player Almanac</div></div>
 <div id="boot">
+<!-- Boot Atmosphere Layer - Premium ambient effects -->
+<div class="boot-atmosphere" aria-hidden="true">
+  <div class="boot-zenith-glow"></div>
+  <div class="boot-ground-glow"></div>
+  <div class="boot-mote"></div>
+  <div class="boot-mote"></div>
+  <div class="boot-mote"></div>
+  <div class="boot-mote"></div>
+  <div class="boot-mote"></div>
+  <div class="boot-mote"></div>
+  <div class="boot-mote"></div>
+  <div class="boot-mote"></div>
+</div>
 <!-- P1 Fix #5: 2-column layout container for wide screens -->
 <div class="boot-container">
   <!-- Left Column: Logo, Title, Tagline, and Actions -->
@@ -16700,6 +18340,13 @@ body {
 
       <!-- Section 12/2: Onboarding panel for empty state -->
       <div class="boot-onboarding" id="bootOnboarding" hidden>
+        <!-- Inner glow vignette -->
+        <div class="boot-onboarding-inner" aria-hidden="true"></div>
+        <!-- Sparkle motes -->
+        <div class="boot-onboarding-sparkle" aria-hidden="true"></div>
+        <div class="boot-onboarding-sparkle" aria-hidden="true"></div>
+        <div class="boot-onboarding-sparkle" aria-hidden="true"></div>
+        <!-- Content -->
         <div class="boot-onboarding-icon">&#x1F4DC;</div>
         <div class="boot-onboarding-title">Welcome, Adventurer</div>
         <div class="boot-onboarding-text">Create your first character to begin tracking your journey through any tabletop RPG campaign.</div>
@@ -16713,6 +18360,19 @@ body {
   <div class="boot-footer-left">
     <button class="boot-skip-btn" id="bootSkip" type="button" hidden>Skip Intro</button>
   </div>
+  
+  <!-- Social Links - Placeholder for future community links -->
+  <div class="boot-social-links" id="bootSocialLinks">
+    <!-- These will link to Player Almanac community channels when available -->
+    <a class="boot-social-link" href="#" title="Discord (Coming Soon)" aria-label="Discord community" style="pointer-events: none; opacity: 0.4;">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028 14.09 14.09 0 0 0 1.226-1.994.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/></svg>
+    </a>
+    <a class="boot-social-link" href="#" title="GitHub (Coming Soon)" aria-label="GitHub repository" style="pointer-events: none; opacity: 0.4;">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+    </a>
+    <div class="boot-social-divider"></div>
+  </div>
+  
   <div class="boot-footer-right">
     <!-- PWA Install Button - shown when app can be installed -->
     <button class="boot-footer-link boot-install-btn" id="bootInstallBtn" type="button" title="Install app to your device" hidden>&#x1F4F2; Install App</button>
@@ -16725,8 +18385,8 @@ body {
     <button class="boot-footer-link boot-settings-btn" id="bootSettingsBtn" type="button" title="Settings">&#x2699; Settings</button>
   </div>
   <div class="boot-footer-version">
-    <span class="boot-version">v6.17.9</span>
-    <span class="boot-build">Build 6.17.4</span>
+    <span class="boot-version">v6.18.3</span>
+    <span class="boot-build">Build 6.18.3</span>
   </div>
 </footer>
   
@@ -27267,6 +28927,10 @@ body {
 
       // Apply CSS custom properties
       const root = document.documentElement;
+      
+      // Phase 4: Set data-theme attribute for CSS atmospheric variations
+      root.setAttribute('data-theme', themeKey);
+      
       root.style.setProperty('--bg-deep', theme.bgDeep);
       root.style.setProperty('--bg-dark', theme.bgDark);
       root.style.setProperty('--accent-primary', theme.accentPrimary);
