@@ -16,11 +16,11 @@
 ================================================================================
 -->
 <!--
-  Player Almanac Character Sheet - v6.17.0 OFFLINE BUILD (No External Dependencies)
+  Player Almanac Character Sheet - v6.17.1 OFFLINE BUILD (No External Dependencies)
   
-  CURRENT VERSION: v6.17.0 - January 1, 2026
+  CURRENT VERSION: v6.17.1 - January 1, 2026
   
-  NEW IN v6.17.0:
+  NEW IN v6.17.1:
   - Added AI-powered character generation via Cloudflare Worker endpoint
   - Character Builder now has "Generate with AI" button for direct creation
   
@@ -41204,4 +41204,33 @@ function translateCommonText(root=document) {
   });
 }
 
-let __i18nObserverInstalled = 
+let __i18nObserverInstalled = false;
+
+// Install a MutationObserver to handle dynamically added content
+function installI18nObserver() {
+  if (__i18nObserverInstalled || typeof MutationObserver === 'undefined') return;
+  __i18nObserverInstalled = true;
+  
+  const observer = new MutationObserver((mutations) => {
+    mutations.forEach((mutation) => {
+      mutation.addedNodes.forEach((node) => {
+        if (node.nodeType === 1) { // Element node
+          applyI18nToLegacyText(node);
+        }
+      });
+    });
+  });
+  
+  observer.observe(document.body, { childList: true, subtree: true });
+}
+
+// Initialize i18n observer after DOM is ready
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', installI18nObserver);
+} else {
+  installI18nObserver();
+}
+</script>
+
+</body>
+</html>
