@@ -1,12 +1,12 @@
 /*
  * Player Almanac - Service Worker
- * Version: 6.16.2
+ * Version: 6.17.0
  * 
  * This service worker caches the app for full offline functionality.
  * After the first visit, the app works completely without internet.
  */
 
-const CACHE_NAME = 'player-almanac-v6.16.2';
+const CACHE_NAME = 'player-almanac-v6.17.0';
 
 // Files to cache for offline use
 const CACHE_FILES = [
