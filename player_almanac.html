@@ -16,11 +16,54 @@
 ================================================================================
 -->
 <!--
-  Player Almanac Character Sheet - v6.17.4 OFFLINE BUILD (No External Dependencies)
+  Player Almanac Character Sheet - v6.17.12 OFFLINE BUILD (No External Dependencies)
   
-  CURRENT VERSION: v6.17.4 - January 2, 2026
+  CURRENT VERSION: v6.17.12 - January 2, 2026
   
-  NEW IN v6.17.4:
+  NEW IN v6.17.12:
+  - Fixed: Settings now opens from char-stats-bar dropdown even when quickbar is collapsed
+  - Added body.settings-from-collapsed class for reliable CSS targeting
+  - Settings popover appears as fixed overlay at top-right when quickbar is collapsed
+  - Clicking outside or pressing ESC properly closes settings and removes helper class
+  
+  PREVIOUS v6.17.11:
+  - Fixed: Settings popover now accessible from dropdown even when quickbar is collapsed
+  - Settings popover positioned as fixed element when opened from char-stats-bar dropdown
+  - Works regardless of quickbar collapsed/expanded state on desktop
+  
+  PREVIOUS v6.17.10:
+  - Fixed: Desktop quickbar now positioned BELOW char-stats-bar (was overlapping)
+  - Fixed: char-stats-bar now HIDDEN on mobile (was showing alongside mobile quickbar)
+  - Fixed: Body padding now correctly accounts for both bars on desktop
+  - Desktop shows: char-stats-bar (top) + quickbar (below it)
+  - Mobile shows: mobile quickbar only (minimal HUD strip)
+  
+  PREVIOUS v6.17.9:
+  - Fixed: Heal/Damage and Settings dropdown buttons now work
+  - Added stopPropagation and setTimeout delays to prevent event conflicts
+  - Fixed: Settings opens popover directly instead of clicking hidden button
+  - Fixed: Broken unicode/mojibake characters in various places
+  
+  PREVIOUS v6.17.8:
+  - Fixed: Dropdown menu buttons now work correctly
+  - Fixed method calls: Temp HP, Short Rest, Long Rest, Roll Initiative
+  
+  PREVIOUS v6.17.7:
+  - Fixed: Stats bar dropdown (Button 2) now properly clickable
+  - Increased char-stats-bar z-index to 1250 to be above quickbar elements
+  - Hidden quickbar collapse toggle on desktop (use dropdown menu instead)
+  - Added "Toggle Quickbar" option to dropdown menu
+  
+  PREVIOUS v6.17.6:
+  - Stats bar dropdown arrow (â–¼) is now main quick actions button
+  - Dropdown menu includes: Heal/Damage, Temp HP, Short Rest, Long Rest, Roll Initiative, Settings
+  - Made dropdown button more visible with border and background
+  
+  PREVIOUS v6.17.5:
+  - Fix: Restored char-stats-bar visibility on desktop (was incorrectly hidden)
+  - The top stats bar showing character name, HP, AC, Init, Speed now displays correctly
+  
+  PREVIOUS v6.17.4:
   - Fix: Character picker popover left-aligned to prevent off-screen display on desktop
   - Fix: Minimal HUD now only visible on mobile (hidden on desktop)
   - Fix: Actions rail positioned above footer to prevent button overlap
@@ -5285,7 +5328,7 @@ textarea::placeholder{color:var(--text-muted);opacity:0.6}
   justify-content:center;
   gap:16px;
   padding:0 12px;
-  z-index:890;
+  z-index:1250;
   transition:transform 0.25s ease,opacity 0.25s ease;
 }
 .char-stats-bar.collapsed{
@@ -5337,21 +5380,84 @@ textarea::placeholder{color:var(--text-muted);opacity:0.6}
 .csb-hp[data-state="bloodied"] .csb-value{color:var(--warning)}
 .csb-hp[data-state="critical"] .csb-value{color:var(--danger)}
 .csb-toggle{
-  position:absolute;
-  right:8px;
-  background:none;
-  border:none;
-  color:var(--text-muted);
-  font-size:0.7rem;
+  background:rgba(255,255,255,0.06);
+  border:1px solid var(--panel-border);
+  color:var(--text-primary);
+  font-size:0.75rem;
   cursor:pointer;
-  padding:4px 8px;
+  padding:6px 10px;
   border-radius:4px;
   transition:all 0.15s;
+  display:flex;
+  align-items:center;
+  justify-content:center;
 }
 .csb-toggle:hover{
   color:var(--text-primary);
+  background:rgba(255,255,255,0.12);
+  border-color:var(--accent);
+}
+
+/* Dropdown container for the toggle button */
+.csb-dropdown{
+  position:absolute;
+  right:12px;
+  top:50%;
+  transform:translateY(-50%);
+  z-index:10;
+}
+.csb-dropdown .csb-toggle{
+  pointer-events:auto;
+}
+.csb-menu{
+  position:absolute;
+  top:100%;
+  right:0;
+  margin-top:4px;
+  min-width:160px;
+  background:var(--panel-bg);
+  border:1px solid var(--panel-border);
+  border-radius:8px;
+  box-shadow:0 4px 16px rgba(0,0,0,0.3);
+  padding:6px 0;
+  opacity:0;
+  visibility:hidden;
+  transform:translateY(-8px);
+  transition:all 0.15s ease;
+  z-index:1000;
+}
+.csb-dropdown.open .csb-menu{
+  opacity:1;
+  visibility:visible;
+  transform:translateY(0);
+}
+.csb-dropdown.open .csb-toggle{
+  color:var(--text-primary);
   background:rgba(255,255,255,0.1);
 }
+.csb-menu-item{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  width:100%;
+  padding:8px 12px;
+  background:none;
+  border:none;
+  color:var(--text-primary);
+  font-size:0.8rem;
+  text-align:left;
+  cursor:pointer;
+  transition:background 0.15s;
+}
+.csb-menu-item:hover{
+  background:rgba(255,255,255,0.08);
+}
+.csb-menu-divider{
+  height:1px;
+  background:var(--panel-border);
+  margin:6px 0;
+}
+
 .char-stats-bar.collapsed + #helpFab,
 .char-stats-bar.collapsed ~ main{
   /* Adjust when collapsed */
@@ -5367,36 +5473,16 @@ body.csb-collapsed .char-stats-bar{
   pointer-events:none;
 }
 
-/* Mobile: condensed stats bar */
+/* Mobile: HIDE char-stats-bar entirely (mobile has its own minimal HUD quickbar) */
 @media (max-width:520px){
   .char-stats-bar{
-    height:32px;
-    gap:8px;
-    padding:0 8px;
+    display:none !important;
+    visibility:hidden !important;
+    pointer-events:none !important;
   }
-  .csb-name{
-    max-width:80px;
-    font-size:0.7rem;
-  }
-  .csb-stats{
-    gap:6px;
-  }
-  .csb-stat{
-    padding:2px 6px;
-    gap:2px;
-  }
-  /* Hide init and speed on mobile, keep only HP and AC */
-  .csb-init,.csb-speed{
-    display:none;
-  }
-  .csb-icon{
-    font-size:0.6rem;
-  }
-  .csb-value{
-    font-size:0.75rem;
-  }
+  /* No padding needed for char-stats-bar on mobile since it's hidden */
   body:not(.csb-collapsed){
-    padding-top:32px;
+    padding-top:0;
   }
 }
 
@@ -6446,6 +6532,63 @@ body {
   transform:translateX(-50%);
   border-top:1px solid var(--glass-border);
   border-radius:0 0 8px 8px;
+}
+/* Hide quickbar collapse toggle on desktop - use char-stats-bar dropdown instead */
+@media (min-width: 521px) {
+  .quickbar.collapsed .qb-collapse-toggle{
+    display:none !important;
+  }
+  
+  /* Fix: Settings popover must be visible even when quickbar is collapsed */
+  /* This allows opening settings from the char-stats-bar dropdown */
+  /* Use body.settings-from-collapsed as reliable CSS hook (set by JS) */
+  body.settings-from-collapsed .quickbar.collapsed .qb-right {
+    opacity: 1 !important;
+    visibility: visible !important;
+    pointer-events: auto !important;
+    position: fixed !important;
+    top: 44px !important;
+    right: 12px !important;
+    left: auto !important;
+    z-index: 1300 !important;
+    display: block !important;
+    width: auto !important;
+    height: auto !important;
+    background: transparent !important;
+  }
+  
+  /* Hide all siblings in qb-right except the open settings */
+  body.settings-from-collapsed .quickbar.collapsed .qb-right > *:not(#settingsWrap) {
+    display: none !important;
+  }
+  
+  body.settings-from-collapsed .quickbar.collapsed #settingsWrap.open {
+    opacity: 1 !important;
+    visibility: visible !important;
+    pointer-events: auto !important;
+    display: block !important;
+  }
+  
+  /* When char-stats-bar is also collapsed, position from top */
+  body.csb-collapsed.settings-from-collapsed .quickbar.collapsed .qb-right {
+    top: 12px !important;
+  }
+  
+  body.settings-from-collapsed .quickbar.collapsed #settingsWrap.open > .qb-popover {
+    display: block !important;
+    position: relative;
+    top: auto;
+    right: auto;
+    opacity: 1 !important;
+    visibility: visible !important;
+    pointer-events: auto !important;
+    transform: none !important;
+  }
+  
+  /* Hide the gear button when popover is open from collapsed state */
+  body.settings-from-collapsed .quickbar.collapsed #settingsWrap.open > .qb-btn {
+    display: none !important;
+  }
 }
 body.quickbar-collapsed{
   /* P0 Fix: Use --quickbar-h variable instead of hardcoded value.
@@ -16174,10 +16317,12 @@ body {
 }
 
 /* =============================================
-   v6.17.4: DESKTOP LAYOUT FIXES
+   v6.17.10: DESKTOP/MOBILE LAYOUT FIXES
    1. Character picker popover - use left alignment to prevent off-screen
    2. Minimal HUD hidden on desktop (shown only on mobile collapsed)
    3. Actions rail positioned above footer
+   4. Quickbar positioned BELOW char-stats-bar on desktop
+   5. char-stats-bar HIDDEN on mobile (mobile has its own minimal HUD)
    ============================================= */
 
 /* Fix #1: Character picker popover alignment - left instead of right */
@@ -16213,15 +16358,32 @@ body {
   }
 }
 
-/* Fix #4: Hide char-stats-bar on desktop - quickbar already shows stats */
+/* Fix #4: Position quickbar BELOW char-stats-bar on desktop */
+/* Both bars are fixed position - quickbar needs to sit below char-stats-bar (36px) */
 @media (min-width: 521px) {
-  .char-stats-bar {
-    display: none !important;
+  /* When char-stats-bar is visible, push quickbar down */
+  body:not(.csb-collapsed) .quickbar:not(.collapsed) {
+    top: 36px;
   }
   
-  /* Remove the extra body padding that was for char-stats-bar */
-  body:not(.csb-collapsed) {
-    padding-top: var(--quickbar-h);
+  /* Adjust body padding for both bars: char-stats-bar (36px) + quickbar (68px) = 104px */
+  body:not(.csb-collapsed):not(.quickbar-collapsed) {
+    padding-top: calc(36px + var(--quickbar-h, 68px));
+  }
+  
+  /* When quickbar is collapsed but char-stats-bar visible, only need char-stats-bar padding */
+  body:not(.csb-collapsed).quickbar-collapsed {
+    padding-top: 36px;
+  }
+  
+  /* When char-stats-bar is collapsed but quickbar visible */
+  body.csb-collapsed:not(.quickbar-collapsed) {
+    padding-top: var(--quickbar-h, 68px);
+  }
+  
+  /* Quickbar collapse toggle needs to account for char-stats-bar */
+  body:not(.csb-collapsed) .quickbar.collapsed .qb-collapse-toggle {
+    top: 36px;
   }
 }
 
@@ -16563,7 +16725,7 @@ body {
     <button class="boot-footer-link boot-settings-btn" id="bootSettingsBtn" type="button" title="Settings">&#x2699; Settings</button>
   </div>
   <div class="boot-footer-version">
-    <span class="boot-version">v6.17.4</span>
+    <span class="boot-version">v6.17.9</span>
     <span class="boot-build">Build 6.17.4</span>
   </div>
 </footer>
@@ -17005,7 +17167,20 @@ body {
       <span class="csb-value" id="csbSpeed">30</span>
     </span>
   </div>
-  <button class="csb-toggle" id="csbToggle" type="button" aria-label="Toggle stats bar" title="Collapse stats bar">&#x25BC;</button>
+  <!-- Main dropdown button for quick actions -->
+  <div class="csb-dropdown" id="csbDropdown">
+    <button class="csb-toggle" id="csbToggle" type="button" aria-label="Quick actions menu" aria-haspopup="menu" aria-expanded="false" title="Quick actions">&#x25BC;</button>
+    <div class="csb-menu" id="csbMenu" role="menu" aria-label="Quick actions">
+      <button class="csb-menu-item" id="csbHealDmg" type="button" role="menuitem" title="Add or remove HP">&#x2764;&#xFE0F; Heal / Damage</button>
+      <button class="csb-menu-item" id="csbTempHp" type="button" role="menuitem" title="Set temporary HP">&#x1F6E1;&#xFE0F; Temp HP</button>
+      <button class="csb-menu-item" id="csbShortRest" type="button" role="menuitem" title="Take a short rest">&#x263E; Short Rest</button>
+      <button class="csb-menu-item" id="csbLongRest" type="button" role="menuitem" title="Take a long rest">&#x1F319; Long Rest</button>
+      <div class="csb-menu-divider"></div>
+      <button class="csb-menu-item" id="csbRollInit" type="button" role="menuitem" title="Roll initiative">&#x1F3B2; Roll Initiative</button>
+      <button class="csb-menu-item" id="csbToggleQb" type="button" role="menuitem" title="Show or hide the quickbar">&#x2195;&#xFE0F; Toggle Quickbar</button>
+      <button class="csb-menu-item" id="csbSettings" type="button" role="menuitem" title="Open settings">&#x2699;&#xFE0F; Settings</button>
+    </div>
+  </div>
 </div>
 
 <!-- Section B: Help FAB Button -->
@@ -18215,7 +18390,7 @@ body {
     <div class="char-builder-output" id="charBuilderOutput" hidden>
       <h3 class="char-builder-output-title">&#x1F4DC; Step 1: Copy This Prompt</h3>
       <p class="char-builder-output-hint">
-        <strong>How to use:</strong> 1) Copy this prompt â†’ 2) Paste into an AI (Claude, ChatGPT, etc.) â†’ 3) The AI will create a downloadable .json file â†’ 4) Download it â†’ 5) Import into Player Almanac using the Import button
+        <strong>How to use:</strong> 1) Copy this prompt Ã¢â€ â€™ 2) Paste into an AI (Claude, ChatGPT, etc.) Ã¢â€ â€™ 3) The AI will create a downloadable .json file Ã¢â€ â€™ 4) Download it Ã¢â€ â€™ 5) Import into Player Almanac using the Import button
       </p>
       <textarea class="char-builder-output-textarea" id="charBuilderPromptOutput" readonly></textarea>
       <div class="char-builder-output-actions">
@@ -18511,7 +18686,7 @@ body {
 <div class="weapon-detail-modal" id="weaponDetailModal" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="weaponDetailTitle">
   <div class="weapon-detail-header">
     <div class="weapon-detail-title">
-      <span class="weapon-mobile-icon">âš”</span>
+      <span class="weapon-mobile-icon">Ã¢Å¡â€</span>
       <span id="weaponDetailName">Weapon Name</span>
     </div>
     <button class="weapon-detail-close" id="weaponDetailClose" type="button" aria-label="Close weapon details">&times;</button>
@@ -18531,13 +18706,13 @@ body {
     </div>
     <div class="weapon-detail-notes" id="weaponDetailNotesWrap">
       <div class="weapon-detail-notes-label">Properties & Notes</div>
-      <div class="weapon-detail-notes-text" id="weaponDetailNotes">â€”</div>
+      <div class="weapon-detail-notes-text" id="weaponDetailNotes">"â€</div>
     </div>
   </div>
   <div class="weapon-detail-actions">
     <button class="weapon-detail-btn roll-atk" id="weaponDetailRollAtk" type="button">Roll Attack</button>
     <button class="weapon-detail-btn roll-dmg" id="weaponDetailRollDmg" type="button">Roll Damage</button>
-    <button class="weapon-detail-btn delete" id="weaponDetailDelete" type="button">âœ•</button>
+    <button class="weapon-detail-btn delete" id="weaponDetailDelete" type="button">Ã¢Å“â€¢</button>
   </div>
 </div>
 
@@ -18545,7 +18720,7 @@ body {
 <div class="equip-detail-modal" id="equipDetailModal" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="equipDetailTitle">
   <div class="equip-detail-header">
     <div class="equip-detail-title">
-      <span class="equip-mobile-icon">ðŸ“¦</span>
+      <span class="equip-mobile-icon">&#x1F4E6;</span>
       <span id="equipDetailTitleText">Equipment</span>
     </div>
     <button class="equip-detail-close" id="equipDetailClose" type="button" aria-label="Close equipment details">&times;</button>
@@ -18573,7 +18748,7 @@ body {
   <div class="bg-select-body" id="bgSelectBody">
     <!-- Feature Section -->
     <div class="bg-section">
-      <div class="bg-section-title"><span class="icon">â­Â</span> Background Feature</div>
+      <div class="bg-section-title"><span class="icon">Ã¢Â­ÂÃ‚Â</span> Background Feature</div>
       <div class="bg-feature-box">
         <div class="bg-feature-name" id="bgFeatureName">Feature Name</div>
         <div class="bg-feature-desc" id="bgFeatureDesc">Feature description goes here.</div>
@@ -18582,7 +18757,7 @@ body {
     
     <!-- 2024 Only: Origin Feat -->
     <div class="bg-section" id="bgFeatSection" style="display:none;">
-      <div class="bg-section-title"><span class="icon">ðŸŽ–ï¸Â</span> Origin Feat</div>
+      <div class="bg-section-title"><span class="icon">&#x1F396;&#xFE0F;</span> Origin Feat</div>
       <div class="bg-feature-box">
         <div class="bg-feature-name" id="bgFeatName">Feat Name</div>
         <div class="bg-feature-desc" id="bgFeatDesc">This background grants you the following Origin Feat at 1st level.</div>
@@ -18591,20 +18766,20 @@ body {
     
     <!-- 2024 Only: Ability Score Options -->
     <div class="bg-section" id="bgAbilitySection" style="display:none;">
-      <div class="bg-section-title"><span class="icon">ðŸ’ª</span> Ability Score Increase</div>
+      <div class="bg-section-title"><span class="icon">&#x1F4AA;</span> Ability Score Increase</div>
       <p style="font-size:0.85rem;color:var(--text-secondary);margin-bottom:12px;">Increase one ability by 2 and another by 1, or increase three abilities by 1 each. Choose from:</p>
       <div class="bg-choice-options" id="bgAbilityOptions"></div>
     </div>
     
     <!-- Skill Proficiencies -->
     <div class="bg-section">
-      <div class="bg-section-title"><span class="icon">ðŸŽ¯</span> Skill Proficiencies</div>
+      <div class="bg-section-title"><span class="icon">&#x1F3AF;</span> Skill Proficiencies</div>
       <div class="bg-choice-options" id="bgSkillsDisplay"></div>
     </div>
     
     <!-- Tool Proficiencies -->
     <div class="bg-section" id="bgToolSection">
-      <div class="bg-section-title"><span class="icon">ðŸ”§</span> Tool Proficiencies</div>
+      <div class="bg-section-title"><span class="icon">&#x1F527;</span> Tool Proficiencies</div>
       <div id="bgToolsContainer">
         <div class="bg-choice-group" id="bgToolsFixed"></div>
         <div class="bg-choice-group" id="bgToolsChoice" style="display:none;">
@@ -18616,7 +18791,7 @@ body {
     
     <!-- Languages -->
     <div class="bg-section" id="bgLangSection">
-      <div class="bg-section-title"><span class="icon">ðŸ“”â€”Â£Ã¯Â¸Â</span> Languages</div>
+      <div class="bg-section-title"><span class="icon">&#x1F5E3;&#xFE0F;</span> Languages</div>
       <div id="bgLangContainer">
         <p style="font-size:0.85rem;color:var(--text-secondary);margin-bottom:10px;" id="bgLangInfo">Choose languages:</p>
         <div id="bgLangSelects"></div>
@@ -18625,13 +18800,13 @@ body {
     
     <!-- Equipment -->
     <div class="bg-section">
-      <div class="bg-section-title"><span class="icon">ðŸ“”Å½â€™</span> Starting Equipment</div>
+      <div class="bg-section-title"><span class="icon">&#x1F392;</span> Starting Equipment</div>
       <div class="bg-equip-list" id="bgEquipList"></div>
     </div>
     
     <!-- Suggested Backstory -->
     <div class="bg-section">
-      <div class="bg-section-title"><span class="icon">ðŸ“œ</span> Suggested Backstory</div>
+      <div class="bg-section-title"><span class="icon">&#x1F4DC;</span> Suggested Backstory</div>
       <textarea class="bg-backstory-preview" id="bgBackstoryPreview" placeholder="Your character's backstory..."></textarea>
     </div>
     
@@ -18641,19 +18816,19 @@ body {
       <div class="bg-summary-grid" id="bgSummaryGrid">
         <div class="bg-summary-item">
           <div class="bg-summary-item-label">Skills</div>
-          <div class="bg-summary-item-value" id="bgSummarySkills">â€”</div>
+          <div class="bg-summary-item-value" id="bgSummarySkills">"â€</div>
         </div>
         <div class="bg-summary-item">
           <div class="bg-summary-item-label">Tools</div>
-          <div class="bg-summary-item-value" id="bgSummaryTools">â€”</div>
+          <div class="bg-summary-item-value" id="bgSummaryTools">"â€</div>
         </div>
         <div class="bg-summary-item">
           <div class="bg-summary-item-label">Languages</div>
-          <div class="bg-summary-item-value" id="bgSummaryLangs">â€”</div>
+          <div class="bg-summary-item-value" id="bgSummaryLangs">"â€</div>
         </div>
         <div class="bg-summary-item" id="bgSummaryFeatItem" style="display:none;">
           <div class="bg-summary-item-label">Origin Feat</div>
-          <div class="bg-summary-item-value" id="bgSummaryFeat">â€”</div>
+          <div class="bg-summary-item-value" id="bgSummaryFeat">"â€</div>
         </div>
       </div>
     </div>
@@ -18692,10 +18867,10 @@ body {
   - "prefer-const": "warn"
   
   HTML Security Checklist:
-  âœ” All innerHTML uses escapeHtml() for user content
-  âœ” No document.write, outerHTML, or insertAdjacentHTML with user data
-  âœ” Portrait/map data URLs validated before use
-  âœ” Import data validated through normalizeState()
+  Ã¢Å“â€ All innerHTML uses escapeHtml() for user content
+  Ã¢Å“â€ No document.write, outerHTML, or insertAdjacentHTML with user data
+  Ã¢Å“â€ Portrait/map data URLs validated before use
+  Ã¢Å“â€ Import data validated through normalizeState()
   
   ============================================================
   CODE STRUCTURE MAP
@@ -19089,7 +19264,7 @@ body {
       'about.title': 'About Player Almanac',
       'about.project': 'PROJECT',
       'about.projectName': 'Player Almanac',
-      'about.copyright': 'Ã‚Â© 2025 Zagreous',
+      'about.copyright': 'Â© 2025 Zagreous',
       'about.description': 'A digital character sheet and campaign companion for tabletop RPGs.',
       'about.license': 'LICENSE',
       'about.licenseTitle': 'ZNAL v1.1',
@@ -19103,17 +19278,17 @@ body {
       'about.attributionPage': 'Official project page:',
       'about.thirdParty': 'THIRD-PARTY NOTICES',
       'about.gsap': 'GSAP 6.16.0',
-      'about.gsapText': '(GreenSock) â€” Animation library (bundled for offline use).',
+      'about.gsapText': '(GreenSock) "â€ Animation library (bundled for offline use).',
       'about.gsapLicense': 'Subject to GreenSock license terms.',
       'about.gsapNote': 'Animations work fully offline (GSAP bundled).',
       'about.fonts': 'Fonts:',
-      'about.fontsText': 'Cinzel, Inter, JetBrains Mono â€” Google Fonts, licensed under the SIL Open Font License (OFL).',
+      'about.fontsText': 'Cinzel, Inter, JetBrains Mono "â€ Google Fonts, licensed under the SIL Open Font License (OFL).',
       'about.icons': 'Icons:',
-      'about.iconsText': 'Custom inline SVGs â€” Original artwork.',
+      'about.iconsText': 'Custom inline SVGs "â€ Original artwork.',
       'about.emoji': 'Emoji:',
-      'about.emojiText': 'Unicode standard characters â€” Rendered by your device/browser.',
+      'about.emojiText': 'Unicode standard characters "â€ Rendered by your device/browser.',
       'about.trademark': 'TRADEMARK DISCLAIMER',
-      'about.trademarkText': 'Dungeons & DragonsÃ‚Â® is a registered trademark of Wizards of the Coast LLC. Player Almanac is not affiliated with, endorsed, sponsored, or specifically approved by Wizards of the Coast LLC.',
+      'about.trademarkText': 'Dungeons & DragonsÂ® is a registered trademark of Wizards of the Coast LLC. Player Almanac is not affiliated with, endorsed, sponsored, or specifically approved by Wizards of the Coast LLC.',
       
       // Conditions
       'condition.blinded': 'Blinded',
@@ -19249,17 +19424,17 @@ body {
       'about.attributionLicense': 'Licensed under ZNAL v1.1 (Noncommercial + Attribution)',
       'about.officialPage': 'Official project page:',
       'about.thirdParty': 'Third-Party Notices',
-      'about.gsapDesc': '(GreenSock) â€” Animation library (bundled for offline use).',
+      'about.gsapDesc': '(GreenSock) "â€ Animation library (bundled for offline use).',
       'about.gsapLicense': 'Subject to GreenSock license terms.',
       'about.gsapNote': 'Animations work fully offline (GSAP bundled).',
       'about.fonts': 'Fonts:',
-      'about.fontsDesc': 'Cinzel, Inter, JetBrains Mono â€” Google Fonts, licensed under the SIL Open Font License (OFL).',
+      'about.fontsDesc': 'Cinzel, Inter, JetBrains Mono "â€ Google Fonts, licensed under the SIL Open Font License (OFL).',
       'about.icons': 'Icons:',
-      'about.iconsDesc': 'Custom inline SVGs â€” Original artwork.',
+      'about.iconsDesc': 'Custom inline SVGs "â€ Original artwork.',
       'about.emoji': 'Emoji:',
-      'about.emojiDesc': 'Unicode standard characters â€” Rendered by your device/browser.',
+      'about.emojiDesc': 'Unicode standard characters "â€ Rendered by your device/browser.',
       'about.trademark': 'Trademark Disclaimer',
-      'about.trademarkDesc': 'Dungeons & DragonsÃ‚Â® is a registered trademark of Wizards of the Coast LLC. Player Almanac is not affiliated with, endorsed, sponsored, or specifically approved by Wizards of the Coast LLC.',
+      'about.trademarkDesc': 'Dungeons & DragonsÂ® is a registered trademark of Wizards of the Coast LLC. Player Almanac is not affiliated with, endorsed, sponsored, or specifically approved by Wizards of the Coast LLC.',
       
       // Map Screen
       'map.title': 'Campaign Map',
@@ -19421,7 +19596,7 @@ body {
       'printSheet.noWeapons': 'No weapons',
       'printSheet.conditions': 'Conditions',
       'printSheet.unnamed': 'Unnamed Character',
-      'printSheet.footer': 'Player Almanac â€¢ Character Sheet',
+      'printSheet.footer': 'Player Almanac "Â¢ Character Sheet',
     
       'alert.emergencyExportFailed': "Emergency export failed:",
       'alert.exportFailed': "Export failed:",
@@ -19577,7 +19752,7 @@ body {
       // Quickbar
       'qb.saved': 'Gespeichert',
       'qb.saving': 'Speichert...',
-      'qb.undo': 'RÃƒÂ¼ckgÃ¤ngig',
+      'qb.undo': 'Rückgängig',
       'qb.edit': 'Bearbeiten',
       'qb.play': 'Spielen',
       'qb.newChar': '+ Neu',
@@ -19608,14 +19783,14 @@ body {
       
       // Tabs
       'tab.core': 'Basis',
-      'tab.spells': 'Zauber & AusrÃƒÂ¼stung',
+      'tab.spells': 'Zauber & Ausrüstung',
       'tab.fate': 'Schicksalsweben',
       
       // Identity Card
-      'identity.portrait': 'PortrÃ¤t',
+      'identity.portrait': 'Porträt',
       'identity.upload': 'Hochladen',
       'identity.adjust': 'Anpassen',
-      'identity.clear': 'LÃ¶schen',
+      'identity.clear': 'Löschen',
       'identity.name': 'Charaktername',
       'identity.newCharacter': 'Neuer Charakter',
       'identity.species': 'Spezies',
@@ -19629,12 +19804,12 @@ body {
       'jump.combat': 'Kampf',
       'jump.skills': 'Fertigkeiten',
       'jump.weapons': 'Waffen',
-      'jump.features': 'FÃ¤higkeiten',
+      'jump.features': 'Fähigkeiten',
       'jump.traits': 'Merkmale',
       'jump.spellcasting': 'Zauberwirken',
-      'jump.spellSlots': 'ZauberplÃ¤tze',
+      'jump.spellSlots': 'Zauberplätze',
       'jump.spells': 'Zauber',
-      'jump.equipment': 'AusrÃƒÂ¼stung',
+      'jump.equipment': 'Ausrüstung',
       'jump.training': 'Training',
       'jump.feats': 'Talente',
       
@@ -19644,29 +19819,29 @@ body {
       'card.combat': 'Kampf',
       'card.skills': 'Fertigkeiten',
       'card.weapons': 'Waffen & Angriffe',
-      'card.features': 'KlassenfÃ¤higkeiten',
+      'card.features': 'Klassenfähigkeiten',
       'card.traits': 'Speziesmerkmale',
-      'card.backstory': 'Hintergrund & PersÃ¶nlichkeit',
+      'card.backstory': 'Hintergrund & Persönlichkeit',
       'card.spellcasting': 'Zauberwirken',
-      'card.coins': 'MÃƒÂ¼nzen',
-      'card.spellSlots': 'ZauberplÃ¤tze',
+      'card.coins': 'Münzen',
+      'card.spellSlots': 'Zauberplätze',
       'card.cantripsSpells': 'Zaubertricks & Zauber',
-      'card.equipment': 'AusrÃƒÂ¼stung',
-      'card.training': 'Training & Ãœbung',
+      'card.equipment': 'Ausrüstung',
+      'card.training': 'Training & Übung',
       'card.feats': 'Talente',
       'card.bonds': 'Bindungen',
-      'card.allies': 'VerbÃƒÂ¼ndete & Fraktionen',
+      'card.allies': 'Verbündete & Fraktionen',
       'card.notes': 'Kampagnennotizen',
       
       // Abilities (full names)
-      'ability.str': 'StÃ¤rke',
+      'ability.str': 'Stärke',
       'ability.dex': 'Geschicklichkeit',
       'ability.con': 'Konstitution',
       'ability.int': 'Intelligenz',
       'ability.wis': 'Weisheit',
       'ability.cha': 'Charisma',
       // Ability abbreviations
-      'ability.str.abbr': 'STÃƒâ€ž',
+      'ability.str.abbr': 'STÄ',
       'ability.dex.abbr': 'GES',
       'ability.con.abbr': 'KON',
       'ability.int.abbr': 'INT',
@@ -19679,41 +19854,41 @@ body {
       'skill.animalHandling': 'Tierumgang',
       'skill.arcana': 'Arkane Kunde',
       'skill.athletics': 'Athletik',
-      'skill.deception': 'TÃ¤uschung',
+      'skill.deception': 'Täuschung',
       'skill.history': 'Geschichte',
       'skill.insight': 'Motiv erkennen',
-      'skill.intimidation': 'EinschÃƒÂ¼chtern',
+      'skill.intimidation': 'Einschüchtern',
       'skill.investigation': 'Nachforschungen',
       'skill.medicine': 'Heilkunde',
       'skill.nature': 'Naturkunde',
       'skill.perception': 'Wahrnehmung',
       'skill.performance': 'Auftreten',
-      'skill.persuasion': 'Ãœberzeugen',
+      'skill.persuasion': 'Überzeugen',
       'skill.religion': 'Religion',
       'skill.sleightOfHand': 'Fingerfertigkeit',
       'skill.stealth': 'Heimlichkeit',
-      'skill.survival': 'Ãœberleben',
-      'skill.prof': 'GEÃœBT',
+      'skill.survival': 'Überleben',
+      'skill.prof': 'GEÜBT',
       'skill.exp': 'EXP',
       
       // Combat Stats
-      'combat.ac': 'RÃƒÂ¼stungsklasse',
+      'combat.ac': 'Rüstungsklasse',
       'combat.initiative': 'Initiative',
       'combat.speed': 'Bewegung',
-      'combat.proficiency': 'Ãœbungsbonus',
+      'combat.proficiency': 'Übungsbonus',
       
       // Vitals
       'vitals.current': 'Aktuell',
       'vitals.max': 'Max',
       'vitals.temp': 'Temp',
       'vitals.successes': 'Erfolge',
-      'vitals.failures': 'FehlschlÃ¤ge',
-      'vitals.hitDice': 'TrefferwÃƒÂ¼rfel',
+      'vitals.failures': 'Fehlschläge',
+      'vitals.hitDice': 'Trefferwürfel',
       'vitals.condition': '+ Zustand',
       
       // Skills section
       'skills.search': 'Fertigkeiten suchen...',
-      'skills.profOnly': 'Nur geÃƒÂ¼bte',
+      'skills.profOnly': 'Nur geübte',
       
       // Spellcasting
       'spell.ability': 'Attribut',
@@ -19729,40 +19904,40 @@ body {
       'spell.all': 'Alle',
       'spell.prepared': 'Vorbereitet',
       'spell.concentration': 'Konzentration',
-      'spell.addSpell': '+ Zauber hinzufÃ¼gen',
-      'spell.addCantrip': '+ Zaubertrick hinzufÃ¼gen',
+      'spell.addSpell': '+ Zauber hinzufügen',
+      'spell.addCantrip': '+ Zaubertrick hinzufügen',
       
       // Weapons Table
       'weapon.name': 'Name',
       'weapon.atk': 'Ang',
       'weapon.damage': 'Schaden',
       'weapon.notes': 'Notizen',
-      'weapon.add': '+ Waffe hinzufÃ¼gen',
+      'weapon.add': '+ Waffe hinzufügen',
       
       // Features
-      'feature.add': '+ FÃ¤higkeit hinzufÃ¼gen',
+      'feature.add': '+ Fähigkeit hinzufügen',
       
       // Equipment
-      'equip.add': '+ Gegenstand hinzufÃ¼gen',
+      'equip.add': '+ Gegenstand hinzufügen',
       
       // Feats
-      'feat.add': '+ Talent hinzufÃ¼gen',
+      'feat.add': '+ Talent hinzufügen',
       
       // Roll Log
-      'rollLog.title': 'WÃƒÂ¼rfelprotokoll',
+      'rollLog.title': 'Würfelprotokoll',
       'rollLog.clear': 'Leeren',
       'rollLog.all': 'Alle',
       'rollLog.skills': 'Fertigkeiten',
-      'rollLog.saves': 'RettungswÃƒÂ¼rfe',
+      'rollLog.saves': 'Rettungswürfe',
       'rollLog.attacks': 'Angriffe',
       'rollLog.misc': 'Sonstige',
-      'rollLog.empty': 'Noch keine WÃƒÂ¼rfe. Klicke auf eine Fertigkeit, Rettungswurf oder Angriff!',
+      'rollLog.empty': 'Noch keine Würfe. Klicke auf eine Fertigkeit, Rettungswurf oder Angriff!',
       
       // Help Modal
       'help.title': 'Kurzreferenz',
-      'help.rolling': 'WÃƒÂ¼rfeln',
+      'help.rolling': 'Würfeln',
       'help.characters': 'Charaktere',
-      'help.shortcuts': 'TastenkÃƒÂ¼rzel',
+      'help.shortcuts': 'Tastenkürzel',
       
       // Actions
       'action.save': 'Speichern',
@@ -19770,12 +19945,12 @@ body {
       'action.import': 'Importieren',
       'action.print': 'Drucken',
       'action.cancel': 'Abbrechen',
-      'action.confirm': 'BestÃ¤tigen',
-      'action.delete': 'LÃ¶schen',
+      'action.confirm': 'Bestätigen',
+      'action.delete': 'Löschen',
       'action.duplicate': 'Duplizieren',
-      'action.close': 'SchlieÃŸen',
+      'action.close': 'Schließen',
       'action.done': 'Fertig',
-      'action.reset': 'ZurÃƒÂ¼cksetzen',
+      'action.reset': 'Zurücksetzen',
       
       // Boot Screen
       'boot.title': 'Player Almanac',
@@ -19799,99 +19974,99 @@ body {
       'bootSettings.motion': 'Animationen',
       'bootSettings.contrast': 'Hoher Kontrast',
       'bootSettings.storage': 'Speicherstatus',
-      'bootSettings.checking': 'PrÃƒÂ¼fe...',
+      'bootSettings.checking': 'Prüfe...',
       
       // Contrast Options
       'contrast.normal': 'Normal',
       'contrast.high': 'Hoch',
       
       // About Modal
-      'about.title': 'Ãœber Player Almanac',
+      'about.title': 'Über Player Almanac',
       'about.project': 'PROJEKT',
       'about.projectName': 'Player Almanac',
-      'about.copyright': 'Ã‚Â© 2025 Zagreous',
-      'about.description': 'Ein digitaler Charakterbogen und Kampagnenbegleiter fÃ¼r Tischrollenspiele.',
+      'about.copyright': 'Â© 2025 Zagreous',
+      'about.description': 'Ein digitaler Charakterbogen und Kampagnenbegleiter für Tischrollenspiele.',
       'about.license': 'LIZENZ',
       'about.licenseTitle': 'ZNAL v1.1',
       'about.licenseFull': '(Zagreous Noncommercial Attribution License)',
       'about.licenseText': 'Nichtkommerzielle Nutzung mit Namensnennung und Verlinkung erlaubt.',
       'about.streamingText': 'YouTube/Twitch/Streaming erlaubt (auch monetarisiert) mit Namensnennung.',
-      'about.commercialText': 'FÃƒÂ¼r kommerzielle Lizenzanfragen:',
+      'about.commercialText': 'Für kommerzielle Lizenzanfragen:',
       'about.attribution': 'ERFORDERLICHE NAMENSNENNUNG',
       'about.attributionText': 'Player Almanac von Zagreous',
       'about.attributionLicense': 'Lizenziert unter ZNAL v1.1 (Nichtkommerziell + Namensnennung)',
       'about.attributionPage': 'Offizielle Projektseite:',
       'about.thirdParty': 'DRITTANBIETER-HINWEISE',
       'about.gsap': 'GSAP 6.16.0',
-      'about.gsapText': '(GreenSock) â€” Animationsbibliothek (gebÃƒÂ¼ndelt fÃ¼r Offline-Nutzung).',
+      'about.gsapText': '(GreenSock) "â€ Animationsbibliothek (gebündelt für Offline-Nutzung).',
       'about.gsapLicense': 'Unterliegt den GreenSock-Lizenzbedingungen.',
-      'about.gsapNote': 'Animationen funktionieren vollstÃ¤ndig offline (GSAP gebÃƒÂ¼ndelt).',
+      'about.gsapNote': 'Animationen funktionieren vollständig offline (GSAP gebündelt).',
       'about.fonts': 'Schriftarten:',
-      'about.fontsText': 'Cinzel, Inter, JetBrains Mono â€” Google Fonts, lizenziert unter der SIL Open Font License (OFL).',
+      'about.fontsText': 'Cinzel, Inter, JetBrains Mono "â€ Google Fonts, lizenziert unter der SIL Open Font License (OFL).',
       'about.icons': 'Icons:',
-      'about.iconsText': 'Benutzerdefinierte Inline-SVGs â€” Originalkunstwerk.',
+      'about.iconsText': 'Benutzerdefinierte Inline-SVGs "â€ Originalkunstwerk.',
       'about.emoji': 'Emoji:',
-      'about.emojiText': 'Unicode-Standardzeichen â€” Gerendert durch Ihr GerÃ¤t/Browser.',
+      'about.emojiText': 'Unicode-Standardzeichen "â€ Gerendert durch Ihr Gerät/Browser.',
       'about.trademark': 'MARKENRECHTLICHER HINWEIS',
-      'about.trademarkText': 'Dungeons & DragonsÃ‚Â® ist eine eingetragene Marke von Wizards of the Coast LLC. Player Almanac ist nicht mit Wizards of the Coast LLC verbunden, wird nicht von ihr unterstÃƒÂ¼tzt, gesponsert oder speziell genehmigt.',
+      'about.trademarkText': 'Dungeons & DragonsÂ® ist eine eingetragene Marke von Wizards of the Coast LLC. Player Almanac ist nicht mit Wizards of the Coast LLC verbunden, wird nicht von ihr unterstützt, gesponsert oder speziell genehmigt.',
       
       // Conditions
       'condition.blinded': 'Geblendet',
       'condition.charmed': 'Bezaubert',
       'condition.deafened': 'Taub',
-      'condition.frightened': 'VerÃ¤ngstigt',
+      'condition.frightened': 'Verängstigt',
       'condition.grappled': 'Gepackt',
-      'condition.incapacitated': 'KampfunfÃ¤hig',
+      'condition.incapacitated': 'Kampfunfähig',
       'condition.invisible': 'Unsichtbar',
-      'condition.paralyzed': 'GelÃ¤hmt',
+      'condition.paralyzed': 'Gelähmt',
       'condition.petrified': 'Versteinert',
       'condition.poisoned': 'Vergiftet',
       'condition.prone': 'Liegend',
       'condition.restrained': 'Festgesetzt',
-      'condition.stunned': 'BetÃ¤ubt',
+      'condition.stunned': 'Betäubt',
       'condition.unconscious': 'Bewusstlos',
-      'condition.exhaustion': 'ErschÃ¶pfung',
+      'condition.exhaustion': 'Erschöpfung',
       
       // Temp HP Modal
       'tempHP.title': 'Temp. TP',
       'tempHP.amount': 'Betrag',
-      'tempHP.description': 'Setzt temporÃ¤re Trefferpunkte direkt.',
+      'tempHP.description': 'Setzt temporäre Trefferpunkte direkt.',
       'tempHP.set': 'Temp. TP setzen',
       
       // Short Rest Modal
       'shortRest.title': 'Kurze Rast',
-      'shortRest.spendHitDice': 'TrefferwÃƒÂ¼rfel ausgeben zum Heilen',
-      'shortRest.description': 'Klicke auf TrefferwÃƒÂ¼rfel, um sie auszuwÃ¤hlen. Jeder gewÃƒÂ¼rfelte WÃƒÂ¼rfel heilt TP in HÃ¶he des Wurfs + deinem KON-Modifikator.',
-      'shortRest.available': 'VerfÃ¼gbare TrefferwÃƒÂ¼rfel',
-      'shortRest.selected': 'AusgewÃ¤hlt',
-      'shortRest.conMod': 'KON-Modifikator (pro WÃƒÂ¼rfel)',
+      'shortRest.spendHitDice': 'Trefferwürfel ausgeben zum Heilen',
+      'shortRest.description': 'Klicke auf Trefferwürfel, um sie auszuwählen. Jeder gewürfelte Würfel heilt TP in Höhe des Wurfs + deinem KON-Modifikator.',
+      'shortRest.available': 'Verfügbare Trefferwürfel',
+      'shortRest.selected': 'Ausgewählt',
+      'shortRest.conMod': 'KON-Modifikator (pro Würfel)',
       'shortRest.resets': 'Kurze Rast stellt wieder her',
-      'shortRest.configureFeatures': 'Konfiguriere, welche FÃ¤higkeiten bei einer kurzen Rast zurÃƒÂ¼ckgesetzt werden.',
-      'shortRest.noFeatures': 'Keine KlassenfÃ¤higkeiten zu konfigurieren. FÃƒÂ¼ge FÃ¤higkeiten im Basis-Tab hinzu.',
-      'shortRest.rollDice': 'AusgewÃ¤hlte WÃƒÂ¼rfeln',
-      'shortRest.complete': 'Rast abschlieÃŸen',
+      'shortRest.configureFeatures': 'Konfiguriere, welche Fähigkeiten bei einer kurzen Rast zurückgesetzt werden.',
+      'shortRest.noFeatures': 'Keine Klassenfähigkeiten zu konfigurieren. Füge Fähigkeiten im Basis-Tab hinzu.',
+      'shortRest.rollDice': 'Ausgewählte Würfeln',
+      'shortRest.complete': 'Rast abschließen',
       
       // Long Rest Modal
       'longRest.title': 'Lange Rast',
       'longRest.benefits': 'Vorteile der langen Rast',
-      'longRest.description': 'Eine lange Rast stellt alle TP wieder her, erholt die HÃ¤lfte deiner TrefferwÃƒÂ¼rfel (mindestens 1) und setzt alle ZauberplÃ¤tze und FÃ¤higkeiten zurÃƒÂ¼ck.',
+      'longRest.description': 'Eine lange Rast stellt alle TP wieder her, erholt die Hälfte deiner Trefferwürfel (mindestens 1) und setzt alle Zauberplätze und Fähigkeiten zurück.',
       'longRest.whatRestored': 'Was wiederhergestellt wird',
       'longRest.hitPoints': 'Trefferpunkte',
-      'longRest.hitDiceRecovered': 'TrefferwÃƒÂ¼rfel erholt',
-      'longRest.spellSlots': 'ZauberplÃ¤tze',
-      'longRest.deathSaves': 'TodesrettungswÃƒÂ¼rfe',
+      'longRest.hitDiceRecovered': 'Trefferwürfel erholt',
+      'longRest.spellSlots': 'Zauberplätze',
+      'longRest.deathSaves': 'Todesrettungswürfe',
       'longRest.noRecovery': 'Keine Erholung',
       'longRest.noneToRestore': 'Keine wiederherzustellen',
-      'longRest.reset': 'ZurÃƒÂ¼cksetzen',
+      'longRest.reset': 'Zurücksetzen',
       'longRest.resets': 'Lange Rast stellt wieder her',
-      'longRest.configureFeatures': 'Konfiguriere, welche FÃ¤higkeiten bei einer langen Rast zurÃƒÂ¼ckgesetzt werden.',
-      'longRest.noFeatures': 'Keine KlassenfÃ¤higkeiten zu konfigurieren.',
+      'longRest.configureFeatures': 'Konfiguriere, welche Fähigkeiten bei einer langen Rast zurückgesetzt werden.',
+      'longRest.noFeatures': 'Keine Klassenfähigkeiten zu konfigurieren.',
       'longRest.restRules': 'Rastregeln',
-      'longRest.hitDiceRecovery': 'TrefferwÃƒÂ¼rfel-Erholung',
+      'longRest.hitDiceRecovery': 'Trefferwürfel-Erholung',
       'longRest.hpRecovery': 'TP-Erholung',
       'longRest.halfLevel': 'Halbe Stufe (RAW)',
       'longRest.fullHP': 'Volle TP (RAW)',
-      'longRest.complete': 'Lange Rast abschlieÃŸen',
+      'longRest.complete': 'Lange Rast abschließen',
       
       // Heal/Damage Modal
       'healDmg.title': 'Heilen / Schaden',
@@ -19900,7 +20075,7 @@ body {
       'healDmg.damage': 'Schaden',
       
       // Training & Proficiencies
-      'training.armor': 'RÃƒÂ¼stung',
+      'training.armor': 'Rüstung',
       'training.light': 'Leicht',
       'training.medium': 'Mittel',
       'training.heavy': 'Schwer',
@@ -19910,8 +20085,8 @@ body {
       'training.languages': 'Sprachen',
       
       // Equipment
-      'equip.magicAttunement': 'Magische GegenstÃ¤nde (Einstimmung)',
-      'equip.addAttunement': '+ Einstimmung hinzufÃ¼gen',
+      'equip.magicAttunement': 'Magische Gegenstände (Einstimmung)',
+      'equip.addAttunement': '+ Einstimmung hinzufügen',
       'equip.compact': 'Kompakt',
       
       // Spell Table Headers
@@ -19926,71 +20101,71 @@ body {
       
       // Help Modal Content
       'help.quickBar': 'Schnellleiste',
-      'help.diceRolls': 'WÃƒÂ¼rfelwÃƒÂ¼rfe',
+      'help.diceRolls': 'Würfelwürfe',
       'help.map': 'Karte',
       'help.editPlay': 'Bearbeiten/Spielen',
       'help.editPlayDesc': 'Wechsle zwischen Bearbeitungs- und Spielmodus (sperrt Felder)',
       'help.advDis': 'Vort/Nacht',
-      'help.advDisDesc': 'Setze globalen Vorteil oder Nachteil fÃ¼r alle WÃƒÂ¼rfe',
-      'help.healDmgDesc': 'Schnell TP hinzufÃ¼gen oder entfernen',
+      'help.advDisDesc': 'Setze globalen Vorteil oder Nachteil für alle Würfe',
+      'help.healDmgDesc': 'Schnell TP hinzufügen oder entfernen',
       'help.moreDesc': 'Zugriff auf Rastoptionen, Extra-Werte und Karte',
-      'help.clickDesc': 'auf Fertigkeit, Rettungswurf oder Wert klicken zum WÃƒÂ¼rfeln mit Modifikatoren',
-      'help.initDesc': 'Klicke auf Initiative, um Initiative zu wÃƒÂ¼rfeln',
-      'help.advDisRollDesc': 'beeinflusst alle WÃƒÂ¼rfe bis zur RÃƒÂ¼ckkehr zu Normal',
+      'help.clickDesc': 'auf Fertigkeit, Rettungswurf oder Wert klicken zum Würfeln mit Modifikatoren',
+      'help.initDesc': 'Klicke auf Initiative, um Initiative zu würfeln',
+      'help.advDisRollDesc': 'beeinflusst alle Würfe bis zur Rückkehr zu Normal',
       'help.selectPan': 'Auswahl- / Verschiebe-Werkzeug',
       'help.placeOrigin': 'Charakter-Ursprung platzieren',
       'help.markLastSeen': 'Zuletzt gesehenen Ort markieren',
       'help.measureDistance': 'Entfernung zwischen zwei Punkten messen',
       'help.drawRoutes': 'Reiserouten zeichnen',
-      'help.addPins': 'Ortspins hinzufÃ¼gen',
-      'help.calibrateScale': 'KartenmaÃŸstab kalibrieren',
-      'help.closeMap': 'Karte schlieÃŸen oder Werkzeugaktion abbrechen',
+      'help.addPins': 'Ortspins hinzufügen',
+      'help.calibrateScale': 'Kartenmaßstab kalibrieren',
+      'help.closeMap': 'Karte schließen oder Werkzeugaktion abbrechen',
       'help.newCharDesc': 'Neuen Charakter erstellen',
-      'help.menuDesc': 'Aktuellen Charakter duplizieren oder lÃ¶schen',
+      'help.menuDesc': 'Aktuellen Charakter duplizieren oder löschen',
       'help.exportDesc': 'Charakter als JSON-Datei speichern',
       'help.importDesc': 'Charakter aus Datei laden',
-      'help.undoShortcut': 'Letzte Ãƒâ€žnderung rÃƒÂ¼ckgÃ¤ngig',
+      'help.undoShortcut': 'Letzte Änderung rückgängig',
       'help.saveShortcut': 'Speichern erzwingen (speichert automatisch)',
       'help.printShortcut': 'Drucken / Als PDF speichern',
-      'help.helpShortcut': 'Diese Hilfe Ã¶ffnen',
-      'help.escShortcut': 'Dialoge und MenÃƒÂ¼s schlieÃŸen',
-      'help.footer': 'Bewege den Mauszeiger ÃƒÂ¼ber eine SchaltflÃ¤che fÃ¼r einen Tooltip. DrÃƒÂ¼cke Esc zum SchlieÃŸen.',
+      'help.helpShortcut': 'Diese Hilfe öffnen',
+      'help.escShortcut': 'Dialoge und Menüs schließen',
+      'help.footer': 'Bewege den Mauszeiger über eine Schaltfläche für einen Tooltip. Drücke Esc zum Schließen.',
       
       // About Modal
-      'about.title': 'Ãœber Player Almanac',
+      'about.title': 'Über Player Almanac',
       'about.project': 'Projekt',
-      'about.description': 'Ein digitaler Charakterbogen und Kampagnenbegleiter fÃ¼r Tischrollenspiele.',
+      'about.description': 'Ein digitaler Charakterbogen und Kampagnenbegleiter für Tischrollenspiele.',
       'about.license': 'Lizenz',
       'about.licenseDesc': 'Nichtkommerzielle Nutzung mit Namensnennung und Verlinkung erlaubt.',
       'about.streamingDesc': 'YouTube/Twitch/Streaming erlaubt (auch monetarisiert) mit Namensnennung.',
-      'about.commercialDesc': 'FÃƒÂ¼r kommerzielle Lizenzanfragen:',
+      'about.commercialDesc': 'Für kommerzielle Lizenzanfragen:',
       'about.attribution': 'Erforderliche Namensnennung',
       'about.attributionBy': 'Player Almanac von Zagreous',
       'about.attributionLicense': 'Lizenziert unter ZNAL v1.1 (Nichtkommerziell + Namensnennung)',
       'about.officialPage': 'Offizielle Projektseite:',
       'about.thirdParty': 'Drittanbieter-Hinweise',
-      'about.gsapDesc': '(GreenSock) â€” Animationsbibliothek (gebÃƒÂ¼ndelt fÃ¼r Offline-Nutzung).',
+      'about.gsapDesc': '(GreenSock) "â€ Animationsbibliothek (gebündelt für Offline-Nutzung).',
       'about.gsapLicense': 'Unterliegt den GreenSock-Lizenzbedingungen.',
-      'about.gsapNote': 'Animationen funktionieren vollstÃ¤ndig offline (GSAP gebÃƒÂ¼ndelt).',
+      'about.gsapNote': 'Animationen funktionieren vollständig offline (GSAP gebündelt).',
       'about.fonts': 'Schriftarten:',
-      'about.fontsDesc': 'Cinzel, Inter, JetBrains Mono â€” Google Fonts, lizenziert unter der SIL Open Font License (OFL).',
+      'about.fontsDesc': 'Cinzel, Inter, JetBrains Mono "â€ Google Fonts, lizenziert unter der SIL Open Font License (OFL).',
       'about.icons': 'Icons:',
-      'about.iconsDesc': 'Benutzerdefinierte Inline-SVGs â€” Originalkunstwerk.',
+      'about.iconsDesc': 'Benutzerdefinierte Inline-SVGs "â€ Originalkunstwerk.',
       'about.emoji': 'Emoji:',
-      'about.emojiDesc': 'Unicode-Standardzeichen â€” Gerendert durch Ihr GerÃ¤t/Browser.',
+      'about.emojiDesc': 'Unicode-Standardzeichen "â€ Gerendert durch Ihr Gerät/Browser.',
       'about.trademark': 'Markenrechtlicher Hinweis',
-      'about.trademarkDesc': 'Dungeons & DragonsÃ‚Â® ist eine eingetragene Marke von Wizards of the Coast LLC. Player Almanac ist nicht mit Wizards of the Coast LLC verbunden oder von ihr genehmigt.',
+      'about.trademarkDesc': 'Dungeons & DragonsÂ® ist eine eingetragene Marke von Wizards of the Coast LLC. Player Almanac ist nicht mit Wizards of the Coast LLC verbunden oder von ihr genehmigt.',
       
       // Map Screen
       'map.title': 'Kampagnenkarte',
       'map.noMapLoaded': 'Keine Karte geladen',
-      'map.placingFor': 'Platzieren fÃ¼r:',
+      'map.placingFor': 'Platzieren für:',
       'map.current': '(Aktuell)',
       'map.settings': 'Karteneinstellungen',
       'map.campaign': 'Kampagne',
       'map.noCampaigns': 'Keine Kampagnen',
       'map.new': '+ Neu',
-      'map.delete': 'LÃ¶schen',
+      'map.delete': 'Löschen',
       'map.export': 'Exportieren',
       'map.import': 'Importieren',
       'map.mapSection': 'Karte',
@@ -19999,13 +20174,13 @@ body {
       'map.remove': 'Entfernen',
       'map.mapName': 'Kartenname',
       'map.mapNamePlaceholder': 'Kampagnenkarte',
-      'map.scale': 'MaÃŸstab',
+      'map.scale': 'Maßstab',
       'map.notCalibrated': 'Nicht kalibriert',
       'map.referenceLine': 'Referenzlinie:',
       'map.distance': 'Entfernung',
-      'map.setScale': 'MaÃŸstab setzen',
-      'map.clear': 'LÃ¶schen',
-      'map.scaleHint': 'WÃ¤hle das MaÃŸstab-Werkzeug und zeichne eine Linie zwischen zwei bekannten Punkten auf der Karte.',
+      'map.setScale': 'Maßstab setzen',
+      'map.clear': 'Löschen',
+      'map.scaleHint': 'Wähle das Maßstab-Werkzeug und zeichne eine Linie zwischen zwei bekannten Punkten auf der Karte.',
       'map.pins': 'Markierungen',
       'map.searchPins': 'Name, Region, Charakter suchen...',
       'map.allTypes': 'Alle Typen',
@@ -20013,19 +20188,19 @@ body {
       'map.noMapTitle': 'Keine Karte geladen',
       'map.noMapDesc': 'Lade ein Bild hoch, um mit deiner Kampagnenkarte zu beginnen.',
       'map.uploadMap': 'Karte hochladen',
-      'map.tools.select': 'AuswÃ¤hlen',
+      'map.tools.select': 'Auswählen',
       'map.tools.origin': 'Ursprung',
       'map.tools.lastSeen': 'Zuletzt gesehen',
       'map.tools.measure': 'Messen',
       'map.tools.route': 'Route',
       'map.tools.pins': 'Markierungen',
-      'map.tools.scale': 'MaÃŸstab',
+      'map.tools.scale': 'Maßstab',
       
       // Map Panel - Additional i18n keys (German)
       'map.emptyText': 'Lade ein Bild hoch, um mit deiner Kampagnenkarte zu beginnen.',
       'map.defaultMapName': 'Kampagnenkarte',
       'origin.defaultName': 'Heimatstadt',
-      'origin.defaultRegion': 'NÃ¶rdliche Provinz',
+      'origin.defaultRegion': 'Nördliche Provinz',
       'origin.defaultNotes': 'Details zu deinem Ursprung...',
       'scale.notCalibrated': 'Nicht kalibriert',
       'scale.referenceLine': 'Referenzlinie:',
@@ -20052,23 +20227,23 @@ body {
       'tooltip.exportChar': 'Charakter als Datei exportieren',
       'tooltip.importChar': 'Charakter aus Datei importieren',
       'tooltip.printChar': 'Charakterbogen drucken',
-      'tooltip.mapView': 'Kampagnenkarte Ã¶ffnen',
+      'tooltip.mapView': 'Kampagnenkarte öffnen',
       
       // Misc
       'misc.level': 'St',
       'misc.or': 'oder',
-      'misc.tapToRoll': 'tippen zum WÃ¼rfeln',
-      'misc.clickToRoll': 'Klicken zum WÃ¼rfeln',
+      'misc.tapToRoll': 'tippen zum Würfeln',
+      'misc.clickToRoll': 'Klicken zum Würfeln',
       'misc.click': 'Klick',
       'misc.init': 'Init',
       'misc.miles': 'Meilen',
       'misc.km': 'km',
-      'misc.ft': 'FuÃŸ',
+      'misc.ft': 'Fuß',
       'misc.m': 'm',
       'misc.px': 'px',
       
       // Boot Screen
-      'boot.loading': 'LÃ¤dt...',
+      'boot.loading': 'Lädt...',
       'boot.importChar': 'Charakter importieren',
       'boot.exportAll': 'Alle exportieren',
       'boot.importBtn': 'Importieren',
@@ -20079,8 +20254,8 @@ body {
       
       // Character Menu
       'charMenu.duplicate': 'Duplizieren',
-      'charMenu.delete': 'LÃ¶schen',
-      'charMenu.deleteConfirm': 'Zum BestÃ¤tigen erneut auf LÃ¶schen klicken.',
+      'charMenu.delete': 'Löschen',
+      'charMenu.deleteConfirm': 'Zum Bestätigen erneut auf Löschen klicken.',
       'charMenu.searchChars': 'Charaktere suchen...',
       
       // Import Modal
@@ -20088,7 +20263,7 @@ body {
       'import.fromFile': 'Aus Datei importieren',
       'import.jsonLabel': 'JSON importieren',
       'import.asNew': 'Als neuen Charakter importieren',
-      'import.hint': 'Exporte sind versioniert. Ãƒâ€žltere (nicht versionierte) Exporte werden importiert, aber neuere Felder kÃ¶nnen fehlen.',
+      'import.hint': 'Exporte sind versioniert. Ältere (nicht versionierte) Exporte werden importiert, aber neuere Felder können fehlen.',
       'import.cancel': 'Abbrechen',
       'import.import': 'Importieren',
       
@@ -20106,15 +20281,15 @@ body {
       'printSheet.ac': 'RK',
       'printSheet.initiative': 'Initiative',
       'printSheet.speed': 'Bewegung',
-      'printSheet.prof': 'Ãœbung',
+      'printSheet.prof': 'Übung',
       'printSheet.passive': 'Passiv',
-      'printSheet.hitDice': 'TrefferwÃƒÂ¼rfel',
+      'printSheet.hitDice': 'Trefferwürfel',
       'printSheet.saves': 'Erfolge',
-      'printSheet.fails': 'FehlschlÃ¤ge',
+      'printSheet.fails': 'Fehlschläge',
       'printSheet.attacks': 'Angriffe',
       'printSheet.skills': 'Fertigkeiten',
       'printSheet.spellcasting': 'Zauberwirken',
-      'printSheet.slots': 'PlÃ¤tze',
+      'printSheet.slots': 'Plätze',
       'printSheet.attack': 'Angriff',
       'printSheet.cantrips': 'Zaubertricks',
       'printSheet.level1': '1. Grad',
@@ -20127,33 +20302,33 @@ body {
       'printSheet.level8': '8. Grad',
       'printSheet.level9': '9. Grad',
       'printSheet.noSpells': 'Keine Zauber',
-      'printSheet.features': 'FÃ¤higkeiten & Merkmale',
-      'printSheet.noFeatures': 'Keine FÃ¤higkeiten',
-      'printSheet.equipment': 'AusrÃƒÂ¼stung',
-      'printSheet.noEquipment': 'Keine AusrÃƒÂ¼stung',
-      'printSheet.proficiencies': 'Ãœbung',
-      'printSheet.armor': 'RÃƒÂ¼stung',
+      'printSheet.features': 'Fähigkeiten & Merkmale',
+      'printSheet.noFeatures': 'Keine Fähigkeiten',
+      'printSheet.equipment': 'Ausrüstung',
+      'printSheet.noEquipment': 'Keine Ausrüstung',
+      'printSheet.proficiencies': 'Übung',
+      'printSheet.armor': 'Rüstung',
       'printSheet.weapons': 'Waffen',
       'printSheet.tools': 'Werkzeuge',
       'printSheet.languages': 'Sprachen',
       'printSheet.none': 'Keine',
       'printSheet.noWeapons': 'Keine Waffen',
-      'printSheet.conditions': 'ZustÃ¤nde',
+      'printSheet.conditions': 'Zustände',
       'printSheet.unnamed': 'Unbenannter Charakter',
-      'printSheet.footer': 'Player Almanac â€¢ Charakterbogen',
+      'printSheet.footer': 'Player Almanac "Â¢ Charakterbogen',
     
       'alert.emergencyExportFailed': "Notfall-Export fehlgeschlagen:",
       'alert.exportFailed': "Export fehlgeschlagen:",
-      'alert.failedToResetCompletelyPleaseTryClearingYour': "Komplettes ZurÃƒÂ¼cksetzen fehlgeschlagen. Bitte lÃ¶sche deine Browserdaten manuell.",
-      'alert.failedToResetPleaseTryClearingYourBrowser': "ZurÃƒÂ¼cksetzen fehlgeschlagen. Bitte lÃ¶sche deine Browserdaten manuell.",
+      'alert.failedToResetCompletelyPleaseTryClearingYour': "Komplettes Zurücksetzen fehlgeschlagen. Bitte lösche deine Browserdaten manuell.",
+      'alert.failedToResetPleaseTryClearingYourBrowser': "Zurücksetzen fehlgeschlagen. Bitte lösche deine Browserdaten manuell.",
       'alert.importFailed': "Import fehlgeschlagen:",
-      'alert.pressCtrlCToCopy': "DrÃƒÂ¼cke Strg+C zum Kopieren",
-      'confirm.aNewVersionOfPlayerAlmanacIsAvailable': "Eine neue Version von Player Almanac ist verfÃ¼gbar. Zum Aktualisieren neu laden?",
-      'confirm.clearTheScaleCalibrationMeasurementsWillShowIn': "Skalierung zurÃƒÂ¼cksetzen? Messungen werden in Pixeln angezeigt.",
-      'confirm.deleteAllData': "ALLE Daten lÃ¶schen?",
+      'alert.pressCtrlCToCopy': "Drücke Strg+C zum Kopieren",
+      'confirm.aNewVersionOfPlayerAlmanacIsAvailable': "Eine neue Version von Player Almanac ist verfügbar. Zum Aktualisieren neu laden?",
+      'confirm.clearTheScaleCalibrationMeasurementsWillShowIn': "Skalierung zurücksetzen? Messungen werden in Pixeln angezeigt.",
+      'confirm.deleteAllData': "ALLE Daten löschen?",
       'confirm.removeThisMapImagePinsAndRoutesWill': "Dieses Kartenbild entfernen? Pins und Routen bleiben erhalten.",
-      'confirm.x26a0Xfe0fThisWillPermanentlyDeleteAllSaved': "&#x26A0;&#xFE0F; Dadurch werden ALLE gespeicherten Charaktere und Einstellungen dauerhaft gelÃ¶scht. Das kann nicht rÃƒÂ¼ckgÃ¤ngig gemacht werden. Bist du sicher?",
-      'confirm.youHaveUnsavedChangesAreYouSureYou': "Du hast ungespeicherte Ãƒâ€žnderungen. Wirklich abbrechen?",
+      'confirm.x26a0Xfe0fThisWillPermanentlyDeleteAllSaved': "&#x26A0;&#xFE0F; Dadurch werden ALLE gespeicherten Charaktere und Einstellungen dauerhaft gelöscht. Das kann nicht rückgängig gemacht werden. Bist du sicher?",
+      'confirm.youHaveUnsavedChangesAreYouSureYou': "Du hast ungespeicherte Änderungen. Wirklich abbrechen?",
       'prompt.campaignName': "Kampagnenname:",
       'default.newCampaign': "Neue Kampagne",
       'toast.addonNotFound': "Add-on nicht gefunden",
@@ -20161,74 +20336,74 @@ body {
       'toast.backupNotFound': "Backup nicht gefunden",
       'toast.backupRestoredReloading': "Backup wiederhergestellt. Neu laden...",
       'toast.campaignCreated': "Kampagne erstellt",
-      'toast.campaignDeleted': "Kampagne gelÃ¶scht",
+      'toast.campaignDeleted': "Kampagne gelöscht",
       'toast.campaignExported': "Kampagne exportiert",
       'toast.campaignImported': "Kampagne importiert",
-      'toast.changeUndone': "Ãƒâ€žnderung rÃƒÂ¼ckgÃ¤ngig gemacht",
-      'toast.characterDeleted': "Charakter gelÃ¶scht",
+      'toast.changeUndone': "Änderung rückgängig gemacht",
+      'toast.characterDeleted': "Charakter gelöscht",
       'toast.characterDuplicated': "Charakter dupliziert",
-      'toast.compressingLargeImage': "GroÃŸes Bild wird komprimiert...",
+      'toast.compressingLargeImage': "Großes Bild wird komprimiert...",
       'toast.copied': "Kopiert!",
       'toast.enableTheAddonFirst': "Add-on zuerst aktivieren",
-      'toast.enterAValidDistance': "Gib eine gÃ¼ltige Entfernung ein",
-      'toast.equipmentRemoved': "AusrÃƒÂ¼stung entfernt",
-      'toast.equipmentUpdated': "AusrÃƒÂ¼stung aktualisiert",
+      'toast.enterAValidDistance': "Gib eine gültige Entfernung ein",
+      'toast.equipmentRemoved': "Ausrüstung entfernt",
+      'toast.equipmentUpdated': "Ausrüstung aktualisiert",
       'toast.errorGeneratingPrintSheet': "Fehler beim Erstellen des Druckblatts:",
-      'toast.errorPrintSheetContainerNotFound': "Fehler: Container fÃ¼r Druckblatt nicht gefunden",
+      'toast.errorPrintSheetContainerNotFound': "Fehler: Container für Druckblatt nicht gefunden",
       'toast.errorPrintSheetElementNotFound': "Fehler: Druckblatt-Element nicht gefunden",
       'toast.exported': "Exportiert",
       'toast.exportedWithMap': "Mit Karte exportiert",
       'toast.exportingCampaign': "Kampagne wird exportiert...",
       'toast.failedToImportCampaign': "Import der Kampagne fehlgeschlagen",
       'toast.failedToSaveMapImage': "Kartenbild konnte nicht gespeichert werden",
-      'toast.fileTooLargeMax50mb': "Datei zu groÃŸ (max. 50 MB)",
+      'toast.fileTooLargeMax50mb': "Datei zu groß (max. 50 MB)",
       'toast.firstDrawAReferenceLineWithTheScale': "Zeichne zuerst eine Referenzlinie mit dem Skalierungswerkzeug",
       'toast.importFailed': "Import fehlgeschlagen:",
       'toast.imported': "Importiert",
       'toast.importingCampaign': "Kampagne wird importiert...",
-      'toast.invalidCampaignFile': "UngÃ¼ltige Kampagnendatei",
-      'toast.mapFeatureIsUnavailable': "Kartenfunktion ist nicht verfÃ¼gbar",
+      'toast.invalidCampaignFile': "Ungültige Kampagnendatei",
+      'toast.mapFeatureIsUnavailable': "Kartenfunktion ist nicht verfügbar",
       'toast.mapImageImported': "Kartenbild importiert",
       'toast.mapRemoved': "Karte entfernt",
       'toast.mapUploaded': "Karte hochgeladen",
-      'toast.needAtLeast2PointsForARoute': "FÃƒÂ¼r eine Route brauchst du mindestens 2 Punkte",
+      'toast.needAtLeast2PointsForARoute': "Für eine Route brauchst du mindestens 2 Punkte",
       'toast.noActiveCharacter': "Kein aktiver Charakter",
-      'toast.noBackgroundSelected': "Kein Hintergrund ausgewÃ¤hlt",
-      'toast.noCampaignSelected': "Keine Kampagne ausgewÃ¤hlt",
+      'toast.noBackgroundSelected': "Kein Hintergrund ausgewählt",
+      'toast.noCampaignSelected': "Keine Kampagne ausgewählt",
       'toast.noCampaignToExport': "Keine Kampagne zum Exportieren",
       'toast.noCharactersToExport': "Keine Charaktere zum Exportieren",
-      'toast.noEnhancementAvailable': "Keine Verbesserung verfÃ¼gbar",
-      'toast.noEnhancementsAvailable': "Keine Verbesserungen verfÃ¼gbar",
-      'toast.noScaleToClear': "Keine Skalierung zum ZurÃƒÂ¼cksetzen",
-      'toast.notAValidBackupFileUseImportFor': "Keine gÃ¼ltige Backup-Datei. Nutze â€žImportâ€œ fÃ¼r einzelne Charaktere.",
-      'toast.nothingToUndo': "Nichts zum RÃƒÂ¼ckgÃ¤ngig machen",
-      'toast.pinDeletedCtrlZToUndo': "Pin gelÃ¶scht (Strg+Z zum RÃƒÂ¼ckgÃ¤ngig machen)",
+      'toast.noEnhancementAvailable': "Keine Verbesserung verfügbar",
+      'toast.noEnhancementsAvailable': "Keine Verbesserungen verfügbar",
+      'toast.noScaleToClear': "Keine Skalierung zum Zurücksetzen",
+      'toast.notAValidBackupFileUseImportFor': "Keine gültige Backup-Datei. Nutze â€žImportâ€œ für einzelne Charaktere.",
+      'toast.nothingToUndo': "Nichts zum Rückgängig machen",
+      'toast.pinDeletedCtrlZToUndo': "Pin gelöscht (Strg+Z zum Rückgängig machen)",
       'toast.pinRestored': "Pin wiederhergestellt",
       'toast.pleaseUploadAnImageFilePngJpgOr': "Bitte lade eine Bilddatei hoch (PNG, JPG oder WebP)",
-      'toast.portraitCleared': "Portrait gelÃ¶scht",
+      'toast.portraitCleared': "Portrait gelöscht",
       'toast.portraitNotSavedIdbBlocked': "Portrait nicht gespeichert (IndexedDB blockiert?)",
       'toast.portraitUpdated': "Portrait aktualisiert",
       'toast.restoreFailed': "Wiederherstellen fehlgeschlagen:",
-      'toast.returnedToMainMenu': "ZurÃƒÂ¼ck zum HauptmenÃƒÂ¼",
+      'toast.returnedToMainMenu': "Zurück zum Hauptmenü",
       'toast.rollLogCleared': "Wurfprotokoll geleert",
       'toast.routeCancelled': "Route abgebrochen",
-      'toast.routeDeleted': "Route gelÃ¶scht",
+      'toast.routeDeleted': "Route gelöscht",
       'toast.saveFailedStorageBlocked': "Speichern fehlgeschlagen (Speicher blockiert?)",
-      'toast.scaleCleared': "Skalierung zurÃƒÂ¼ckgesetzt",
-      'toast.selectAValidUnit': "WÃ¤hle eine gÃ¼ltige Einheit",
-      'toast.selectHitDiceToRoll': "WÃ¤hle TrefferwÃƒÂ¼rfel zum WÃƒÂ¼rfeln",
+      'toast.scaleCleared': "Skalierung zurückgesetzt",
+      'toast.selectAValidUnit': "Wähle eine gültige Einheit",
+      'toast.selectHitDiceToRoll': "Wähle Trefferwürfel zum Würfeln",
       'toast.spellAbilityIsNotSet': "Zauberattribut ist nicht gesetzt",
       'toast.spellEnhancedWithSystemData': "Zauber mit Systemdaten verbessert",
       'toast.spellRemoved': "Zauber entfernt",
       'toast.switchedCharacter': "Charakter gewechselt",
-      'toast.undone': "RÃƒÂ¼ckgÃ¤ngig gemacht",
+      'toast.undone': "Rückgängig gemacht",
       'toast.unknownCharacter': "Unbekannter Charakter",
-      'toast.unsupportedFileType': "Nicht unterstÃƒÂ¼tzter Dateityp",
+      'toast.unsupportedFileType': "Nicht unterstützter Dateityp",
       'toast.weaponEnhancedWithSystemData': "Waffe mit Systemdaten verbessert",
       'toast.weaponRemoved': "Waffe entfernt",
 
       'abbr.hp': "TP",
-      'toast.added': "HinzugefÃ¼gt",
+      'toast.added': "Hinzugefügt",
       'toast.addonFailedDisabledPrefix': "Add-on",
       'toast.addonInstalledSuccessfully': "erfolgreich installiert",
       'toast.addonRemoved': "entfernt",
@@ -20240,24 +20415,24 @@ body {
       'toast.enhanced': "Verbessert",
       'toast.enhancedWithSystemData': "mit Systemdaten",
       'toast.failedAndDisabled': "ist fehlgeschlagen und wurde deaktiviert:",
-      'toast.failedToLaunch': "Start fehlgeschlagen fÃ¼r",
+      'toast.failedToLaunch': "Start fehlgeschlagen für",
       'toast.healed': "Geheilt",
       'toast.importedAs': "Importiert als",
       'toast.item': "Element",
       'toast.items': "Elemente",
-      'toast.lastSeenMarkedFor': "Zuletzt gesehen markiert fÃ¼r",
+      'toast.lastSeenMarkedFor': "Zuletzt gesehen markiert für",
       'toast.masteryLabel': "Meisterschaft",
-      'toast.originPlacedFor': "Ursprung gesetzt fÃ¼r",
+      'toast.originPlacedFor': "Ursprung gesetzt für",
       'toast.phb2014': "2014 PHB",
       'toast.phb2024': "2024 PHB",
-      'toast.rolled': "GewÃƒÂ¼rfelt",
+      'toast.rolled': "Gewürfelt",
       'toast.routeSaved': "Route gespeichert",
       'toast.rules2014': "(2014-Regeln)",
       'toast.rulesLabel': "Regeln:",
       'toast.scaleCalibrated': "Skalierung kalibriert:",
       'toast.storageFullFailedToSave': "Speicher voll! Konnte nicht speichern",
       'toast.tempAbsorbed': "(Temp absorbiert)",
-      'toast.tempHpSetTo': "TemporÃ¤re TP auf",
+      'toast.tempHpSetTo': "Temporäre TP auf",
       'toast.themeLabel': "Design:",
       'toast.tookDamage': "Hat",
       'toast.withMastery': "mit",
@@ -20270,10 +20445,10 @@ body {
         "boot.lastCharacter": "Letzter Charakter",
         "map.defaultMapName": "Kampagnenkarte",
         "origin.defaultName": "Heimatstadt",
-        "origin.defaultRegion": "NÃ¶rdliche Provinz",
+        "origin.defaultRegion": "Nördliche Provinz",
         "origin.defaultNotes": "Details zu deinem Ursprung...",
         "map.replaceButton": "Ersetzen",
-        "map.placingFor": "Platzieren fÃ¼r:",
+        "map.placingFor": "Platzieren für:",
         "map.currentCharacter": "Aktueller Charakter",
         "scale.notCalibrated": "Nicht kalibriert",
         "scale.referenceLine": "Referenzlinie:",
@@ -20285,24 +20460,24 @@ body {
         "table.cast": "Wirkzeit",
         "table.range": "Reichweite",
         "table.notes": "Notizen",
-        "select.spell5e": "-- 5E-Zauber wÃ¤hlen --",
-        "select.weapon5e": "-- 5E-Waffe wÃ¤hlen --",
-        "language.add": "+ Sprache hinzufÃ¼gen",
+        "select.spell5e": "-- 5E-Zauber wählen --",
+        "select.weapon5e": "-- 5E-Waffe wählen --",
+        "language.add": "+ Sprache hinzufügen",
       'ui.noCampaigns': 'Keine Kampagnen',
       'ui.replace': 'Ersetzen',
       'ui.none': 'Keine',
       'ui.autoCalculate': 'Auto-berechnen',
-      'ui.conditions': 'ZustÃ¤nde',
+      'ui.conditions': 'Zustände',
       'ui.passivePerception': 'Passive Wahrnehmung',
       'ui.lightArmor': 'Leicht',
       'ui.mediumArmor': 'Mittel',
       'ui.heavyArmor': 'Schwer',
       'ui.shields': 'Schilde',
-      'ui.select5eGear': '-- 5E-AusrÃƒÂ¼stung wÃ¤hlen --',
-      'ui.add5e': '5E HINZUFÃœGEN',
-      'ui.addItem': '+ GEGENSTAND HINZUFÃœGEN',
-      'ui.addLanguage': '+ Sprache hinzufÃ¼gen',
-      'ui.add': 'HINZUFÃœGEN',
+      'ui.select5eGear': '-- 5E-Ausrüstung wählen --',
+      'ui.add5e': '5E HINZUFÜGEN',
+      'ui.addItem': '+ GEGENSTAND HINZUFÜGEN',
+      'ui.addLanguage': '+ Sprache hinzufügen',
+      'ui.add': 'HINZUFÜGEN',
       'ui.saved': 'Gespeichert',
       'ui.edit': 'Bearbeiten',
       'ui.play': 'Spielen',
@@ -20604,7 +20779,7 @@ body {
     { name: 'Hand Crossbow', atk: 'DEX', dmg: '1d6 piercing', notes: 'Ammunition (30/120), Light, Loading', mastery: 'Vex' },
     { name: 'Heavy Crossbow', atk: 'DEX', dmg: '1d10 piercing', notes: 'Ammunition (100/400), Heavy, Loading, Two-handed', mastery: 'Push' },
     { name: 'Longbow', atk: 'DEX', dmg: '1d8 piercing', notes: 'Ammunition (150/600), Heavy, Two-handed', mastery: 'Slow' },
-    { name: 'Net', atk: 'DEX', dmg: 'â€”', notes: 'Special, Thrown (5/15)', mastery: '' },
+    { name: 'Net', atk: 'DEX', dmg: '"â€', notes: 'Special, Thrown (5/15)', mastery: '' },
   ];
 
   // Weapon Mastery Descriptions (2024 PHB only)
@@ -20660,7 +20835,7 @@ body {
       languages: 1,
       equipment: ["Thieves' Tools", 'Crowbar', 'Dark Common Clothes', '15 GP'],
       feature: { name: 'Criminal Contact', desc: 'You have a reliable and trustworthy contact who acts as your liaison to a network of other criminals. You know how to get messages to and from your contact, even over great distances.' },
-      backstory: 'You grew up on the streets, learning to survive through cunning and quick hands. Whether as a pickpocket, burglar, fence, or enforcer, you operated outside the law. Your past has given you skills others lackâ€”and enemies you\'d rather forget.'
+      backstory: 'You grew up on the streets, learning to survive through cunning and quick hands. Whether as a pickpocket, burglar, fence, or enforcer, you operated outside the law. Your past has given you skills others lack"â€and enemies you\'d rather forget.'
     },
     'Entertainer (2024)': {
       abilities: ['STR', 'DEX', 'CHA'],
@@ -20712,7 +20887,7 @@ body {
       languages: 1,
       equipment: ['Herbalism Kit', 'Winter Blanket', 'Scroll Case with Notes', 'Common Clothes', '5 GP'],
       feature: { name: 'Discovery', desc: 'The quiet seclusion of your extended hermitage gave you access to a unique and powerful discovery. The nature of this revelation depends on the nature of your seclusion.' },
-      backstory: 'You lived in seclusion for yearsâ€”either in a sheltered community, alone in nature, or as a shutaway. Your time apart was spent in prayer, study, or contemplation. During that time, you found something profound: perhaps a truth about the cosmos or a secret buried in your soul.'
+      backstory: 'You lived in seclusion for years"â€either in a sheltered community, alone in nature, or as a shutaway. Your time apart was spent in prayer, study, or contemplation. During that time, you found something profound: perhaps a truth about the cosmos or a secret buried in your soul.'
     },
     'Merchant (2024)': {
       abilities: ['CON', 'INT', 'CHA'],
@@ -20722,7 +20897,7 @@ body {
       languages: 1,
       equipment: ["Navigator's Tools", 'Mule', 'Cart', 'Common Clothes', '25 GP'],
       feature: { name: 'Supply Chain', desc: 'From your experience as a merchant, you know how trade routes work. You can identify trade goods, assess their value, and know where to find buyers. Merchants and traders regard you favorably and may offer deals.' },
-      backstory: 'Coin has always been your compass. You traded in goods across villages, towns, and citiesâ€”learning the value of everything and the art of negotiation. The marketplace taught you about people: their desires, their fears, and what they\'re willing to pay.'
+      backstory: 'Coin has always been your compass. You traded in goods across villages, towns, and cities"â€learning the value of everything and the art of negotiation. The marketplace taught you about people: their desires, their fears, and what they\'re willing to pay.'
     },
     'Noble (2024)': {
       abilities: ['STR', 'INT', 'CHA'],
@@ -20733,7 +20908,7 @@ body {
       languages: 1,
       equipment: ['Signet Ring', 'Scroll of Pedigree', 'Fine Clothes', '25 GP'],
       feature: { name: 'Position of Privilege', desc: 'Thanks to your noble birth, people are inclined to think the best of you. You are welcome in high society. Common folk make every effort to accommodate you and avoid your displeasure.' },
-      backstory: 'You were born into a life of privilege. Your family wields power through wealth, titles, or both. Though you enjoyed every luxury, expectations weighed on youâ€”to uphold family honor, make strategic alliances, or continue a legacy. Now you step beyond those halls.'
+      backstory: 'You were born into a life of privilege. Your family wields power through wealth, titles, or both. Though you enjoyed every luxury, expectations weighed on you"â€to uphold family honor, make strategic alliances, or continue a legacy. Now you step beyond those halls.'
     },
     'Sage (2024)': {
       abilities: ['CON', 'INT', 'WIS'],
@@ -20753,7 +20928,7 @@ body {
       languages: 1,
       equipment: ['Dagger', 'Rope (50 ft.)', 'Lucky Charm', 'Common Clothes', '10 GP'],
       feature: { name: 'Ship\'s Passage', desc: 'When you need to, you can secure free passage on a sailing ship for yourself and your companions. In return, you and your companions are expected to assist the crew during the voyage.' },
-      backstory: 'You sailed the seas, learning to work the rigging and navigate by stars. The crew was your family, the ship your home. Whether merchant marine or privateer, life at sea forged you into someone who can weather any stormâ€”literal or otherwise.'
+      backstory: 'You sailed the seas, learning to work the rigging and navigate by stars. The crew was your family, the ship your home. Whether merchant marine or privateer, life at sea forged you into someone who can weather any storm"â€literal or otherwise.'
     },
     'Scribe (2024)': {
       abilities: ['DEX', 'INT', 'WIS'],
@@ -20848,7 +21023,7 @@ body {
       languages: 1,
       equipment: ['Scroll Case with Notes', 'Winter Blanket', 'Common Clothes', 'Herbalism Kit', '5 GP'],
       feature: { name: 'Discovery', desc: 'The quiet seclusion of your extended hermitage gave you access to a unique and powerful discovery about the cosmos, the deities, or the self.' },
-      backstory: 'You lived in seclusionâ€”either in a sheltered community such as a monastery, or entirely aloneâ€”for a formative part of your life. In your time apart from the clamor of society, you found quiet, solitude, and perhaps some answers.'
+      backstory: 'You lived in seclusion"â€either in a sheltered community such as a monastery, or entirely alone"â€for a formative part of your life. In your time apart from the clamor of society, you found quiet, solitude, and perhaps some answers.'
     },
     'Noble': {
       skills: ['history', 'persuasion'],
@@ -20997,7 +21172,7 @@ body {
     { lvl: '1', name: 'Charm Person', cast: '1A', range: '30 ft', conc: false, rit: false, notes: 'Charmed 1hr, WIS', desc: 'You attempt to charm a humanoid you can see within range. It must make a WIS save (advantage if you or companions are fighting it). If it fails, it is charmed by you until the spell ends or until you or companions do anything harmful to it. The charmed creature regards you as a friendly acquaintance. When the spell ends, it knows it was charmed.' },
     { lvl: '1', name: 'Cure Wounds', cast: '1A', range: 'Touch', conc: false, rit: false, notes: '2d8+mod healing', desc: 'A creature you touch regains a number of hit points equal to 2d8 + your spellcasting ability modifier. At Higher Levels: healing increases by 2d8 for each slot level above 1st.' },
     { lvl: '1', name: 'Detect Magic', cast: '1A', range: 'Self', conc: true, rit: true, notes: 'Sense magic 30ft', desc: 'For the duration, you sense the presence of magic within 30 feet of you. If you sense magic this way, you can use your action to see a faint aura around any visible creature or object that bears magic, and you learn its school of magic. The spell can penetrate most barriers, but is blocked by 1 foot of stone, 1 inch of metal, a thin sheet of lead, or 3 feet of wood/dirt.' },
-    { lvl: '1', name: 'Disguise Self', cast: '1A', range: 'Self', conc: false, rit: false, notes: 'Appear different, 1hr', desc: 'You make yourselfâ€”including clothing, armor, weapons, and belongingsâ€”look different until the spell ends or until you dismiss it. You can seem 1 foot shorter or taller and can appear thin, fat, or in between. You can\'t change body type, and your limbs must remain present. Investigation check vs your spell DC to discern disguise.' },
+    { lvl: '1', name: 'Disguise Self', cast: '1A', range: 'Self', conc: false, rit: false, notes: 'Appear different, 1hr', desc: 'You make yourself"â€including clothing, armor, weapons, and belongings"â€look different until the spell ends or until you dismiss it. You can seem 1 foot shorter or taller and can appear thin, fat, or in between. You can\'t change body type, and your limbs must remain present. Investigation check vs your spell DC to discern disguise.' },
     { lvl: '1', name: 'Faerie Fire', cast: '1A', range: '60 ft', conc: true, rit: false, notes: 'Adv on attacks, 20ft', desc: 'Each object in a 20-foot cube within range is outlined in blue, green, or violet light (your choice). Any creature in the area when the spell is cast is also outlined if it fails a DEX save. For the duration, affected objects and creatures shed dim light in a 10-foot radius. Any attack roll against an affected creature or object has advantage if the attacker can see it, and they can\'t benefit from being invisible.' },
     { lvl: '1', name: 'Feather Fall', cast: '1 React', range: '60 ft', conc: false, rit: false, notes: 'Slow fall, 5 creatures', desc: 'Choose up to five falling creatures within range. A falling creature\'s rate of descent slows to 60 feet per round until the spell ends. If the creature lands before the spell ends, it takes no falling damage and can land on its feet, and the spell ends for that creature. Duration: 1 minute.' },
     { lvl: '1', name: 'Find Familiar', cast: '1 hour', range: '10 ft', conc: false, rit: true, notes: 'Spirit companion', desc: 'You gain the service of a familiar, a spirit that takes an animal form you choose (bat, cat, crab, frog, hawk, lizard, octopus, owl, snake, fish, rat, raven, sea horse, spider, or weasel). The familiar acts independently but obeys your commands. You can communicate with it telepathically within 100 feet and see through its senses. It can\'t attack. If it drops to 0 HP, it disappears.' },
@@ -24481,10 +24656,93 @@ body {
       }
       this.bindHpQuickPopupEvents();
       
-      // P0-3: Character Stats Bar toggle
+      // P0-3: Character Stats Bar dropdown menu
       const csbToggle = document.getElementById('csbToggle');
-      if (csbToggle) {
-        csbToggle.addEventListener('click', () => this.toggleCharStatsBar());
+      const csbDropdown = document.getElementById('csbDropdown');
+      const csbMenu = document.getElementById('csbMenu');
+      if (csbToggle && csbDropdown) {
+        csbToggle.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const isOpen = csbDropdown.classList.toggle('open');
+          csbToggle.setAttribute('aria-expanded', String(isOpen));
+        });
+        
+        // Close dropdown when clicking outside
+        document.addEventListener('click', (e) => {
+          if (!csbDropdown.contains(e.target)) {
+            csbDropdown.classList.remove('open');
+            csbToggle.setAttribute('aria-expanded', 'false');
+          }
+        });
+        
+        // Menu item handlers
+        const csbHealDmg = document.getElementById('csbHealDmg');
+        const csbTempHp = document.getElementById('csbTempHp');
+        const csbShortRest = document.getElementById('csbShortRest');
+        const csbLongRest = document.getElementById('csbLongRest');
+        const csbRollInit = document.getElementById('csbRollInit');
+        const csbSettings = document.getElementById('csbSettings');
+        
+        if (csbHealDmg) csbHealDmg.addEventListener('click', (e) => {
+          e.stopPropagation();
+          csbDropdown.classList.remove('open');
+          csbToggle.setAttribute('aria-expanded', 'false');
+          // Delay to let dropdown close first
+          setTimeout(() => this.openHpQuickPopup(), 50);
+        });
+        if (csbTempHp) csbTempHp.addEventListener('click', (e) => {
+          e.stopPropagation();
+          csbDropdown.classList.remove('open');
+          csbToggle.setAttribute('aria-expanded', 'false');
+          setTimeout(() => this.openQuickHPModal('temp'), 50);
+        });
+        if (csbShortRest) csbShortRest.addEventListener('click', (e) => {
+          e.stopPropagation();
+          csbDropdown.classList.remove('open');
+          csbToggle.setAttribute('aria-expanded', 'false');
+          setTimeout(() => this.openShortRestModal(), 50);
+        });
+        if (csbLongRest) csbLongRest.addEventListener('click', (e) => {
+          e.stopPropagation();
+          csbDropdown.classList.remove('open');
+          csbToggle.setAttribute('aria-expanded', 'false');
+          setTimeout(() => this.openLongRestModal(), 50);
+        });
+        if (csbRollInit) csbRollInit.addEventListener('click', (e) => {
+          e.stopPropagation();
+          csbDropdown.classList.remove('open');
+          csbToggle.setAttribute('aria-expanded', 'false');
+          setTimeout(() => this.rollInitiative(), 50);
+        });
+        if (csbSettings) csbSettings.addEventListener('click', (e) => {
+          e.stopPropagation();
+          csbDropdown.classList.remove('open');
+          csbToggle.setAttribute('aria-expanded', 'false');
+          // Open settings popover directly
+          setTimeout(() => {
+            const settingsWrap = document.getElementById('settingsWrap');
+            const settingsBtn = document.getElementById('settingsBtn');
+            const quickBar = document.getElementById('quickBar');
+            if (settingsWrap) {
+              this.closeAllPopovers();
+              settingsWrap.classList.add('open');
+              if (settingsBtn) settingsBtn.setAttribute('aria-expanded', 'true');
+              // Add helper class if quickbar is collapsed (for CSS positioning)
+              if (quickBar && quickBar.classList.contains('collapsed')) {
+                document.body.classList.add('settings-from-collapsed');
+              }
+              this.syncSettingsUI();
+            }
+          }, 50);
+        });
+        const csbToggleQb = document.getElementById('csbToggleQb');
+        if (csbToggleQb) csbToggleQb.addEventListener('click', (e) => {
+          e.stopPropagation();
+          csbDropdown.classList.remove('open');
+          csbToggle.setAttribute('aria-expanded', 'false');
+          const qbToggle = document.getElementById('qbCollapseToggle');
+          if (qbToggle) qbToggle.click();
+        });
       }
       this.initCharStatsBar();
       
@@ -25862,7 +26120,7 @@ body {
       const origLevel = this.state.level;
       this.state.level = toInt(this.state.level, 1, { min: 1, max: 20 });
       if (origLevel !== this.state.level) {
-        issues.push(`Level clamped: ${origLevel} â†’ ${this.state.level}`);
+        issues.push(`Level clamped: ${origLevel} Ã¢â€ â€™ ${this.state.level}`);
       }
       
       // Hit dice
@@ -25875,7 +26133,7 @@ body {
       this.state.hp.max = toInt(this.state.hp.max, 0, { min: 0, max: 9999 });
       this.state.hp.tmp = toInt(this.state.hp.tmp, 0, { min: 0, max: 9999 });
       if (origHpCur !== this.state.hp.cur && origHpCur < 0) {
-        issues.push(`HP was negative: ${origHpCur} â†’ 0`);
+        issues.push(`HP was negative: ${origHpCur} Ã¢â€ â€™ 0`);
       }
       
       // P1.2: Ensure coins are non-negative
@@ -25884,7 +26142,7 @@ body {
           const orig = this.state.coins[coinType];
           this.state.coins[coinType] = toInt(orig, 0, { min: 0, max: 999999 });
           if (orig < 0) {
-            issues.push(`${coinType.toUpperCase()} was negative: ${orig} â†’ 0`);
+            issues.push(`${coinType.toUpperCase()} was negative: ${orig} Ã¢â€ â€™ 0`);
           }
         }
       }
@@ -26861,6 +27119,8 @@ body {
         const btn = w.querySelector('button[aria-expanded="true"]');
         if (btn) btn.setAttribute('aria-expanded', 'false');
       });
+      // Remove helper class for settings-from-collapsed state
+      document.body.classList.remove('settings-from-collapsed');
     }
 
     // ===== Character list filtering =====
@@ -27216,12 +27476,12 @@ body {
       // Update combat stats labels
       const combatMappings = [
         { text: 'Armor Class', key: 'combat.ac' },
-        { text: 'RÃƒÂ¼stungsklasse', key: 'combat.ac' },
+        { text: 'Rüstungsklasse', key: 'combat.ac' },
         { text: 'Initiative', key: 'combat.initiative' },
         { text: 'Speed', key: 'combat.speed' },
         { text: 'Bewegung', key: 'combat.speed' },
         { text: 'Proficiency', key: 'combat.proficiency' },
-        { text: 'Ãœbungsbonus', key: 'combat.proficiency' },
+        { text: 'Übungsbonus', key: 'combat.proficiency' },
       ];
 
       document.querySelectorAll('.stat-label').forEach(el => {
@@ -27399,11 +27659,11 @@ body {
       // Update help section titles
       document.querySelectorAll('.help-section-title').forEach(el => {
         const text = el.textContent.trim();
-        if (text === 'Rolling Dice' || text === 'WÃƒÂ¼rfeln') {
+        if (text === 'Rolling Dice' || text === 'Würfeln') {
           el.textContent = t('help.rolling');
         } else if (text === 'Characters' || text === 'Charaktere') {
           el.textContent = t('help.characters');
-        } else if (text === 'Keyboard Shortcuts' || text === 'TastenkÃƒÂ¼rzel') {
+        } else if (text === 'Keyboard Shortcuts' || text === 'Tastenkürzel') {
           el.textContent = t('help.shortcuts');
         }
       });
@@ -27429,7 +27689,7 @@ body {
       
       // Update Coins title
       const coinsTitle = document.querySelector('[data-section="spells-casting"] .card-title:last-of-type');
-      if (coinsTitle && (coinsTitle.textContent === 'Coins' || coinsTitle.textContent === 'MÃƒÂ¼nzen')) {
+      if (coinsTitle && (coinsTitle.textContent === 'Coins' || coinsTitle.textContent === 'Münzen')) {
         coinsTitle.textContent = t('card.coins');
       }
       
@@ -27556,7 +27816,7 @@ body {
       // ============ TRAINING SECTION ============
       document.querySelectorAll('[data-section="spells-training"] h3').forEach(el => {
         const text = el.textContent.trim().toUpperCase();
-        if (text === 'ARMOR' || text === 'RÃœSTUNG') el.textContent = t('training.armor');
+        if (text === 'ARMOR' || text === 'RÜSTUNG') el.textContent = t('training.armor');
         else if (text === 'WEAPONS' || text === 'WAFFEN') el.textContent = t('training.weapons');
         else if (text === 'TOOLS' || text === 'WERKZEUGE') el.textContent = t('training.tools');
         else if (text === 'LANGUAGES' || text === 'SPRACHEN') el.textContent = t('training.languages');
@@ -27607,7 +27867,7 @@ body {
       document.querySelectorAll('#helpModal .help-section h3').forEach(el => {
         const text = el.textContent.trim().toUpperCase();
         if (text === 'QUICK BAR' || text === 'SCHNELLLEISTE') el.textContent = t('help.quickBar');
-        else if (text === 'DICE ROLLS' || text === 'WÃœRFELWÃœRFE') el.textContent = t('help.diceRolls');
+        else if (text === 'DICE ROLLS' || text === 'WÜRFELWÜRFE') el.textContent = t('help.diceRolls');
         else if (text === 'MAP' || text === 'KARTE') el.textContent = t('help.map');
         else if (text === 'CHARACTERS' || text === 'CHARAKTERE') el.textContent = t('help.characters');
       });
@@ -27624,7 +27884,7 @@ body {
           // Check if it's in the quickbar section or dice rolls section
           const section = item.closest('.help-section');
           const sectionTitle = section?.querySelector('h3')?.textContent?.trim().toUpperCase();
-          if (sectionTitle === 'DICE ROLLS' || sectionTitle === 'WÃœRFELWÃœRFE') {
+          if (sectionTitle === 'DICE ROLLS' || sectionTitle === 'WÜRFELWÜRFE') {
             desc.textContent = t('help.advDisRollDesc');
           } else {
             desc.textContent = t('help.advDisDesc');
@@ -27673,7 +27933,7 @@ body {
       
       document.querySelectorAll('#tempHPModal .hint, .qb-pop .hint').forEach(el => {
         const text = el.textContent.trim();
-        if (text.includes('Sets Temp HP') || text.includes('Setzt temporÃ¤re')) {
+        if (text.includes('Sets Temp HP') || text.includes('Setzt temporäre')) {
           el.textContent = t('tempHP.description');
         }
       });
@@ -27768,13 +28028,13 @@ body {
       document.querySelectorAll('.map-settings button, .map-panel button').forEach(btn => {
         const text = btn.textContent.trim().toUpperCase();
         if (text === '+ NEW' || text === '+ NEU') btn.textContent = t('map.new');
-        else if (text === 'DELETE' || text === 'LÃƒâ€“SCHEN') btn.textContent = t('map.delete');
+        else if (text === 'DELETE' || text === 'LÖSCHEN') btn.textContent = t('map.delete');
         else if (text === 'EXPORT' || text === 'Export' || text === 'EXPORTIEREN') btn.textContent = t('map.export');
         else if (text === 'IMPORT' || text === 'Import' || text === 'IMPORTIEREN') btn.textContent = t('map.import');
         else if (text === 'REPLACE' || text === 'Replace' || text === 'ERSETZEN') btn.textContent = t('map.replace');
         else if (text === 'REMOVE' || text === 'Remove' || text === 'ENTFERNEN') btn.textContent = t('map.remove');
         else if (text === 'SET SCALE' || text === 'MASSSTAB SETZEN') btn.textContent = t('map.setScale');
-        else if (text === 'CLEAR' || text === 'LÃƒâ€“SCHEN') btn.textContent = t('map.clear');
+        else if (text === 'CLEAR' || text === 'LÖSCHEN') btn.textContent = t('map.clear');
         else if (text === 'UPLOAD MAP' || text === 'KARTE HOCHLADEN') btn.textContent = t('map.uploadMap');
       });
       
@@ -27788,7 +28048,7 @@ body {
       // Map tool labels
       document.querySelectorAll('.map-tool-label').forEach(el => {
         const text = el.textContent.trim().toUpperCase();
-        if (text === 'SELECT' || text === 'AUSWÃƒâ€žHLEN') el.textContent = t('map.tools.select');
+        if (text === 'SELECT' || text === 'AUSWÄHLEN') el.textContent = t('map.tools.select');
         else if (text === 'ORIGIN' || text === 'URSPRUNG') el.textContent = t('map.tools.origin');
         else if (text === 'LAST SEEN' || text === 'ZULETZT GESEHEN') el.textContent = t('map.tools.lastSeen');
         else if (text === 'MEASURE' || text === 'MESSEN') el.textContent = t('map.tools.measure');
@@ -27948,8 +28208,8 @@ body {
         // Characters section
         if (label === '+ New') {
           li.innerHTML = '<strong>+ New</strong> ' + t('help.newCharDesc');
-        } else if (label.includes('Menu') || label === 'â‹® Menu') {
-          li.innerHTML = '<strong>â‹® Menu</strong> ' + t('help.menuDesc');
+        } else if (label.includes('Menu') || label === 'Ã¢â€¹Â® Menu') {
+          li.innerHTML = '<strong>Ã¢â€¹Â® Menu</strong> ' + t('help.menuDesc');
         } else if (label === 'Export') {
           li.innerHTML = '<strong>Export</strong> ' + t('help.exportDesc');
         } else if (label === 'Import') {
@@ -28184,7 +28444,7 @@ body {
 
         // Equipment HTML (combine equip + attune)
         const allEquip = [...(s.equip || []), ...(s.attune || []).map(a => '&#x2726; ' + a)];
-        const equipHtml = allEquip.slice(0, 20).map(e => `<div class="ps-equip-item">â€¢ ${esc(e)}</div>`).join('') || `<em style="color:#888">${t('printSheet.noEquipment')}</em>`;
+        const equipHtml = allEquip.slice(0, 20).map(e => `<div class="ps-equip-item">"Â¢ ${esc(e)}</div>`).join('') || `<em style="color:#888">${t('printSheet.noEquipment')}</em>`;
 
         // Conditions - escape each condition for XSS safety
         const condsHtml = (s.conds && s.conds.length > 0) 
@@ -28208,7 +28468,7 @@ body {
           <div class="ps-header">
             <div class="ps-header-left">
               <div class="ps-name">${esc(s.name) || t('printSheet.unnamed')}</div>
-              <div class="ps-subtitle">${esc(s.species)}${s.species && s.class ? ' ' : ''}${esc(s.class)}${s.background ? ' â€¢ ' + esc(s.background) : ''}${s.campaign ? ' â€” ' + esc(s.campaign) : ''}</div>
+              <div class="ps-subtitle">${esc(s.species)}${s.species && s.class ? ' ' : ''}${esc(s.class)}${s.background ? ' "Â¢ ' + esc(s.background) : ''}${s.campaign ? ' "â€ ' + esc(s.campaign) : ''}</div>
             </div>
             ${portraitSrc ? `<img class="ps-portrait" src="${portraitSrc}" alt=""/>` : ''}
             <div class="ps-level-badge">
@@ -28826,7 +29086,7 @@ SKILLS:
 - "misc": miscellaneous bonus (usually 0)
 
 HIT POINTS (hp):
-- Calculate max HP: Hit die max at level 1 + CON modifier + ((average hit die + CON mod) Ãƒâ€” (level - 1))
+- Calculate max HP: Hit die max at level 1 + CON modifier + ((average hit die + CON mod) Ã— (level - 1))
 - Set "cur" equal to "max" for a fresh character
 
 HIT DICE (hd):
@@ -29809,9 +30069,9 @@ Actions:
           const unit = unitLabels[map.scale.unit] || map.scale.unit;
           // Show in a more readable format: "1 mile = X pixels" or "100 px = Y miles"
           if (ppu >= 1) {
-            scaleInfo.querySelector('.map-scale-status').textContent = `âœ” 1 ${unit} = ${ppu.toFixed(1)} px`;
+            scaleInfo.querySelector('.map-scale-status').textContent = `Ã¢Å“â€ 1 ${unit} = ${ppu.toFixed(1)} px`;
           } else {
-            scaleInfo.querySelector('.map-scale-status').textContent = `âœ” 1 px = ${(1/ppu).toFixed(2)} ${unit}s`;
+            scaleInfo.querySelector('.map-scale-status').textContent = `Ã¢Å“â€ 1 px = ${(1/ppu).toFixed(2)} ${unit}s`;
           }
         } else {
           scaleInfo.classList.remove('calibrated');
@@ -31032,7 +31292,7 @@ Actions:
       
       // Update inspector title
       if (this.dom.mapRouteInspectorTitle) {
-        this.dom.mapRouteInspectorTitle.textContent = 'ðŸ“”â€œÂ ' + (route.name || 'Route');
+        this.dom.mapRouteInspectorTitle.textContent = '📍 ' + (route.name || 'Route');
       }
       
       // Populate fields
@@ -31085,7 +31345,7 @@ Actions:
       if (this._selectedPinId) {
         // Pin selected - show pin inspector
         showPanels(panelPinInspector);
-        if (contextIcon) contextIcon.textContent = 'ðŸ“”â€œÂ';
+        if (contextIcon) contextIcon.textContent = '📍';
         if (contextText) contextText.textContent = 'Pin Inspector';
         return;
       }
@@ -31093,7 +31353,7 @@ Actions:
       if (this._selectedRouteId) {
         // Route selected - show route inspector
         showPanels(panelRouteInspector);
-        if (contextIcon) contextIcon.textContent = 'ðŸ“”â€œÂ';
+        if (contextIcon) contextIcon.textContent = '📍';
         if (contextText) contextText.textContent = 'Route Inspector';
         return;
       }
@@ -31104,7 +31364,7 @@ Actions:
       if (tool === 'scale') {
         // Scale tool - show scale panel prominently with map settings
         showPanels(panelScale, panelCampaign, panelMap);
-        if (contextIcon) contextIcon.textContent = 'ðŸ“”â€œÂ';
+        if (contextIcon) contextIcon.textContent = '📍';
         if (contextText) contextText.textContent = 'Scale Calibration';
         return;
       }
@@ -31112,7 +31372,7 @@ Actions:
       if (tool === 'route') {
         // Route tool - show route panel with instructions
         showPanels(panelRoutes, panelCampaign, panelMap);
-        if (contextIcon) contextIcon.textContent = 'ðŸ“”â€œÂ';
+        if (contextIcon) contextIcon.textContent = '📍';
         if (contextText) contextText.textContent = 'Route Planning';
         return;
       }
@@ -31120,7 +31380,7 @@ Actions:
       if (tool === 'pin') {
         // Pin tool - show pins browser with map settings
         showPanels(panelPins, panelCampaign, panelMap);
-        if (contextIcon) contextIcon.textContent = 'ðŸ“”â€œÂ';
+        if (contextIcon) contextIcon.textContent = '📍';
         if (contextText) contextText.textContent = 'Pins Browser';
         return;
       }
@@ -31128,14 +31388,14 @@ Actions:
       if (tool === 'origin' || tool === 'lastseen') {
         // Origin/LastSeen tool - show origin settings with map settings
         showPanels(panelOrigin, panelCampaign, panelMap);
-        if (contextIcon) contextIcon.textContent = tool === 'origin' ? 'ðŸ“”â€œÂ' : 'ðŸ“”â€˜Â¤';
+        if (contextIcon) contextIcon.textContent = tool === 'origin' ? '📍' : '📌';
         if (contextText) contextText.textContent = tool === 'origin' ? 'Place Origin' : 'Mark Last Seen';
         return;
       }
       
       // Default context - show map settings overview
       showPanels(panelCampaign, panelMap, panelScale, panelPins, panelRoutes);
-      if (contextIcon) contextIcon.textContent = 'ðŸ“”â€œÂ';
+      if (contextIcon) contextIcon.textContent = '📍';
       if (contextText) contextText.textContent = 'Map Settings';
     }
     
@@ -31157,7 +31417,7 @@ Actions:
       
       // Update inspector title
       if (this.dom.mapRouteInspectorTitle) {
-        this.dom.mapRouteInspectorTitle.textContent = 'ðŸ“”â€œÂ ' + route.name;
+        this.dom.mapRouteInspectorTitle.textContent = '📍 ' + route.name;
       }
       
       // Re-render
@@ -31527,7 +31787,7 @@ Actions:
       // Update inspector title
       if (this.dom.mapPinInspectorTitle) {
         const pinIcons = { origin: '\uD83C\uDFE0', last_seen: '\uD83D\uDC64', town: '\uD83C\uDFD8\uFE0F', city: '\uD83C\uDFF0', dungeon: '\u2694\uFE0F', landmark: '\uD83D\uDDFF', quest: '\u2757', shop: '\uD83D\uDED2', tavern: '\uD83C\uDF7A', temple: '\u26EA', location: '\uD83D\uDCCD' };
-        this.dom.mapPinInspectorTitle.textContent = (pinIcons[pin.type] || 'ðŸ“”â€œÂ') + ' ' + (pin.name || 'Pin');
+        this.dom.mapPinInspectorTitle.textContent = (pinIcons[pin.type] || '📍') + ' ' + (pin.name || 'Pin');
       }
       
       // Populate fields
@@ -31565,7 +31825,7 @@ Actions:
       // Update title
       if (this.dom.mapPinInspectorTitle) {
         const pinIcons = { origin: '\uD83C\uDFE0', last_seen: '\uD83D\uDC64', town: '\uD83C\uDFD8\uFE0F', city: '\uD83C\uDFF0', dungeon: '\u2694\uFE0F', landmark: '\uD83D\uDDFF', quest: '\u2757', shop: '\uD83D\uDED2', tavern: '\uD83C\uDF7A', temple: '\u26EA', location: '\uD83D\uDCCD' };
-        this.dom.mapPinInspectorTitle.textContent = (pinIcons[pin.type] || 'ðŸ“”â€œÂ') + ' ' + pin.name;
+        this.dom.mapPinInspectorTitle.textContent = (pinIcons[pin.type] || '📍') + ' ' + pin.name;
       }
       
       this.renderMapPins();
@@ -32555,16 +32815,7 @@ Actions:
     
     // P0-3: Character Stats Bar methods
     initCharStatsBar() {
-      // Restore collapsed state from localStorage
-      const collapsed = localStorage.getItem('cmCharStatsBarCollapsed_v1') === 'true';
-      if (collapsed) {
-        document.body.classList.add('csb-collapsed');
-        const bar = document.getElementById('charStatsBar');
-        if (bar) bar.classList.add('collapsed');
-        const toggle = document.getElementById('csbToggle');
-        if (toggle) toggle.textContent = '\u25B2'; // Up arrow when collapsed
-      }
-      // Initial update
+      // Initial update of stats display
       this.updateCharStatsBar();
     }
     
@@ -33007,10 +33258,10 @@ Actions:
       }
       
       if (is2024) {
-        // 2024 rules: -2Ãƒâ€”level to d20 tests, -5Ãƒâ€”level to speed
+        // 2024 rules: -2Ã—level to d20 tests, -5Ã—level to speed
         const d20Penalty = lvl * 2;
         const speedPenalty = lvl * 5;
-        this.dom.exhaustionEffects.textContent = `âˆ’${d20Penalty} to d20 tests, âˆ’${speedPenalty} ft speed`;
+        this.dom.exhaustionEffects.textContent = `Ã¢Ë†â€™${d20Penalty} to d20 tests, Ã¢Ë†â€™${speedPenalty} ft speed`;
       } else {
         // 2014 rules: different effects per level, cumulative
         const effects2014 = [
@@ -33680,7 +33931,7 @@ Actions:
         <div class="roll-breakdown">d20(${roll}) ${modStr}</div>
         <div class="roll-name">${escapeHtml(name)}</div>
         ${isCrit ? '<div class="crit-label">&#x2728; CRITICAL!</div>' : ''}
-        ${isFumble ? '<div class="fumble-label">ðŸ’€ FUMBLE</div>' : ''}
+        ${isFumble ? '<div class="fumble-label">💀 FUMBLE</div>' : ''}
       `;
 
       document.body.appendChild(toast);
@@ -34604,7 +34855,7 @@ Actions:
           const enhanceBtn = document.createElement('button');
           enhanceBtn.className = 'system-enhance-btn';
           enhanceBtn.type = 'button';
-          enhanceBtn.textContent = 'â¬†';
+          enhanceBtn.textContent = 'Ã¢Â¬â€ ';
           enhanceBtn.title = 'Add system data: ' + enhancements.weapons[i].fields.join(', ');
           enhanceBtn.dataset.action = 'weapon-system-enhance';
           enhanceBtn.dataset.index = String(i);
@@ -34638,7 +34889,7 @@ Actions:
           
           const iconSpan = document.createElement('span');
           iconSpan.className = 'weapon-mobile-icon';
-          iconSpan.textContent = 'âš”';
+          iconSpan.textContent = 'Ã¢Å¡â€';
           
           const nameSpan = document.createElement('span');
           nameSpan.className = 'weapon-mobile-name';
@@ -34866,9 +35117,9 @@ Actions:
         if (exLvl === 6) {
           effectText = 'Death';
         } else if (is2024) {
-          effectText = `âˆ’${exLvl * 2} d20, âˆ’${exLvl * 5} ft`;
+          effectText = `Ã¢Ë†â€™${exLvl * 2} d20, Ã¢Ë†â€™${exLvl * 5} ft`;
         } else {
-          const effects2014Short = ['Disadv checks', 'Speed Ã‚Â½', 'Disadv atk/saves', 'HP max Ã‚Â½', 'Speed 0'];
+          const effects2014Short = ['Disadv checks', 'Speed Â½', 'Disadv atk/saves', 'HP max Â½', 'Speed 0'];
           effectText = effects2014Short.slice(0, exLvl).join(', ');
         }
         
@@ -35130,7 +35381,7 @@ Actions:
           const enhanceBtn = document.createElement('button');
           enhanceBtn.className = 'system-enhance-btn';
           enhanceBtn.type = 'button';
-          enhanceBtn.textContent = 'â¬† Enhance';
+          enhanceBtn.textContent = 'Ã¢Â¬â€  Enhance';
           enhanceBtn.title = 'Add system data: ' + enhancements.spells[i].fields.join(', ');
           enhanceBtn.dataset.action = 'spell-system-enhance';
           enhanceBtn.dataset.index = String(i);
@@ -35381,10 +35632,10 @@ Actions:
         d.spellDetailName.textContent = spell.name || 'Unnamed Spell';
       }
       if (d.spellDetailCast) {
-        d.spellDetailCast.textContent = spell.cast || 'â€”';
+        d.spellDetailCast.textContent = spell.cast || '"â€';
       }
       if (d.spellDetailRange) {
-        d.spellDetailRange.textContent = spell.range || 'â€”';
+        d.spellDetailRange.textContent = spell.range || '"â€';
       }
       
       // Tags
@@ -35394,19 +35645,19 @@ Actions:
         if (spell.conc) {
           const tag = document.createElement('span');
           tag.className = 'spell-detail-tag conc';
-          tag.textContent = 'â§³ Concentration';
+          tag.textContent = 'Ã¢Â§Â³ Concentration';
           d.spellDetailTags.appendChild(tag);
         }
         if (spell.rit) {
           const tag = document.createElement('span');
           tag.className = 'spell-detail-tag rit';
-          tag.textContent = 'âœ§ Ritual';
+          tag.textContent = 'Ã¢Å“Â§ Ritual';
           d.spellDetailTags.appendChild(tag);
         }
         
         const prepTag = document.createElement('span');
         prepTag.className = spell.prep ? 'spell-detail-tag prep' : 'spell-detail-tag not-prep';
-        prepTag.textContent = spell.prep ? 'âœ” Prepared' : 'â—‹ Not Prepared';
+        prepTag.textContent = spell.prep ? 'Ã¢Å“â€ Prepared' : 'Ã¢â€”â€¹ Not Prepared';
         d.spellDetailTags.appendChild(prepTag);
       }
       
@@ -35432,7 +35683,7 @@ Actions:
       // Update toggle prep button state
       if (d.spellDetailTogglePrep) {
         d.spellDetailTogglePrep.classList.toggle('is-prepared', !!spell.prep);
-        d.spellDetailTogglePrep.textContent = spell.prep ? 'âœ” Prepared' : 'Mark Prepared';
+        d.spellDetailTogglePrep.textContent = spell.prep ? 'Ã¢Å“â€ Prepared' : 'Mark Prepared';
       }
       
       // Show modal
@@ -35521,7 +35772,7 @@ Actions:
         d.weaponDetailAtk.textContent = atk.startsWith('+') || atk.startsWith('-') ? atk : `+${atk}`;
       }
       if (d.weaponDetailDmg) {
-        d.weaponDetailDmg.textContent = weapon.dmg || 'â€”';
+        d.weaponDetailDmg.textContent = weapon.dmg || '"â€';
       }
       
       // Notes
@@ -35847,7 +36098,7 @@ Actions:
         (bgData.equipment || []).forEach(item => {
           const div = document.createElement('div');
           div.className = 'bg-equip-item';
-          div.innerHTML = `<span class="icon">â€¢</span> ${escapeHtml(item)}`;
+          div.innerHTML = `<span class="icon">"Â¢</span> ${escapeHtml(item)}`;
           d.bgEquipList.appendChild(div);
         });
       }
@@ -35914,7 +36165,7 @@ Actions:
           const skillObj = SKILLS.find(s => s.k === sk);
           return skillObj ? skillObj.n : sk;
         });
-        d.bgSummarySkills.textContent = skillNames.join(', ') || 'â€”';
+        d.bgSummarySkills.textContent = skillNames.join(', ') || '"â€';
       }
       
       // Tools summary
@@ -35930,7 +36181,7 @@ Actions:
         if (toolSelect && toolSelect.value) {
           tools.push(toolSelect.value);
         }
-        d.bgSummaryTools.textContent = tools.length > 0 ? tools.join(', ') : 'â€”';
+        d.bgSummaryTools.textContent = tools.length > 0 ? tools.join(', ') : '"â€';
       }
       
       // Languages summary
@@ -35944,7 +36195,7 @@ Actions:
         if (langs.length === 0 && langCount > 0) {
           d.bgSummaryLangs.textContent = `Choose ${langCount}`;
         } else {
-          d.bgSummaryLangs.textContent = langs.length > 0 ? langs.join(', ') : 'â€”';
+          d.bgSummaryLangs.textContent = langs.length > 0 ? langs.join(', ') : '"â€';
         }
       }
       
@@ -36133,7 +36384,7 @@ Actions:
           
           const iconSpan = document.createElement('span');
           iconSpan.className = 'equip-mobile-icon';
-          iconSpan.textContent = 'ðŸ“¦';
+          iconSpan.textContent = '📦';
           
           const nameSpan = document.createElement('span');
           nameSpan.className = 'equip-mobile-name';
@@ -36335,7 +36586,7 @@ Actions:
             <div class="boot-error-details" id="bootErrorDetails"></div>
             <div class="boot-error-actions">
               <button type="button" class="boot-error-btn boot-error-primary" id="bootErrorExport">&#x1F4BE; Export All Data</button>
-              <button type="button" class="boot-error-btn" id="bootErrorRetry">&#x1F504; Retry</button>
+                <button onclick="location.reload()" style="padding:12px 20px; border:1px solid #888; background:rgba(255,255,255,0.05); color:#fff; border-radius:8px; cursor:pointer;">🔄 Retry</button>
               <button type="button" class="boot-error-btn" id="bootErrorNew">&#x2728; Start New</button>
               <button type="button" class="boot-error-btn" id="bootErrorImport">&#x1F4C2; Import</button>
               <button type="button" class="boot-error-btn boot-error-danger" id="bootErrorReset">&#x1F5D1;&#xFE0F; Reset Storage</button>
@@ -36678,7 +36929,7 @@ Actions:
       modal.setAttribute('aria-modal', 'true');
       modal.innerHTML = `
         <div class="boot-error-content" style="max-width: 480px;">
-          <div class="boot-error-icon">ðŸ’¾</div>
+          <div class="boot-error-icon">💾</div>
           <h2 class="boot-error-title">Storage Full - Save Failed!</h2>
           <p class="boot-error-message">
             Your character data couldn't be saved because browser storage is full.
@@ -36688,7 +36939,7 @@ Actions:
             Storage used: ~${Math.round((stats?.used || 0) / 1024)}KB
           </div>
           <div class="boot-error-actions" style="margin-top: 20px;">
-            <button type="button" class="boot-error-btn boot-error-primary" id="exportNowBtn">ðŸ’¾ Export All Now</button>
+            <button type="button" class="boot-error-btn boot-error-primary" id="exportNowBtn">💾 Export All Now</button>
             <button type="button" class="boot-error-btn" id="exportNowDismiss">Dismiss</button>
           </div>
           <p style="font-size: 0.75rem; color: var(--text-muted); margin-top: 16px;">
@@ -38018,7 +38269,7 @@ Actions:
       item.dataset.addonId = addon.id;
       
       // P0-4: Get truncated hash if available (async computed separately)
-      const shortHash = addon.hash ? addon.hash.slice(0, 8) : 'â€”';
+      const shortHash = addon.hash ? addon.hash.slice(0, 8) : '"â€';
       
       item.innerHTML = `
         <div class="pa-addon-icon">&#x1F9E9;</div>
@@ -38027,7 +38278,7 @@ Actions:
           <div class="pa-addon-meta">
             <span class="pa-addon-version">v${this.escapeHtml(addon.version)}</span>
             ${addon.author ? `<span class="pa-addon-author">by ${this.escapeHtml(addon.author)}</span>` : ''}
-            <span class="pa-addon-hash" title="SHA-256 hash (first 8 chars): ${shortHash}">ðŸ“”â€â€™ ${shortHash}</span>
+            <span class="pa-addon-hash" title="SHA-256 hash (first 8 chars): ${shortHash}">🔒 ${shortHash}</span>
           </div>
           ${addon.lastError ? `<div class="pa-addon-error" style="color:#f88;font-size:0.75rem;">Error: ${this.escapeHtml(addon.lastError)}</div>` : ''}
         </div>
@@ -38081,7 +38332,7 @@ Actions:
           // Update the hash display in the DOM
           const hashEl = itemElement.querySelector('.pa-addon-hash');
           if (hashEl) {
-            hashEl.textContent = 'ðŸ“”â€â€™ ' + shortHash;
+            hashEl.textContent = '🔒 ' + shortHash;
             hashEl.title = `SHA-256: ${hash}`;
           }
           
@@ -38478,7 +38729,7 @@ Actions:
         
         // Show security warning
         const warningMsg = 
-          `âš ï¸ SECURITY WARNING\n\n` +
+          `Ã¢Å¡Â Ã¯Â¸Â SECURITY WARNING\n\n` +
           `Addons can run code and access your character data.\n\n` +
           `Addon: ${addon.name}\n` +
           `Version: ${addon.version || 'unknown'}\n` +
@@ -40129,16 +40380,16 @@ console.log('[PA Addon] Host API bridge initialized for addon:', window.PA.addon
         boot.innerHTML = `
           <div class="boot-error-modal" style="display:flex !important; position:fixed; inset:0; z-index:99999; background:rgba(0,0,0,0.95); align-items:center; justify-content:center;">
             <div style="background:rgba(30,30,40,0.98); border:1px solid rgba(255,255,255,0.1); border-radius:12px; padding:32px; max-width:500px; text-align:center; font-family:system-ui,sans-serif; color:#eee;">
-              <div style="font-size:48px; margin-bottom:16px;">âš ï¸</div>
+              <div style="font-size:48px; margin-bottom:16px;">Ã¢Å¡Â Ã¯Â¸Â</div>
               <h2 style="margin:0 0 16px; font-size:1.3rem;">Player Almanac Failed to Start</h2>
               <p style="color:#aaa; margin-bottom:24px; line-height:1.5;">A critical error occurred during startup. Your character data may still be recoverable.</p>
               <div style="background:rgba(0,0,0,0.3); border-radius:6px; padding:12px; margin-bottom:24px; text-align:left; font-family:monospace; font-size:0.75rem; color:#f88; max-height:100px; overflow:auto;">
                 ${String(err?.message || err || 'Unknown error')}
               </div>
               <div style="display:flex; gap:12px; flex-wrap:wrap; justify-content:center;">
-                <button onclick="window.__PA_EMERGENCY_EXPORT?.()" style="padding:12px 20px; border:1px solid #5a5; background:rgba(90,170,90,0.2); color:#8f8; border-radius:8px; cursor:pointer; font-weight:600;">ðŸ’¾ Export All Data</button>
-                <button onclick="location.reload()" style="padding:12px 20px; border:1px solid #888; background:rgba(255,255,255,0.05); color:#fff; border-radius:8px; cursor:pointer;">ðŸ“”â€â€ Retry</button>
-                <button onclick="if(confirm(t('confirm.deleteAllData'))){localStorage.clear();indexedDB.deleteDatabase('PlayerAlmanacPortraits');location.reload()}" style="padding:12px 20px; border:1px solid #a55; background:rgba(170,90,90,0.2); color:#f88; border-radius:8px; cursor:pointer;">ðŸ“”â€”â€˜Ã¯Â¸Â Reset All</button>
+                <button onclick="window.__PA_EMERGENCY_EXPORT?.()" style="padding:12px 20px; border:1px solid #5a5; background:rgba(90,170,90,0.2); color:#8f8; border-radius:8px; cursor:pointer; font-weight:600;">💾 Export All Data</button>
+                <button onclick="location.reload()" style="padding:12px 20px; border:1px solid #888; background:rgba(255,255,255,0.05); color:#fff; border-radius:8px; cursor:pointer;">🔄 Retry</button>
+                <button onclick="if(confirm(t('confirm.deleteAllData'))){localStorage.clear();indexedDB.deleteDatabase('PlayerAlmanacPortraits');location.reload()}" style="padding:12px 20px; border:1px solid #a55; background:rgba(170,90,90,0.2); color:#f88; border-radius:8px; cursor:pointer;">🗑️ Reset All</button>
               </div>
             </div>
           </div>
@@ -40148,7 +40399,7 @@ console.log('[PA Addon] Host API bridge initialized for addon:', window.PA.addon
       }
     } catch (fallbackErr) {
       // Absolute last resort - at least show something
-      document.body.innerHTML = '<div style="padding:40px;text-align:center;font-family:sans-serif;color:#fff;background:#111;min-height:100vh;"><h1>âš ï¸ Player Almanac Error</h1><p>A critical error occurred. Please refresh or clear browser data.</p><pre style="color:#f88;margin:20px auto;max-width:600px;text-align:left;">' + String(err) + '</pre><button onclick="location.reload()" style="padding:12px 24px;font-size:16px;cursor:pointer;">Reload</button></div>';
+      document.body.innerHTML = '<div style="padding:40px;text-align:center;font-family:sans-serif;color:#fff;background:#111;min-height:100vh;"><h1>Ã¢Å¡Â Ã¯Â¸Â Player Almanac Error</h1><p>A critical error occurred. Please refresh or clear browser data.</p><pre style="color:#f88;margin:20px auto;max-width:600px;text-align:left;">' + String(err) + '</pre><button onclick="location.reload()" style="padding:12px 24px;font-size:16px;cursor:pointer;">Reload</button></div>';
     }
   };
 
@@ -40703,7 +40954,7 @@ console.log('[PA Addon] Host API bridge initialized for addon:', window.PA.addon
 <!-- PDF Print Sheet Container -->
 <div id="printSheet">
   <button class="ps-close" id="printSheetClose" type="button" onclick="window.__PA_INSTANCE && window.__PA_INSTANCE.closePrintSheet()">&#x2715; Close</button>
-  <button class="ps-print-btn" id="printSheetPrint" type="button" onclick="window.print()">ðŸ“”â€“Â¨Ã¯Â¸Â Print / Save PDF</button>
+  <button class="ps-print-btn" id="printSheetPrint" type="button" onclick="window.print()">🖨️ Print / Save PDF</button>
   <div class="ps-page" id="printSheetContent">
     <!-- Content populated by JavaScript -->
   </div>
@@ -41104,7 +41355,7 @@ console.log('[PA Addon] Host API bridge initialized for addon:', window.PA.addon
           if (currentState === 'initial') {
             // First tap - show confirmation
             delBtn.setAttribute('data-confirm-state', 'confirm');
-            delBtn.textContent = 'âœ”';
+            delBtn.textContent = 'Ã¢Å“â€';
             delBtn.style.background = 'rgba(220, 53, 69, 0.7)';
             delBtn.style.color = '#fff';
             delBtn.style.fontWeight = 'bold';
@@ -41845,7 +42096,7 @@ END OF ZNAL v1.1</pre>
     console.warn('[Offline Validator] External URLs detected:', found);
     console.warn('[Offline Validator] This build may not work fully offline.');
   } else {
-    console.log('[Offline Validator] âœ” No external URLs detected - build is fully offline.');
+    console.log('[Offline Validator] Ã¢Å“â€ No external URLs detected - build is fully offline.');
   }
 })();
 </script>
@@ -41899,7 +42150,7 @@ END OF ZNAL v1.1</pre>
         box-shadow: 0 2px 8px rgba(0,0,0,0.3);
       `;
       banner.innerHTML = `
-        <strong>âš ï¸ Offline Build Check Failed</strong> â€” 
+        <strong>Ã¢Å¡Â Ã¯Â¸Â Offline Build Check Failed</strong> "â€ 
         This build requires internet for: ${foundDeps.join(', ')}.
         <button onclick="this.parentElement.remove()" style="
           margin-left: 16px;
@@ -41957,7 +42208,7 @@ END OF ZNAL v1.1</pre>
     installBtn.addEventListener('click', async () => {
       if (!deferredPrompt) {
         // If no prompt, show a helpful message
-        alert('To install Player Almanac:\n\nâ€¢ On iOS: Tap Share â†’ "Add to Home Screen"\nâ€¢ On Android: Tap the menu (â‹®) â†’ "Add to Home Screen" or "Install App"\nâ€¢ On Desktop: Click the install icon in the address bar');
+        alert('To install Player Almanac:\n\n"Â¢ On iOS: Tap Share Ã¢â€ â€™ "Add to Home Screen"\n"Â¢ On Android: Tap the menu (Ã¢â€¹Â®) Ã¢â€ â€™ "Add to Home Screen" or "Install App"\n"Â¢ On Desktop: Click the install icon in the address bar');
         return;
       }
       
