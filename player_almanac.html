@@ -16,11 +16,11 @@
 ================================================================================
 -->
 <!--
-  Player Almanac Character Sheet - v6.17.1 OFFLINE BUILD (No External Dependencies)
+  Player Almanac Character Sheet - v6.17.2 OFFLINE BUILD (No External Dependencies)
   
-  CURRENT VERSION: v6.17.1 - January 1, 2026
+  CURRENT VERSION: v6.17.2 - January 1, 2026
   
-  NEW IN v6.17.1:
+  NEW IN v6.17.2:
   - Added AI-powered character generation via Cloudflare Worker endpoint
   - Character Builder now has "Generate with AI" button for direct creation
   
@@ -41215,7 +41215,7 @@ function installI18nObserver() {
     mutations.forEach((mutation) => {
       mutation.addedNodes.forEach((node) => {
         if (node.nodeType === 1) { // Element node
-          applyI18nToLegacyText(node);
+          translateCommonText(node);
         }
       });
     });
