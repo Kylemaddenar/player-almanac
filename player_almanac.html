@@ -36,9 +36,9 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <title>Player Almanac | Character Sheet</title>
 <!-- PWA Support -->
-<link rel="manifest" href="/manifest.json">
-<link rel="icon" type="image/png" sizes="192x192" href="/player-almanac/icons/icon-192.png">
-<link rel="apple-touch-icon" href="/player-almanac/icons/icon-512.png">
+<link rel="manifest" href="./manifest.json">
+<link rel="icon" type="image/png" sizes="192x192" href="./icons/icon-192.png">
+<link rel="apple-touch-icon" href="./icons/icon-512.png">
 <meta name="theme-color" content="#6b46c1">
 <!-- P0.4: Content Security Policy for hosted deployments
      Note: 'unsafe-inline' is required for embedded <style> and <script> in single-file architecture.
@@ -41144,7 +41144,7 @@ END OF ZNAL v1.1</pre>
 <script>
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
-    navigator.serviceWorker.register('/sw.js')
+    navigator.serviceWorker.register('./sw.js')
       .then(reg => {
         console.log('[PWA] Service worker registered:', reg.scope);
         
