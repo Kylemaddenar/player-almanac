@@ -41168,6 +41168,9 @@ if ('serviceWorker' in navigator) {
 /* --- i18n: sweep leftover hardcoded English labels (buttons/options/headers) --- */
 function translateCommonText(root=document) {
   if (!root) return;
+  // Check if translation function is available
+  if (typeof t === 'undefined') return;
+  
   const map = new Map([
     ['No campaigns', t('ui.noCampaigns')],
     ['REPLACE', t('ui.replace')], ['Replace', t('ui.replace')],
