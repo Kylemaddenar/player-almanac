@@ -18334,6 +18334,327 @@ body {
 }
 
 /* =============================================
+   v7.1.0: DATA & PRIVACY PANEL
+   Trust-building transparency about data handling
+   ============================================= */
+.privacy-dialog {
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  background: transparent;
+  border: none;
+  padding: 0;
+  max-width: 100vw;
+  max-height: 100vh;
+  width: 100vw;
+  height: 100vh;
+}
+
+.privacy-dialog::backdrop {
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(4px);
+}
+
+.privacy-dialog-inner {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: var(--card-bg, #1a1625);
+  border: 1px solid var(--border-color, #3d3654);
+  border-radius: 12px;
+  width: min(520px, 95vw);
+  max-height: 85vh;
+  overflow: hidden;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+}
+
+.privacy-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--border-color, #3d3654);
+  background: var(--bg-darker, #0d0a12);
+}
+
+.privacy-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--text-primary, #fff);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.privacy-close-btn {
+  background: transparent;
+  border: none;
+  color: var(--text-muted, #8a8a8a);
+  font-size: 1.5rem;
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 4px;
+  line-height: 1;
+}
+
+.privacy-close-btn:hover {
+  background: var(--hover-bg, rgba(255,255,255,0.1));
+  color: var(--text-primary, #fff);
+}
+
+.privacy-body {
+  padding: 20px;
+  overflow-y: auto;
+  max-height: calc(85vh - 70px);
+}
+
+.privacy-summary {
+  background: linear-gradient(135deg, rgba(34, 197, 94, 0.15), rgba(34, 197, 94, 0.05));
+  border: 1px solid rgba(34, 197, 94, 0.3);
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 20px;
+}
+
+.privacy-summary-title {
+  font-weight: 600;
+  color: #22c55e;
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.privacy-summary-text {
+  color: var(--text-secondary, #b0b0b0);
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+.privacy-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--border-color, #3d3654);
+}
+
+.privacy-item:last-child {
+  border-bottom: none;
+}
+
+.privacy-icon {
+  font-size: 1.5rem;
+  flex-shrink: 0;
+  width: 40px;
+  text-align: center;
+}
+
+.privacy-item-content {
+  flex: 1;
+}
+
+.privacy-item-title {
+  font-weight: 600;
+  color: var(--text-primary, #fff);
+  margin-bottom: 4px;
+}
+
+.privacy-item-desc {
+  color: var(--text-muted, #8a8a8a);
+  font-size: 0.85rem;
+  line-height: 1.4;
+}
+
+.privacy-footer {
+  padding: 16px 20px;
+  border-top: 1px solid var(--border-color, #3d3654);
+  background: var(--bg-darker, #0d0a12);
+  text-align: center;
+}
+
+.privacy-footer-text {
+  color: var(--text-muted, #8a8a8a);
+  font-size: 0.8rem;
+}
+
+.privacy-footer-text a {
+  color: var(--accent, #9b87f5);
+}
+
+@media (max-width: 520px) {
+  .privacy-dialog-inner {
+    width: 95%;
+  }
+}
+
+/* =============================================
+   v7.1.0: ADDON SECURITY WARNING MODAL
+   Prominent warning before installing addons
+   ============================================= */
+.addon-security-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 10001;
+  background: transparent;
+  border: none;
+  padding: 0;
+  max-width: 100vw;
+  max-height: 100vh;
+  width: 100vw;
+  height: 100vh;
+  display: none;
+}
+
+.addon-security-modal[open] {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.addon-security-modal::backdrop {
+  background: rgba(0, 0, 0, 0.8);
+  backdrop-filter: blur(4px);
+}
+
+.addon-security-inner {
+  position: relative;
+  background: #1a1625;
+  border: 2px solid #ef4444;
+  border-radius: 12px;
+  width: min(480px, 95vw);
+  max-height: 85vh;
+  overflow: hidden;
+  box-shadow: 0 20px 60px rgba(239, 68, 68, 0.3);
+}
+
+.addon-security-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px 20px;
+  background: linear-gradient(135deg, rgba(239, 68, 68, 0.2), rgba(239, 68, 68, 0.1));
+  border-bottom: 1px solid rgba(239, 68, 68, 0.3);
+}
+
+.addon-security-icon {
+  font-size: 2rem;
+}
+
+.addon-security-title {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #ef4444;
+}
+
+.addon-security-body {
+  padding: 20px;
+  background: #1a1625;
+}
+
+.addon-security-warning {
+  color: #b0b0b0;
+  line-height: 1.6;
+  margin-bottom: 16px;
+}
+
+.addon-security-file {
+  background: #0d0a12;
+  border: 1px solid #3d3654;
+  border-radius: 8px;
+  padding: 12px;
+  margin-bottom: 16px;
+}
+
+.addon-security-file-label {
+  font-size: 0.75rem;
+  color: #8a8a8a;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 4px;
+}
+
+.addon-security-file-name {
+  font-family: 'JetBrains Mono', monospace;
+  color: #fff;
+  word-break: break-all;
+}
+
+.addon-security-file-size {
+  font-size: 0.8rem;
+  color: #8a8a8a;
+  margin-top: 4px;
+}
+
+.addon-security-checkbox {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 12px;
+  background: rgba(239, 68, 68, 0.1);
+  border: 1px solid rgba(239, 68, 68, 0.2);
+  border-radius: 8px;
+  margin-bottom: 16px;
+  cursor: pointer;
+}
+
+.addon-security-checkbox input {
+  margin-top: 2px;
+  width: 18px;
+  height: 18px;
+  accent-color: #ef4444;
+}
+
+.addon-security-checkbox-text {
+  color: #fff;
+  font-size: 0.9rem;
+}
+
+.addon-security-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+}
+
+.addon-security-btn {
+  padding: 10px 20px;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  transition: all 0.2s;
+}
+
+.addon-security-btn-cancel {
+  background: #0d0a12;
+  border: 1px solid #3d3654;
+  color: #b0b0b0;
+}
+
+.addon-security-btn-cancel:hover {
+  background: rgba(255,255,255,0.1);
+  color: #fff;
+}
+
+.addon-security-btn-install {
+  background: #ef4444;
+  color: white;
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+.addon-security-btn-install.enabled {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.addon-security-btn-install.enabled:hover {
+  background: #dc2626;
+}
+
+/* =============================================
    v6.17.10: DESKTOP/MOBILE LAYOUT FIXES
    1. Character picker popover - use left alignment to prevent off-screen
    2. Minimal HUD hidden on desktop (shown only on mobile collapsed)
@@ -18760,6 +19081,12 @@ body {
             <span data-i18n="boot.featureMaps">Campaign Maps</span>
           </div>
         </div>
+        <!-- v7.1.0: Trust statement on welcome card -->
+        <div class="boot-trust-statement" style="margin-top: 16px; padding-top: 12px; border-top: 1px solid var(--border-color, rgba(255,255,255,0.1)); font-size: 0.8rem; color: var(--text-muted, #8a8a8a); display: flex; align-items: center; justify-content: center; gap: 8px; flex-wrap: wrap;">
+          <span>&#x1F512;</span>
+          <span data-i18n="boot.trustStatement">Offline-first &bull; Your data stays local &bull; Export anytime</span>
+          <button id="bootTrustLearnMore" type="button" class="privacy-link" style="background: none; border: none; color: var(--accent, #9b87f5); font-size: 0.75rem; cursor: pointer; padding: 2px 4px; text-decoration: underline;">Learn more</button>
+        </div>
       </div>
     </div>
   </div>
@@ -18771,32 +19098,32 @@ body {
     <button class="boot-skip-btn" id="bootSkip" type="button" hidden>Skip Intro</button>
   </div>
   
-  <!-- Social Links - Placeholder for future community links -->
+  <!-- Social Links -->
   <div class="boot-social-links" id="bootSocialLinks">
-    <!-- These will link to Player Almanac community channels when available -->
-    <a class="boot-social-link" href="#" title="Discord (Coming Soon)" aria-label="Discord community" style="pointer-events: none; opacity: 0.4;">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028 14.09 14.09 0 0 0 1.226-1.994.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/></svg>
-    </a>
-    <a class="boot-social-link" href="#" title="GitHub (Coming Soon)" aria-label="GitHub repository" style="pointer-events: none; opacity: 0.4;">
+    <a class="boot-social-link" href="https://github.com/Kylemaddenar/player-almanac" target="_blank" rel="noopener" title="View on GitHub" aria-label="GitHub repository">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
     </a>
     <div class="boot-social-divider"></div>
+    <!-- v7.1.0: Trademark notice visible on boot screen -->
+    <span class="boot-trademark-notice" style="font-size: 0.65rem; color: var(--text-muted, #6b6b6b); opacity: 0.7;">Not affiliated with Wizards of the Coast</span>
   </div>
   
   <div class="boot-footer-right">
     <!-- PWA Install Button - always visible, handles both native prompt and manual instructions -->
     <button class="boot-footer-link boot-install-btn" id="bootInstallBtn" type="button" title="Install app to your device">&#x1F4F2; Install App</button>
     <!-- P0-1: Recovery button always accessible for data export -->
-    <button class="boot-footer-link boot-recovery-btn" id="bootRecoveryBtn" type="button" title="Emergency data recovery - export all data">&#x1F6E0; Recovery</button>
-    <button class="boot-footer-link" id="bootExportAll" type="button" title="Export all characters">Export All</button>
-    <button class="boot-footer-link" id="bootRestoreBackup" type="button" title="Restore from backup file">Restore Backup</button>
-    <button class="boot-footer-link" id="bootImportFile" type="button" title="Import character file">Import</button>
+    <button class="boot-footer-link boot-recovery-btn" id="bootRecoveryBtn" type="button" title="Emergency data export if something goes wrong">&#x1F6E0; Recovery</button>
+    <button class="boot-footer-link" id="bootExportAll" type="button" title="Save all your characters to a backup file">&#x1F4BE; Export All</button>
+    <button class="boot-footer-link" id="bootRestoreBackup" type="button" title="Load characters from a backup file">&#x1F4E5; Restore Backup</button>
+    <button class="boot-footer-link" id="bootImportFile" type="button" title="Import character file">&#x1F4C2; Import</button>
     <button class="boot-footer-link" id="bootAddonsBtn" type="button" title="Manage addons">&#x1F9E9; Addons</button>
+    <button class="boot-footer-link" id="bootPrivacyBtn" type="button" title="How your data is handled">&#x1F512; Privacy</button>
     <button class="boot-footer-link boot-settings-btn" id="bootSettingsBtn" type="button" title="Settings">&#x2699; Settings</button>
   </div>
   <div class="boot-footer-version">
-    <span class="boot-version">v<span id="bootVersionNumber">7.0.0</span></span>
-    <span class="boot-build">Build 6.18.7</span>
+    <span class="boot-version">v<span id="bootVersionNumber">7.1.0</span></span>
+    <span class="boot-build">(Jan 3, 2026)</span>
+    <button class="boot-whats-new-link" id="bootWhatsNewBtn" type="button" style="background: none; border: none; color: var(--accent, #9b87f5); font-size: 0.7rem; cursor: pointer; padding: 2px 4px; margin-left: 4px;">What's New</button>
   </div>
 </footer>
   
@@ -19214,6 +19541,12 @@ body {
         <div class="qb-setting">
           <button class="qb-menu-item" id="settingsAboutBtn" type="button" data-close-pop="1" title="View credits and license information" data-tip="About Player Almanac" aria-label="About and Credits">&#x2139;&#xFE0F; About / Credits</button>
         </div>
+        <div class="qb-setting">
+          <button class="qb-menu-item" id="privacyBtn" type="button" data-close-pop="1" title="How your data is handled" data-tip="Data &amp; Privacy" aria-label="Data and Privacy">&#x1F512; Data &amp; Privacy</button>
+        </div>
+        <div class="qb-setting">
+          <a class="qb-menu-item" href="https://github.com/Kylemaddenar/player-almanac" target="_blank" rel="noopener" title="View source code on GitHub" data-tip="View on GitHub" aria-label="GitHub Repository" style="text-decoration: none;">&#x1F4BB; GitHub</a>
+        </div>
       </div>
     </div>
   </div>
@@ -19290,7 +19623,7 @@ body {
 <!-- v7.0.0: Destructive Action Confirmation Modal -->
 <div id="confirmDestructive" class="modal-overlay confirm-overlay" style="display:none;" role="dialog" aria-modal="true" aria-labelledby="confirmDestructiveTitle">
   <div class="modal confirm-destructive">
-    <div class="modal-icon danger">⚠️</div>
+    <div class="modal-icon danger">⚠ï¸</div>
     <h2 id="confirmDestructiveTitle"></h2>
     <p id="confirmDestructiveMessage"></p>
     <div class="confirm-destructive-detail" id="confirmDestructiveDetail"></div>
@@ -19355,6 +19688,21 @@ body {
     </div>
     <div class="modal-body changelog-body">
       <div class="changelog-version">
+        <h3>Version 7.1.0 <span class="changelog-date">January 3, 2026</span></h3>
+        <div class="changelog-subtitle">Trust & Transparency Release</div>
+      </div>
+      <ul class="changelog-list">
+        <li><strong>🔒 Data & Privacy Panel</strong> - New panel explaining how your data is handled (Settings → Privacy)</li>
+        <li><strong>⚠️ Addon Security Warning</strong> - Prominent warning before installing addons with risk acknowledgment</li>
+        <li><strong>📊 Better Storage Status</strong> - Clear indicators for storage availability and usage</li>
+        <li><strong>🔗 GitHub Link</strong> - Quick access to source code from Settings and boot screen</li>
+        <li><strong>✨ Trust Statement</strong> - "Offline-first • Your data stays local" visible on welcome screen</li>
+        <li><strong>📝 Cleaner Version Display</strong> - Version shown as "v7.1.0 (Jan 3, 2026)" with What's New link</li>
+        <li><strong>™️ Trademark Notice</strong> - "Not affiliated with Wizards of the Coast" visible on boot screen</li>
+        <li><strong>🏷️ Friendly Labels</strong> - Better tooltips for Recovery/Export/Restore buttons</li>
+      </ul>
+      
+      <div class="changelog-version" style="margin-top: 24px;">
         <h3>Version 7.0.0 <span class="changelog-date">January 2, 2026</span></h3>
         <div class="changelog-subtitle" data-i18n="changelog.qualityRelease">Quality Refinement Release</div>
       </div>
@@ -20878,7 +21226,7 @@ body {
 <div class="weapon-detail-modal" id="weaponDetailModal" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="weaponDetailTitle">
   <div class="weapon-detail-header">
     <div class="weapon-detail-title">
-      <span class="weapon-mobile-icon">⚠️</span>
+      <span class="weapon-mobile-icon">⚠ï¸Â</span>
       <span id="weaponDetailName">Weapon Name</span>
     </div>
     <button class="weapon-detail-close" id="weaponDetailClose" type="button" aria-label="Close weapon details">&times;</button>
@@ -20898,13 +21246,13 @@ body {
     </div>
     <div class="weapon-detail-notes" id="weaponDetailNotesWrap">
       <div class="weapon-detail-notes-label">Properties & Notes</div>
-      <div class="weapon-detail-notes-text" id="weaponDetailNotes">"—</div>
+      <div class="weapon-detail-notes-text" id="weaponDetailNotes">"—Â</div>
     </div>
   </div>
   <div class="weapon-detail-actions">
     <button class="weapon-detail-btn roll-atk" id="weaponDetailRollAtk" type="button">Roll Attack</button>
     <button class="weapon-detail-btn roll-dmg" id="weaponDetailRollDmg" type="button">Roll Damage</button>
-    <button class="weapon-detail-btn delete" id="weaponDetailDelete" type="button">✓¢</button>
+    <button class="weapon-detail-btn delete" id="weaponDetailDelete" type="button">✓Â¢</button>
   </div>
 </div>
 
@@ -20940,7 +21288,7 @@ body {
   <div class="bg-select-body" id="bgSelectBody">
     <!-- Feature Section -->
     <div class="bg-section">
-      <div class="bg-section-title"><span class="icon">⭐</span> Background Feature</div>
+      <div class="bg-section-title"><span class="icon">⭐</span> Background Feature</div>
       <div class="bg-feature-box">
         <div class="bg-feature-name" id="bgFeatureName">Feature Name</div>
         <div class="bg-feature-desc" id="bgFeatureDesc">Feature description goes here.</div>
@@ -21008,19 +21356,19 @@ body {
       <div class="bg-summary-grid" id="bgSummaryGrid">
         <div class="bg-summary-item">
           <div class="bg-summary-item-label">Skills</div>
-          <div class="bg-summary-item-value" id="bgSummarySkills">"—</div>
+          <div class="bg-summary-item-value" id="bgSummarySkills">"—Â</div>
         </div>
         <div class="bg-summary-item">
           <div class="bg-summary-item-label">Tools</div>
-          <div class="bg-summary-item-value" id="bgSummaryTools">"—</div>
+          <div class="bg-summary-item-value" id="bgSummaryTools">"—Â</div>
         </div>
         <div class="bg-summary-item">
           <div class="bg-summary-item-label">Languages</div>
-          <div class="bg-summary-item-value" id="bgSummaryLangs">"—</div>
+          <div class="bg-summary-item-value" id="bgSummaryLangs">"—Â</div>
         </div>
         <div class="bg-summary-item" id="bgSummaryFeatItem" style="display:none;">
           <div class="bg-summary-item-label">Origin Feat</div>
-          <div class="bg-summary-item-value" id="bgSummaryFeat">"—</div>
+          <div class="bg-summary-item-value" id="bgSummaryFeat">"—Â</div>
         </div>
       </div>
     </div>
@@ -21223,7 +21571,7 @@ body {
     network: {
       offline: {
         title: 'You\'re Offline',
-        message: 'No worries—Player Almanac works fully offline. Your data is safe.',
+        message: 'No worries — Player Almanac works fully offline. Your data is safe.',
         action: null
       }
     },
@@ -21242,7 +21590,7 @@ body {
   };
 
   // App version constant for visibility
-  const APP_VERSION = '7.0.1';
+  const APP_VERSION = '7.1.0';
 
   // ============================================
   // ORDER 6: FIRST-VISIT DETECTION
@@ -21557,7 +21905,7 @@ body {
       'about.title': 'About Player Almanac',
       'about.project': 'PROJECT',
       'about.projectName': 'Player Almanac',
-      'about.copyright': '© 2025 Zagreous',
+      'about.copyright': 'Â© 2025 Zagreous',
       'about.description': 'A digital character sheet and campaign companion for tabletop RPGs.',
       'about.license': 'LICENSE',
       'about.licenseTitle': 'ZNAL v1.1',
@@ -21571,17 +21919,49 @@ body {
       'about.attributionPage': 'Official project page:',
       'about.thirdParty': 'THIRD-PARTY NOTICES',
       'about.gsap': 'GSAP 6.16.0',
-      'about.gsapText': '(GreenSock) "— Animation library (bundled for offline use).',
+      'about.gsapText': '(GreenSock) "—Â Animation library (bundled for offline use).',
       'about.gsapLicense': 'Subject to GreenSock license terms.',
       'about.gsapNote': 'Animations work fully offline (GSAP bundled).',
       'about.fonts': 'Fonts:',
-      'about.fontsText': 'Cinzel, Inter, JetBrains Mono "— Google Fonts, licensed under the SIL Open Font License (OFL).',
+      'about.fontsText': 'Cinzel, Inter, JetBrains Mono "—Â Google Fonts, licensed under the SIL Open Font License (OFL).',
       'about.icons': 'Icons:',
-      'about.iconsText': 'Custom inline SVGs "— Original artwork.',
+      'about.iconsText': 'Custom inline SVGs "—Â Original artwork.',
       'about.emoji': 'Emoji:',
-      'about.emojiText': 'Unicode standard characters "— Rendered by your device/browser.',
+      'about.emojiText': 'Unicode standard characters "—Â Rendered by your device/browser.',
       'about.trademark': 'TRADEMARK DISCLAIMER',
-      'about.trademarkText': 'Dungeons & Dragons® is a registered trademark of Wizards of the Coast LLC. Player Almanac is not affiliated with, endorsed, sponsored, or specifically approved by Wizards of the Coast LLC.',
+      'about.trademarkText': 'Dungeons & DragonsÂ® is a registered trademark of Wizards of the Coast LLC. Player Almanac is not affiliated with, endorsed, sponsored, or specifically approved by Wizards of the Coast LLC.',
+      
+      // v7.1.0: Privacy Dialog
+      'privacy.title': '🔒 Data & Privacy',
+      'privacy.summaryTitle': '✅ Your Data Stays With You',
+      'privacy.summaryText': 'Player Almanac runs entirely in your browser. No servers, no accounts, no tracking — just you and your character sheets.',
+      'privacy.localTitle': 'Runs Locally in Your Browser',
+      'privacy.localDesc': 'The entire application runs on your device. No data is sent to any server. Works fully offline.',
+      'privacy.noAccountTitle': 'No Account Required',
+      'privacy.noAccountDesc': 'Start using immediately. No registration, no login, no email collection.',
+      'privacy.noTrackingTitle': 'No Analytics or Tracking',
+      'privacy.noTrackingDesc': 'Zero telemetry. No usage data collected. No third-party analytics scripts.',
+      'privacy.localStorageTitle': 'Browser Storage Only',
+      'privacy.localStorageDesc': 'Characters saved to your browser\'s local storage. Export files save directly to your device.',
+      'privacy.clearDataTitle': 'Clearing Site Data Erases Characters',
+      'privacy.clearDataDesc': 'If you clear your browser\'s site data, your characters will be deleted. Use Export to create backups.',
+      'privacy.openSourceTitle': 'Open Source & Inspectable',
+      'privacy.openSourceDesc': 'The entire source code is in a single HTML file. You can verify these claims yourself.',
+      
+      // v7.1.0: Addon Security Warning
+      'addonSecurity.title': 'Security Warning',
+      'addonSecurity.warning': 'Addons can run arbitrary code and access your character data. Only install addons from sources you trust. Malicious addons could steal or corrupt your data.',
+      'addonSecurity.fileLabel': 'File to install:',
+      'addonSecurity.acknowledge': 'I understand the risks and trust this addon source',
+      'addonSecurity.cancel': 'Cancel',
+      'addonSecurity.install': 'Install Addon',
+      
+      // v7.1.0: Boot trust statement
+      'boot.trustStatement': 'Offline-first • Your data stays local • Export anytime',
+      
+      // v7.1.0: Settings menu items
+      'settings.privacy': '🔒 Data & Privacy',
+      'settings.github': '💻 GitHub',
       
       // Conditions
       'condition.blinded': 'Blinded',
@@ -21717,17 +22097,17 @@ body {
       'about.attributionLicense': 'Licensed under ZNAL v1.1 (Noncommercial + Attribution)',
       'about.officialPage': 'Official project page:',
       'about.thirdParty': 'Third-Party Notices',
-      'about.gsapDesc': '(GreenSock) "— Animation library (bundled for offline use).',
+      'about.gsapDesc': '(GreenSock) "—Â Animation library (bundled for offline use).',
       'about.gsapLicense': 'Subject to GreenSock license terms.',
       'about.gsapNote': 'Animations work fully offline (GSAP bundled).',
       'about.fonts': 'Fonts:',
-      'about.fontsDesc': 'Cinzel, Inter, JetBrains Mono "— Google Fonts, licensed under the SIL Open Font License (OFL).',
+      'about.fontsDesc': 'Cinzel, Inter, JetBrains Mono "—Â Google Fonts, licensed under the SIL Open Font License (OFL).',
       'about.icons': 'Icons:',
-      'about.iconsDesc': 'Custom inline SVGs "— Original artwork.',
+      'about.iconsDesc': 'Custom inline SVGs "—Â Original artwork.',
       'about.emoji': 'Emoji:',
-      'about.emojiDesc': 'Unicode standard characters "— Rendered by your device/browser.',
+      'about.emojiDesc': 'Unicode standard characters "—Â Rendered by your device/browser.',
       'about.trademark': 'Trademark Disclaimer',
-      'about.trademarkDesc': 'Dungeons & Dragons® is a registered trademark of Wizards of the Coast LLC. Player Almanac is not affiliated with, endorsed, sponsored, or specifically approved by Wizards of the Coast LLC.',
+      'about.trademarkDesc': 'Dungeons & DragonsÂ® is a registered trademark of Wizards of the Coast LLC. Player Almanac is not affiliated with, endorsed, sponsored, or specifically approved by Wizards of the Coast LLC.',
       
       // Map Screen
       'map.title': 'Campaign Map',
@@ -22377,7 +22757,7 @@ body {
       'about.title': 'Über Player Almanac',
       'about.project': 'PROJEKT',
       'about.projectName': 'Player Almanac',
-      'about.copyright': '© 2025 Zagreous',
+      'about.copyright': 'Â© 2025 Zagreous',
       'about.description': 'Ein digitaler Charakterbogen und Kampagnenbegleiter für Tischrollenspiele.',
       'about.license': 'LIZENZ',
       'about.licenseTitle': 'ZNAL v1.1',
@@ -22391,17 +22771,49 @@ body {
       'about.attributionPage': 'Offizielle Projektseite:',
       'about.thirdParty': 'DRITTANBIETER-HINWEISE',
       'about.gsap': 'GSAP 6.16.0',
-      'about.gsapText': '(GreenSock) "— Animationsbibliothek (gebündelt für Offline-Nutzung).',
+      'about.gsapText': '(GreenSock) "—Â Animationsbibliothek (gebündelt für Offline-Nutzung).',
       'about.gsapLicense': 'Unterliegt den GreenSock-Lizenzbedingungen.',
       'about.gsapNote': 'Animationen funktionieren vollständig offline (GSAP gebündelt).',
       'about.fonts': 'Schriftarten:',
-      'about.fontsText': 'Cinzel, Inter, JetBrains Mono "— Google Fonts, lizenziert unter der SIL Open Font License (OFL).',
+      'about.fontsText': 'Cinzel, Inter, JetBrains Mono "—Â Google Fonts, lizenziert unter der SIL Open Font License (OFL).',
       'about.icons': 'Icons:',
-      'about.iconsText': 'Benutzerdefinierte Inline-SVGs "— Originalkunstwerk.',
+      'about.iconsText': 'Benutzerdefinierte Inline-SVGs "—Â Originalkunstwerk.',
       'about.emoji': 'Emoji:',
-      'about.emojiText': 'Unicode-Standardzeichen "— Gerendert durch Ihr Gerät/Browser.',
+      'about.emojiText': 'Unicode-Standardzeichen "—Â Gerendert durch Ihr Gerät/Browser.',
       'about.trademark': 'MARKENRECHTLICHER HINWEIS',
-      'about.trademarkText': 'Dungeons & Dragons® ist eine eingetragene Marke von Wizards of the Coast LLC. Player Almanac ist nicht mit Wizards of the Coast LLC verbunden, wird nicht von ihr unterstützt, gesponsert oder speziell genehmigt.',
+      'about.trademarkText': 'Dungeons & DragonsÂ® ist eine eingetragene Marke von Wizards of the Coast LLC. Player Almanac ist nicht mit Wizards of the Coast LLC verbunden, wird nicht von ihr unterstützt, gesponsert oder speziell genehmigt.',
+      
+      // v7.1.0: Privacy Dialog (German)
+      'privacy.title': '🔒 Daten & Datenschutz',
+      'privacy.summaryTitle': '✅ Deine Daten bleiben bei dir',
+      'privacy.summaryText': 'Player Almanac läuft vollständig in deinem Browser. Keine Server, keine Konten, kein Tracking — nur du und deine Charakterbögen.',
+      'privacy.localTitle': 'Läuft lokal in deinem Browser',
+      'privacy.localDesc': 'Die gesamte Anwendung läuft auf deinem Gerät. Keine Daten werden an Server gesendet. Funktioniert vollständig offline.',
+      'privacy.noAccountTitle': 'Kein Konto erforderlich',
+      'privacy.noAccountDesc': 'Sofort loslegen. Keine Registrierung, kein Login, keine E-Mail-Erfassung.',
+      'privacy.noTrackingTitle': 'Keine Analyse oder Tracking',
+      'privacy.noTrackingDesc': 'Keine Telemetrie. Keine Nutzungsdaten erfasst. Keine Analyseskripte von Drittanbietern.',
+      'privacy.localStorageTitle': 'Nur Browser-Speicher',
+      'privacy.localStorageDesc': 'Charaktere werden im lokalen Speicher deines Browsers gespeichert. Exportdateien werden direkt auf deinem Gerät gespeichert.',
+      'privacy.clearDataTitle': 'Löschen der Website-Daten löscht Charaktere',
+      'privacy.clearDataDesc': 'Wenn du die Website-Daten deines Browsers löschst, werden deine Charaktere gelöscht. Verwende Export, um Backups zu erstellen.',
+      'privacy.openSourceTitle': 'Open Source & überprüfbar',
+      'privacy.openSourceDesc': 'Der gesamte Quellcode befindet sich in einer einzigen HTML-Datei. Du kannst diese Aussagen selbst überprüfen.',
+      
+      // v7.1.0: Addon Security Warning (German)
+      'addonSecurity.title': 'Sicherheitswarnung',
+      'addonSecurity.warning': 'Addons können beliebigen Code ausführen und auf deine Charakterdaten zugreifen. Installiere nur Addons aus vertrauenswürdigen Quellen. Böswillige Addons könnten deine Daten stehlen oder beschädigen.',
+      'addonSecurity.fileLabel': 'Zu installierende Datei:',
+      'addonSecurity.acknowledge': 'Ich verstehe die Risiken und vertraue dieser Addon-Quelle',
+      'addonSecurity.cancel': 'Abbrechen',
+      'addonSecurity.install': 'Addon installieren',
+      
+      // v7.1.0: Boot trust statement (German)
+      'boot.trustStatement': 'Offline-first • Deine Daten bleiben lokal • Jederzeit exportieren',
+      
+      // v7.1.0: Settings menu items (German)
+      'settings.privacy': '🔒 Daten & Datenschutz',
+      'settings.github': '💻 GitHub',
       
       // Conditions
       'condition.blinded': 'Geblendet',
@@ -22537,17 +22949,17 @@ body {
       'about.attributionLicense': 'Lizenziert unter ZNAL v1.1 (Nichtkommerziell + Namensnennung)',
       'about.officialPage': 'Offizielle Projektseite:',
       'about.thirdParty': 'Drittanbieter-Hinweise',
-      'about.gsapDesc': '(GreenSock) "— Animationsbibliothek (gebündelt für Offline-Nutzung).',
+      'about.gsapDesc': '(GreenSock) "—Â Animationsbibliothek (gebündelt für Offline-Nutzung).',
       'about.gsapLicense': 'Unterliegt den GreenSock-Lizenzbedingungen.',
       'about.gsapNote': 'Animationen funktionieren vollständig offline (GSAP gebündelt).',
       'about.fonts': 'Schriftarten:',
-      'about.fontsDesc': 'Cinzel, Inter, JetBrains Mono "— Google Fonts, lizenziert unter der SIL Open Font License (OFL).',
+      'about.fontsDesc': 'Cinzel, Inter, JetBrains Mono "—Â Google Fonts, lizenziert unter der SIL Open Font License (OFL).',
       'about.icons': 'Icons:',
-      'about.iconsDesc': 'Benutzerdefinierte Inline-SVGs "— Originalkunstwerk.',
+      'about.iconsDesc': 'Benutzerdefinierte Inline-SVGs "—Â Originalkunstwerk.',
       'about.emoji': 'Emoji:',
-      'about.emojiDesc': 'Unicode-Standardzeichen "— Gerendert durch Ihr Gerät/Browser.',
+      'about.emojiDesc': 'Unicode-Standardzeichen "—Â Gerendert durch Ihr Gerät/Browser.',
       'about.trademark': 'Markenrechtlicher Hinweis',
-      'about.trademarkDesc': 'Dungeons & Dragons® ist eine eingetragene Marke von Wizards of the Coast LLC. Player Almanac ist nicht mit Wizards of the Coast LLC verbunden oder von ihr genehmigt.',
+      'about.trademarkDesc': 'Dungeons & DragonsÂ® ist eine eingetragene Marke von Wizards of the Coast LLC. Player Almanac ist nicht mit Wizards of the Coast LLC verbunden oder von ihr genehmigt.',
       
       // Map Screen
       'map.title': 'Kampagnenkarte',
@@ -22768,7 +23180,7 @@ body {
       'toast.noEnhancementAvailable': "Keine Verbesserung verfügbar",
       'toast.noEnhancementsAvailable': "Keine Verbesserungen verfügbar",
       'toast.noScaleToClear': "Keine Skalierung zum Zurücksetzen",
-      'toast.notAValidBackupFileUseImportFor': "Keine gültige Backup-Datei. Nutze —Å¾Import—Å“ für einzelne Charaktere.",
+      'toast.notAValidBackupFileUseImportFor': "Keine gültige Backup-Datei. Nutze 'Import' für einzelne Charaktere.",
       'toast.nothingToUndo': "Nichts zum Rückgängig machen",
       'toast.pinDeletedCtrlZToUndo': "Pin gelöscht (Strg+Z zum Rückgängig machen)",
       'toast.pinRestored': "Pin wiederhergestellt",
@@ -23278,7 +23690,7 @@ body {
     { name: 'Hand Crossbow', atk: 'DEX', dmg: '1d6 piercing', notes: 'Ammunition (30/120), Light, Loading', mastery: 'Vex' },
     { name: 'Heavy Crossbow', atk: 'DEX', dmg: '1d10 piercing', notes: 'Ammunition (100/400), Heavy, Loading, Two-handed', mastery: 'Push' },
     { name: 'Longbow', atk: 'DEX', dmg: '1d8 piercing', notes: 'Ammunition (150/600), Heavy, Two-handed', mastery: 'Slow' },
-    { name: 'Net', atk: 'DEX', dmg: '"—', notes: 'Special, Thrown (5/15)', mastery: '' },
+    { name: 'Net', atk: 'DEX', dmg: '"—Â', notes: 'Special, Thrown (5/15)', mastery: '' },
   ];
 
   // Weapon Mastery Descriptions (2024 PHB only)
@@ -23334,7 +23746,7 @@ body {
       languages: 1,
       equipment: ["Thieves' Tools", 'Crowbar', 'Dark Common Clothes', '15 GP'],
       feature: { name: 'Criminal Contact', desc: 'You have a reliable and trustworthy contact who acts as your liaison to a network of other criminals. You know how to get messages to and from your contact, even over great distances.' },
-      backstory: 'You grew up on the streets, learning to survive through cunning and quick hands. Whether as a pickpocket, burglar, fence, or enforcer, you operated outside the law. Your past has given you skills others lack"—and enemies you\'d rather forget.'
+      backstory: 'You grew up on the streets, learning to survive through cunning and quick hands. Whether as a pickpocket, burglar, fence, or enforcer, you operated outside the law. Your past has given you skills others lack"—Âand enemies you\'d rather forget.'
     },
     'Entertainer (2024)': {
       abilities: ['STR', 'DEX', 'CHA'],
@@ -23386,7 +23798,7 @@ body {
       languages: 1,
       equipment: ['Herbalism Kit', 'Winter Blanket', 'Scroll Case with Notes', 'Common Clothes', '5 GP'],
       feature: { name: 'Discovery', desc: 'The quiet seclusion of your extended hermitage gave you access to a unique and powerful discovery. The nature of this revelation depends on the nature of your seclusion.' },
-      backstory: 'You lived in seclusion for years"—either in a sheltered community, alone in nature, or as a shutaway. Your time apart was spent in prayer, study, or contemplation. During that time, you found something profound: perhaps a truth about the cosmos or a secret buried in your soul.'
+      backstory: 'You lived in seclusion for years"—Âeither in a sheltered community, alone in nature, or as a shutaway. Your time apart was spent in prayer, study, or contemplation. During that time, you found something profound: perhaps a truth about the cosmos or a secret buried in your soul.'
     },
     'Merchant (2024)': {
       abilities: ['CON', 'INT', 'CHA'],
@@ -23396,7 +23808,7 @@ body {
       languages: 1,
       equipment: ["Navigator's Tools", 'Mule', 'Cart', 'Common Clothes', '25 GP'],
       feature: { name: 'Supply Chain', desc: 'From your experience as a merchant, you know how trade routes work. You can identify trade goods, assess their value, and know where to find buyers. Merchants and traders regard you favorably and may offer deals.' },
-      backstory: 'Coin has always been your compass. You traded in goods across villages, towns, and cities"—learning the value of everything and the art of negotiation. The marketplace taught you about people: their desires, their fears, and what they\'re willing to pay.'
+      backstory: 'Coin has always been your compass. You traded in goods across villages, towns, and cities"—Âlearning the value of everything and the art of negotiation. The marketplace taught you about people: their desires, their fears, and what they\'re willing to pay.'
     },
     'Noble (2024)': {
       abilities: ['STR', 'INT', 'CHA'],
@@ -23407,7 +23819,7 @@ body {
       languages: 1,
       equipment: ['Signet Ring', 'Scroll of Pedigree', 'Fine Clothes', '25 GP'],
       feature: { name: 'Position of Privilege', desc: 'Thanks to your noble birth, people are inclined to think the best of you. You are welcome in high society. Common folk make every effort to accommodate you and avoid your displeasure.' },
-      backstory: 'You were born into a life of privilege. Your family wields power through wealth, titles, or both. Though you enjoyed every luxury, expectations weighed on you"—to uphold family honor, make strategic alliances, or continue a legacy. Now you step beyond those halls.'
+      backstory: 'You were born into a life of privilege. Your family wields power through wealth, titles, or both. Though you enjoyed every luxury, expectations weighed on you"—Âto uphold family honor, make strategic alliances, or continue a legacy. Now you step beyond those halls.'
     },
     'Sage (2024)': {
       abilities: ['CON', 'INT', 'WIS'],
@@ -23427,7 +23839,7 @@ body {
       languages: 1,
       equipment: ['Dagger', 'Rope (50 ft.)', 'Lucky Charm', 'Common Clothes', '10 GP'],
       feature: { name: 'Ship\'s Passage', desc: 'When you need to, you can secure free passage on a sailing ship for yourself and your companions. In return, you and your companions are expected to assist the crew during the voyage.' },
-      backstory: 'You sailed the seas, learning to work the rigging and navigate by stars. The crew was your family, the ship your home. Whether merchant marine or privateer, life at sea forged you into someone who can weather any storm"—literal or otherwise.'
+      backstory: 'You sailed the seas, learning to work the rigging and navigate by stars. The crew was your family, the ship your home. Whether merchant marine or privateer, life at sea forged you into someone who can weather any storm"—Âliteral or otherwise.'
     },
     'Scribe (2024)': {
       abilities: ['DEX', 'INT', 'WIS'],
@@ -23522,7 +23934,7 @@ body {
       languages: 1,
       equipment: ['Scroll Case with Notes', 'Winter Blanket', 'Common Clothes', 'Herbalism Kit', '5 GP'],
       feature: { name: 'Discovery', desc: 'The quiet seclusion of your extended hermitage gave you access to a unique and powerful discovery about the cosmos, the deities, or the self.' },
-      backstory: 'You lived in seclusion"—either in a sheltered community such as a monastery, or entirely alone"—for a formative part of your life. In your time apart from the clamor of society, you found quiet, solitude, and perhaps some answers.'
+      backstory: 'You lived in seclusion"—Âeither in a sheltered community such as a monastery, or entirely alone"—Âfor a formative part of your life. In your time apart from the clamor of society, you found quiet, solitude, and perhaps some answers.'
     },
     'Noble': {
       skills: ['history', 'persuasion'],
@@ -23671,7 +24083,7 @@ body {
     { lvl: '1', name: 'Charm Person', cast: '1A', range: '30 ft', conc: false, rit: false, notes: 'Charmed 1hr, WIS', desc: 'You attempt to charm a humanoid you can see within range. It must make a WIS save (advantage if you or companions are fighting it). If it fails, it is charmed by you until the spell ends or until you or companions do anything harmful to it. The charmed creature regards you as a friendly acquaintance. When the spell ends, it knows it was charmed.' },
     { lvl: '1', name: 'Cure Wounds', cast: '1A', range: 'Touch', conc: false, rit: false, notes: '2d8+mod healing', desc: 'A creature you touch regains a number of hit points equal to 2d8 + your spellcasting ability modifier. At Higher Levels: healing increases by 2d8 for each slot level above 1st.' },
     { lvl: '1', name: 'Detect Magic', cast: '1A', range: 'Self', conc: true, rit: true, notes: 'Sense magic 30ft', desc: 'For the duration, you sense the presence of magic within 30 feet of you. If you sense magic this way, you can use your action to see a faint aura around any visible creature or object that bears magic, and you learn its school of magic. The spell can penetrate most barriers, but is blocked by 1 foot of stone, 1 inch of metal, a thin sheet of lead, or 3 feet of wood/dirt.' },
-    { lvl: '1', name: 'Disguise Self', cast: '1A', range: 'Self', conc: false, rit: false, notes: 'Appear different, 1hr', desc: 'You make yourself"—including clothing, armor, weapons, and belongings"—look different until the spell ends or until you dismiss it. You can seem 1 foot shorter or taller and can appear thin, fat, or in between. You can\'t change body type, and your limbs must remain present. Investigation check vs your spell DC to discern disguise.' },
+    { lvl: '1', name: 'Disguise Self', cast: '1A', range: 'Self', conc: false, rit: false, notes: 'Appear different, 1hr', desc: 'You make yourself"—Âincluding clothing, armor, weapons, and belongings"—Âlook different until the spell ends or until you dismiss it. You can seem 1 foot shorter or taller and can appear thin, fat, or in between. You can\'t change body type, and your limbs must remain present. Investigation check vs your spell DC to discern disguise.' },
     { lvl: '1', name: 'Faerie Fire', cast: '1A', range: '60 ft', conc: true, rit: false, notes: 'Adv on attacks, 20ft', desc: 'Each object in a 20-foot cube within range is outlined in blue, green, or violet light (your choice). Any creature in the area when the spell is cast is also outlined if it fails a DEX save. For the duration, affected objects and creatures shed dim light in a 10-foot radius. Any attack roll against an affected creature or object has advantage if the attacker can see it, and they can\'t benefit from being invisible.' },
     { lvl: '1', name: 'Feather Fall', cast: '1 React', range: '60 ft', conc: false, rit: false, notes: 'Slow fall, 5 creatures', desc: 'Choose up to five falling creatures within range. A falling creature\'s rate of descent slows to 60 feet per round until the spell ends. If the creature lands before the spell ends, it takes no falling damage and can land on its feet, and the spell ends for that creature. Duration: 1 minute.' },
     { lvl: '1', name: 'Find Familiar', cast: '1 hour', range: '10 ft', conc: false, rit: true, notes: 'Spirit companion', desc: 'You gain the service of a familiar, a spirit that takes an animal form you choose (bat, cat, crab, frog, hawk, lizard, octopus, owl, snake, fish, rat, raven, sea horse, spider, or weasel). The familiar acts independently but obeys your commands. You can communicate with it telepathically within 100 feet and see through its senses. It can\'t attack. If it drops to 0 HP, it disappears.' },
@@ -31449,7 +31861,7 @@ body {
           <div class="ps-header">
             <div class="ps-header-left">
               <div class="ps-name">${esc(s.name) || t('printSheet.unnamed')}</div>
-              <div class="ps-subtitle">${esc(s.species)}${s.species && s.class ? ' ' : ''}${esc(s.class)}${s.background ? ' "™ ' + esc(s.background) : ''}${s.campaign ? ' "— ' + esc(s.campaign) : ''}</div>
+              <div class="ps-subtitle">${esc(s.species)}${s.species && s.class ? ' ' : ''}${esc(s.class)}${s.background ? ' "™ ' + esc(s.background) : ''}${s.campaign ? ' "—Â ' + esc(s.campaign) : ''}</div>
             </div>
             ${portraitSrc ? `<img class="ps-portrait" src="${portraitSrc}" alt=""/>` : ''}
             <div class="ps-level-badge">
@@ -35362,7 +35774,7 @@ Actions:
     createEmptyState(type) {
       const configs = {
         spells: {
-          icon: '📜',
+          icon: '📓',
           title: t('empty.spellsTitle'),
           text: t('empty.spellsText'),
           action: { label: t('empty.addSpell'), handler: 'addSpell', icon: '➕' }
@@ -35386,7 +35798,7 @@ Actions:
           action: null
         },
         map: {
-          icon: '🗺️',
+          icon: '🗺️',
           title: t('empty.mapTitle'),
           text: t('empty.mapText'),
           action: { label: t('empty.uploadMap'), handler: 'triggerMapUpload', icon: '📤' }
@@ -38058,7 +38470,7 @@ Actions:
           const enhanceBtn = document.createElement('button');
           enhanceBtn.className = 'system-enhance-btn';
           enhanceBtn.type = 'button';
-          enhanceBtn.textContent = '← ';
+          enhanceBtn.textContent = '←Â ';
           enhanceBtn.title = 'Add system data: ' + enhancements.weapons[i].fields.join(', ');
           enhanceBtn.dataset.action = 'weapon-system-enhance';
           enhanceBtn.dataset.index = String(i);
@@ -38092,7 +38504,7 @@ Actions:
           
           const iconSpan = document.createElement('span');
           iconSpan.className = 'weapon-mobile-icon';
-          iconSpan.textContent = '⚠️';
+          iconSpan.textContent = '⚠ï¸Â';
           
           const nameSpan = document.createElement('span');
           nameSpan.className = 'weapon-mobile-name';
@@ -38322,7 +38734,7 @@ Actions:
         } else if (is2024) {
           effectText = `−${exLvl * 2} d20, −${exLvl * 5} ft`;
         } else {
-          const effects2014Short = ['Disadv checks', 'Speed ½', 'Disadv atk/saves', 'HP max ½', 'Speed 0'];
+          const effects2014Short = ['Disadv checks', 'Speed Â½', 'Disadv atk/saves', 'HP max Â½', 'Speed 0'];
           effectText = effects2014Short.slice(0, exLvl).join(', ');
         }
         
@@ -38598,7 +39010,7 @@ Actions:
           const enhanceBtn = document.createElement('button');
           enhanceBtn.className = 'system-enhance-btn';
           enhanceBtn.type = 'button';
-          enhanceBtn.textContent = '←  Enhance';
+          enhanceBtn.textContent = '←Â  Enhance';
           enhanceBtn.title = 'Add system data: ' + enhancements.spells[i].fields.join(', ');
           enhanceBtn.dataset.action = 'spell-system-enhance';
           enhanceBtn.dataset.index = String(i);
@@ -38849,10 +39261,10 @@ Actions:
         d.spellDetailName.textContent = spell.name || 'Unnamed Spell';
       }
       if (d.spellDetailCast) {
-        d.spellDetailCast.textContent = spell.cast || '"—';
+        d.spellDetailCast.textContent = spell.cast || '"—Â';
       }
       if (d.spellDetailRange) {
-        d.spellDetailRange.textContent = spell.range || '"—';
+        d.spellDetailRange.textContent = spell.range || '"—Â';
       }
       
       // Tags
@@ -38989,7 +39401,7 @@ Actions:
         d.weaponDetailAtk.textContent = atk.startsWith('+') || atk.startsWith('-') ? atk : `+${atk}`;
       }
       if (d.weaponDetailDmg) {
-        d.weaponDetailDmg.textContent = weapon.dmg || '"—';
+        d.weaponDetailDmg.textContent = weapon.dmg || '"—Â';
       }
       
       // Notes
@@ -39382,7 +39794,7 @@ Actions:
           const skillObj = SKILLS.find(s => s.k === sk);
           return skillObj ? skillObj.n : sk;
         });
-        d.bgSummarySkills.textContent = skillNames.join(', ') || '"—';
+        d.bgSummarySkills.textContent = skillNames.join(', ') || '"—Â';
       }
       
       // Tools summary
@@ -39398,7 +39810,7 @@ Actions:
         if (toolSelect && toolSelect.value) {
           tools.push(toolSelect.value);
         }
-        d.bgSummaryTools.textContent = tools.length > 0 ? tools.join(', ') : '"—';
+        d.bgSummaryTools.textContent = tools.length > 0 ? tools.join(', ') : '"—Â';
       }
       
       // Languages summary
@@ -39412,7 +39824,7 @@ Actions:
         if (langs.length === 0 && langCount > 0) {
           d.bgSummaryLangs.textContent = `Choose ${langCount}`;
         } else {
-          d.bgSummaryLangs.textContent = langs.length > 0 ? langs.join(', ') : '"—';
+          d.bgSummaryLangs.textContent = langs.length > 0 ? langs.join(', ') : '"—Â';
         }
       }
       
@@ -41496,7 +41908,7 @@ Actions:
       item.dataset.addonId = addon.id;
       
       // P0-4: Get truncated hash if available (async computed separately)
-      const shortHash = addon.hash ? addon.hash.slice(0, 8) : '"—';
+      const shortHash = addon.hash ? addon.hash.slice(0, 8) : '"—Â';
       
       item.innerHTML = `
         <div class="pa-addon-icon">&#x1F9E9;</div>
@@ -41505,7 +41917,7 @@ Actions:
           <div class="pa-addon-meta">
             <span class="pa-addon-version">v${this.escapeHtml(addon.version)}</span>
             ${addon.author ? `<span class="pa-addon-author">by ${this.escapeHtml(addon.author)}</span>` : ''}
-            <span class="pa-addon-hash" title="SHA-256 hash (first 8 chars): ${shortHash}">🔑 ${shortHash}</span>
+            <span class="pa-addon-hash" title="SHA-256 hash (first 8 chars): ${shortHash}">📍‘ ${shortHash}</span>
           </div>
           ${addon.lastError ? `<div class="pa-addon-error" style="color:#f88;font-size:0.75rem;">Error: ${this.escapeHtml(addon.lastError)}</div>` : ''}
         </div>
@@ -41559,7 +41971,7 @@ Actions:
           // Update the hash display in the DOM
           const hashEl = itemElement.querySelector('.pa-addon-hash');
           if (hashEl) {
-            hashEl.textContent = '🔑 ' + shortHash;
+            hashEl.textContent = '📍‘ ' + shortHash;
             hashEl.title = `SHA-256: ${hash}`;
           }
           
@@ -41693,6 +42105,94 @@ Actions:
     // Section H/6: Install Addon (File Picker)
     // =========================
     
+    // v7.1.0: Show security warning modal before installing addon
+    async showAddonSecurityWarning(file) {
+      return new Promise((resolve) => {
+        const modal = document.getElementById('addonSecurityModal');
+        const fileNameEl = document.getElementById('addonSecurityFileName');
+        const fileSizeEl = document.getElementById('addonSecurityFileSize');
+        const checkbox = document.getElementById('addonSecurityCheckbox');
+        const installBtn = document.getElementById('addonSecurityInstall');
+        const cancelBtn = document.getElementById('addonSecurityCancel');
+        
+        if (!modal) {
+          // Fallback to basic confirm if modal not found
+          const confirmed = confirm(
+            '⚠️ SECURITY WARNING\n\n' +
+            'Addons can run arbitrary code and access your character data.\n' +
+            'Only install addons from sources you trust.\n\n' +
+            `Install "${file.name}"?`
+          );
+          resolve(confirmed);
+          return;
+        }
+        
+        // Set file info
+        if (fileNameEl) fileNameEl.textContent = file.name;
+        if (fileSizeEl) {
+          const sizeKB = Math.round(file.size / 1024);
+          fileSizeEl.textContent = sizeKB > 1024 
+            ? `${(sizeKB / 1024).toFixed(1)} MB`
+            : `${sizeKB} KB`;
+        }
+        
+        // Reset checkbox and button state
+        if (checkbox) checkbox.checked = false;
+        if (installBtn) installBtn.classList.remove('enabled');
+        
+        // Checkbox enables install button
+        const onCheckboxChange = () => {
+          if (installBtn) {
+            installBtn.classList.toggle('enabled', checkbox?.checked);
+          }
+        };
+        checkbox?.addEventListener('change', onCheckboxChange);
+        
+        // Clean up function
+        const cleanup = () => {
+          checkbox?.removeEventListener('change', onCheckboxChange);
+          if (modal.close) modal.close();
+          else modal.removeAttribute('open');
+        };
+        
+        // Install button
+        const onInstall = () => {
+          if (!checkbox?.checked) return;
+          cleanup();
+          resolve(true);
+        };
+        installBtn?.addEventListener('click', onInstall, { once: true });
+        
+        // Cancel button
+        const onCancel = () => {
+          cleanup();
+          resolve(false);
+        };
+        cancelBtn?.addEventListener('click', onCancel, { once: true });
+        
+        // ESC key / backdrop click
+        const onKeyDown = (e) => {
+          if (e.key === 'Escape') {
+            cleanup();
+            resolve(false);
+          }
+        };
+        modal.addEventListener('keydown', onKeyDown);
+        
+        const onBackdropClick = (e) => {
+          if (e.target === modal) {
+            cleanup();
+            resolve(false);
+          }
+        };
+        modal.addEventListener('click', onBackdropClick);
+        
+        // Show modal
+        if (modal.showModal) modal.showModal();
+        else modal.setAttribute('open', '');
+      });
+    }
+    
     // Section H/6: Initialize install file input listener
     initAddonsInstallInput() {
       const input = this.dom.addonsInstallInput || document.getElementById('addonsInstallInput');
@@ -41704,6 +42204,13 @@ Actions:
         
         // Reset input so same file can be re-selected
         /** @type {HTMLInputElement} */(e.target).value = '';
+        
+        // v7.1.0: Show security warning before installing
+        const confirmed = await this.showAddonSecurityWarning(file);
+        if (!confirmed) {
+          console.log('[PlayerAlmanac] Addon installation cancelled by user');
+          return;
+        }
         
         try {
           await this.installAddonFromFile(file);
@@ -41956,7 +42463,7 @@ Actions:
         
         // Show security warning
         const warningMsg = 
-          `⚠️ SECURITY WARNING\n\n` +
+          `⚠ï¸ SECURITY WARNING\n\n` +
           `Addons can run code and access your character data.\n\n` +
           `Addon: ${addon.name}\n` +
           `Version: ${addon.version || 'unknown'}\n` +
@@ -42631,8 +43138,11 @@ console.log('[PA Addon] Host API bridge initialized for addon:', window.PA.addon
     }
 
     // Section 12/7: Check and display storage status
+    // v7.1.0: Enhanced storage status messages for better user understanding
     checkBootStorageStatus() {
       if (!this.dom.bootStorageStatus) return;
+      
+      const el = this.dom.bootStorageStatus;
       
       try {
         // Try writing and reading a test value
@@ -42648,12 +43158,39 @@ console.log('[PA Addon] Host API bridge initialized for addon:', window.PA.addon
           }
         }
         const usedKB = Math.round(usedBytes / 1024);
+        const usedMB = (usedKB / 1024).toFixed(1);
         
-        this.dom.bootStorageStatus.textContent = `OK \u2022 ${usedKB}KB used`;
-        this.dom.bootStorageStatus.classList.remove('error');
+        // v7.1.0: Clearer status messages
+        // Most browsers allow ~5-10MB for localStorage
+        if (usedKB < 100) {
+          el.textContent = `✅ Local storage available`;
+          el.style.color = '#22c55e';
+        } else if (usedKB < 2048) {
+          el.textContent = `✅ ${usedKB < 1024 ? usedKB + 'KB' : usedMB + 'MB'} used`;
+          el.style.color = '#22c55e';
+        } else if (usedKB < 4096) {
+          el.textContent = `⚠️ ${usedMB}MB used (consider backup)`;
+          el.style.color = '#eab308';
+        } else {
+          el.textContent = `⚠️ Low space: ${usedMB}MB used`;
+          el.style.color = '#f97316';
+        }
+        el.classList.remove('error');
       } catch (e) {
-        this.dom.bootStorageStatus.textContent = 'Storage unavailable';
-        this.dom.bootStorageStatus.classList.add('error');
+        // Check if this might be private browsing
+        const isPrivate = e.name === 'QuotaExceededError' || 
+                          (e.name === 'NS_ERROR_DOM_QUOTA_REACHED' || 
+                           e.name === 'QUOTA_EXCEEDED_ERR');
+        
+        if (isPrivate || navigator.cookieEnabled === false) {
+          el.textContent = '⚠️ Private browsing may block saving';
+          el.style.color = '#f97316';
+        } else {
+          el.textContent = '❌ Storage unavailable';
+          el.style.color = '#ef4444';
+        }
+        el.classList.add('error');
+        console.warn('[Storage] Status check failed:', e);
       }
     }
 
@@ -43637,7 +44174,7 @@ console.log('[PA Addon] Host API bridge initialized for addon:', window.PA.addon
         boot.innerHTML = `
           <div class="boot-error-modal" style="display:flex !important; position:fixed; inset:0; z-index:99999; background:rgba(0,0,0,0.95); align-items:center; justify-content:center;">
             <div style="background:rgba(30,30,40,0.98); border:1px solid rgba(255,255,255,0.1); border-radius:12px; padding:32px; max-width:500px; text-align:center; font-family:system-ui,sans-serif; color:#eee;">
-              <div style="font-size:48px; margin-bottom:16px;">⚠️</div>
+              <div style="font-size:48px; margin-bottom:16px;">⚠ï¸</div>
               <h2 style="margin:0 0 16px; font-size:1.3rem;">Player Almanac Failed to Start</h2>
               <p style="color:#aaa; margin-bottom:24px; line-height:1.5;">A critical error occurred during startup. Your character data may still be recoverable.</p>
               <div style="background:rgba(0,0,0,0.3); border-radius:6px; padding:12px; margin-bottom:24px; text-align:left; font-family:monospace; font-size:0.75rem; color:#f88; max-height:100px; overflow:auto;">
@@ -43646,7 +44183,7 @@ console.log('[PA Addon] Host API bridge initialized for addon:', window.PA.addon
               <div style="display:flex; gap:12px; flex-wrap:wrap; justify-content:center;">
                 <button onclick="window.__PA_EMERGENCY_EXPORT?.()" style="padding:12px 20px; border:1px solid #5a5; background:rgba(90,170,90,0.2); color:#8f8; border-radius:8px; cursor:pointer; font-weight:600;">💾 Export All Data</button>
                 <button onclick="location.reload()" style="padding:12px 20px; border:1px solid #888; background:rgba(255,255,255,0.05); color:#fff; border-radius:8px; cursor:pointer;">🔄 Retry</button>
-                <button onclick="if(confirm(t('confirm.deleteAllData'))){localStorage.clear();indexedDB.deleteDatabase('PlayerAlmanacPortraits');location.reload()}" style="padding:12px 20px; border:1px solid #a55; background:rgba(170,90,90,0.2); color:#f88; border-radius:8px; cursor:pointer;">🗑️ Reset All</button>
+                <button onclick="if(confirm(t('confirm.deleteAllData'))){localStorage.clear();indexedDB.deleteDatabase('PlayerAlmanacPortraits');location.reload()}" style="padding:12px 20px; border:1px solid #a55; background:rgba(170,90,90,0.2); color:#f88; border-radius:8px; cursor:pointer;">🗑ï¸ Reset All</button>
               </div>
             </div>
           </div>
@@ -43656,7 +44193,7 @@ console.log('[PA Addon] Host API bridge initialized for addon:', window.PA.addon
       }
     } catch (fallbackErr) {
       // Absolute last resort - at least show something
-      document.body.innerHTML = '<div style="padding:40px;text-align:center;font-family:sans-serif;color:#fff;background:#111;min-height:100vh;"><h1>⚠️ Player Almanac Error</h1><p>A critical error occurred. Please refresh or clear browser data.</p><pre style="color:#f88;margin:20px auto;max-width:600px;text-align:left;">' + String(err) + '</pre><button onclick="location.reload()" style="padding:12px 24px;font-size:16px;cursor:pointer;">Reload</button></div>';
+      document.body.innerHTML = '<div style="padding:40px;text-align:center;font-family:sans-serif;color:#fff;background:#111;min-height:100vh;"><h1>⚠ï¸ Player Almanac Error</h1><p>A critical error occurred. Please refresh or clear browser data.</p><pre style="color:#f88;margin:20px auto;max-width:600px;text-align:left;">' + String(err) + '</pre><button onclick="location.reload()" style="padding:12px 24px;font-size:16px;cursor:pointer;">Reload</button></div>';
     }
   };
 
@@ -45147,6 +45684,117 @@ END OF ZNAL v1.1</pre>
 </dialog>
 
 <!-- =============================================
+     v7.1.0: DATA & PRIVACY DIALOG
+     ============================================= -->
+<dialog class="privacy-dialog" id="privacyDialog" aria-labelledby="privacyTitle">
+  <div class="privacy-dialog-inner">
+    <header class="privacy-header">
+      <h2 class="privacy-title" id="privacyTitle">&#x1F512; Data &amp; Privacy</h2>
+      <button class="privacy-close-btn" id="privacyCloseBtn" type="button" aria-label="Close">&times;</button>
+    </header>
+    <div class="privacy-body">
+      
+      <!-- Summary Box -->
+      <div class="privacy-summary">
+        <div class="privacy-summary-title">&#x2705; Your Data Stays With You</div>
+        <div class="privacy-summary-text">
+          Player Almanac runs entirely in your browser. No servers, no accounts, no tracking &mdash; just you and your character sheets.
+        </div>
+      </div>
+      
+      <!-- Privacy Items -->
+      <div class="privacy-item">
+        <div class="privacy-icon">&#x1F3E0;</div>
+        <div class="privacy-item-content">
+          <div class="privacy-item-title" data-i18n="privacy.localTitle">Runs Locally in Your Browser</div>
+          <div class="privacy-item-desc" data-i18n="privacy.localDesc">The entire application runs on your device. No data is sent to any server. Works fully offline.</div>
+        </div>
+      </div>
+      
+      <div class="privacy-item">
+        <div class="privacy-icon">&#x1F464;</div>
+        <div class="privacy-item-content">
+          <div class="privacy-item-title" data-i18n="privacy.noAccountTitle">No Account Required</div>
+          <div class="privacy-item-desc" data-i18n="privacy.noAccountDesc">Start using immediately. No registration, no login, no email collection.</div>
+        </div>
+      </div>
+      
+      <div class="privacy-item">
+        <div class="privacy-icon">&#x1F4CA;</div>
+        <div class="privacy-item-content">
+          <div class="privacy-item-title" data-i18n="privacy.noTrackingTitle">No Analytics or Tracking</div>
+          <div class="privacy-item-desc" data-i18n="privacy.noTrackingDesc">Zero telemetry. No usage data collected. No third-party analytics scripts.</div>
+        </div>
+      </div>
+      
+      <div class="privacy-item">
+        <div class="privacy-icon">&#x1F4BE;</div>
+        <div class="privacy-item-content">
+          <div class="privacy-item-title" data-i18n="privacy.localStorageTitle">Browser Storage Only</div>
+          <div class="privacy-item-desc" data-i18n="privacy.localStorageDesc">Characters saved to your browser's local storage. Export files save directly to your device.</div>
+        </div>
+      </div>
+      
+      <div class="privacy-item">
+        <div class="privacy-icon">&#x1F5D1;</div>
+        <div class="privacy-item-content">
+          <div class="privacy-item-title" data-i18n="privacy.clearDataTitle">Clearing Site Data Erases Characters</div>
+          <div class="privacy-item-desc" data-i18n="privacy.clearDataDesc">If you clear your browser's site data, your characters will be deleted. Use Export to create backups.</div>
+        </div>
+      </div>
+      
+      <div class="privacy-item">
+        <div class="privacy-icon">&#x1F512;</div>
+        <div class="privacy-item-content">
+          <div class="privacy-item-title" data-i18n="privacy.openSourceTitle">Open Source &amp; Inspectable</div>
+          <div class="privacy-item-desc" data-i18n="privacy.openSourceDesc">The entire source code is in a single HTML file. You can verify these claims yourself.</div>
+        </div>
+      </div>
+      
+    </div>
+    <div class="privacy-footer">
+      <div class="privacy-footer-text">
+        Questions? See <a href="#" id="privacyToCredits">About/Credits</a> for contact information.
+      </div>
+    </div>
+  </div>
+</dialog>
+
+<!-- =============================================
+     v7.1.0: ADDON SECURITY WARNING MODAL  
+     ============================================= -->
+<dialog class="addon-security-modal" id="addonSecurityModal" aria-labelledby="addonSecurityTitle">
+  <div class="addon-security-inner">
+    <div class="addon-security-header">
+      <span class="addon-security-icon">&#x26A0;&#xFE0F;</span>
+      <span class="addon-security-title" id="addonSecurityTitle">Security Warning</span>
+    </div>
+    <div class="addon-security-body">
+      <p class="addon-security-warning" data-i18n="addonSecurity.warning">
+        <strong>Addons can run arbitrary code</strong> and access your character data. 
+        Only install addons from sources you trust. Malicious addons could steal or corrupt your data.
+      </p>
+      
+      <div class="addon-security-file">
+        <div class="addon-security-file-label">File to install:</div>
+        <div class="addon-security-file-name" id="addonSecurityFileName">filename.html</div>
+        <div class="addon-security-file-size" id="addonSecurityFileSize">0 KB</div>
+      </div>
+      
+      <label class="addon-security-checkbox" id="addonSecurityCheckboxLabel">
+        <input type="checkbox" id="addonSecurityCheckbox">
+        <span class="addon-security-checkbox-text" data-i18n="addonSecurity.acknowledge">I understand the risks and trust this addon source</span>
+      </label>
+      
+      <div class="addon-security-actions">
+        <button class="addon-security-btn addon-security-btn-cancel" id="addonSecurityCancel" type="button" data-i18n="addonSecurity.cancel">Cancel</button>
+        <button class="addon-security-btn addon-security-btn-install" id="addonSecurityInstall" type="button" data-i18n="addonSecurity.install">Install Addon</button>
+      </div>
+    </div>
+  </div>
+</dialog>
+
+<!-- =============================================
      FOOTER & CREDITS JAVASCRIPT
      ============================================= -->
 <script>
@@ -45269,11 +45917,99 @@ END OF ZNAL v1.1</pre>
     }
   }
   
+  // v7.1.0: Privacy dialog open/close
+  function setupPrivacyDialog() {
+    const dialog = document.getElementById('privacyDialog');
+    const closeBtn = document.getElementById('privacyCloseBtn');
+    const toCreditsLink = document.getElementById('privacyToCredits');
+    
+    if (!dialog) {
+      console.warn('[Privacy] Dialog element not found');
+      return;
+    }
+    
+    // Helper to open dialog
+    window.openPrivacyDialog = function() {
+      console.log('[Privacy] Opening dialog');
+      // Close any open mobile menu modals first
+      const mobileModal = document.getElementById('mobileMenuModal');
+      if (mobileModal) {
+        mobileModal.remove();
+        document.body.classList.remove('mobile-menu-open');
+      }
+      
+      if (dialog.showModal) {
+        dialog.showModal();
+      } else {
+        dialog.setAttribute('open', '');
+      }
+    };
+    
+    // Helper to close dialog
+    function closeDialog() {
+      console.log('[Privacy] Closing dialog');
+      if (dialog.close) {
+        dialog.close();
+      } else {
+        dialog.removeAttribute('open');
+      }
+    }
+    
+    // Event delegation for open buttons
+    document.addEventListener('click', function(e) {
+      const target = e.target.closest('#privacyBtn, #bootPrivacyBtn, .privacy-link');
+      if (target) {
+        e.preventDefault();
+        e.stopPropagation();
+        const mobileModal = document.getElementById('mobileMenuModal');
+        if (mobileModal) {
+          mobileModal.remove();
+          document.body.classList.remove('mobile-menu-open');
+        }
+        window.openPrivacyDialog();
+      }
+    }, true);
+    
+    // Close button
+    if (closeBtn) {
+      closeBtn.addEventListener('click', closeDialog);
+    }
+    
+    // Link to credits from privacy dialog
+    if (toCreditsLink) {
+      toCreditsLink.addEventListener('click', function(e) {
+        e.preventDefault();
+        closeDialog();
+        const creditsDialog = document.getElementById('creditsDialog');
+        if (creditsDialog && creditsDialog.showModal) {
+          creditsDialog.showModal();
+        }
+      });
+    }
+    
+    // Close on backdrop click
+    dialog.addEventListener('click', function(e) {
+      if (e.target === dialog) {
+        closeDialog();
+      }
+    });
+    
+    // ESC key closes dialog
+    dialog.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') {
+        closeDialog();
+      }
+    });
+    
+    console.log('[Privacy] Dialog setup complete');
+  }
+  
   // Initialize
   function init() {
     updateYears();
     updateLinkBack();
     setupCreditsDialog();
+    setupPrivacyDialog();
     console.log('[Credits] Footer and About/Credits system initialized');
   }
   
@@ -45429,7 +46165,7 @@ END OF ZNAL v1.1</pre>
         box-shadow: 0 2px 8px rgba(0,0,0,0.3);
       `;
       banner.innerHTML = `
-        <strong>⚠️ Offline Build Check Failed</strong> "— 
+        <strong>&#x26A0;&#xFE0F; Offline Build Check Failed</strong> &mdash; 
         This build requires internet for: ${foundDeps.join(', ')}.
         <button onclick="this.parentElement.remove()" style="
           margin-left: 16px;
