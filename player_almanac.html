@@ -34273,7 +34273,7 @@ Actions:
       
       // Update inspector title
       if (this.dom.mapRouteInspectorTitle) {
-        this.dom.mapRouteInspectorTitle.textContent = 'ðŸ“ ' + (route.name || 'Route');
+        this.dom.mapRouteInspectorTitle.textContent = '📍 ' + (route.name || 'Route');
       }
       
       // Populate fields
@@ -34326,7 +34326,7 @@ Actions:
       if (this._selectedPinId) {
         // Pin selected - show pin inspector
         showPanels(panelPinInspector);
-        if (contextIcon) contextIcon.textContent = 'ðŸ“';
+        if (contextIcon) contextIcon.textContent = '📍';
         if (contextText) contextText.textContent = 'Pin Inspector';
         return;
       }
@@ -34334,7 +34334,7 @@ Actions:
       if (this._selectedRouteId) {
         // Route selected - show route inspector
         showPanels(panelRouteInspector);
-        if (contextIcon) contextIcon.textContent = 'ðŸ“';
+        if (contextIcon) contextIcon.textContent = '📍';
         if (contextText) contextText.textContent = 'Route Inspector';
         return;
       }
@@ -34345,7 +34345,7 @@ Actions:
       if (tool === 'scale') {
         // Scale tool - show scale panel prominently with map settings
         showPanels(panelScale, panelCampaign, panelMap);
-        if (contextIcon) contextIcon.textContent = 'ðŸ“';
+        if (contextIcon) contextIcon.textContent = '📍';
         if (contextText) contextText.textContent = 'Scale Calibration';
         return;
       }
@@ -34353,7 +34353,7 @@ Actions:
       if (tool === 'route') {
         // Route tool - show route panel with instructions
         showPanels(panelRoutes, panelCampaign, panelMap);
-        if (contextIcon) contextIcon.textContent = 'ðŸ“';
+        if (contextIcon) contextIcon.textContent = '📍';
         if (contextText) contextText.textContent = 'Route Planning';
         return;
       }
@@ -34361,7 +34361,7 @@ Actions:
       if (tool === 'pin') {
         // Pin tool - show pins browser with map settings
         showPanels(panelPins, panelCampaign, panelMap);
-        if (contextIcon) contextIcon.textContent = 'ðŸ“';
+        if (contextIcon) contextIcon.textContent = '📍';
         if (contextText) contextText.textContent = 'Pins Browser';
         return;
       }
@@ -34369,14 +34369,14 @@ Actions:
       if (tool === 'origin' || tool === 'lastseen') {
         // Origin/LastSeen tool - show origin settings with map settings
         showPanels(panelOrigin, panelCampaign, panelMap);
-        if (contextIcon) contextIcon.textContent = tool === 'origin' ? 'ðŸ“' : 'ðŸ“Œ';
+        if (contextIcon) contextIcon.textContent = tool === 'origin' ? '📍' : '📌';
         if (contextText) contextText.textContent = tool === 'origin' ? 'Place Origin' : 'Mark Last Seen';
         return;
       }
       
       // Default context - show map settings overview
       showPanels(panelCampaign, panelMap, panelScale, panelPins, panelRoutes);
-      if (contextIcon) contextIcon.textContent = 'ðŸ“';
+      if (contextIcon) contextIcon.textContent = '📍';
       if (contextText) contextText.textContent = 'Map Settings';
     }
     
@@ -34398,7 +34398,7 @@ Actions:
       
       // Update inspector title
       if (this.dom.mapRouteInspectorTitle) {
-        this.dom.mapRouteInspectorTitle.textContent = 'ðŸ“ ' + route.name;
+        this.dom.mapRouteInspectorTitle.textContent = '📍 ' + route.name;
       }
       
       // Re-render
@@ -34768,7 +34768,7 @@ Actions:
       // Update inspector title
       if (this.dom.mapPinInspectorTitle) {
         const pinIcons = { origin: '\uD83C\uDFE0', last_seen: '\uD83D\uDC64', town: '\uD83C\uDFD8\uFE0F', city: '\uD83C\uDFF0', dungeon: '\u2694\uFE0F', landmark: '\uD83D\uDDFF', quest: '\u2757', shop: '\uD83D\uDED2', tavern: '\uD83C\uDF7A', temple: '\u26EA', location: '\uD83D\uDCCD' };
-        this.dom.mapPinInspectorTitle.textContent = (pinIcons[pin.type] || 'ðŸ“') + ' ' + (pin.name || 'Pin');
+        this.dom.mapPinInspectorTitle.textContent = (pinIcons[pin.type] || '📍') + ' ' + (pin.name || 'Pin');
       }
       
       // Populate fields
@@ -34806,7 +34806,7 @@ Actions:
       // Update title
       if (this.dom.mapPinInspectorTitle) {
         const pinIcons = { origin: '\uD83C\uDFE0', last_seen: '\uD83D\uDC64', town: '\uD83C\uDFD8\uFE0F', city: '\uD83C\uDFF0', dungeon: '\u2694\uFE0F', landmark: '\uD83D\uDDFF', quest: '\u2757', shop: '\uD83D\uDED2', tavern: '\uD83C\uDF7A', temple: '\u26EA', location: '\uD83D\uDCCD' };
-        this.dom.mapPinInspectorTitle.textContent = (pinIcons[pin.type] || 'ðŸ“') + ' ' + pin.name;
+        this.dom.mapPinInspectorTitle.textContent = (pinIcons[pin.type] || '📍') + ' ' + pin.name;
       }
       
       this.renderMapPins();
@@ -37119,7 +37119,7 @@ Actions:
         <div class="roll-breakdown">d20(${roll}) ${modStr}</div>
         <div class="roll-name">${escapeHtml(name)}</div>
         ${isCrit ? '<div class="crit-label">&#x2728; CRITICAL!</div>' : ''}
-        ${isFumble ? '<div class="fumble-label">ðŸ’€ FUMBLE</div>' : ''}
+        ${isFumble ? '<div class="fumble-label">👀 FUMBLE</div>' : ''}
       `;
 
       document.body.appendChild(toast);
@@ -39601,7 +39601,7 @@ Actions:
           
           const iconSpan = document.createElement('span');
           iconSpan.className = 'equip-mobile-icon';
-          iconSpan.textContent = 'ðŸ“¦';
+          iconSpan.textContent = '📦';
           
           const nameSpan = document.createElement('span');
           nameSpan.className = 'equip-mobile-name';
@@ -39803,7 +39803,7 @@ Actions:
             <div class="boot-error-details" id="bootErrorDetails"></div>
             <div class="boot-error-actions">
               <button type="button" class="boot-error-btn boot-error-primary" id="bootErrorExport">&#x1F4BE; Export All Data</button>
-                <button onclick="location.reload()" style="padding:12px 20px; border:1px solid #888; background:rgba(255,255,255,0.05); color:#fff; border-radius:8px; cursor:pointer;">ðŸ”„ Retry</button>
+                <button onclick="location.reload()" style="padding:12px 20px; border:1px solid #888; background:rgba(255,255,255,0.05); color:#fff; border-radius:8px; cursor:pointer;">🔄 Retry</button>
               <button type="button" class="boot-error-btn" id="bootErrorNew">&#x2728; Start New</button>
               <button type="button" class="boot-error-btn" id="bootErrorImport">&#x1F4C2; Import</button>
               <button type="button" class="boot-error-btn boot-error-danger" id="bootErrorReset">&#x1F5D1;&#xFE0F; Reset Storage</button>
@@ -40146,7 +40146,7 @@ Actions:
       modal.setAttribute('aria-modal', 'true');
       modal.innerHTML = `
         <div class="boot-error-content" style="max-width: 480px;">
-          <div class="boot-error-icon">ðŸ’¾</div>
+          <div class="boot-error-icon">💾</div>
           <h2 class="boot-error-title">Storage Full - Save Failed!</h2>
           <p class="boot-error-message">
             Your character data couldn't be saved because browser storage is full.
@@ -40156,7 +40156,7 @@ Actions:
             Storage used: ~${Math.round((stats?.used || 0) / 1024)}KB
           </div>
           <div class="boot-error-actions" style="margin-top: 20px;">
-            <button type="button" class="boot-error-btn boot-error-primary" id="exportNowBtn">ðŸ’¾ Export All Now</button>
+            <button type="button" class="boot-error-btn boot-error-primary" id="exportNowBtn">💾 Export All Now</button>
             <button type="button" class="boot-error-btn" id="exportNowDismiss">Dismiss</button>
           </div>
           <p style="font-size: 0.75rem; color: var(--text-muted); margin-top: 16px;">
@@ -41505,7 +41505,7 @@ Actions:
           <div class="pa-addon-meta">
             <span class="pa-addon-version">v${this.escapeHtml(addon.version)}</span>
             ${addon.author ? `<span class="pa-addon-author">by ${this.escapeHtml(addon.author)}</span>` : ''}
-            <span class="pa-addon-hash" title="SHA-256 hash (first 8 chars): ${shortHash}">ðŸ”’ ${shortHash}</span>
+            <span class="pa-addon-hash" title="SHA-256 hash (first 8 chars): ${shortHash}">🔑 ${shortHash}</span>
           </div>
           ${addon.lastError ? `<div class="pa-addon-error" style="color:#f88;font-size:0.75rem;">Error: ${this.escapeHtml(addon.lastError)}</div>` : ''}
         </div>
@@ -41559,7 +41559,7 @@ Actions:
           // Update the hash display in the DOM
           const hashEl = itemElement.querySelector('.pa-addon-hash');
           if (hashEl) {
-            hashEl.textContent = 'ðŸ”’ ' + shortHash;
+            hashEl.textContent = '🔑 ' + shortHash;
             hashEl.title = `SHA-256: ${hash}`;
           }
           
@@ -43644,9 +43644,9 @@ console.log('[PA Addon] Host API bridge initialized for addon:', window.PA.addon
                 ${String(err?.message || err || 'Unknown error')}
               </div>
               <div style="display:flex; gap:12px; flex-wrap:wrap; justify-content:center;">
-                <button onclick="window.__PA_EMERGENCY_EXPORT?.()" style="padding:12px 20px; border:1px solid #5a5; background:rgba(90,170,90,0.2); color:#8f8; border-radius:8px; cursor:pointer; font-weight:600;">ðŸ’¾ Export All Data</button>
-                <button onclick="location.reload()" style="padding:12px 20px; border:1px solid #888; background:rgba(255,255,255,0.05); color:#fff; border-radius:8px; cursor:pointer;">ðŸ”„ Retry</button>
-                <button onclick="if(confirm(t('confirm.deleteAllData'))){localStorage.clear();indexedDB.deleteDatabase('PlayerAlmanacPortraits');location.reload()}" style="padding:12px 20px; border:1px solid #a55; background:rgba(170,90,90,0.2); color:#f88; border-radius:8px; cursor:pointer;">ðŸ—‘ï¸ Reset All</button>
+                <button onclick="window.__PA_EMERGENCY_EXPORT?.()" style="padding:12px 20px; border:1px solid #5a5; background:rgba(90,170,90,0.2); color:#8f8; border-radius:8px; cursor:pointer; font-weight:600;">💾 Export All Data</button>
+                <button onclick="location.reload()" style="padding:12px 20px; border:1px solid #888; background:rgba(255,255,255,0.05); color:#fff; border-radius:8px; cursor:pointer;">🔄 Retry</button>
+                <button onclick="if(confirm(t('confirm.deleteAllData'))){localStorage.clear();indexedDB.deleteDatabase('PlayerAlmanacPortraits');location.reload()}" style="padding:12px 20px; border:1px solid #a55; background:rgba(170,90,90,0.2); color:#f88; border-radius:8px; cursor:pointer;">🗑️ Reset All</button>
               </div>
             </div>
           </div>
@@ -44211,7 +44211,7 @@ console.log('[PA Addon] Host API bridge initialized for addon:', window.PA.addon
 <!-- PDF Print Sheet Container -->
 <div id="printSheet">
   <button class="ps-close" id="printSheetClose" type="button" onclick="window.__PA_INSTANCE && window.__PA_INSTANCE.closePrintSheet()">&#x2715; Close</button>
-  <button class="ps-print-btn" id="printSheetPrint" type="button" onclick="window.print()">ðŸ–¨ï¸ Print / Save PDF</button>
+  <button class="ps-print-btn" id="printSheetPrint" type="button" onclick="window.print()">🖨️ Print / Save PDF</button>
   <div class="ps-page" id="printSheetContent">
     <!-- Content populated by JavaScript -->
   </div>
@@ -44826,7 +44826,7 @@ console.log('[PA Addon] Host API bridge initialized for addon:', window.PA.addon
         </p>
         <p class="credits-text" style="margin-top: 8px;">
           For commercial licensing inquiries:<br>
-          <a href="/cdn-cgi/l/email-protection#402b392c252d212424252e213200272d21292c6e232f2d"><span class="__cf_email__" data-cfemail="8de6f4e1e8e0ece9e9e8e3ecffcdeae0ece4e1a3eee2e0">[email&#160;protected]</span></a>
+          <a href="mailto:kylemaddenar@gmail.com">kylemaddenar@gmail.com</a>
         </p>
       </div>
       
@@ -44873,7 +44873,7 @@ console.log('[PA Addon] Host API bridge initialized for addon:', window.PA.addon
 Copyright (c) 2025 Zagreous
 
 Official project page: https://github.com/Kylemaddenar/player-almanac
-Commercial licensing contact: <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="b9d2c0d5dcd4d8dddddcd7d8cbf9ded4d8d0d597dad6d4">[email&#160;protected]</a>
+Commercial licensing contact: kylemaddenar@gmail.com
 
 TERMS AND CONDITIONS
 
@@ -45083,7 +45083,7 @@ You must:
 5. COMMERCIAL LICENSING
 
 For Commercial Use permissions, contact:
-<a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="573c2e3b323a3633333239362517303a363e3b7934383a">[email&#160;protected]</a>
+kylemaddenar@gmail.com
 
 6. THIRD-PARTY MATERIALS
 
@@ -45149,7 +45149,7 @@ END OF ZNAL v1.1</pre>
 <!-- =============================================
      FOOTER & CREDITS JAVASCRIPT
      ============================================= -->
-<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+<script>
 /*
  * Player Almanac by Zagreous
  * ZNAL v1.1 (Noncommercial, Attribution + Link-back Required)
@@ -45348,10 +45348,17 @@ END OF ZNAL v1.1</pre>
   
   // Check for remaining external URLs in the document
   const html = document.documentElement.outerHTML;
+  
+  // Build patterns dynamically to avoid self-matching
+  // (the validator script itself would otherwise match these patterns)
+  const gFonts = 'fonts.google' + 'apis.com';
+  const cdnJS = 'cdn' + 'js.cloudflare.com';
+  const gStatic = 'fonts.gsta' + 'tic.com';
+  
   const urlPatterns = [
-    /https?:\/\/fonts\.googleapis\.com/g,
-    /https?:\/\/cdnjs\.cloudflare\.com/g,
-    /https?:\/\/fonts\.gstatic\.com/g
+    new RegExp('https?://' + gFonts.replace(/\./g, '\\.'), 'g'),
+    new RegExp('https?://' + cdnJS.replace(/\./g, '\\.'), 'g'),
+    new RegExp('https?://' + gStatic.replace(/\./g, '\\.'), 'g')
   ];
   
   let found = [];
@@ -45381,12 +45388,16 @@ END OF ZNAL v1.1</pre>
   function checkOfflineIntegrity() {
     const html = document.documentElement.outerHTML;
     
+    // Build patterns dynamically to avoid self-matching
+    // (the validator script itself would otherwise match these patterns)
+    const buildPattern = (parts) => new RegExp('https?://' + parts.join('').replace(/\./g, '\\.'), 'g');
+    
     // Patterns that indicate external dependencies
     const criticalPatterns = [
-      { pattern: /https?:\/\/fonts\.googleapis\.com/g, name: 'Google Fonts' },
-      { pattern: /https?:\/\/cdnjs\.cloudflare\.com/g, name: 'CDNJS' },
-      { pattern: /https?:\/\/unpkg\.com/g, name: 'unpkg' },
-      { pattern: /https?:\/\/cdn\.jsdelivr\.net/g, name: 'jsDelivr' }
+      { pattern: buildPattern(['fonts.google', 'apis.com']), name: 'Google Fonts' },
+      { pattern: buildPattern(['cdn', 'js.cloudflare.com']), name: 'CDNJS' },
+      { pattern: buildPattern(['un', 'pkg.com']), name: 'unpkg' },
+      { pattern: buildPattern(['cdn.jsdelivr', '.net']), name: 'jsDelivr' }
     ];
     
     let foundDeps = [];
@@ -45617,4 +45628,33 @@ function installI18nObserver() {
   __i18nObserverInstalled = true;
   
   const observer = new MutationObserver((mutations) => {
-    m
+    mutations.forEach((mutation) => {
+      if (mutation.type === 'childList') {
+        mutation.addedNodes.forEach((node) => {
+          if (node.nodeType === 1) { // Element node
+            translateCommonText(node);
+          }
+        });
+      }
+    });
+  });
+  
+  observer.observe(document.body, {
+    childList: true,
+    subtree: true
+  });
+}
+
+// Run initial translation and install observer when DOM is ready
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', () => {
+    translateCommonText();
+    installI18nObserver();
+  });
+} else {
+  translateCommonText();
+  installI18nObserver();
+}
+</script>
+</body>
+</html>
