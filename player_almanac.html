@@ -16,9 +16,9 @@
 ================================================================================
 -->
 <!--
-  Player Almanac Character Sheet - v6.17.12 OFFLINE BUILD (No External Dependencies)
+  Player Almanac Character Sheet - v7.0.0 OFFLINE BUILD (No External Dependencies)
   
-  CURRENT VERSION: v6.17.12 - January 2, 2026
+  CURRENT VERSION: v7.0.0 - January 2, 2026
   
   NEW IN v6.17.12:
   - Fixed: Settings now opens from char-stats-bar dropdown even when quickbar is collapsed
@@ -674,6 +674,35 @@ label,
 :focus-visible {
   outline: 2px solid var(--accent-primary);
   outline-offset: 2px;
+}
+
+/* =============================================
+   ORDER 7: SKIP LINKS FOR KEYBOARD NAVIGATION
+   ============================================= */
+.skip-link {
+  position: absolute;
+  top: -60px;
+  left: 8px;
+  background: var(--accent-primary);
+  color: #fff;
+  padding: 10px 20px;
+  z-index: 99999;
+  text-decoration: none;
+  font-size: 0.9rem;
+  border-radius: 4px;
+  font-weight: 500;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  transition: top 0.2s ease;
+}
+
+.skip-link:focus {
+  top: 8px;
+  outline: 2px solid #fff;
+  outline-offset: 2px;
+}
+
+.skip-link:hover {
+  background: var(--accent-secondary);
 }
 
 /* Interactive hover lift */
@@ -1825,6 +1854,92 @@ body.high-contrast .watermark {
     rgba(var(--gradient-color1), 0.05) 100%
   );
   pointer-events: none;
+}
+
+/* =============================================
+   13i-2. ORDER 6: FIRST-VISIT ENHANCEMENT
+   Pulse animation for new user onboarding
+   ============================================= */
+
+/* First-visit pulse glow on primary button */
+.boot-primary.first-visit {
+  animation: first-visit-pulse 2s ease-in-out infinite;
+}
+
+@keyframes first-visit-pulse {
+  0%, 100% { 
+    box-shadow: 
+      0 0 20px rgba(var(--particle-color), 0.4),
+      0 4px 12px rgba(0, 0, 0, 0.3);
+  }
+  50% { 
+    box-shadow: 
+      0 0 40px rgba(var(--particle-color), 0.6),
+      0 0 60px rgba(var(--particle-color), 0.3),
+      0 4px 12px rgba(0, 0, 0, 0.3);
+  }
+}
+
+/* Feature badges in onboarding panel */
+.boot-welcome-features {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid rgba(var(--particle-color), 0.1);
+}
+
+.boot-feature {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(var(--card-bg-rgb, 30, 30, 40), 0.5);
+  padding: 8px 14px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  border: 1px solid rgba(var(--particle-color), 0.1);
+  transition: all 0.2s ease;
+}
+
+.boot-feature:hover {
+  background: rgba(var(--card-bg-rgb, 30, 30, 40), 0.7);
+  border-color: rgba(var(--particle-color), 0.2);
+  color: var(--text-primary);
+}
+
+.boot-feature-icon {
+  font-size: 1rem;
+}
+
+/* Hint text below primary button */
+.boot-action-hint {
+  display: block;
+  font-size: 0.7rem;
+  opacity: 0.6;
+  margin-top: 4px;
+  font-weight: normal;
+}
+
+.boot-primary.first-visit .boot-action-hint {
+  animation: hint-fade 2s ease-in-out infinite;
+}
+
+@keyframes hint-fade {
+  0%, 100% { opacity: 0.6; }
+  50% { opacity: 0.9; }
+}
+
+/* Reduced motion: disable pulse animations */
+@media (prefers-reduced-motion: reduce) {
+  .boot-primary.first-visit {
+    animation: none;
+  }
+  .boot-primary.first-visit .boot-action-hint {
+    animation: none;
+  }
 }
 
 /* =============================================
@@ -6891,6 +7006,82 @@ textarea::placeholder{color:var(--text-muted);opacity:0.6}
 .motion-toggle button:hover{border-color:var(--accent-primary);color:var(--text-primary)}
 .toast-wrap{position:fixed;top:32px;left:50%;transform:translateX(-50%);z-index:1000;display:flex;flex-direction:column;gap:8px}
 .toast{background:var(--glass-bg);border:1px solid var(--accent-primary);backdrop-filter:blur(20px);padding:16px 32px;border-radius:8px;font-family:var(--font-display);font-size:0.9rem;color:var(--accent-secondary);box-shadow:0 0 30px var(--accent-glow);opacity:0;transform:translateY(-20px)}
+
+/* v7.0.0: Enhanced toast styles for error/success messages */
+.toast-enhanced{text-align:left;min-width:280px;max-width:400px;padding:16px 20px}
+.toast-title{font-weight:600;margin-bottom:4px;font-size:0.95rem;color:var(--text-primary)}
+.toast-message{font-size:0.85rem;color:var(--text-secondary);margin-bottom:8px;line-height:1.4}
+.toast-action{background:var(--accent-primary);color:#fff;border:none;padding:6px 16px;border-radius:4px;cursor:pointer;font-size:0.85rem;font-family:var(--font-body)}
+.toast-action:hover{filter:brightness(1.1)}
+.toast-success{border-color:var(--success);box-shadow:0 0 20px rgba(141,212,168,0.3)}
+.toast-success .toast-icon{color:var(--success);margin-right:8px}
+.toast-error{border-color:var(--danger);box-shadow:0 0 20px rgba(216,138,151,0.3)}
+.toast-error .toast-icon{color:var(--danger);margin-right:8px}
+.toast-warning{border-color:var(--warning);box-shadow:0 0 20px rgba(212,200,138,0.3)}
+.toast-warning .toast-icon{color:var(--warning);margin-right:8px}
+
+/* v7.0.0: Enhanced save status indicator */
+.save-status{display:flex;align-items:center;gap:6px;font-size:0.75rem;color:var(--text-muted);transition:all 0.2s ease}
+.save-status[data-state="saving"]{color:var(--accent-secondary)}
+.save-status[data-state="saved"]{color:var(--success)}
+.save-status[data-state="failed"]{color:var(--danger)}
+.save-status-icon{width:14px;height:14px;display:inline-block}
+.save-status[data-state="saving"] .save-status-icon{animation:spin 1s linear infinite}
+@keyframes spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+.save-status-retry{cursor:pointer;text-decoration:underline;margin-left:4px}
+.save-status-retry:hover{color:var(--accent-primary)}
+
+/* v7.0.0: Destructive Action Confirmation Modal */
+.confirm-overlay{display:flex;align-items:center;justify-content:center;position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:9999;backdrop-filter:blur(4px)}
+.confirm-destructive{max-width:400px;text-align:center;background:var(--glass-bg);border:1px solid var(--danger);border-radius:16px;padding:32px;box-shadow:0 0 40px rgba(216,138,151,0.3)}
+.confirm-destructive .modal-icon{font-size:3rem;margin-bottom:16px}
+.confirm-destructive .modal-icon.danger{color:var(--danger)}
+.confirm-destructive h2{color:var(--danger);margin-bottom:8px;font-family:var(--font-display);font-size:1.3rem}
+.confirm-destructive p{color:var(--text-secondary);margin-bottom:16px;font-size:0.95rem;line-height:1.5}
+.confirm-destructive-detail{background:rgba(0,0,0,0.2);padding:12px;border-radius:8px;margin-bottom:16px;font-size:0.85rem;text-align:left;color:var(--text-muted);line-height:1.4}
+.confirm-destructive-check{display:flex;align-items:center;gap:8px;justify-content:center;margin-bottom:20px;font-size:0.85rem;cursor:pointer;color:var(--text-secondary)}
+.confirm-destructive-check input[type="checkbox"]{width:18px;height:18px;accent-color:var(--danger)}
+.modal-actions{display:flex;gap:12px;justify-content:center}
+.modal-btn{padding:10px 24px;border-radius:8px;font-family:var(--font-body);font-size:0.9rem;cursor:pointer;border:none;transition:all 0.2s ease}
+.modal-btn.secondary{background:var(--glass-bg);border:1px solid var(--glass-border);color:var(--text-primary)}
+.modal-btn.secondary:hover{border-color:var(--accent-primary);background:rgba(255,255,255,0.05)}
+.modal-btn.danger{background:var(--danger);color:#fff}
+.modal-btn.danger:hover{filter:brightness(1.1)}
+.modal-btn.danger:disabled{opacity:0.5;cursor:not-allowed;filter:none}
+
+/* ORDER 7: Keyboard Shortcuts Modal */
+.keyboard-shortcuts-modal{max-width:400px}
+.keyboard-shortcuts-modal .modal-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid rgba(var(--particle-color),0.2)}
+.keyboard-shortcuts-modal .modal-header h2{margin:0;font-size:1.1rem}
+.keyboard-shortcuts-modal .modal-close{background:none;border:none;color:var(--text-muted);font-size:1.2rem;cursor:pointer;padding:4px 8px}
+.keyboard-shortcuts-modal .modal-close:hover{color:var(--text-primary)}
+.shortcuts-list{display:flex;flex-direction:column;gap:12px}
+.shortcut-row{display:flex;align-items:center;gap:8px;padding:8px 12px;background:rgba(var(--card-bg-rgb,30,30,40),0.5);border-radius:8px}
+.shortcut-row kbd{display:inline-block;background:var(--card-bg);border:1px solid rgba(var(--particle-color),0.3);border-radius:4px;padding:4px 8px;font-family:var(--font-mono);font-size:0.8rem;min-width:24px;text-align:center;box-shadow:0 2px 0 rgba(0,0,0,0.2)}
+.shortcut-row span{margin-left:auto;color:var(--text-secondary);font-size:0.85rem}
+.keyboard-shortcuts-modal .modal-footer{margin-top:20px;text-align:center}
+
+/* ORDER 8: Changelog / What's New Modal */
+.changelog-modal{max-width:500px}
+.changelog-modal .modal-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid rgba(var(--particle-color),0.2)}
+.changelog-modal .modal-header h2{margin:0;font-size:1.1rem}
+.changelog-modal .modal-close{background:none;border:none;color:var(--text-muted);font-size:1.2rem;cursor:pointer;padding:4px 8px}
+.changelog-modal .modal-close:hover{color:var(--text-primary)}
+.changelog-body{max-height:60vh;overflow-y:auto}
+.changelog-version{margin-bottom:16px}
+.changelog-version h3{margin:0 0 4px 0;font-size:1rem;color:var(--accent-secondary)}
+.changelog-version .changelog-date{font-weight:normal;color:var(--text-muted);font-size:0.85rem}
+.changelog-subtitle{color:var(--text-secondary);font-style:italic;font-size:0.9rem}
+.changelog-list{list-style:none;padding:0;margin:0}
+.changelog-list li{padding:8px 12px;margin-bottom:8px;background:rgba(var(--card-bg-rgb,30,30,40),0.5);border-radius:6px;font-size:0.85rem;border-left:3px solid var(--accent-primary)}
+.changelog-list li strong{color:var(--accent-secondary)}
+.changelog-modal .modal-footer{margin-top:20px;text-align:center}
+
+/* ORDER 9: Input Validation Styles */
+.input-error{border-color:var(--danger) !important;box-shadow:0 0 0 2px rgba(216,138,151,0.3) !important}
+.input-error-message{color:var(--danger);font-size:0.75rem;margin-top:4px;padding:2px 4px}
+.input-warning{border-color:var(--warning) !important}
+.input-warning-message{color:var(--warning);font-size:0.75rem;margin-top:4px}
 
 /* P0-2: HP Quick-Input Popup */
 .hp-quick-popup{
@@ -16048,6 +16239,19 @@ body.reduced-motion .help-modal-content {
     font-size: 0.9rem !important;
   }
   
+  /* ORDER 6: Mobile feature badges */
+  .boot-welcome-features {
+    flex-direction: column !important;
+    gap: 8px !important;
+    align-items: center !important;
+    padding-top: 12px !important;
+  }
+  
+  .boot-feature {
+    font-size: 0.75rem !important;
+    padding: 6px 12px !important;
+  }
+  
   .boot-char-grid {
     display: flex !important;
     flex-direction: column !important;
@@ -17930,6 +18134,38 @@ body {
   flex: 1;
 }
 
+/* ORDER 8: Version Info Box in About Dialog */
+.credits-version-box {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+  background: rgba(var(--particle-color), 0.1);
+  border: 1px solid rgba(var(--particle-color), 0.2);
+  border-radius: 8px;
+  margin-bottom: 20px;
+}
+
+.credits-version-info {
+  font-size: 1rem;
+  color: var(--text-primary);
+}
+
+.credits-whats-new-btn {
+  background: var(--accent-primary);
+  color: #fff;
+  border: none;
+  padding: 6px 14px;
+  border-radius: 4px;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.credits-whats-new-btn:hover {
+  filter: brightness(1.1);
+}
+
 .credits-section {
   margin-bottom: 20px;
 }
@@ -18384,6 +18620,10 @@ body {
 })();
 </script>
 <body data-anim="subtle">
+<!-- ORDER 7: Skip Links for Keyboard Navigation -->
+<a href="#app" class="skip-link" data-i18n="a11y.skipToMain">Skip to main content</a>
+<a href="#quickBar" class="skip-link" style="left: 170px;" data-i18n="a11y.skipToQuickbar">Skip to quickbar</a>
+
 <!-- FIX #10: Dev debug badge (hidden by default, enable with body.dev-debug class) -->
 <div class="dev-debug-badge" id="devDebugBadge" aria-hidden="true"></div>
 
@@ -18495,8 +18735,23 @@ body {
         <div class="boot-onboarding-sparkle" aria-hidden="true"></div>
         <!-- Content -->
         <div class="boot-onboarding-icon">&#x1F4DC;</div>
-        <div class="boot-onboarding-title">Welcome, Adventurer</div>
-        <div class="boot-onboarding-text">Create your first character to begin tracking your journey through any tabletop RPG campaign.</div>
+        <div class="boot-onboarding-title" id="bootWelcomeTitle">Welcome, Adventurer</div>
+        <div class="boot-onboarding-text" id="bootWelcomeText">Create your first character to begin tracking your journey through any tabletop RPG campaign.</div>
+        <!-- ORDER 6: Feature badges -->
+        <div class="boot-welcome-features" id="bootWelcomeFeatures">
+          <div class="boot-feature">
+            <span class="boot-feature-icon">&#x1F3B2;</span>
+            <span data-i18n="boot.featureStats">Stats &amp; Dice Rolls</span>
+          </div>
+          <div class="boot-feature">
+            <span class="boot-feature-icon">&#x2694;</span>
+            <span data-i18n="boot.featureCombat">Combat &amp; HP Tracking</span>
+          </div>
+          <div class="boot-feature">
+            <span class="boot-feature-icon">&#x1F5FA;</span>
+            <span data-i18n="boot.featureMaps">Campaign Maps</span>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -18532,7 +18787,7 @@ body {
     <button class="boot-footer-link boot-settings-btn" id="bootSettingsBtn" type="button" title="Settings">&#x2699; Settings</button>
   </div>
   <div class="boot-footer-version">
-    <span class="boot-version">v6.18.7</span>
+    <span class="boot-version">v<span id="bootVersionNumber">7.0.0</span></span>
     <span class="boot-build">Build 6.18.7</span>
   </div>
 </footer>
@@ -19020,6 +19275,94 @@ body {
       <button class="csb-menu-item" id="csbRollInit" type="button" role="menuitem" title="Roll initiative">&#x1F3B2; Roll Initiative</button>
       <button class="csb-menu-item" id="csbToggleQb" type="button" role="menuitem" title="Show or hide the quickbar">&#x2195;&#xFE0F; Toggle Quickbar</button>
       <button class="csb-menu-item" id="csbSettings" type="button" role="menuitem" title="Open settings">&#x2699;&#xFE0F; Settings</button>
+    </div>
+  </div>
+</div>
+
+<!-- v7.0.0: Destructive Action Confirmation Modal -->
+<div id="confirmDestructive" class="modal-overlay confirm-overlay" style="display:none;" role="dialog" aria-modal="true" aria-labelledby="confirmDestructiveTitle">
+  <div class="modal confirm-destructive">
+    <div class="modal-icon danger">⚠️</div>
+    <h2 id="confirmDestructiveTitle"></h2>
+    <p id="confirmDestructiveMessage"></p>
+    <div class="confirm-destructive-detail" id="confirmDestructiveDetail"></div>
+    <label class="confirm-destructive-check">
+      <input type="checkbox" id="confirmDestructiveAck" />
+      <span id="confirmDestructiveAckLabel"></span>
+    </label>
+    <div class="modal-actions">
+      <button class="modal-btn secondary" id="confirmDestructiveCancel">Cancel</button>
+      <button class="modal-btn danger" id="confirmDestructiveConfirm" disabled>Delete</button>
+    </div>
+  </div>
+</div>
+
+<!-- ORDER 7: Keyboard Shortcuts Modal -->
+<div id="keyboardShortcutsModal" class="modal-overlay" style="display:none;" role="dialog" aria-modal="true" aria-labelledby="keyboardShortcutsTitle">
+  <div class="modal keyboard-shortcuts-modal">
+    <div class="modal-header">
+      <h2 id="keyboardShortcutsTitle" data-i18n="shortcuts.title">Keyboard Shortcuts</h2>
+      <button class="modal-close" id="keyboardShortcutsClose" type="button" aria-label="Close">&#x2715;</button>
+    </div>
+    <div class="modal-body">
+      <div class="shortcuts-list">
+        <div class="shortcut-row">
+          <kbd>Ctrl</kbd> + <kbd>S</kbd>
+          <span data-i18n="shortcuts.save">Save character</span>
+        </div>
+        <div class="shortcut-row">
+          <kbd>Ctrl</kbd> + <kbd>Z</kbd>
+          <span data-i18n="shortcuts.undo">Undo last change</span>
+        </div>
+        <div class="shortcut-row">
+          <kbd>Escape</kbd>
+          <span data-i18n="shortcuts.closeModal">Close modal/menu</span>
+        </div>
+        <div class="shortcut-row">
+          <kbd>?</kbd>
+          <span data-i18n="shortcuts.showHelp">Show this help</span>
+        </div>
+        <div class="shortcut-row">
+          <kbd>Tab</kbd>
+          <span data-i18n="shortcuts.navigate">Navigate elements</span>
+        </div>
+        <div class="shortcut-row">
+          <kbd>Enter</kbd>
+          <span data-i18n="shortcuts.activate">Activate button</span>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="modal-btn primary" id="keyboardShortcutsOk" type="button">OK</button>
+    </div>
+  </div>
+</div>
+
+<!-- ORDER 8: Changelog / What's New Modal -->
+<div id="changelogModal" class="modal-overlay" style="display:none;" role="dialog" aria-modal="true" aria-labelledby="changelogTitle">
+  <div class="modal changelog-modal">
+    <div class="modal-header">
+      <h2 id="changelogTitle" data-i18n="changelog.title">What's New</h2>
+      <button class="modal-close" id="changelogClose" type="button" aria-label="Close">&#x2715;</button>
+    </div>
+    <div class="modal-body changelog-body">
+      <div class="changelog-version">
+        <h3>Version 7.0.0 <span class="changelog-date">January 2, 2026</span></h3>
+        <div class="changelog-subtitle" data-i18n="changelog.qualityRelease">Quality Refinement Release</div>
+      </div>
+      <ul class="changelog-list">
+        <li><strong data-i18n="changelog.errorSystem">User-Friendly Errors</strong> - <span data-i18n="changelog.errorSystemDesc">Clear, helpful error messages with recovery actions</span></li>
+        <li><strong data-i18n="changelog.saveStatus">Save Status</strong> - <span data-i18n="changelog.saveStatusDesc">Visual save indicator with Saving/Saved/Failed states</span></li>
+        <li><strong data-i18n="changelog.confirmations">Confirmations</strong> - <span data-i18n="changelog.confirmationsDesc">Enhanced confirmation dialogs for destructive actions</span></li>
+        <li><strong data-i18n="changelog.emptyStates">Empty States</strong> - <span data-i18n="changelog.emptyStatesDesc">Helpful guidance when lists are empty</span></li>
+        <li><strong data-i18n="changelog.successFeedback">Success Feedback</strong> - <span data-i18n="changelog.successFeedbackDesc">Clear confirmations for completed actions</span></li>
+        <li><strong data-i18n="changelog.firstUse">First-Use Experience</strong> - <span data-i18n="changelog.firstUseDesc">Enhanced welcome for new users</span></li>
+        <li><strong data-i18n="changelog.keyboard">Keyboard Navigation</strong> - <span data-i18n="changelog.keyboardDesc">Full keyboard support with shortcuts</span></li>
+        <li><strong data-i18n="changelog.versionInfo">Version Info</strong> - <span data-i18n="changelog.versionInfoDesc">Version visible in About section</span></li>
+      </ul>
+    </div>
+    <div class="modal-footer">
+      <button class="modal-btn primary" id="changelogOk" type="button">OK</button>
     </div>
   </div>
 </div>
@@ -20836,6 +21179,103 @@ body {
     COINS_MAX: 999999,
   };
 
+  // ============================================
+  // USER-FRIENDLY ERROR MESSAGES (v7.0.0)
+  // ============================================
+  const USER_ERRORS = {
+    storage: {
+      quota: {
+        title: 'Storage Full',
+        message: 'Your browser storage is full. Export your characters to free up space.',
+        action: { label: 'Export All', handler: 'exportAllCharacters' }
+      },
+      unavailable: {
+        title: 'Storage Unavailable',
+        message: 'Browser storage is not available. Your changes won\'t be saved.',
+        action: { label: 'Learn More', handler: 'showStorageHelp' }
+      }
+    },
+    import: {
+      invalid: {
+        title: 'Invalid File',
+        message: 'This file doesn\'t appear to be a valid Player Almanac export.',
+        action: { label: 'Try Again', handler: 'openImportDialog' }
+      },
+      corrupt: {
+        title: 'File Corrupted',
+        message: 'Some data in this file couldn\'t be read. Partial import may be possible.',
+        action: { label: 'Import Anyway', handler: 'forceImport' }
+      },
+      version: {
+        title: 'Newer Version',
+        message: 'This file was created with a newer version. Some features may not import correctly.',
+        action: { label: 'Import Anyway', handler: 'forceImport' }
+      }
+    },
+    network: {
+      offline: {
+        title: 'You\'re Offline',
+        message: 'No worries—Player Almanac works fully offline. Your data is safe.',
+        action: null
+      }
+    },
+    character: {
+      notFound: {
+        title: 'Character Not Found',
+        message: 'This character could not be loaded. It may have been deleted.',
+        action: null
+      }
+    },
+    generic: {
+      title: 'Something Went Wrong',
+      message: 'An unexpected error occurred. Your data should be safe.',
+      action: { label: 'Dismiss', handler: null }
+    }
+  };
+
+  // App version constant for visibility
+  const APP_VERSION = '7.0.0';
+
+  // ============================================
+  // ORDER 6: FIRST-VISIT DETECTION
+  // ============================================
+  
+  /**
+   * Check if this is the user's first visit
+   * @returns {boolean} True if no cmHasVisited_v1 flag and no characters exist
+   */
+  function isFirstVisit() {
+    const hasVisited = localStorage.getItem('cmHasVisited_v1');
+    // If they've explicitly visited before, not first visit
+    if (hasVisited === 'true') return false;
+    // Check if any characters exist (might have characters from before this feature)
+    const charIndexRaw = localStorage.getItem('cmCharIndex_v1');
+    if (charIndexRaw) {
+      try {
+        const charIndex = JSON.parse(charIndexRaw);
+        if (Array.isArray(charIndex) && charIndex.length > 0) {
+          // Has characters, so mark as visited and return false
+          markVisited();
+          return false;
+        }
+      } catch (e) { /* ignore parse errors */ }
+    }
+    return true;
+  }
+  
+  /**
+   * Mark that the user has visited the app
+   */
+  function markVisited() {
+    try {
+      localStorage.setItem('cmHasVisited_v1', 'true');
+    } catch (e) {
+      if (window.__CM_DEBUG) {
+        console.warn('[PlayerAlmanac] Could not save visited flag:', e);
+      }
+    }
+  }
+
   // Internationalization - Translation strings
   const TRANSLATIONS = {
     en: {
@@ -21080,6 +21520,10 @@ body {
       'boot.tagline': 'Your tabletop companion',
       'boot.welcomeTitle': 'Welcome, Adventurer',
       'boot.welcomeText': 'Create your first character to begin tracking your journey through any tabletop RPG campaign.',
+      'boot.featureStats': 'Stats & Dice Rolls',
+      'boot.featureCombat': 'Combat & HP Tracking',
+      'boot.featureMaps': 'Campaign Maps',
+      'boot.startHere': 'Start here',
       'boot.restoreBackup': 'Restore Backup',
       'boot.settingsBtn': 'Settings',
       'boot.addons': 'Addons',
@@ -21576,6 +22020,102 @@ body {
       'ui.saved': 'Saved',
       'ui.edit': 'Edit',
       'ui.play': 'Play',
+      
+      // v7.0.0: Save Status
+      'save.saving': 'Saving...',
+      'save.saved': 'Saved',
+      'save.failed': 'Save failed',
+      'save.retry': 'Retry',
+      'save.lastSaved': 'Last saved: {time}',
+      
+      // v7.0.0: Time expressions
+      'time.justNow': 'just now',
+      'time.minutesAgo': '{n} min ago',
+      'time.hoursAgo': '{n} hr ago',
+      
+      // v7.0.0: Success messages
+      'success.characterCreated': 'Character "{name}" created',
+      'success.characterDuplicated': '"{name}" duplicated',
+      'success.exported': 'Exported to {filename}',
+      'success.imported': '{count} character(s) imported',
+      'success.backupRestored': 'Backup restored successfully',
+      'success.settingsSaved': 'Settings saved',
+      'success.characterDeleted': 'Character deleted',
+      
+      // v7.0.0: Confirmations
+      'confirm.deleteCharacterTitle': 'Delete Character?',
+      'confirm.deleteCharacterMessage': 'Are you sure you want to delete "{name}"?',
+      'confirm.deleteCharacterDetail': 'This will permanently remove all character data, including portrait and notes.',
+      'confirm.cannotBeUndone': 'I understand this cannot be undone',
+      'confirm.deleteCharacter': 'Delete Character',
+      'confirm.cancel': 'Cancel',
+      'confirm.iUnderstand': 'I understand',
+      'confirm.clearAllTitle': 'Clear All Data?',
+      'confirm.clearAllMessage': 'This will delete all your characters and settings.',
+      'confirm.clearAll': 'Clear All',
+      
+      // v7.0.0: Empty states
+      'empty.spellsTitle': 'No Spells Yet',
+      'empty.spellsText': 'Add spells from the SRD or create custom ones.',
+      'empty.addSpell': 'Add Spell',
+      'empty.equipmentTitle': 'Pack is Empty',
+      'empty.equipmentText': 'Track your gear, items, and treasure here.',
+      'empty.addItem': 'Add Item',
+      'empty.weaponsTitle': 'No Weapons',
+      'empty.weaponsText': 'Add weapons to track attacks and damage.',
+      'empty.addWeapon': 'Add Weapon',
+      'empty.notesTitle': 'No Notes',
+      'empty.notesText': 'Use this space for backstory, session notes, or anything else.',
+      'empty.mapTitle': 'No Map',
+      'empty.mapText': 'Upload a campaign map to track locations and measure distances.',
+      'empty.uploadMap': 'Upload Map',
+      
+      // v7.0.0: Keyboard shortcuts
+      'shortcuts.save': 'Force save',
+      'shortcuts.undo': 'Undo last change',
+      'shortcuts.closeModal': 'Close modal/menu',
+      'shortcuts.showHelp': 'Show keyboard shortcuts',
+      'shortcuts.navigate': 'Navigate between elements',
+      'shortcuts.activate': 'Activate button/link',
+      'shortcuts.title': 'Keyboard Shortcuts',
+      'shortcuts.saveComplete': 'Character saved!',
+      
+      // v7.0.0: Accessibility
+      'a11y.skipToMain': 'Skip to main content',
+      'a11y.skipToQuickbar': 'Skip to quickbar',
+      
+      // v7.0.0: Update notifications
+      'update.newVersion': 'New Version Available',
+      'update.seeWhatsNew': 'Player Almanac has been updated.',
+      'update.viewChanges': 'What\'s New',
+      
+      // v7.0.0: Changelog / About (ORDER 8)
+      'about.whatsNew': 'What\'s New',
+      'changelog.title': 'What\'s New',
+      'changelog.qualityRelease': 'Quality Refinement Release',
+      'changelog.errorSystem': 'User-Friendly Errors',
+      'changelog.errorSystemDesc': 'Clear, helpful error messages with recovery actions',
+      'changelog.saveStatus': 'Save Status',
+      'changelog.saveStatusDesc': 'Visual save indicator with Saving/Saved/Failed states',
+      'changelog.confirmations': 'Confirmations',
+      'changelog.confirmationsDesc': 'Enhanced confirmation dialogs for destructive actions',
+      'changelog.emptyStates': 'Empty States',
+      'changelog.emptyStatesDesc': 'Helpful guidance when lists are empty',
+      'changelog.successFeedback': 'Success Feedback',
+      'changelog.successFeedbackDesc': 'Clear confirmations for completed actions',
+      'changelog.firstUse': 'First-Use Experience',
+      'changelog.firstUseDesc': 'Enhanced welcome for new users',
+      'changelog.keyboard': 'Keyboard Navigation',
+      'changelog.keyboardDesc': 'Full keyboard support with shortcuts',
+      'changelog.versionInfo': 'Version Info',
+      'changelog.versionInfoDesc': 'Version visible in About section',
+      
+      // v7.0.0: Validation messages
+      'validation.required': 'This field is required',
+      'validation.maxLength': 'Maximum {max} characters',
+      'validation.min': 'Minimum value is {min}',
+      'validation.max': 'Maximum value is {max}',
+      'validation.invalid': 'Invalid input',
 },
     de: {
       // Settings Menu
@@ -21804,6 +22344,10 @@ body {
       'boot.tagline': 'Dein Tischrollenspiel-Begleiter',
       'boot.welcomeTitle': 'Willkommen, Abenteurer',
       'boot.welcomeText': 'Erstelle deinen ersten Charakter, um deine Reise durch jede Tischrollenspiel-Kampagne zu verfolgen.',
+      'boot.featureStats': 'Werte & Würfelwürfe',
+      'boot.featureCombat': 'Kampf & HP-Verfolgung',
+      'boot.featureMaps': 'Kampagnenkarten',
+      'boot.startHere': 'Hier starten',
       'boot.restoreBackup': 'Backup wiederherstellen',
       'boot.settingsBtn': 'Einstellungen',
       'boot.addons': 'Erweiterungen',
@@ -22322,17 +22866,123 @@ body {
       'ui.saved': 'Gespeichert',
       'ui.edit': 'Bearbeiten',
       'ui.play': 'Spielen',
+      
+      // v7.0.0: Save Status
+      'save.saving': 'Speichern...',
+      'save.saved': 'Gespeichert',
+      'save.failed': 'Speichern fehlgeschlagen',
+      'save.retry': 'Erneut versuchen',
+      'save.lastSaved': 'Zuletzt gespeichert: {time}',
+      
+      // v7.0.0: Time expressions
+      'time.justNow': 'gerade eben',
+      'time.minutesAgo': 'vor {n} Min',
+      'time.hoursAgo': 'vor {n} Std',
+      
+      // v7.0.0: Success messages
+      'success.characterCreated': 'Charakter "{name}" erstellt',
+      'success.characterDuplicated': '"{name}" dupliziert',
+      'success.exported': 'Exportiert nach {filename}',
+      'success.imported': '{count} Charakter(e) importiert',
+      'success.backupRestored': 'Backup erfolgreich wiederhergestellt',
+      'success.settingsSaved': 'Einstellungen gespeichert',
+      'success.characterDeleted': 'Charakter gelöscht',
+      
+      // v7.0.0: Confirmations
+      'confirm.deleteCharacterTitle': 'Charakter löschen?',
+      'confirm.deleteCharacterMessage': 'Möchtest du "{name}" wirklich löschen?',
+      'confirm.deleteCharacterDetail': 'Dies entfernt alle Charakterdaten dauerhaft, einschließlich Portrait und Notizen.',
+      'confirm.cannotBeUndone': 'Ich verstehe, dass dies nicht rückgängig gemacht werden kann',
+      'confirm.deleteCharacter': 'Charakter löschen',
+      'confirm.cancel': 'Abbrechen',
+      'confirm.iUnderstand': 'Ich verstehe',
+      'confirm.clearAllTitle': 'Alle Daten löschen?',
+      'confirm.clearAllMessage': 'Dies löscht alle deine Charaktere und Einstellungen.',
+      'confirm.clearAll': 'Alles löschen',
+      
+      // v7.0.0: Empty states
+      'empty.spellsTitle': 'Noch keine Zauber',
+      'empty.spellsText': 'Füge Zauber aus dem SRD hinzu oder erstelle eigene.',
+      'empty.addSpell': 'Zauber hinzufügen',
+      'empty.equipmentTitle': 'Rucksack ist leer',
+      'empty.equipmentText': 'Verfolge hier deine Ausrüstung, Gegenstände und Schätze.',
+      'empty.addItem': 'Gegenstand hinzufügen',
+      'empty.weaponsTitle': 'Keine Waffen',
+      'empty.weaponsText': 'Füge Waffen hinzu um Angriffe und Schaden zu verfolgen.',
+      'empty.addWeapon': 'Waffe hinzufügen',
+      'empty.notesTitle': 'Keine Notizen',
+      'empty.notesText': 'Nutze diesen Platz für Hintergrundgeschichte, Sitzungsnotizen oder anderes.',
+      'empty.mapTitle': 'Keine Karte',
+      'empty.mapText': 'Lade eine Kampagnenkarte hoch um Orte zu markieren und Entfernungen zu messen.',
+      'empty.uploadMap': 'Karte hochladen',
+      
+      // v7.0.0: Keyboard shortcuts
+      'shortcuts.save': 'Speichern erzwingen',
+      'shortcuts.undo': 'Letzte Änderung rückgängig',
+      'shortcuts.closeModal': 'Modal/Menü schließen',
+      'shortcuts.showHelp': 'Tastaturkürzel anzeigen',
+      'shortcuts.navigate': 'Zwischen Elementen navigieren',
+      'shortcuts.activate': 'Button/Link aktivieren',
+      'shortcuts.title': 'Tastaturkürzel',
+      'shortcuts.saveComplete': 'Charakter gespeichert!',
+      
+      // v7.0.0: Accessibility
+      'a11y.skipToMain': 'Zum Hauptinhalt springen',
+      'a11y.skipToQuickbar': 'Zur Schnellleiste springen',
+      
+      // v7.0.0: Update notifications
+      'update.newVersion': 'Neue Version verfügbar',
+      'update.seeWhatsNew': 'Player Almanac wurde aktualisiert.',
+      'update.viewChanges': 'Was ist neu',
+      
+      // v7.0.0: Changelog / About (ORDER 8)
+      'about.whatsNew': 'Was ist neu',
+      'changelog.title': 'Was ist neu',
+      'changelog.qualityRelease': 'Qualitätsverbesserungen',
+      'changelog.errorSystem': 'Benutzerfreundliche Fehler',
+      'changelog.errorSystemDesc': 'Klare, hilfreiche Fehlermeldungen mit Lösungsvorschlägen',
+      'changelog.saveStatus': 'Speicherstatus',
+      'changelog.saveStatusDesc': 'Visuelle Anzeige für Speichern/Gespeichert/Fehlgeschlagen',
+      'changelog.confirmations': 'Bestätigungen',
+      'changelog.confirmationsDesc': 'Verbesserte Bestätigungsdialoge für kritische Aktionen',
+      'changelog.emptyStates': 'Leere Zustände',
+      'changelog.emptyStatesDesc': 'Hilfreiche Hinweise bei leeren Listen',
+      'changelog.successFeedback': 'Erfolgsrückmeldung',
+      'changelog.successFeedbackDesc': 'Klare Bestätigungen für abgeschlossene Aktionen',
+      'changelog.firstUse': 'Erstnutzung',
+      'changelog.firstUseDesc': 'Verbesserter Willkommensbildschirm',
+      'changelog.keyboard': 'Tastaturnavigation',
+      'changelog.keyboardDesc': 'Vollständige Tastaturunterstützung mit Kürzeln',
+      'changelog.versionInfo': 'Versionsinformation',
+      'changelog.versionInfoDesc': 'Version im Über-Bereich sichtbar',
+      
+      // v7.0.0: Validation messages
+      'validation.required': 'Dieses Feld ist erforderlich',
+      'validation.maxLength': 'Maximal {max} Zeichen',
+      'validation.min': 'Mindestwert ist {min}',
+      'validation.max': 'Maximalwert ist {max}',
+      'validation.invalid': 'Ungültige Eingabe',
 }
   };
 
   // Current language (defaults to English)
   let currentLanguage = 'en';
 
-  // Translation helper function
-  function t(key) {
+  // Translation helper function with parameter substitution support
+  function t(key, params) {
     const lang = currentLanguage || 'en';
-    return TRANSLATIONS[lang]?.[key] || TRANSLATIONS['en']?.[key] || key;
+    let str = TRANSLATIONS[lang]?.[key] || TRANSLATIONS['en']?.[key] || key;
+    // Replace {param} placeholders with values from params object
+    if (params && typeof str === 'string') {
+      for (const [k, v] of Object.entries(params)) {
+        str = str.replace(new RegExp(`\\{${k}\\}`, 'g'), v);
+      }
+    }
+    return str;
   }
+  
+  // Alias for translation function to avoid shadowing in event handlers where 't' is the target element
+  const translate = t;
 
   // Theme presets - each defines colors and particle settings
   const THEMES = {
@@ -23375,6 +24025,258 @@ body {
       }
     };
   }
+
+  /**
+   * ORDER 7: Show keyboard shortcuts modal
+   */
+  function showKeyboardShortcuts() {
+    const modal = document.getElementById('keyboardShortcutsModal');
+    if (!modal) return;
+    
+    modal.style.display = 'flex';
+    
+    // Apply translations if needed
+    const titleEl = modal.querySelector('[data-i18n="shortcuts.title"]');
+    if (titleEl) titleEl.textContent = t('shortcuts.title');
+    modal.querySelectorAll('[data-i18n]').forEach(el => {
+      const key = el.getAttribute('data-i18n');
+      if (key) el.textContent = t(key);
+    });
+    
+    // Focus trap and close handlers
+    const closeModal = () => {
+      modal.style.display = 'none';
+    };
+    
+    const closeBtn = modal.querySelector('#keyboardShortcutsClose');
+    const okBtn = modal.querySelector('#keyboardShortcutsOk');
+    
+    // Remove any existing listeners to prevent duplicates
+    const newCloseBtn = closeBtn?.cloneNode(true);
+    const newOkBtn = okBtn?.cloneNode(true);
+    if (closeBtn && newCloseBtn) closeBtn.replaceWith(newCloseBtn);
+    if (okBtn && newOkBtn) okBtn.replaceWith(newOkBtn);
+    
+    newCloseBtn?.addEventListener('click', closeModal);
+    newOkBtn?.addEventListener('click', closeModal);
+    
+    // Close on backdrop click
+    modal.addEventListener('click', (e) => {
+      if (e.target === modal) closeModal();
+    }, { once: true });
+    
+    // Close on Escape
+    const escHandler = (e) => {
+      if (e.key === 'Escape') {
+        closeModal();
+        document.removeEventListener('keydown', escHandler);
+      }
+    };
+    document.addEventListener('keydown', escHandler);
+    
+    // Focus the OK button
+    setTimeout(() => newOkBtn?.focus(), 100);
+  }
+  
+  /**
+   * ORDER 7: Show success message for shortcuts
+   */
+  function showSuccess(messageKey, params = {}) {
+    if (window.app && typeof window.app.showSuccess === 'function') {
+      window.app.showSuccess(messageKey, params);
+    } else {
+      // Fallback toast
+      const message = t(messageKey, params);
+      const wrap = document.getElementById('toasts');
+      if (!wrap) return;
+      const toast = document.createElement('div');
+      toast.className = 'toast toast-success';
+      toast.innerHTML = `<span class="toast-icon">✓</span><span class="toast-text">${escapeHtml(message)}</span>`;
+      wrap.appendChild(toast);
+      toast.style.opacity = '1';
+      setTimeout(() => { toast.style.opacity = '0'; setTimeout(() => toast.remove(), 300); }, 3000);
+    }
+  }
+
+  /**
+   * ORDER 8: Show the changelog / What's New modal
+   */
+  function showChangelog() {
+    const modal = document.getElementById('changelogModal');
+    if (!modal) return;
+    
+    modal.style.display = 'flex';
+    
+    // Apply translations
+    modal.querySelectorAll('[data-i18n]').forEach(el => {
+      const key = el.getAttribute('data-i18n');
+      if (key) el.textContent = t(key);
+    });
+    
+    // Close handler
+    const closeModal = () => {
+      modal.style.display = 'none';
+    };
+    
+    const closeBtn = modal.querySelector('#changelogClose');
+    const okBtn = modal.querySelector('#changelogOk');
+    
+    // Remove existing listeners by cloning
+    const newCloseBtn = closeBtn?.cloneNode(true);
+    const newOkBtn = okBtn?.cloneNode(true);
+    if (closeBtn && newCloseBtn) closeBtn.replaceWith(newCloseBtn);
+    if (okBtn && newOkBtn) okBtn.replaceWith(newOkBtn);
+    
+    newCloseBtn?.addEventListener('click', closeModal);
+    newOkBtn?.addEventListener('click', closeModal);
+    
+    // Backdrop click
+    modal.addEventListener('click', (e) => {
+      if (e.target === modal) closeModal();
+    }, { once: true });
+    
+    // Escape key
+    const escHandler = (e) => {
+      if (e.key === 'Escape') {
+        closeModal();
+        document.removeEventListener('keydown', escHandler);
+      }
+    };
+    document.addEventListener('keydown', escHandler);
+    
+    // Focus OK button
+    setTimeout(() => newOkBtn?.focus(), 100);
+  }
+  
+  // Make showChangelog globally accessible
+  window.showChangelog = showChangelog;
+
+  /**
+   * ORDER 8: Check for version update and show notification
+   */
+  function checkForUpdate() {
+    const lastVersion = localStorage.getItem('cmLastSeenVersion_v1');
+    if (lastVersion && lastVersion !== APP_VERSION) {
+      // Show "Updated" toast after a short delay
+      setTimeout(() => {
+        const wrap = document.getElementById('toasts');
+        if (!wrap) return;
+        const toast = document.createElement('div');
+        toast.className = 'toast toast-info';
+        toast.innerHTML = `
+          <span class="toast-icon">✨</span>
+          <span class="toast-text">${t('update.seeWhatsNew')}</span>
+          <button class="toast-action" onclick="showChangelog(); this.closest('.toast').remove();">${t('update.viewChanges')}</button>
+        `;
+        toast.style.cssText = 'display:flex;align-items:center;gap:8px;';
+        wrap.appendChild(toast);
+        toast.style.opacity = '1';
+        setTimeout(() => { 
+          if (toast.parentNode) {
+            toast.style.opacity = '0'; 
+            setTimeout(() => toast.remove(), 300); 
+          }
+        }, 8000);
+      }, 2000);
+    }
+    localStorage.setItem('cmLastSeenVersion_v1', APP_VERSION);
+  }
+
+  /**
+   * ORDER 9: Input validation helper
+   * @param {string} value - The value to validate
+   * @param {Object} rules - Validation rules
+   * @returns {string[]} Array of error messages
+   */
+  function validateInput(value, rules) {
+    const errors = [];
+    const strVal = String(value ?? '');
+    
+    if (rules.required && !strVal.trim()) {
+      errors.push(t('validation.required'));
+    }
+    if (rules.maxLength && strVal.length > rules.maxLength) {
+      errors.push(t('validation.maxLength', { max: rules.maxLength }));
+    }
+    if (rules.min !== undefined && Number(value) < rules.min) {
+      errors.push(t('validation.min', { min: rules.min }));
+    }
+    if (rules.max !== undefined && Number(value) > rules.max) {
+      errors.push(t('validation.max', { max: rules.max }));
+    }
+    if (rules.pattern && !rules.pattern.test(strVal)) {
+      errors.push(rules.patternMessage || t('validation.invalid'));
+    }
+    
+    return errors;
+  }
+
+  /**
+   * ORDER 9: Show inline validation error on input
+   * @param {HTMLElement} inputEl - The input element
+   * @param {string} message - Error message to display
+   */
+  function showInputError(inputEl, message) {
+    if (!inputEl) return;
+    
+    inputEl.classList.add('input-error');
+    inputEl.setAttribute('aria-invalid', 'true');
+    
+    // Check if error message element already exists
+    let errorEl = inputEl.nextElementSibling;
+    if (!errorEl || !errorEl.classList.contains('input-error-message')) {
+      errorEl = document.createElement('div');
+      errorEl.className = 'input-error-message';
+      inputEl.parentNode.insertBefore(errorEl, inputEl.nextSibling);
+    }
+    errorEl.textContent = message;
+    
+    // Add aria-describedby for accessibility
+    const errorId = errorEl.id || (errorEl.id = 'err-' + Math.random().toString(36).substr(2, 9));
+    inputEl.setAttribute('aria-describedby', errorId);
+  }
+
+  /**
+   * ORDER 9: Clear validation error from input
+   * @param {HTMLElement} inputEl - The input element
+   */
+  function clearInputError(inputEl) {
+    if (!inputEl) return;
+    
+    inputEl.classList.remove('input-error');
+    inputEl.removeAttribute('aria-invalid');
+    inputEl.removeAttribute('aria-describedby');
+    
+    const errorEl = inputEl.nextElementSibling;
+    if (errorEl && errorEl.classList.contains('input-error-message')) {
+      errorEl.remove();
+    }
+  }
+
+  /**
+   * ORDER 9: Validate and show/clear error for an input
+   * @param {HTMLElement} inputEl - The input element
+   * @param {Object} rules - Validation rules
+   * @returns {boolean} True if valid
+   */
+  function validateAndShowError(inputEl, rules) {
+    if (!inputEl) return true;
+    
+    const errors = validateInput(inputEl.value, rules);
+    if (errors.length > 0) {
+      showInputError(inputEl, errors[0]);
+      return false;
+    } else {
+      clearInputError(inputEl);
+      return true;
+    }
+  }
+  
+  // Make validation functions globally accessible
+  window.validateInput = validateInput;
+  window.showInputError = showInputError;
+  window.clearInputError = clearInputError;
+  window.validateAndShowError = validateAndShowError;
 
   /**
    * @param {unknown} v
@@ -26791,6 +27693,38 @@ body {
         }
       });
 
+      // ============================================
+      // ORDER 7: GLOBAL KEYBOARD SHORTCUTS
+      // ============================================
+      window.addEventListener('keydown', (e) => {
+        // Skip if in input/textarea (except for Escape)
+        const isInput = e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.isContentEditable;
+        
+        // Ctrl/Cmd + S: Force save
+        if ((e.ctrlKey || e.metaKey) && e.key === 's') {
+          e.preventDefault();
+          if (this.activeCharId) {
+            this.persist({ force: true });
+            showSuccess('shortcuts.saveComplete');
+          }
+          return;
+        }
+        
+        // Ctrl/Cmd + Z: Undo (only when not in input)
+        if ((e.ctrlKey || e.metaKey) && e.key === 'z' && !isInput) {
+          e.preventDefault();
+          this.undo?.();
+          return;
+        }
+        
+        // ? (shift not required): Show keyboard shortcuts (only when not in input)
+        if (e.key === '?' && !isInput) {
+          e.preventDefault();
+          showKeyboardShortcuts();
+          return;
+        }
+      });
+
       // Roll log
       this.dom.rollLogToggle?.addEventListener('click', () => this.toggleRollLog());
       this.dom.rollLogClear?.addEventListener('click', () => this.clearRollLog());
@@ -26823,6 +27757,16 @@ body {
         if (filterBtn) {
           e.preventDefault();
           this.setSpellFilter(filterBtn.dataset.spellFilter);
+        }
+        
+        // v7.0.0: Empty state action buttons
+        const emptyAction = e.target.closest('.empty-state-action[data-action]');
+        if (emptyAction) {
+          e.preventDefault();
+          const action = emptyAction.dataset.action;
+          if (action && typeof this[action] === 'function') {
+            this[action]();
+          }
         }
       });
       
@@ -27479,10 +28423,34 @@ body {
       this.beginUndoPoint();
 
       // Header fields and thread
-      if (t.matches('[data-field="name"]')) { this.state.name = safeText(t.textContent); this.touchActiveCharMeta({ name: this.state.name }); }
+      if (t.matches('[data-field="name"]')) { 
+        this.state.name = safeText(t.textContent); 
+        this.touchActiveCharMeta({ name: this.state.name }); 
+        // ORDER 9: Validate character name
+        const nameVal = safeText(t.textContent);
+        if (!nameVal.trim()) {
+          showInputError(t, translate('validation.required'));
+        } else if (nameVal.length > 100) {
+          showInputError(t, translate('validation.maxLength', { max: 100 }));
+        } else {
+          clearInputError(t);
+        }
+      }
       if (t.matches('[data-field="species"]')) this.state.species = safeText(t.textContent);
       if (t.matches('[data-field="class"]')) this.state.class = safeText(t.textContent);
-      if (t.matches('[data-field="level"]')) this.state.level = toInt(t.textContent, this.state.level, { min: 1, max: 20 });
+      if (t.matches('[data-field="level"]')) {
+        const levelVal = toInt(t.textContent, this.state.level, { min: 1, max: 20 });
+        this.state.level = levelVal;
+        // ORDER 9: Validate level
+        const rawLevel = Number(t.textContent);
+        if (rawLevel < 1) {
+          showInputError(t, translate('validation.min', { min: 1 }));
+        } else if (rawLevel > 20) {
+          showInputError(t, translate('validation.max', { max: 20 }));
+        } else {
+          clearInputError(t);
+        }
+      }
       if (t.matches('[data-field="campaign"]')) this.state.campaign = safeText(t.textContent);
       if (t.id === 'thread') this.state.thread = safeText(t.textContent);
 
@@ -27559,9 +28527,30 @@ body {
           this.state.spellAb = (t.value === 'int' || t.value === 'wis' || t.value === 'cha') ? t.value : 'none';
           break;
 
-        case 'hp-cur': this.state.hp.cur = toInt(t.value, this.state.hp.cur, { min: 0, max: 9999 }); this.renderHP(); break;
-        case 'hp-max': this.state.hp.max = toInt(t.value, this.state.hp.max, { min: 0, max: 9999 }); this.renderHP(); break;
-        case 'hp-tmp': this.state.hp.tmp = toInt(t.value, this.state.hp.tmp, { min: 0, max: 9999 }); this.renderHP(); break;
+        case 'hp-cur': 
+          this.state.hp.cur = toInt(t.value, this.state.hp.cur, { min: 0, max: 9999 }); 
+          this.renderHP(); 
+          // ORDER 9: Validate HP current
+          if (Number(t.value) < 0) showInputError(t, translate('validation.min', { min: 0 }));
+          else if (Number(t.value) > 9999) showInputError(t, translate('validation.max', { max: 9999 }));
+          else clearInputError(t);
+          break;
+        case 'hp-max': 
+          this.state.hp.max = toInt(t.value, this.state.hp.max, { min: 0, max: 9999 }); 
+          this.renderHP(); 
+          // ORDER 9: Validate HP max
+          if (Number(t.value) < 0) showInputError(t, translate('validation.min', { min: 0 }));
+          else if (Number(t.value) > 9999) showInputError(t, translate('validation.max', { max: 9999 }));
+          else clearInputError(t);
+          break;
+        case 'hp-tmp': 
+          this.state.hp.tmp = toInt(t.value, this.state.hp.tmp, { min: 0, max: 9999 }); 
+          this.renderHP(); 
+          // ORDER 9: Validate HP temp
+          if (Number(t.value) < 0) showInputError(t, translate('validation.min', { min: 0 }));
+          else if (Number(t.value) > 9999) showInputError(t, translate('validation.max', { max: 9999 }));
+          else clearInputError(t);
+          break;
         case 'hd-die': 
           if (/^d\d+$/.test(t.value)) {
             this.state.hd.die = t.value;
@@ -27602,6 +28591,11 @@ body {
           this.state.abilities[ab].score = toInt(t.value, 10, { min: 1, max: 30 });
           this.renderAbilities();
           this.renderSkills();
+          // ORDER 9: Validate ability score
+          const rawVal = Number(t.value);
+          if (rawVal < 1) showInputError(t, translate('validation.min', { min: 1 }));
+          else if (rawVal > 30) showInputError(t, translate('validation.max', { max: 30 }));
+          else clearInputError(t);
         }
       }
       if (t.matches('input[type="checkbox"][data-save]')) {
@@ -28094,40 +29088,140 @@ body {
         els.forEach((x) => { try { x.disabled = dis; } catch {} });
       };
       el.classList.remove('saving', 'saved', 'error');
+      el.removeAttribute('data-state');
 
       if (kind === 'saving') {
         lockIO(true);
         el.classList.add('saving');
-        el.textContent = 'Saving...';
-        el.title = 'Saving&#x2026;';
+        el.dataset.state = 'saving';
+        el.innerHTML = `<span class="save-status-icon">↻</span><span class="save-status-text">${t('save.saving')}</span>`;
+        el.title = t('save.saving');
         return;
       }
 
       if (kind === 'saved') {
         lockIO(false);
         el.classList.add('saved');
-        el.textContent = 'Saved';
+        el.dataset.state = 'saved';
+        el.innerHTML = `<span class="save-status-icon">✓</span><span class="save-status-text">${t('save.saved')}</span>`;
         if (this.lastSavedAt) {
           const d = new Date(this.lastSavedAt);
           const hh = String(d.getHours()).padStart(2, '0');
           const mm = String(d.getMinutes()).padStart(2, '0');
-          el.title = `Saved at ${hh}:${mm}`;
+          el.title = `${t('save.saved')} ${hh}:${mm}`;
         } else {
-          el.title = 'Saved';
+          el.title = t('save.saved');
         }
         return;
       }
 
       lockIO(false);
       el.classList.add('error');
-      el.textContent = 'Not saved';
-      el.title = 'Not saved (storage blocked?)';
+      el.dataset.state = 'failed';
+      el.innerHTML = `<span class="save-status-icon">⚠</span><span class="save-status-text">${t('save.failed')}</span><span class="save-status-retry" onclick="app.persist({force:true})">${t('save.retry')}</span>`;
+      el.title = t('save.failed');
     }
 
     updateUndoUI() {
       const b = this.dom && this.dom.undoBtn;
       if (!b) return;
       b.disabled = this.undoStack.length === 0;
+    }
+
+    /**
+     * v7.0.0: Show destructive action confirmation modal
+     * @param {Object} options - Configuration object
+     * @param {string} options.title - Modal title
+     * @param {string} options.message - Main message
+     * @param {string} options.detail - Additional detail (optional)
+     * @param {string} options.ackText - Checkbox label
+     * @param {string} options.confirmText - Confirm button text
+     * @param {string} options.cancelText - Cancel button text
+     * @returns {Promise<boolean>} - True if confirmed, false if cancelled
+     */
+    confirmDestructive(options) {
+      return new Promise((resolve) => {
+        const modal = document.getElementById('confirmDestructive');
+        const title = document.getElementById('confirmDestructiveTitle');
+        const message = document.getElementById('confirmDestructiveMessage');
+        const detail = document.getElementById('confirmDestructiveDetail');
+        const ackCheck = document.getElementById('confirmDestructiveAck');
+        const ackLabel = document.getElementById('confirmDestructiveAckLabel');
+        const cancelBtn = document.getElementById('confirmDestructiveCancel');
+        const confirmBtn = document.getElementById('confirmDestructiveConfirm');
+        
+        if (!modal || !title || !message || !confirmBtn || !cancelBtn) {
+          console.warn('[PlayerAlmanac] Confirmation modal elements not found');
+          resolve(false);
+          return;
+        }
+        
+        // Populate
+        title.textContent = options.title || t('confirm.deleteCharacterTitle');
+        message.textContent = options.message || '';
+        if (detail) {
+          detail.textContent = options.detail || '';
+          detail.style.display = options.detail ? 'block' : 'none';
+        }
+        if (ackLabel) {
+          ackLabel.textContent = options.ackText || t('confirm.cannotBeUndone');
+        }
+        confirmBtn.textContent = options.confirmText || t('confirm.deleteCharacter');
+        cancelBtn.textContent = options.cancelText || t('confirm.cancel');
+        
+        // Reset checkbox
+        if (ackCheck) {
+          ackCheck.checked = false;
+        }
+        confirmBtn.disabled = true;
+        
+        // Handlers
+        const cleanup = () => {
+          modal.style.display = 'none';
+          if (ackCheck) ackCheck.removeEventListener('change', onAckChange);
+          cancelBtn.removeEventListener('click', onCancel);
+          confirmBtn.removeEventListener('click', onConfirm);
+          modal.removeEventListener('click', onBackdropClick);
+          document.removeEventListener('keydown', onEscape);
+        };
+        
+        const onAckChange = () => {
+          confirmBtn.disabled = !ackCheck.checked;
+        };
+        
+        const onCancel = () => {
+          cleanup();
+          resolve(false);
+        };
+        
+        const onConfirm = () => {
+          cleanup();
+          resolve(true);
+        };
+        
+        const onBackdropClick = (e) => {
+          if (e.target === modal) {
+            cleanup();
+            resolve(false);
+          }
+        };
+        
+        const onEscape = (e) => {
+          if (e.key === 'Escape') {
+            cleanup();
+            resolve(false);
+          }
+        };
+        
+        if (ackCheck) ackCheck.addEventListener('change', onAckChange);
+        cancelBtn.addEventListener('click', onCancel);
+        confirmBtn.addEventListener('click', onConfirm);
+        modal.addEventListener('click', onBackdropClick);
+        document.addEventListener('keydown', onEscape);
+        
+        modal.style.display = 'flex';
+        cancelBtn.focus();
+      });
     }
 
 
@@ -28522,6 +29616,9 @@ body {
 
       this.renderCharacterSelect();
       await this.selectCharacter(id);
+      
+      // v7.0.0: Show success feedback
+      this.showSuccess('success.characterCreated', { name: st.name });
     }
 
     /**
@@ -28585,15 +29682,29 @@ body {
 
       this.renderCharacterSelect();
       await this.selectCharacter(id);
+      
+      // v7.0.0: Show success feedback
+      this.showSuccess('success.characterDuplicated', { name: srcState.name });
     }
 
     async deleteActiveCharacter(skipConfirm = false) {
       if (!this.activeCharId) return;
       const id = this.activeCharId;
       const name = (this.charIndex.find(c => c.id === id)?.name) || (this.state && this.state.name) || 'this character';
+      
+      // v7.0.0: Use enhanced confirmation dialog
       if (!skipConfirm) {
-        if (!confirm(`Delete "${name}"? This cannot be undone.`)) return;
+        const confirmed = await this.confirmDestructive({
+          title: t('confirm.deleteCharacterTitle'),
+          message: t('confirm.deleteCharacterMessage').replace('{name}', name),
+          detail: t('confirm.deleteCharacterDetail'),
+          ackText: t('confirm.cannotBeUndone'),
+          confirmText: t('confirm.deleteCharacter'),
+          cancelText: t('confirm.cancel')
+        });
+        if (!confirmed) return;
       }
+      
 // Remove state + portrait
       storageDel(this.charStateKey(id));
       try { await this.portrait.del(this.portraitKey(id)); } catch {}
@@ -28614,6 +29725,9 @@ body {
       this.saveCharIndex();
       this.renderCharacterSelect();
 
+      // v7.0.0: Show success feedback
+      this.showSuccess('success.characterDeleted', { name });
+      
       await this.selectCharacter(nextId, { skipSave: true, quiet: true });
     }
 
@@ -29940,6 +31054,13 @@ body {
       
       const bootWelcomeText = document.querySelector('.boot-onboarding-text');
       if (bootWelcomeText) bootWelcomeText.textContent = t('boot.welcomeText');
+      
+      // ORDER 6: Boot feature badges
+      const featureSpans = document.querySelectorAll('.boot-feature [data-i18n]');
+      featureSpans.forEach(span => {
+        const key = span.getAttribute('data-i18n');
+        if (key) span.textContent = t(key);
+      });
       
       // Boot action buttons - Import Character label
       const bootImportLabel = document.querySelector('.boot-import .boot-action-label');
@@ -34068,6 +35189,213 @@ Actions:
     }
 
     /* =============================================
+       v7.0.0: Enhanced Toast & Error Functions
+       ============================================= */
+    
+    /**
+     * Show enhanced toast with optional action button
+     * @param {string} title - Toast title
+     * @param {string} message - Toast message
+     * @param {Object|null} action - Optional action { label, handler }
+     * @param {string} type - Toast type: 'default', 'success', 'error', 'warning'
+     */
+    showToastWithAction(title, message, action = null, type = 'default') {
+      const el = this.dom.toasts;
+      if (!el) return;
+      
+      const toast = document.createElement('div');
+      const typeClass = type !== 'default' ? ` toast-${type}` : '';
+      toast.className = `toast toast-enhanced${typeClass}`;
+      
+      const icon = type === 'success' ? '✓' : type === 'error' ? '⚠' : type === 'warning' ? '⚡' : '';
+      
+      toast.innerHTML = `
+        ${icon ? `<span class="toast-icon">${icon}</span>` : ''}
+        <div class="toast-title">${this.escapeHtml(title)}</div>
+        <div class="toast-message">${this.escapeHtml(message)}</div>
+        ${action && action.label ? `<button class="toast-action" data-handler="${action.handler || ''}">${this.escapeHtml(action.label)}</button>` : ''}
+      `;
+      
+      // Action handler
+      if (action && action.label) {
+        const btn = toast.querySelector('.toast-action');
+        btn.addEventListener('click', () => {
+          if (action.handler && typeof window[action.handler] === 'function') {
+            window[action.handler]();
+          } else if (action.handler && typeof this[action.handler] === 'function') {
+            this[action.handler]();
+          }
+          toast.remove();
+        });
+      }
+      
+      el.appendChild(toast);
+      
+      const duration = action ? 8000 : 4000;
+      
+      if (this.gsapOK && this.motion) {
+        window.gsap.fromTo(toast, { opacity: 0, y: -20 }, { opacity: 1, y: 0, duration: 0.3 });
+        setTimeout(() => window.gsap.to(toast, { opacity: 0, y: -20, duration: 0.3, onComplete: () => toast.remove() }), duration);
+      } else {
+        toast.style.opacity = '1';
+        toast.style.transform = 'translateY(0)';
+        setTimeout(() => {
+          toast.style.opacity = '0';
+          toast.style.transform = 'translateY(-20px)';
+          setTimeout(() => toast.remove(), 300);
+        }, duration);
+      }
+    }
+    
+    /**
+     * Show user-friendly error message
+     * @param {string} errorKey - Dot-notation key into USER_ERRORS
+     * @param {*} technicalDetails - Technical details for debug mode
+     */
+    showUserError(errorKey, technicalDetails = null) {
+      const parts = errorKey.split('.');
+      let errorDef = USER_ERRORS;
+      for (const part of parts) {
+        errorDef = errorDef?.[part];
+        if (!errorDef) break;
+      }
+      if (!errorDef || typeof errorDef !== 'object' || !errorDef.title) {
+        errorDef = USER_ERRORS.generic;
+      }
+      
+      // Show enhanced toast with action
+      this.showToastWithAction(errorDef.title, errorDef.message, errorDef.action, 'error');
+      
+      // Log technical details in debug mode
+      if (window.__CM_DEBUG && technicalDetails) {
+        console.error('[PlayerAlmanac] Technical details:', technicalDetails);
+      }
+    }
+    
+    /**
+     * Show success toast
+     * @param {string} messageKey - Translation key for message
+     * @param {Object} params - Parameters for translation
+     */
+    showSuccess(messageKey, params = {}) {
+      const message = t(messageKey, params);
+      const toast = document.createElement('div');
+      toast.className = 'toast toast-success';
+      toast.innerHTML = `
+        <span class="toast-icon">✓</span>
+        <span class="toast-text">${this.escapeHtml(message)}</span>
+      `;
+      
+      const el = this.dom.toasts;
+      if (!el) return;
+      el.appendChild(toast);
+      
+      if (this.gsapOK && this.motion) {
+        window.gsap.fromTo(toast, { opacity: 0, y: -20 }, { opacity: 1, y: 0, duration: 0.3 });
+        setTimeout(() => window.gsap.to(toast, { opacity: 0, y: -20, duration: 0.3, onComplete: () => toast.remove() }), 3000);
+      } else {
+        toast.style.opacity = '1';
+        toast.style.transform = 'translateY(0)';
+        setTimeout(() => {
+          toast.style.opacity = '0';
+          toast.style.transform = 'translateY(-20px)';
+          setTimeout(() => toast.remove(), 300);
+        }, 3000);
+      }
+    }
+    
+    /**
+     * Update save status indicator
+     * @param {string} state - 'saving', 'saved', or 'failed'
+     * @param {string} message - Optional override message
+     */
+    setSaveStatus(state, message = null) {
+      const statusEl = document.getElementById('saveStatus');
+      if (!statusEl) return;
+      
+      const icons = {
+        saving: '↻',
+        saved: '✓',
+        failed: '⚠'
+      };
+      
+      const messages = {
+        saving: t('save.saving'),
+        saved: t('save.saved'),
+        failed: t('save.failed')
+      };
+      
+      statusEl.dataset.state = state;
+      statusEl.className = 'save-status';
+      statusEl.innerHTML = `
+        <span class="save-status-icon">${icons[state] || ''}</span>
+        <span class="save-status-text">${message || messages[state] || ''}</span>
+        ${state === 'failed' ? `<span class="save-status-retry" onclick="app.persist({force:true})">${t('save.retry')}</span>` : ''}
+      `;
+      
+      // Update timestamp for saved state
+      if (state === 'saved') {
+        this._lastSavedAt = Date.now();
+      }
+    }
+
+    /**
+     * v7.0.0: Create empty state HTML for empty lists
+     * @param {string} type - Type of empty state (spells, equipment, weapons, notes, map)
+     * @returns {string} HTML for empty state
+     */
+    createEmptyState(type) {
+      const configs = {
+        spells: {
+          icon: '📜',
+          title: t('empty.spellsTitle'),
+          text: t('empty.spellsText'),
+          action: { label: t('empty.addSpell'), handler: 'addSpell', icon: '➕' }
+        },
+        equipment: {
+          icon: '🎒',
+          title: t('empty.equipmentTitle'),
+          text: t('empty.equipmentText'),
+          action: { label: t('empty.addItem'), handler: 'addEquipmentItem', icon: '➕' }
+        },
+        weapons: {
+          icon: '⚔️',
+          title: t('empty.weaponsTitle'),
+          text: t('empty.weaponsText'),
+          action: { label: t('empty.addWeapon'), handler: 'addWeapon', icon: '➕' }
+        },
+        notes: {
+          icon: '📝',
+          title: t('empty.notesTitle'),
+          text: t('empty.notesText'),
+          action: null
+        },
+        map: {
+          icon: '🗺️',
+          title: t('empty.mapTitle'),
+          text: t('empty.mapText'),
+          action: { label: t('empty.uploadMap'), handler: 'triggerMapUpload', icon: '📤' }
+        }
+      };
+      
+      const config = configs[type];
+      if (!config) return '';
+      
+      return `
+        <div class="empty-state" data-empty-type="${type}">
+          <div class="empty-state-icon">${config.icon}</div>
+          <div class="empty-state-title">${this.escapeHtml(config.title)}</div>
+          <div class="empty-state-text">${this.escapeHtml(config.text)}</div>
+          ${config.action ? `
+            <button class="empty-state-action" data-action="${config.action.handler}">
+              ${config.action.icon || ''} ${this.escapeHtml(config.action.label)}
+            </button>
+          ` : ''}
+        </div>
+      `;
+    }
+
+    /* =============================================
        System Data Enhancement Methods
        Detect and apply system data to player entries
        ============================================= */
@@ -36650,6 +37978,21 @@ Actions:
       const mobileFrag = document.createDocumentFragment();
       const mobileEl = this.dom.weaponMobileList;
 
+      // v7.0.0: Show empty state if no weapons
+      if (!this.state.weapons || this.state.weapons.length === 0) {
+        const emptyDiv = document.createElement('tr');
+        emptyDiv.innerHTML = `<td colspan="5">${this.createEmptyState('weapons')}</td>`;
+        frag.appendChild(emptyDiv);
+        el.replaceChildren(frag);
+        if (mobileEl) {
+          const mobileEmpty = document.createElement('div');
+          mobileEmpty.innerHTML = this.createEmptyState('weapons');
+          mobileEl.replaceChildren(mobileEmpty);
+        }
+        if (this.mode === 'play') this.syncModeDom();
+        return;
+      }
+
       for (let i = 0; i < this.state.weapons.length; i++) {
         const w = this.state.weapons[i];
         const tr = document.createElement('tr');
@@ -37109,6 +38452,20 @@ Actions:
 
       // Section 10: Get sorted indices based on current sort
       const sortedIndices = this.getSortedSpellIndices();
+
+      // v7.0.0: Show empty state if no spells
+      if (!this.state.spells || this.state.spells.length === 0) {
+        const emptyDiv = document.createElement('tr');
+        emptyDiv.innerHTML = `<td colspan="9">${this.createEmptyState('spells')}</td>`;
+        frag.appendChild(emptyDiv);
+        el.replaceChildren(frag);
+        if (mobileEl) {
+          const mobileEmpty = document.createElement('div');
+          mobileEmpty.innerHTML = this.createEmptyState('spells');
+          mobileEl.replaceChildren(mobileEmpty);
+        }
+        return;
+      }
 
       for (const i of sortedIndices) {
         const s = this.state.spells[i];
@@ -39157,7 +40514,11 @@ Actions:
         if (this.dom.bootContinue) this.dom.bootContinue.hidden = false;
         if (this.dom.bootChoose) this.dom.bootChoose.hidden = !multipleCharacters;
         if (this.dom.bootNew) this.dom.bootNew.hidden = false;
-        if (this.dom.bootNewPrimary) this.dom.bootNewPrimary.hidden = true;
+        if (this.dom.bootNewPrimary) {
+          this.dom.bootNewPrimary.hidden = true;
+          // ORDER 6: Remove first-visit class since they have characters
+          this.dom.bootNewPrimary.classList.remove('first-visit');
+        }
         if (this.dom.bootImport) this.dom.bootImport.hidden = true;
         
         // Section 12/2: Show recent characters, hide onboarding
@@ -39216,7 +40577,13 @@ Actions:
         if (this.dom.bootContinue) this.dom.bootContinue.hidden = true;
         if (this.dom.bootChoose) this.dom.bootChoose.hidden = true;
         if (this.dom.bootNew) this.dom.bootNew.hidden = true;
-        if (this.dom.bootNewPrimary) this.dom.bootNewPrimary.hidden = false;
+        if (this.dom.bootNewPrimary) {
+          this.dom.bootNewPrimary.hidden = false;
+          // ORDER 6: Add first-visit pulse animation for new users
+          if (isFirstVisit()) {
+            this.dom.bootNewPrimary.classList.add('first-visit');
+          }
+        }
         if (this.dom.bootImport) this.dom.bootImport.hidden = false;
         
         // Section 12/2: Show onboarding, hide recent characters
@@ -41337,6 +42704,12 @@ console.log('[PA Addon] Host API bridge initialized for addon:', window.PA.addon
       if (this._bootHardStop) clearTimeout(this._bootHardStop);
       // P0 FIX: Set flag to allow skipBoot even without valid existing character
       this._creatingNewCharacter = true;
+      // ORDER 6: Mark as visited when creating first character
+      markVisited();
+      // Remove first-visit class if present
+      if (this.dom.bootNewPrimary) {
+        this.dom.bootNewPrimary.classList.remove('first-visit');
+      }
       this.skipBoot(false);
       // Short delay to let the boot animation complete before creating
       await new Promise(r => setTimeout(r, 100));
@@ -42201,6 +43574,30 @@ console.log('[PA Addon] Host API bridge initialized for addon:', window.PA.addon
   const app = new SheetApp();
   // P1.2: Store global reference for storage quota error handling
   window.__PA_INSTANCE = app;
+  // Also expose as window.app for global access
+  window.app = app;
+
+  // ============================================
+  // ORDER 8: VERSION DISPLAY AND UPDATE CHECK
+  // ============================================
+  
+  // Update version displays from APP_VERSION constant
+  const bootVersionEl = document.getElementById('bootVersionNumber');
+  if (bootVersionEl) bootVersionEl.textContent = APP_VERSION;
+  
+  const aboutVersionEl = document.getElementById('aboutVersionNumber');
+  if (aboutVersionEl) aboutVersionEl.textContent = APP_VERSION;
+  
+  // Add click handler for What's New button in About dialog
+  document.addEventListener('click', (e) => {
+    if (e.target.closest('#whatsNewBtn')) {
+      e.preventDefault();
+      showChangelog();
+    }
+  });
+  
+  // Check for version update (shows toast if updated)
+  setTimeout(() => checkForUpdate(), 3000);
 
   // P0-1: Never strand the user behind the boot overlay if something throws during init.
   // Instead of hiding everything, show a recovery UI with export/reset options.
@@ -43385,6 +44782,14 @@ console.log('[PA Addon] Host API bridge initialized for addon:', window.PA.addon
       <button class="credits-close-btn" id="creditsCloseBtn" type="button" aria-label="Close">&times;</button>
     </header>
     <div class="credits-body">
+      
+      <!-- ORDER 8: Version Info Box -->
+      <div class="credits-version-box">
+        <div class="credits-version-info">
+          <strong>Version <span id="aboutVersionNumber">7.0.0</span></strong>
+        </div>
+        <button class="credits-whats-new-btn" id="whatsNewBtn" type="button" data-i18n="about.whatsNew">What's New</button>
+      </div>
       
       <!-- Project Info -->
       <div class="credits-section">
