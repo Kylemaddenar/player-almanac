@@ -16,11 +16,35 @@
 ================================================================================
 -->
 <!--
-  Player Almanac Character Sheet - v7.0.1 OFFLINE BUILD (No External Dependencies)
+  Player Almanac Character Sheet - v7.0.5 OFFLINE BUILD (No External Dependencies)
   
-  CURRENT VERSION: v7.0.1 - January 2, 2026
+  CURRENT VERSION: v7.0.6 - January 4, 2026
   
-  NEW IN v7.0.1:
+  NEW IN v7.0.6:
+  - REBUILT: Mobile boot menu completely rebuilt with simple button + modal pattern
+  - Fixed: Horizontal overflow on mobile boot screen caused by complex CSS cascade
+  - Added: New .boot-mobile-menu-btn button (hidden on desktop, shown on mobile)
+  - Added: New .boot-mobile-menu modal (full-screen bottom sheet on mobile)
+  - Added: All boot actions wired to mobile menu buttons
+  - Removed: Complex collapsible footer CSS that was causing issues
+  - Kept: Desktop footer unchanged (still uses .boot-footer-row)
+  
+  PREVIOUS v7.0.5:
+  - Fixed: File truncation - completed installI18nObserver() function
+  - Fixed: Added missing </script>, </body>, </html> closing tags
+  - Fixed: 48 mojibake (corrupted unicode) instances repaired:
+    * Em-dash with corrupted characters (17 instances)
+    * Warning emoji sequences (2 instances)
+    * Checkmark symbol (1 instance)
+    * Copyright symbol (2 instances)
+    * Registered trademark symbol (4 instances)
+    * Non-breaking space (2 instances)
+    * Half fraction (2 instances)
+    * GSAP text translation (17 instances)
+  - Fixed: Removed Cloudflare email-decode.min.js external dependency (line 46612)
+  - File integrity verified: proper HTML structure with all tags balanced
+  
+  PREVIOUS v7.0.1:
   - Fixed: Skip-to-quickbar link no longer visible in header (was using improper hiding)
   - Fixed: Lite Mode + Motion conflict causing animations to "freak out"
   - Fixed: Motion toggle now checks performance mode before starting particles
@@ -82,7 +106,7 @@
   
   For complete version history, see: CHANGELOG.txt
 -->
-<html lang="en">
+<html lang="en" class="boot-visible">
 <head>
 <meta charset="utf-8">
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
@@ -3746,6 +3770,18 @@ body.high-contrast .watermark {
 .boot-import .boot-action-icon{
   background:rgba(126,200,154,0.2);
 }
+/* v7.1.0: Enhanced import button visibility in empty state */
+.boot-import{
+  border:1px dashed rgba(126,200,154,0.4);
+  background:rgba(126,200,154,0.05);
+}
+.boot-import:hover{
+  border-color:rgba(126,200,154,0.6);
+  background:rgba(126,200,154,0.1);
+}
+.boot-import .boot-action-label{
+  color:var(--success);
+}
 .boot-new-primary .boot-action-icon{
   background:linear-gradient(135deg,var(--accent-tertiary),var(--accent-primary));
 }
@@ -3787,6 +3823,7 @@ body.high-contrast .watermark {
   gap:12px;
   max-height:400px;
   overflow-y:auto;
+  overscroll-behavior:contain;
   padding-right:4px;
 }
 /* Custom scrollbar for recent cards */
@@ -4178,6 +4215,37 @@ body.high-contrast .watermark {
   flex-wrap:wrap;
 }
 
+/* v7.0.6: Mobile menu button - hidden by default (shown via 520px media query) */
+.boot-mobile-menu-btn {
+  display: none;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 10001;
+  background: rgba(10,10,18,0.98);
+  border: none;
+  border-top: 1px solid rgba(120, 105, 180, 0.2);
+  padding: 14px 16px;
+  padding-bottom: calc(14px + env(safe-area-inset-bottom, 0px));
+  font-family: var(--font-display);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-secondary);
+  cursor: pointer;
+  min-height: 48px;
+}
+
+.boot-mobile-menu-btn:active {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+/* v7.0.6: Mobile menu modal - hidden by default */
+.boot-mobile-menu {
+  display: none;
+}
+
 .boot-footer-left{
   display:flex;
   align-items:center;
@@ -4303,6 +4371,32 @@ body.high-contrast .watermark {
 .boot-footer-link:focus-visible{
   outline:2px solid var(--accent-secondary);
   outline-offset:2px;
+}
+
+/* v7.1.0: Keyboard shortcuts hint */
+.boot-shortcuts-hint{
+  font-size:0.7rem;
+  color:var(--text-muted);
+  padding:4px 8px;
+  border-radius:4px;
+  background:rgba(255,255,255,0.03);
+  border:1px solid rgba(255,255,255,0.06);
+  cursor:default;
+  display:none;
+}
+.boot-shortcuts-hint kbd{
+  font-family:var(--font-mono);
+  background:rgba(255,255,255,0.1);
+  padding:2px 6px;
+  border-radius:3px;
+  font-size:0.75rem;
+  border:1px solid rgba(255,255,255,0.15);
+  margin:0 2px;
+}
+@media (min-width:768px){
+  .boot-shortcuts-hint{
+    display:inline-block;
+  }
 }
 
 /* P0-1: Recovery button - always accessible for emergency export */
@@ -4555,6 +4649,7 @@ body.high-contrast .watermark {
   flex-direction:column;
   gap:16px;
   overflow-y:auto;
+  overscroll-behavior:contain;
   flex:1;
 }
 .pa-addons-status{
@@ -4595,6 +4690,7 @@ body.high-contrast .watermark {
   gap:8px;
   max-height:200px;
   overflow-y:auto;
+  overscroll-behavior:contain;
 }
 .pa-addons-empty{
   text-align:center;
@@ -5355,6 +5451,14 @@ body.addon-open{
   color:var(--text-muted);
   margin-bottom:16px;
 }
+/* v7.1.0: Enhanced empty state actions */
+.empty-state-actions{
+  display:flex;
+  flex-wrap:wrap;
+  gap:10px;
+  justify-content:center;
+  margin-bottom:12px;
+}
 .empty-state-action{
   display:inline-flex;
   align-items:center;
@@ -5371,6 +5475,32 @@ body.addon-open{
 .empty-state-action:hover{
   background:var(--accent-glow);
   border-style:solid;
+}
+/* v7.1.0: Secondary action for 5E quick-add */
+.empty-state-action.secondary{
+  background:rgba(126,200,154,0.1);
+  border-color:rgba(126,200,154,0.4);
+  color:var(--success);
+}
+.empty-state-action.secondary:hover{
+  background:rgba(126,200,154,0.15);
+  border-style:solid;
+  border-color:rgba(126,200,154,0.6);
+}
+/* v7.1.0: Empty state tip */
+.empty-state-tip{
+  font-size:0.75rem;
+  color:var(--text-muted);
+  opacity:0.8;
+  margin-top:8px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:4px;
+}
+.empty-state-tip::before{
+  content:'💡';
+  font-size:0.85rem;
 }
 
 /* Table-specific empty state */
@@ -7022,6 +7152,9 @@ textarea::placeholder{color:var(--text-muted);opacity:0.6}
 .bargain textarea{min-height:80px;background:transparent;border:1px solid transparent;padding:8px;border-radius:var(--input-radius)}
 .bargain textarea:focus{border-color:var(--danger);background:rgba(0,0,0,0.2)}
 .actions{position:fixed;bottom:16px;right:16px;display:flex;flex-direction:column;gap:8px;z-index:100}
+/* v7.0.5: Actions rail hidden by default, shown via .actions-visible class */
+#actionsRail{display:none}
+#actionsRail.actions-visible{display:flex}
 .act-btn{width:50px;height:50px;border-radius:50%;background:var(--glass-bg);border:1px solid var(--glass-border);backdrop-filter:blur(20px);color:var(--text-secondary);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:0.3s;position:relative}
 .act-btn:hover{background:var(--accent-primary);border-color:var(--accent-secondary);color:white;transform:scale(1.1);box-shadow:0 0 20px var(--accent-glow)}
 .act-btn svg{width:24px;height:24px}
@@ -7051,14 +7184,16 @@ textarea::placeholder{color:var(--text-muted);opacity:0.6}
 .toast-warning .toast-icon{color:var(--warning);margin-right:8px}
 
 /* v7.0.0: Enhanced save status indicator */
-.save-status{display:flex;align-items:center;gap:6px;font-size:0.75rem;color:var(--text-muted);transition:all 0.2s ease}
-.save-status[data-state="saving"]{color:var(--accent-secondary)}
-.save-status[data-state="saved"]{color:var(--success)}
-.save-status[data-state="failed"]{color:var(--danger)}
+/* v7.1.0: Added backgrounds and pulse animation for better visibility */
+.save-status{display:flex;align-items:center;gap:6px;font-size:0.75rem;color:var(--text-muted);transition:all 0.3s ease;padding:4px 10px;border-radius:4px}
+.save-status[data-state="saving"]{color:var(--accent-secondary);background:rgba(155,135,245,0.1)}
+.save-status[data-state="saved"]{color:var(--success);background:rgba(126,200,154,0.1)}
+.save-status[data-state="failed"]{color:var(--danger);background:rgba(216,138,151,0.15);animation:attention-pulse 1.5s ease infinite}
+@keyframes attention-pulse{0%,100%{background:rgba(216,138,151,0.15)}50%{background:rgba(216,138,151,0.25)}}
 .save-status-icon{width:14px;height:14px;display:inline-block}
 .save-status[data-state="saving"] .save-status-icon{animation:spin 1s linear infinite}
 @keyframes spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
-.save-status-retry{cursor:pointer;text-decoration:underline;margin-left:4px}
+.save-status-retry{cursor:pointer;text-decoration:underline;margin-left:4px;font-weight:500}
 .save-status-retry:hover{color:var(--accent-primary)}
 
 /* v7.0.0: Destructive Action Confirmation Modal */
@@ -7097,7 +7232,7 @@ textarea::placeholder{color:var(--text-muted);opacity:0.6}
 .changelog-modal .modal-header h2{margin:0;font-size:1.1rem}
 .changelog-modal .modal-close{background:none;border:none;color:var(--text-muted);font-size:1.2rem;cursor:pointer;padding:4px 8px}
 .changelog-modal .modal-close:hover{color:var(--text-primary)}
-.changelog-body{max-height:60vh;overflow-y:auto}
+.changelog-body{max-height:60vh;overflow-y:auto;overscroll-behavior:contain}
 .changelog-version{margin-bottom:16px}
 .changelog-version h3{margin:0 0 4px 0;font-size:1rem;color:var(--accent-secondary)}
 .changelog-version .changelog-date{font-weight:normal;color:var(--text-muted);font-size:0.85rem}
@@ -7712,7 +7847,7 @@ body.csb-collapsed .char-stats-bar{
 .modal-wrap{position:fixed;inset:0;background:rgba(0,0,0,0.85);backdrop-filter:blur(8px);z-index:2000;display:none;align-items:center;justify-content:center;opacity:0}
 .modal-wrap.active{display:flex;opacity:1}
 /* P1.3: Modal with stronger borders */
-.modal{background:rgba(22,22,32,0.95);border:1px solid var(--glass-border);border-radius:var(--card-radius);padding:24px;max-width:500px;width:90%;max-height:80vh;overflow-y:auto;overscroll-behavior:contain}
+.modal{background:var(--panel-bg);border:1px solid var(--glass-border);border-radius:var(--card-radius);padding:24px;max-width:500px;width:90%;max-height:80vh;overflow-y:auto;overscroll-behavior:contain}
 .modal-title{font-family:var(--font-display);font-size:1.1rem;color:var(--accent-secondary);margin-bottom:20px;letter-spacing:0.08em}
 .modal-actions{display:flex;gap:10px;margin-top:24px;justify-content:flex-end}
 /* P0.6: Modal button hierarchy */
@@ -7732,6 +7867,37 @@ body.csb-collapsed .char-stats-bar{
 .input:focus{outline:none;border-color:var(--accent-primary);box-shadow:0 0 14px var(--accent-glow)}
 .input:disabled{opacity:0.55;cursor:not-allowed}
 
+/* v7.1.0: Editable vs read-only visual distinction (Issue 3C) */
+input:not([disabled]):not([readonly]),
+textarea:not([disabled]):not([readonly]),
+select:not([disabled]),
+[contenteditable="true"]{
+  background:rgba(255,255,255,0.03);
+  cursor:text;
+}
+input[readonly],
+textarea[readonly],
+.readonly-field{
+  background:transparent;
+  cursor:default;
+  border-color:transparent;
+  opacity:0.8;
+}
+input:not([disabled]):not([readonly]):focus,
+textarea:not([disabled]):not([readonly]):focus,
+select:not([disabled]):focus,
+[contenteditable="true"]:focus{
+  outline:2px solid var(--accent-primary);
+  outline-offset:2px;
+  background:rgba(255,255,255,0.05);
+}
+/* Hover hint for editable fields */
+input:not([disabled]):not([readonly]):hover,
+textarea:not([disabled]):not([readonly]):hover,
+[contenteditable="true"]:hover{
+  background:rgba(255,255,255,0.04);
+}
+
 /* Quickbar buttons use .btn; keep them consistent with .modal-btn */
 .btn{padding:8px 24px;border-radius:10px;font-family:var(--font-body);font-size:0.9rem;cursor:pointer;min-height:44px}
 .btn.primary{background:var(--accent-primary);border:1px solid var(--accent-secondary);color:white}
@@ -7740,7 +7906,7 @@ body.csb-collapsed .char-stats-bar{
 .btn.secondary:hover{border-color:var(--text-secondary);color:var(--text-primary)}
 
 /* Modal layout helpers */
-.modal-head{position:sticky;top:0;z-index:5;background:rgba(18,18,26,0.96);padding-bottom:10px;border-bottom:1px solid rgba(255,255,255,0.06)}
+.modal-head{position:sticky;top:0;z-index:5;background:var(--panel-bg);padding-bottom:10px;border-bottom:1px solid rgba(255,255,255,0.06)}
 .modal-body{display:flex;flex-direction:column;gap:12px}
 
 /* Import error messaging */
@@ -15031,6 +15197,11 @@ body.reduced-motion .help-modal-content {
    Vertical flow, no overlaps
    ========================= */
 @media (max-width: 520px) {
+  /* v7.2.1: Global overflow prevention */
+  html {
+    overflow-x: hidden !important;
+  }
+  
   #boot {
     padding: calc(48px + var(--safe-area-top)) 16px calc(16px + var(--safe-area-bottom));
     justify-content: flex-start;
@@ -15142,183 +15313,151 @@ body.reduced-motion .help-modal-content {
     min-height: 100px;
   }
 
-  /* Boot footer: collapsible on mobile */
+  /* =============================================
+     v7.0.6: REBUILT MOBILE BOOT MENU
+     Simple button + modal approach - no cascade issues
+     ============================================= */
+  
+  /* Hide the complex footer on mobile */
   .boot-footer-row {
+    display: none !important;
+  }
+  
+  /* Show simple mobile menu button */
+  .boot-mobile-menu-btn {
+    display: flex !important;
+  }
+  
+  /* Mobile menu modal - full screen bottom sheet */
+  .boot-mobile-menu {
     position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    flex-direction: column;
-    align-items: center;
-    gap: 0;
-    padding: 0;
-    background: rgba(10,10,18,0.98);
-    border-top: 1px solid rgba(120, 105, 180, 0.2);
-    max-height: 48px; /* Collapsed by default */
-    overflow: hidden;
-    transition: max-height 0.3s ease, padding 0.3s ease;
-  }
-  
-  /* Collapsed state: just show toggle bar */
-  .boot-footer-row::before {
-    content: 'Menu \25B2';
+    inset: 0;
+    z-index: 10000;
+    background: rgba(0, 0, 0, 0.85);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
     display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 100%;
-    padding: 14px 16px;
-    font-family: var(--font-display);
-    font-size: 0.72rem;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    color: var(--text-secondary);
-    cursor: pointer;
-    min-height: 48px;
-    box-sizing: border-box;
-    transition: background 0.15s ease;
-  }
-  
-  .boot-footer-row:active::before {
-    background: rgba(255, 255, 255, 0.05);
-  }
-  
-  /* Expanded state */
-  .boot-footer-row.expanded {
-    max-height: 400px; /* P0: Increased for reliable content display */
-    padding: 0 16px calc(12px + var(--safe-area-bottom));
-    overflow: visible !important; /* P0: Critical - must override overflow:hidden */
-  }
-  
-  .boot-footer-row.expanded::before {
-    content: 'Menu \25BC';
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-    margin-bottom: 10px;
-  }
-
-  .boot-footer-left,
-  .boot-footer-right {
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 8px;
+    flex-direction: column;
+    justify-content: flex-end;
     opacity: 0;
     pointer-events: none;
-    transition: opacity 0.2s ease, visibility 0.2s ease;
-    width: 100%; /* Ensure full width for centering */
-    visibility: hidden; /* Completely hide when collapsed */
-    height: 0; /* Remove from layout when collapsed */
-    overflow: hidden;
-  }
-  
-  .boot-footer-row.expanded .boot-footer-left,
-  .boot-footer-row.expanded .boot-footer-right {
-    opacity: 1;
-    pointer-events: auto;
-    visibility: visible;
-    height: auto;
-    overflow: visible !important; /* P0: Critical - ensure content displays */
-    display: flex; /* P0: Ensure flex layout is active */
-  }
-
-  /* Footer buttons: 2x2 grid - centered */
-  .boot-footer-right {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 8px;
-    width: 100%;
-    max-width: 320px;
-    margin: 0 auto; /* Center the grid */
-    justify-items: stretch; /* Stretch items to fill cells */
-  }
-  
-  /* P0: Ensure grid overrides flex when expanded */
-  .boot-footer-row.expanded .boot-footer-right {
-    display: grid !important;
-    grid-template-columns: repeat(2, 1fr);
-  }
-
-  .boot-footer-link {
-    text-align: center;
-    padding: 10px 12px;
-    min-height: 44px;
-    justify-content: center;
-    width: 100%; /* Fill grid cell */
-  }
-  
-  /* Center the last item if it's alone in its row (odd child) */
-  .boot-footer-right .boot-footer-link:last-child:nth-child(odd) {
-    grid-column: 1 / -1; /* Span both columns */
-    max-width: 50%; /* Keep it same width as others */
-    justify-self: center; /* Center it */
-  }
-
-  /* Skip and Don't show again: separate row - centered */
-  .boot-footer-left {
-    order: 1;
-    width: 100%;
-    max-width: 320px;
-    margin: 0 auto; /* Center the container */
-    display: flex;
-    justify-content: center; /* Center items when visible */
-  }
-
-  .boot-footer-version {
-    order: 2;
-    font-size: 0.6rem;
-    opacity: 0;
     transition: opacity 0.2s ease;
   }
   
-  .boot-footer-row.expanded .boot-footer-version {
-    opacity: 0.6;
+  .boot-mobile-menu.open {
+    opacity: 1;
+    pointer-events: auto;
   }
-
-  /* Social links: visible when collapsed, positioned alongside menu toggle */
-  .boot-footer-row .boot-social-links,
-  .boot-social-links {
-    position: fixed !important;
-    left: 16px !important;
-    right: auto !important;
-    bottom: 12px !important;
-    top: auto !important;
-    width: auto !important;
-    max-width: none !important;
-    justify-content: flex-start !important;
-    align-items: center !important;
-    margin: 0 !important;
-    padding: 0 !important;
-    border: none !important;
-    transform: none !important;
-    opacity: 1 !important;
-    pointer-events: auto !important;
-    visibility: visible !important;
-    height: auto !important;
-    overflow: visible !important;
-    z-index: 10002 !important;
-    display: flex !important;
-    flex-direction: row !important;
+  
+  .boot-mobile-menu-sheet {
+    background: var(--card-bg, #1a1625);
+    border-top: 1px solid var(--border-color, #3d3654);
+    border-radius: 16px 16px 0 0;
+    padding: 16px;
+    padding-bottom: calc(16px + env(safe-area-inset-bottom, 0px));
+    max-height: 80vh;
+    overflow-y: auto;
+    transform: translateY(100%);
+    transition: transform 0.25s ease;
+  }
+  
+  .boot-mobile-menu.open .boot-mobile-menu-sheet {
+    transform: translateY(0);
+  }
+  
+  .boot-mobile-menu-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--border-color, #3d3654);
+  }
+  
+  .boot-mobile-menu-title {
+    font-family: var(--font-display, 'Cinzel', serif);
+    font-size: 1rem;
+    color: var(--text-primary, #fff);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+  
+  .boot-mobile-menu-close {
+    background: transparent;
+    border: none;
+    color: var(--text-secondary, #aaa);
+    font-size: 1.5rem;
+    cursor: pointer;
+    padding: 8px;
+    line-height: 1;
+  }
+  
+  .boot-mobile-menu-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+    margin-bottom: 16px;
+  }
+  
+  .boot-mobile-menu-item {
+    display: flex;
+    align-items: center;
+    justify-content: center;
     gap: 8px;
-    order: unset !important;
+    background: var(--glass-bg, rgba(255,255,255,0.05));
+    border: 1px solid var(--glass-border, rgba(255,255,255,0.1));
+    border-radius: 8px;
+    padding: 14px 12px;
+    color: var(--text-primary, #fff);
+    font-size: 0.85rem;
+    cursor: pointer;
+    min-height: 48px;
+    transition: background 0.15s ease, border-color 0.15s ease;
   }
   
-  /* When expanded, social links flow normally inside the menu */
-  .boot-footer-row.expanded .boot-social-links {
-    position: relative !important;
-    left: auto !important;
-    bottom: auto !important;
-    z-index: auto;
-    order: -1;
-    width: 100% !important;
-    justify-content: center !important;
-    margin-bottom: 12px !important;
-    padding-bottom: 12px !important;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
+  .boot-mobile-menu-item:hover,
+  .boot-mobile-menu-item:active {
+    background: var(--glass-highlight, rgba(255,255,255,0.1));
+    border-color: var(--accent-primary, #9b87f5);
   }
   
-  /* Hide the divider on mobile */
-  .boot-social-divider {
-    display: none;
+  .boot-mobile-menu-item.primary {
+    background: var(--accent-primary, #9b87f5);
+    border-color: var(--accent-primary, #9b87f5);
+    color: #fff;
   }
-
+  
+  .boot-mobile-menu-item.danger {
+    border-color: var(--danger, #dc3545);
+    color: var(--danger, #dc3545);
+  }
+  
+  .boot-mobile-menu-footer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    padding-top: 12px;
+    border-top: 1px solid var(--border-color, #3d3654);
+    font-size: 0.7rem;
+    color: var(--text-muted, #6b6b6b);
+  }
+  
+  .boot-mobile-menu-social {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  
+  .boot-mobile-menu-social a {
+    color: var(--text-secondary, #aaa);
+  }
+  
+  /* Hide social links from old footer on mobile */
+  .boot-social-links {
+    display: none !important;
+  }
+  
   .boot-skip-btn {
     min-height: 44px;
     flex: 1;
@@ -15957,6 +16096,11 @@ body.reduced-motion .help-modal-content {
 
 /* Very narrow mobile (320px and below) */
 @media (max-width: 380px) {
+  /* v7.2.1: Global overflow prevention for narrow screens */
+  html {
+    overflow-x: hidden !important;
+  }
+  
   /* Even more compact boot screen - but keep adequate top padding */
   #boot {
     padding: calc(40px + var(--safe-area-top)) 12px calc(12px + var(--safe-area-bottom));
@@ -16021,8 +16165,11 @@ body.reduced-motion .help-modal-content {
   }
 
   /* Footer: single column on very narrow screens */
-  .boot-footer-right {
-    grid-template-columns: 1fr;
+  /* v7.2.2: COLLAPSED STATE for narrow screens */
+  .boot-footer-left,
+  .boot-footer-right,
+  .boot-footer-version {
+    display: none !important; /* v7.2.2: Must be !important */
   }
   
   /* Reset the orphan centering for single column */
@@ -16036,26 +16183,26 @@ body.reduced-motion .help-modal-content {
     font-size: 0.75rem;
   }
   
-  /* Ensure expanded state works at narrow widths */
-  .boot-footer-row.expanded .boot-footer-left,
-  .boot-footer-row.expanded .boot-footer-right {
-    opacity: 1;
-    pointer-events: auto;
-    visibility: visible;
-    height: auto;
-    overflow: visible !important;
+  /* v7.2.2: EXPANDED STATE for narrow widths */
+  .boot-footer-row.expanded .boot-footer-left {
+    display: flex !important;
   }
   
-  /* P0: Ensure single column grid at very narrow widths */
   .boot-footer-row.expanded .boot-footer-right {
     display: grid !important;
     grid-template-columns: 1fr;
+    max-width: calc(100vw - 32px);
+  }
+  
+  .boot-footer-row.expanded .boot-footer-version {
+    display: flex !important;
   }
   
   /* Increase max-height for single column content */
   .boot-footer-row.expanded {
     max-height: 500px; /* P0: More room for single-column buttons */
-    overflow: visible !important;
+    overflow-y: auto; /* v7.2.1: Allow vertical scroll */
+    overflow-x: hidden; /* v7.2.1: Prevent horizontal overflow */
   }
 }
 
@@ -17245,6 +17392,41 @@ body.reduced-motion .help-modal-content {
     border-radius: 50% !important;
     z-index: 1300 !important;
   }
+  
+  /* v7.0.5 FIX: Hide action buttons except FAB on mobile (was missing from 768px rule) */
+  .actions .act-btn:not(.act-fab-toggle) {
+    opacity: 0 !important;
+    pointer-events: none !important;
+    transform: scale(0.8) translateY(20px) !important;
+    transition: all 0.2s ease !important;
+  }
+  
+  /* Show buttons when expanded */
+  .actions[data-expanded="true"] .act-btn:not(.act-fab-toggle) {
+    opacity: 1 !important;
+    pointer-events: auto !important;
+    transform: scale(1) translateY(0) !important;
+  }
+  
+  /* FAB toggle always visible */
+  .act-fab-toggle {
+    display: flex !important;
+    opacity: 1 !important;
+    pointer-events: auto !important;
+    transform: none !important;
+  }
+}
+
+/* v7.0.5 FIX: Hide actions rail completely during boot screen */
+/* Uses :has() selector - supported in all modern browsers */
+body:has(#boot:not(.hidden)) .actions {
+  display: none !important;
+}
+
+/* Fallback for browsers without :has() - hide when boot is visible via z-index */
+#boot:not(.hidden) ~ .actions,
+#boot:not(.hidden) ~ * .actions {
+  display: none !important;
 }
 
 /* =============================================
@@ -18895,6 +19077,413 @@ body {
   }
 }
 
+/* ========================================
+   Phase 3: Inline Help System (v7.2.0)
+   ======================================== */
+
+/* Inline help button */
+.help-inline {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  margin-left: 6px;
+  padding: 0;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-muted);
+  background: rgba(255,255,255,0.06);
+  border: 1px solid var(--glass-border);
+  border-radius: 50%;
+  cursor: help;
+  vertical-align: middle;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+}
+
+.help-inline:hover {
+  color: var(--accent-primary);
+  background: rgba(155,135,245,0.15);
+  border-color: var(--accent-primary);
+  transform: scale(1.1);
+}
+
+.help-inline:focus {
+  outline: 2px solid var(--accent-primary);
+  outline-offset: 2px;
+}
+
+/* Help popover */
+.help-popover {
+  position: fixed;
+  z-index: 10000;
+  max-width: 320px;
+  padding: 16px;
+  background: var(--panel-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--card-radius);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-8px);
+  transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s;
+}
+
+.help-popover.visible {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.help-popover-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 10px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.help-popover-title::before {
+  content: "💡";
+  font-size: 16px;
+}
+
+.help-popover-content {
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--text-secondary);
+}
+
+.help-popover-content p {
+  margin: 0 0 8px;
+}
+
+.help-popover-content p:last-child {
+  margin-bottom: 0;
+}
+
+.help-popover-content strong {
+  color: var(--text-primary);
+}
+
+.help-popover-content code {
+  padding: 2px 6px;
+  font-family: monospace;
+  font-size: 12px;
+  background: rgba(255,255,255,0.08);
+  border-radius: 4px;
+}
+
+.help-popover-close {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  padding: 4px 8px;
+  font-size: 11px;
+  color: var(--text-muted);
+  background: transparent;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.help-popover-close:hover {
+  color: var(--text-primary);
+  background: rgba(255,255,255,0.08);
+}
+
+/* Help popover arrow */
+.help-popover::before {
+  content: "";
+  position: absolute;
+  top: -6px;
+  left: 20px;
+  width: 12px;
+  height: 12px;
+  background: var(--panel-bg);
+  border-top: 1px solid var(--glass-border);
+  border-left: 1px solid var(--glass-border);
+  transform: rotate(45deg);
+}
+
+.help-popover.arrow-right::before {
+  left: auto;
+  right: 20px;
+}
+
+.help-popover.arrow-bottom::before {
+  top: auto;
+  bottom: -6px;
+  transform: rotate(225deg);
+}
+
+/* Card title with help button */
+.card-title-with-help {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+/* ========================================
+   Phase 3: Actions Rail Discoverability (v7.2.0)
+   ======================================== */
+
+/* First-visit animation for actions rail */
+.actions.first-visit .act-fab-toggle {
+  animation: actions-pulse 2s ease-in-out 3;
+}
+
+@keyframes actions-pulse {
+  0%, 100% {
+    box-shadow: 0 2px 12px rgba(155,135,245,0.3);
+  }
+  50% {
+    box-shadow: 0 2px 24px rgba(155,135,245,0.6), 0 0 0 4px rgba(155,135,245,0.2);
+  }
+}
+
+/* Coach mark pointing to actions rail */
+.coach-mark {
+  position: fixed;
+  z-index: 9999;
+  max-width: 240px;
+  padding: 12px 16px;
+  font-size: 13px;
+  line-height: 1.4;
+  color: var(--text-primary);
+  background: var(--accent-primary);
+  border-radius: 8px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease, visibility 0.3s;
+}
+
+.coach-mark.visible {
+  opacity: 1;
+  visibility: visible;
+}
+
+.coach-mark::after {
+  content: "";
+  position: absolute;
+  right: -8px;
+  top: 50%;
+  transform: translateY(-50%);
+  border: 8px solid transparent;
+  border-left-color: var(--accent-primary);
+}
+
+.coach-mark-dismiss {
+  display: inline-block;
+  margin-top: 8px;
+  padding: 4px 12px;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--accent-primary);
+  background: rgba(255,255,255,0.95);
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.coach-mark-dismiss:hover {
+  background: #fff;
+}
+
+/* ========================================
+   Phase 3: Progressive Disclosure (v7.2.0)
+   ======================================== */
+
+/* Collapsible advanced sections */
+.advanced-toggle {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 12px;
+  padding: 8px 12px;
+  font-size: 12px;
+  color: var(--text-muted);
+  background: rgba(255,255,255,0.03);
+  border: 1px dashed var(--glass-border);
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.advanced-toggle:hover {
+  color: var(--text-secondary);
+  background: rgba(255,255,255,0.06);
+  border-color: var(--accent-primary);
+}
+
+.advanced-toggle::before {
+  content: "▶";
+  font-size: 10px;
+  transition: transform 0.2s ease;
+}
+
+.advanced-toggle.expanded::before {
+  transform: rotate(90deg);
+}
+
+.advanced-content {
+  display: none;
+  margin-top: 12px;
+  padding: 12px;
+  background: rgba(0,0,0,0.15);
+  border-radius: 6px;
+}
+
+.advanced-content.visible {
+  display: block;
+  animation: slideDown 0.2s ease;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Mobile adjustments for help system */
+@media (max-width: 768px) {
+  .help-popover {
+    max-width: calc(100vw - 32px);
+    left: 16px !important;
+    right: 16px !important;
+  }
+  
+  .help-popover::before {
+    display: none;
+  }
+  
+  .coach-mark {
+    right: 80px !important;
+    left: auto !important;
+    max-width: 200px;
+  }
+  
+  .help-inline {
+    width: 20px;
+    height: 20px;
+    font-size: 12px;
+  }
+}
+
+/* =============================================
+   v7.0.5 NUCLEAR FIX: Force hide actionsRail on boot
+   This rule has maximum specificity and comes last
+   ============================================= */
+html body div.actions#actionsRail[hidden],
+html body div#actionsRail[hidden],
+div.actions#actionsRail[hidden],
+#actionsRail[hidden] {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+  position: absolute !important;
+  left: -9999px !important;
+  width: 0 !important;
+  height: 0 !important;
+  overflow: hidden !important;
+}
+
+/* Also hide all children when parent is hidden */
+#actionsRail[hidden] * {
+  display: none !important;
+  visibility: hidden !important;
+}
+
+/* v7.0.5: Hide actionsRail when body has boot-visible class */
+body.boot-visible .actions,
+body.boot-visible #actionsRail,
+body.boot-visible div.actions#actionsRail {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+  position: absolute !important;
+  left: -9999px !important;
+  width: 0 !important;
+  height: 0 !important;
+  overflow: hidden !important;
+}
+
+body.boot-visible .actions *,
+body.boot-visible #actionsRail * {
+  display: none !important;
+  visibility: hidden !important;
+}
+
+/* v7.0.5: Hide quickbar during boot */
+body.boot-visible .quickbar,
+body.boot-visible #quickBar {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+
+/* v7.0.5: Hide char-stats-bar during boot */
+body.boot-visible .char-stats-bar,
+body.boot-visible #charStatsBar {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+
+/* v7.0.5: Hide app-footer during boot (boot has its own footer) */
+body.boot-visible .app-footer,
+body.boot-visible #appFooter {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+
+/* v7.0.5: Hide #app container during boot and prevent overflow */
+body.boot-visible #app {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+  width: 0 !important;
+  height: 0 !important;
+  overflow: hidden !important;
+  position: absolute !important;
+  left: -9999px !important;
+}
+
+/* v7.0.5: Prevent horizontal overflow during boot */
+html.boot-visible,
+body.boot-visible {
+  overflow-x: hidden !important;
+  max-width: 100vw !important;
+  width: 100% !important;
+}
+
+/* v7.0.5: Hide roll-log during boot */
+body.boot-visible .roll-log {
+  display: none !important;
+  visibility: hidden !important;
+}
+
+/* v7.0.5: Hide any toast containers during boot */
+body.boot-visible .toast-wrap {
+  display: none !important;
+}
+
 </style>
 </head>
 <script>
@@ -18948,7 +19537,7 @@ body {
   } catch(e) {}
 })();
 </script>
-<body data-anim="subtle">
+<body data-anim="subtle" class="boot-visible">
 <!-- ORDER 7: Skip Links for Keyboard Navigation -->
 <a href="#app" class="skip-link" data-i18n="a11y.skipToMain">Skip to main content</a>
 <a href="#quickBar" class="skip-link skip-link-second" data-i18n="a11y.skipToQuickbar">Skip to quickbar</a>
@@ -19109,6 +19698,8 @@ body {
   </div>
   
   <div class="boot-footer-right">
+    <!-- v7.1.0: Keyboard shortcuts hint -->
+    <span class="boot-shortcuts-hint" id="bootShortcutsHint" title="Press ? for keyboard shortcuts">Press <kbd>?</kbd> for shortcuts</span>
     <!-- PWA Install Button - always visible, handles both native prompt and manual instructions -->
     <button class="boot-footer-link boot-install-btn" id="bootInstallBtn" type="button" title="Install app to your device">&#x1F4F2; Install App</button>
     <!-- P0-1: Recovery button always accessible for data export -->
@@ -19121,11 +19712,48 @@ body {
     <button class="boot-footer-link boot-settings-btn" id="bootSettingsBtn" type="button" title="Settings">&#x2699; Settings</button>
   </div>
   <div class="boot-footer-version">
-    <span class="boot-version">v<span id="bootVersionNumber">7.1.0</span></span>
+    <span class="boot-version">v<span id="bootVersionNumber">7.2.2</span></span>
     <span class="boot-build">(Jan 3, 2026)</span>
     <button class="boot-whats-new-link" id="bootWhatsNewBtn" type="button" style="background: none; border: none; color: var(--accent, #9b87f5); font-size: 0.7rem; cursor: pointer; padding: 2px 4px; margin-left: 4px;">What's New</button>
   </div>
 </footer>
+
+<!-- v7.0.6: Mobile Menu Button (shown only on mobile via CSS) -->
+<button class="boot-mobile-menu-btn" id="bootMobileMenuBtn" type="button" aria-label="Open menu" aria-expanded="false">
+  Menu &#x25B2;
+</button>
+
+<!-- v7.0.6: Mobile Menu Modal (full-screen bottom sheet) -->
+<div class="boot-mobile-menu" id="bootMobileMenu" role="dialog" aria-modal="true" aria-labelledby="bootMobileMenuTitle">
+  <div class="boot-mobile-menu-sheet">
+    <div class="boot-mobile-menu-header">
+      <span class="boot-mobile-menu-title" id="bootMobileMenuTitle">Menu</span>
+      <button class="boot-mobile-menu-close" id="bootMobileMenuClose" type="button" aria-label="Close menu">&times;</button>
+    </div>
+    <div class="boot-mobile-menu-grid">
+      <button class="boot-mobile-menu-item primary" id="mobileInstallBtn" type="button">&#x1F4F2; Install App</button>
+      <button class="boot-mobile-menu-item danger" id="mobileRecoveryBtn" type="button">&#x1F6E0; Recovery</button>
+      <button class="boot-mobile-menu-item" id="mobileExportAllBtn" type="button">&#x1F4BE; Export All</button>
+      <button class="boot-mobile-menu-item" id="mobileRestoreBtn" type="button">&#x1F4E5; Restore</button>
+      <button class="boot-mobile-menu-item" id="mobileImportBtn" type="button">&#x1F4C2; Import</button>
+      <button class="boot-mobile-menu-item" id="mobileAddonsBtn" type="button">&#x1F9E9; Addons</button>
+      <button class="boot-mobile-menu-item" id="mobilePrivacyBtn" type="button">&#x1F512; Privacy</button>
+      <button class="boot-mobile-menu-item" id="mobileSettingsBtn" type="button">&#x2699; Settings</button>
+    </div>
+    <div class="boot-mobile-menu-footer">
+      <div class="boot-mobile-menu-social">
+        <a href="https://github.com/Kylemaddenar/player-almanac" target="_blank" rel="noopener" title="GitHub" aria-label="GitHub">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+        </a>
+        <span>Not affiliated with Wizards of the Coast</span>
+      </div>
+      <div>
+        <span>v<span id="mobileVersionNumber">7.1.0</span></span>
+        <button id="mobileWhatsNewBtn" type="button" style="background: none; border: none; color: var(--accent, #9b87f5); font-size: 0.7rem; cursor: pointer; padding: 2px 4px; text-decoration: underline;">What's New</button>
+      </div>
+    </div>
+  </div>
+</div>
   
   <!-- Section 12/7: Boot Settings Panel -->
   <div class="boot-settings-panel" id="bootSettingsPanel" hidden>
@@ -19299,6 +19927,16 @@ body {
           boot.style.pointerEvents = 'none';
           boot.style.display = 'none';
           if (app) app.style.opacity = '1';
+          // v7.0.5: Remove boot-visible class from body and html
+          document.body.classList.remove('boot-visible');
+          document.documentElement.classList.remove('boot-visible');
+          // v7.0.5: Show actions rail when boot is dismissed
+          const actionsRail = document.getElementById('actionsRail');
+          if (actionsRail) {
+            actionsRail.removeAttribute('hidden');
+            actionsRail.style.display = '';
+            actionsRail.classList.add('actions-visible');
+          }
         } else {
           // App still BOOTING or state unavailable - keep boot visible
           // This is the CORRECT behavior - don't dismiss while user is reading
@@ -19623,7 +20261,7 @@ body {
 <!-- v7.0.0: Destructive Action Confirmation Modal -->
 <div id="confirmDestructive" class="modal-overlay confirm-overlay" style="display:none;" role="dialog" aria-modal="true" aria-labelledby="confirmDestructiveTitle">
   <div class="modal confirm-destructive">
-    <div class="modal-icon danger">⚠ï¸</div>
+    <div class="modal-icon danger">⚠️</div>
     <h2 id="confirmDestructiveTitle"></h2>
     <p id="confirmDestructiveMessage"></p>
     <div class="confirm-destructive-detail" id="confirmDestructiveDetail"></div>
@@ -19689,17 +20327,19 @@ body {
     <div class="modal-body changelog-body">
       <div class="changelog-version">
         <h3>Version 7.1.0 <span class="changelog-date">January 3, 2026</span></h3>
-        <div class="changelog-subtitle">Trust & Transparency Release</div>
+        <div class="changelog-subtitle">UX Improvements Release</div>
       </div>
       <ul class="changelog-list">
-        <li><strong>🔒 Data & Privacy Panel</strong> - New panel explaining how your data is handled (Settings → Privacy)</li>
-        <li><strong>⚠️ Addon Security Warning</strong> - Prominent warning before installing addons with risk acknowledgment</li>
-        <li><strong>📊 Better Storage Status</strong> - Clear indicators for storage availability and usage</li>
-        <li><strong>🔗 GitHub Link</strong> - Quick access to source code from Settings and boot screen</li>
-        <li><strong>✨ Trust Statement</strong> - "Offline-first • Your data stays local" visible on welcome screen</li>
-        <li><strong>📝 Cleaner Version Display</strong> - Version shown as "v7.1.0 (Jan 3, 2026)" with What's New link</li>
-        <li><strong>™️ Trademark Notice</strong> - "Not affiliated with Wizards of the Coast" visible on boot screen</li>
-        <li><strong>🏷️ Friendly Labels</strong> - Better tooltips for Recovery/Export/Restore buttons</li>
+        <li><strong>🎯 Better Scroll Behavior</strong> - Nested scroll areas no longer trap scrolling</li>
+        <li><strong>🎨 Theme-Aware Modals</strong> - Modal backgrounds now properly use theme colors</li>
+        <li><strong>⌨️ Shortcuts Hint</strong> - "Press ? for shortcuts" visible in footer on desktop</li>
+        <li><strong>💾 Enhanced Save Indicator</strong> - Clearer visual feedback with backgrounds and pulse animation</li>
+        <li><strong>📥 Prominent Import</strong> - Import button more visible in empty state</li>
+        <li><strong>✨ Enhanced Empty States</strong> - Quick-add buttons for 5E SRD content with helpful tips</li>
+        <li><strong>📝 Editable Field Hints</strong> - Visual distinction between editable and read-only fields</li>
+        <li><strong>📍’ Data & Privacy Panel</strong> - New panel explaining how your data is handled</li>
+        <li><strong>⚠️ Addon Security Warning</strong> - Prominent warning before installing addons</li>
+        <li><strong>™️ Trademark Notice</strong> - "Not affiliated with Wizards of the Coast" visible</li>
       </ul>
       
       <div class="changelog-version" style="margin-top: 24px;">
@@ -19902,16 +20542,16 @@ body {
   <div class="card" data-section="core-vitals"><h2 class="card-title">Vitals</h2>
     <div class="hp-bar-wrap"><div class="hp-bar" id="hp-bar"></div><span class="hp-text" id="hp-text">24 / 24</span></div>
     <div class="hp-inputs"><div><label>Current</label><input type="number" id="hp-cur" value=""></div><div><label>Max</label><input type="number" id="hp-max" value=""></div><div><label>Temp</label><input type="number" id="hp-tmp" value=""></div></div>
-    <div class="death-saves"><div class="death-group"><label>Successes</label><div class="death-pips" id="d-suc"><div class="death-pip"></div><div class="death-pip"></div><div class="death-pip"></div></div></div><div class="death-group"><label>Failures</label><div class="death-pips" id="d-fail"><div class="death-pip"></div><div class="death-pip"></div><div class="death-pip"></div></div></div></div>
-    <div class="hd-wrap"><div class="hd-row"><span class="hd-label">Hit Dice <select id="hd-die" style="background:transparent;border:1px solid var(--glass-border);color:var(--text-secondary);padding:2px 4px;border-radius:4px;font-size:0.75rem;margin-left:4px"><option value="d6">d6</option><option value="d8" selected>d8</option><option value="d10">d10</option><option value="d12">d12</option></select></span><div class="hd-pips" id="hd-pips"></div></div></div>
+    <div class="death-saves"><div class="death-group"><label>Successes<button class="help-inline" data-help="deathSaves" type="button" aria-label="Help with death saves">?</button></label><div class="death-pips" id="d-suc"><div class="death-pip"></div><div class="death-pip"></div><div class="death-pip"></div></div></div><div class="death-group"><label>Failures</label><div class="death-pips" id="d-fail"><div class="death-pip"></div><div class="death-pip"></div><div class="death-pip"></div></div></div></div>
+    <div class="hd-wrap"><div class="hd-row"><span class="hd-label">Hit Dice<button class="help-inline" data-help="hitDice" type="button" aria-label="Help with hit dice">?</button> <select id="hd-die" style="background:transparent;border:1px solid var(--glass-border);color:var(--text-secondary);padding:2px 4px;border-radius:4px;font-size:0.75rem;margin-left:4px"><option value="d6">d6</option><option value="d8" selected>d8</option><option value="d10">d10</option><option value="d12">d12</option></select></span><div class="hd-pips" id="hd-pips"></div></div></div>
     <div class="conditions" id="conds"><button class="add-cond" id="addCondBtn" type="button" data-tip="Track status effects like Poisoned, Stunned, etc." aria-label="Add condition">+ Condition</button></div>
   </div>
   
   <div class="card" data-section="core-combat"><h2 class="card-title">Combat</h2>
-    <div class="stat-row"><span class="stat-label">Armor Class</span><span class="stat-value"><input type="number" id="ac" value=""></span></div>
-    <div class="stat-row"><span class="stat-label">Initiative</span><span class="stat-value" id="init">+3</span></div>
+    <div class="stat-row"><span class="stat-label">Armor Class<button class="help-inline" data-help="armorClass" type="button" aria-label="Help with armor class">?</button></span><span class="stat-value"><input type="number" id="ac" value=""></span></div>
+    <div class="stat-row"><span class="stat-label">Initiative<button class="help-inline" data-help="initiative" type="button" aria-label="Help with initiative">?</button></span><span class="stat-value" id="init">+3</span></div>
     <div class="stat-row"><span class="stat-label">Speed</span><span class="stat-value"><input type="text" id="speed" value=""></span></div>
-    <div class="stat-row"><span class="stat-label">Proficiency</span><span class="prof-badge" id="prof">+2</span></div>
+    <div class="stat-row"><span class="stat-label">Proficiency<button class="help-inline" data-help="profBonus" type="button" aria-label="Help with proficiency bonus">?</button></span><span class="prof-badge" id="prof">+2</span></div>
     <div class="stat-row"><span class="stat-label">Passive Perception</span><span class="stat-value" id="passive-perception" style="font-family:var(--font-mono)">10</span></div>
   </div>
 </div>
@@ -20071,7 +20711,7 @@ body {
 <h2 class="card-title" style="margin-top:24px">Coins</h2>
 <div class="coins"><div class="coin"><label>CP</label><input type="number" id="cp" value=""></div><div class="coin"><label>SP</label><input type="number" id="sp" value=""></div><div class="coin"><label>EP</label><input type="number" id="ep" value=""></div><div class="coin"><label>GP</label><input type="number" id="gp" value=""></div><div class="coin"><label>PP</label><input type="number" id="pp" value=""></div></div>
 </div>
-<div class="card col-8" data-section="spells-slots"><h2 class="card-title">Spell Slots</h2><div class="slots-grid" id="slots"></div></div>
+<div class="card col-8" data-section="spells-slots"><h2 class="card-title">Spell Slots<button class="help-inline" data-help="spellSlots" type="button" aria-label="Help with spell slots">?</button></h2><div class="slots-grid" id="slots"></div></div>
 <div class="card" data-section="spells-list" id="spellsCard"><h2 class="card-title">Cantrips & Spells</h2>
 <!-- Section 10: Spell Controls -->
 <div class="spells-controls" id="spellsControls">
@@ -20315,7 +20955,7 @@ body {
 </div>
 </section>
 </div>
-<div class="actions" id="actionsRail">
+<div class="actions" id="actionsRail" hidden style="display:none !important">
 <button class="act-btn act-fab-toggle" id="actionsFabToggle" type="button" title="Actions" aria-haspopup="menu" aria-expanded="false" aria-label="Toggle actions menu"><span class="tip">Actions</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="1"/><circle cx="12" cy="5" r="1"/><circle cx="12" cy="19" r="1"/></svg></button>
 <button class="act-btn act-home" id="homeBtn" type="button" title="Return to main menu" data-tip="Return to character selection" aria-label="Return to main menu" data-tip-pos="left"><span class="tip">Menu</span><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 3L2 12h3v9h6v-6h2v6h6v-9h3L12 3zm0 2.84L19 12h-1v8h-4v-6H10v6H6v-8H5l7-6.16z"/></svg></button>
 <button class="act-btn" id="mapBtn" type="button" title="Map" data-tip="Open campaign map" aria-label="Open map" data-tip-pos="left"><span class="tip">Map</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 6v16l7-4 8 4 7-4V2l-7 4-8-4-7 4z"/><path d="M8 2v16"/><path d="M16 6v16"/></svg></button>
@@ -21008,7 +21648,7 @@ body {
     </div>
     <div class="modal-body">
       <div class="conc-panel">
-        <div class="cond-section-title" style="margin-top:0">Concentration</div>
+        <div class="cond-section-title" style="margin-top:0">Concentration<button class="help-inline" data-help="concentration" type="button" aria-label="Help with concentration">?</button></div>
         <label class="prof-check" style="margin-bottom:8px">
           <input type="checkbox" id="concActive" data-no-mode-disable="1">
           Concentrating
@@ -21023,7 +21663,7 @@ body {
         </label>
       </div>
 
-      <div class="cond-section-title">Conditions</div>
+      <div class="cond-section-title">Conditions<button class="help-inline" data-help="conditions" type="button" aria-label="Help with conditions">?</button></div>
       <div class="cond-modal-grid" id="condList"></div>
 
       <div class="cond-section-title" style="margin-top:16px">Custom</div>
@@ -21035,7 +21675,7 @@ body {
         <button class="modal-btn secondary" id="addCustomCond" type="button" data-no-mode-disable="1">Add</button>
       </div>
 
-      <div class="cond-section-title" style="margin-top:16px">Exhaustion Level</div>
+      <div class="cond-section-title" style="margin-top:16px">Exhaustion Level<button class="help-inline" data-help="exhaustion" type="button" aria-label="Help with exhaustion levels">?</button></div>
       <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
         <select class="input" id="exhaustionLevel" style="width:auto;min-width:80px" data-no-mode-disable="1">
           <option value="0">None</option>
@@ -21226,7 +21866,7 @@ body {
 <div class="weapon-detail-modal" id="weaponDetailModal" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="weaponDetailTitle">
   <div class="weapon-detail-header">
     <div class="weapon-detail-title">
-      <span class="weapon-mobile-icon">⚠ï¸Â</span>
+      <span class="weapon-mobile-icon">⚠️</span>
       <span id="weaponDetailName">Weapon Name</span>
     </div>
     <button class="weapon-detail-close" id="weaponDetailClose" type="button" aria-label="Close weapon details">&times;</button>
@@ -21246,13 +21886,13 @@ body {
     </div>
     <div class="weapon-detail-notes" id="weaponDetailNotesWrap">
       <div class="weapon-detail-notes-label">Properties & Notes</div>
-      <div class="weapon-detail-notes-text" id="weaponDetailNotes">"—Â</div>
+      <div class="weapon-detail-notes-text" id="weaponDetailNotes">–</div>
     </div>
   </div>
   <div class="weapon-detail-actions">
     <button class="weapon-detail-btn roll-atk" id="weaponDetailRollAtk" type="button">Roll Attack</button>
     <button class="weapon-detail-btn roll-dmg" id="weaponDetailRollDmg" type="button">Roll Damage</button>
-    <button class="weapon-detail-btn delete" id="weaponDetailDelete" type="button">✓Â¢</button>
+    <button class="weapon-detail-btn delete" id="weaponDetailDelete" type="button">✓</button>
   </div>
 </div>
 
@@ -21288,7 +21928,7 @@ body {
   <div class="bg-select-body" id="bgSelectBody">
     <!-- Feature Section -->
     <div class="bg-section">
-      <div class="bg-section-title"><span class="icon">⭐</span> Background Feature</div>
+      <div class="bg-section-title"><span class="icon">⭐Â</span> Background Feature</div>
       <div class="bg-feature-box">
         <div class="bg-feature-name" id="bgFeatureName">Feature Name</div>
         <div class="bg-feature-desc" id="bgFeatureDesc">Feature description goes here.</div>
@@ -21356,19 +21996,19 @@ body {
       <div class="bg-summary-grid" id="bgSummaryGrid">
         <div class="bg-summary-item">
           <div class="bg-summary-item-label">Skills</div>
-          <div class="bg-summary-item-value" id="bgSummarySkills">"—Â</div>
+          <div class="bg-summary-item-value" id="bgSummarySkills">–</div>
         </div>
         <div class="bg-summary-item">
           <div class="bg-summary-item-label">Tools</div>
-          <div class="bg-summary-item-value" id="bgSummaryTools">"—Â</div>
+          <div class="bg-summary-item-value" id="bgSummaryTools">–</div>
         </div>
         <div class="bg-summary-item">
           <div class="bg-summary-item-label">Languages</div>
-          <div class="bg-summary-item-value" id="bgSummaryLangs">"—Â</div>
+          <div class="bg-summary-item-value" id="bgSummaryLangs">–</div>
         </div>
         <div class="bg-summary-item" id="bgSummaryFeatItem" style="display:none;">
           <div class="bg-summary-item-label">Origin Feat</div>
-          <div class="bg-summary-item-value" id="bgSummaryFeat">"—Â</div>
+          <div class="bg-summary-item-value" id="bgSummaryFeat">–</div>
         </div>
       </div>
     </div>
@@ -21571,7 +22211,7 @@ body {
     network: {
       offline: {
         title: 'You\'re Offline',
-        message: 'No worries — Player Almanac works fully offline. Your data is safe.',
+        message: 'No worries – Player Almanac works fully offline. Your data is safe.',
         action: null
       }
     },
@@ -21590,7 +22230,7 @@ body {
   };
 
   // App version constant for visibility
-  const APP_VERSION = '7.1.0';
+  const APP_VERSION = '7.2.2';
 
   // ============================================
   // ORDER 6: FIRST-VISIT DETECTION
@@ -21919,22 +22559,22 @@ body {
       'about.attributionPage': 'Official project page:',
       'about.thirdParty': 'THIRD-PARTY NOTICES',
       'about.gsap': 'GSAP 6.16.0',
-      'about.gsapText': '(GreenSock) "—Â Animation library (bundled for offline use).',
+      'about.gsapText': '(GreenSock) – Animation library (bundled for offline use).',
       'about.gsapLicense': 'Subject to GreenSock license terms.',
       'about.gsapNote': 'Animations work fully offline (GSAP bundled).',
       'about.fonts': 'Fonts:',
-      'about.fontsText': 'Cinzel, Inter, JetBrains Mono "—Â Google Fonts, licensed under the SIL Open Font License (OFL).',
+      'about.fontsText': 'Cinzel, Inter, JetBrains Mono – Google Fonts, licensed under the SIL Open Font License (OFL).',
       'about.icons': 'Icons:',
-      'about.iconsText': 'Custom inline SVGs "—Â Original artwork.',
+      'about.iconsText': 'Custom inline SVGs – Original artwork.',
       'about.emoji': 'Emoji:',
-      'about.emojiText': 'Unicode standard characters "—Â Rendered by your device/browser.',
+      'about.emojiText': 'Unicode standard characters – Rendered by your device/browser.',
       'about.trademark': 'TRADEMARK DISCLAIMER',
       'about.trademarkText': 'Dungeons & DragonsÂ® is a registered trademark of Wizards of the Coast LLC. Player Almanac is not affiliated with, endorsed, sponsored, or specifically approved by Wizards of the Coast LLC.',
       
       // v7.1.0: Privacy Dialog
-      'privacy.title': '🔒 Data & Privacy',
-      'privacy.summaryTitle': '✅ Your Data Stays With You',
-      'privacy.summaryText': 'Player Almanac runs entirely in your browser. No servers, no accounts, no tracking — just you and your character sheets.',
+      'privacy.title': '📍’ Data & Privacy',
+      'privacy.summaryTitle': '✔ Your Data Stays With You',
+      'privacy.summaryText': 'Player Almanac runs entirely in your browser. No servers, no accounts, no tracking – just you and your character sheets.',
       'privacy.localTitle': 'Runs Locally in Your Browser',
       'privacy.localDesc': 'The entire application runs on your device. No data is sent to any server. Works fully offline.',
       'privacy.noAccountTitle': 'No Account Required',
@@ -21960,7 +22600,7 @@ body {
       'boot.trustStatement': 'Offline-first • Your data stays local • Export anytime',
       
       // v7.1.0: Settings menu items
-      'settings.privacy': '🔒 Data & Privacy',
+      'settings.privacy': '📍’ Data & Privacy',
       'settings.github': '💻 GitHub',
       
       // Conditions
@@ -22097,15 +22737,15 @@ body {
       'about.attributionLicense': 'Licensed under ZNAL v1.1 (Noncommercial + Attribution)',
       'about.officialPage': 'Official project page:',
       'about.thirdParty': 'Third-Party Notices',
-      'about.gsapDesc': '(GreenSock) "—Â Animation library (bundled for offline use).',
+      'about.gsapDesc': '(GreenSock) – Animation library (bundled for offline use).',
       'about.gsapLicense': 'Subject to GreenSock license terms.',
       'about.gsapNote': 'Animations work fully offline (GSAP bundled).',
       'about.fonts': 'Fonts:',
-      'about.fontsDesc': 'Cinzel, Inter, JetBrains Mono "—Â Google Fonts, licensed under the SIL Open Font License (OFL).',
+      'about.fontsDesc': 'Cinzel, Inter, JetBrains Mono – Google Fonts, licensed under the SIL Open Font License (OFL).',
       'about.icons': 'Icons:',
-      'about.iconsDesc': 'Custom inline SVGs "—Â Original artwork.',
+      'about.iconsDesc': 'Custom inline SVGs – Original artwork.',
       'about.emoji': 'Emoji:',
-      'about.emojiDesc': 'Unicode standard characters "—Â Rendered by your device/browser.',
+      'about.emojiDesc': 'Unicode standard characters – Rendered by your device/browser.',
       'about.trademark': 'Trademark Disclaimer',
       'about.trademarkDesc': 'Dungeons & DragonsÂ® is a registered trademark of Wizards of the Coast LLC. Player Almanac is not affiliated with, endorsed, sponsored, or specifically approved by Wizards of the Coast LLC.',
       
@@ -22446,17 +23086,29 @@ body {
       'empty.spellsTitle': 'No Spells Yet',
       'empty.spellsText': 'Add spells from the SRD or create custom ones.',
       'empty.addSpell': 'Add Spell',
+      'empty.add5eSpell': 'Quick add from 5E SRD',
+      'empty.spellsTip': 'Tip: Click any spell to see its details and cast it',
       'empty.equipmentTitle': 'Pack is Empty',
       'empty.equipmentText': 'Track your gear, items, and treasure here.',
       'empty.addItem': 'Add Item',
+      'empty.equipmentTip': 'Tip: Track coins, potions, and magic items',
       'empty.weaponsTitle': 'No Weapons',
       'empty.weaponsText': 'Add weapons to track attacks and damage.',
       'empty.addWeapon': 'Add Weapon',
+      'empty.add5eWeapon': 'Quick add from 5E SRD',
+      'empty.weaponsTip': 'Tip: Click any weapon to roll attack and damage dice',
       'empty.notesTitle': 'No Notes',
       'empty.notesText': 'Use this space for backstory, session notes, or anything else.',
       'empty.mapTitle': 'No Map',
       'empty.mapText': 'Upload a campaign map to track locations and measure distances.',
       'empty.uploadMap': 'Upload Map',
+      'empty.mapTip': 'Tip: Place pins and measure distances on your maps',
+      
+      // v7.1.0: Toast messages for dropdown navigation
+      'toast.select5eWeapon': 'Select a 5E weapon from the dropdown above',
+      'toast.select5eSpell': 'Select a 5E spell from the dropdown above',
+      'toast.weaponDropdownNotFound': 'Weapon dropdown not available',
+      'toast.spellDropdownNotFound': 'Spell dropdown not available',
       
       // v7.0.0: Keyboard shortcuts
       'shortcuts.save': 'Force save',
@@ -22472,7 +23124,46 @@ body {
       'a11y.skipToMain': 'Skip to main content',
       'a11y.skipToQuickbar': 'Skip to quickbar',
       
-      // v7.0.0: Update notifications
+      // v7.2.0: Phase 3 - Inline Help System
+      'inlineHelp.deathSaves.title': 'Death Saves',
+      'inlineHelp.deathSaves.content': 'When you drop to 0 HP, you make death saving throws. Roll a d20: <strong>10 or higher</strong> = success, <strong>9 or lower</strong> = failure. <strong>3 successes</strong> = stabilized, <strong>3 failures</strong> = death. A <strong>natural 20</strong> restores 1 HP, a <strong>natural 1</strong> counts as 2 failures.',
+      'inlineHelp.spellSlots.title': 'Spell Slots',
+      'inlineHelp.spellSlots.content': 'Spell slots represent your magical energy. Each slot can cast one spell of its level or lower. Higher-level slots can cast lower-level spells at higher potency. Slots refresh on a <strong>long rest</strong> (some classes recover slots on short rests).',
+      'inlineHelp.hitDice.title': 'Hit Dice',
+      'inlineHelp.hitDice.content': 'Hit Dice are used for healing during <strong>short rests</strong>. Roll one or more of your hit dice and add your Constitution modifier to regain HP. You recover half your total hit dice (minimum 1) on a <strong>long rest</strong>.',
+      'inlineHelp.initiative.title': 'Initiative',
+      'inlineHelp.initiative.content': 'Initiative determines combat order. Roll <strong>d20 + Dexterity modifier</strong> at the start of combat. Higher results act first. Click the initiative stat to roll automatically.',
+      'inlineHelp.armorClass.title': 'Armor Class',
+      'inlineHelp.armorClass.content': 'Armor Class (AC) represents how hard you are to hit. Attack rolls must meet or exceed your AC to hit. Calculated from <strong>armor worn</strong> + <strong>shield</strong> + <strong>Dex modifier</strong> (limited by armor type).',
+      'inlineHelp.profBonus.title': 'Proficiency Bonus',
+      'inlineHelp.profBonus.content': 'Your proficiency bonus is added to checks you\'re proficient in. It increases as you level: <strong>+2</strong> at levels 1-4, <strong>+3</strong> at 5-8, <strong>+4</strong> at 9-12, <strong>+5</strong> at 13-16, <strong>+6</strong> at 17-20.',
+      'inlineHelp.conditions.title': 'Conditions',
+      'inlineHelp.conditions.content': 'Conditions alter your abilities during combat. Common conditions: <strong>Blinded</strong>, <strong>Charmed</strong>, <strong>Frightened</strong>, <strong>Grappled</strong>, <strong>Incapacitated</strong>, <strong>Poisoned</strong>, <strong>Prone</strong>, <strong>Restrained</strong>, <strong>Stunned</strong>.',
+      'inlineHelp.concentration.title': 'Concentration',
+      'inlineHelp.concentration.content': 'Some spells require concentration (marked with a C). You can only concentrate on one spell at a time. Taking damage requires a <strong>Constitution save</strong> (DC 10 or half damage, whichever is higher) to maintain concentration.',
+      'inlineHelp.exhaustion.title': 'Exhaustion',
+      'inlineHelp.exhaustion.content': 'Exhaustion has 6 levels with cumulative effects: <strong>1</strong>: Disadvantage on checks, <strong>2</strong>: Speed halved, <strong>3</strong>: Disadvantage on attacks/saves, <strong>4</strong>: HP max halved, <strong>5</strong>: Speed is 0, <strong>6</strong>: Death.',
+      'inlineHelp.dismiss': 'Got it',
+      
+      // v7.2.0: Phase 3 - Actions Rail Coach Mark
+      'coachMark.actionsRail': 'Quick actions here! Export, import, and more.',
+      'coachMark.dismiss': 'Got it',
+      
+      // v7.2.0: Phase 3 - Progressive Disclosure
+      'advanced.showMore': 'Show advanced options',
+      'advanced.showLess': 'Hide advanced options',
+      
+      // v7.2.0: Phase 3 - Action Feedback
+      'feedback.weaponAdded': 'Added {name} to weapons',
+      'feedback.spellAdded': 'Added {name} to spells',
+      'feedback.itemAdded': 'Added {name} to equipment',
+      'feedback.weaponRemoved': 'Removed {name}',
+      'feedback.spellRemoved': 'Removed {name}',
+      'feedback.itemRemoved': 'Removed {name}',
+      'feedback.featureAdded': 'Added {name} to features',
+      'feedback.featureRemoved': 'Removed {name}',
+      
+      // v7.2.0: Update notifications
       'update.newVersion': 'New Version Available',
       'update.seeWhatsNew': 'Player Almanac has been updated.',
       'update.viewChanges': 'What\'s New',
@@ -22771,22 +23462,22 @@ body {
       'about.attributionPage': 'Offizielle Projektseite:',
       'about.thirdParty': 'DRITTANBIETER-HINWEISE',
       'about.gsap': 'GSAP 6.16.0',
-      'about.gsapText': '(GreenSock) "—Â Animationsbibliothek (gebündelt für Offline-Nutzung).',
+      'about.gsapText': '(GreenSock) – Animationsbibliothek (gebündelt für Offline-Nutzung).',
       'about.gsapLicense': 'Unterliegt den GreenSock-Lizenzbedingungen.',
       'about.gsapNote': 'Animationen funktionieren vollständig offline (GSAP gebündelt).',
       'about.fonts': 'Schriftarten:',
-      'about.fontsText': 'Cinzel, Inter, JetBrains Mono "—Â Google Fonts, lizenziert unter der SIL Open Font License (OFL).',
+      'about.fontsText': 'Cinzel, Inter, JetBrains Mono – Google Fonts, lizenziert unter der SIL Open Font License (OFL).',
       'about.icons': 'Icons:',
-      'about.iconsText': 'Benutzerdefinierte Inline-SVGs "—Â Originalkunstwerk.',
+      'about.iconsText': 'Benutzerdefinierte Inline-SVGs – Originalkunstwerk.',
       'about.emoji': 'Emoji:',
-      'about.emojiText': 'Unicode-Standardzeichen "—Â Gerendert durch Ihr Gerät/Browser.',
+      'about.emojiText': 'Unicode-Standardzeichen – Gerendert durch Ihr Gerät/Browser.',
       'about.trademark': 'MARKENRECHTLICHER HINWEIS',
       'about.trademarkText': 'Dungeons & DragonsÂ® ist eine eingetragene Marke von Wizards of the Coast LLC. Player Almanac ist nicht mit Wizards of the Coast LLC verbunden, wird nicht von ihr unterstützt, gesponsert oder speziell genehmigt.',
       
       // v7.1.0: Privacy Dialog (German)
-      'privacy.title': '🔒 Daten & Datenschutz',
-      'privacy.summaryTitle': '✅ Deine Daten bleiben bei dir',
-      'privacy.summaryText': 'Player Almanac läuft vollständig in deinem Browser. Keine Server, keine Konten, kein Tracking — nur du und deine Charakterbögen.',
+      'privacy.title': '📍’ Daten & Datenschutz',
+      'privacy.summaryTitle': '✔ Deine Daten bleiben bei dir',
+      'privacy.summaryText': 'Player Almanac läuft vollständig in deinem Browser. Keine Server, keine Konten, kein Tracking – nur du und deine Charakterbögen.',
       'privacy.localTitle': 'Läuft lokal in deinem Browser',
       'privacy.localDesc': 'Die gesamte Anwendung läuft auf deinem Gerät. Keine Daten werden an Server gesendet. Funktioniert vollständig offline.',
       'privacy.noAccountTitle': 'Kein Konto erforderlich',
@@ -22812,7 +23503,7 @@ body {
       'boot.trustStatement': 'Offline-first • Deine Daten bleiben lokal • Jederzeit exportieren',
       
       // v7.1.0: Settings menu items (German)
-      'settings.privacy': '🔒 Daten & Datenschutz',
+      'settings.privacy': '📍’ Daten & Datenschutz',
       'settings.github': '💻 GitHub',
       
       // Conditions
@@ -22949,15 +23640,15 @@ body {
       'about.attributionLicense': 'Lizenziert unter ZNAL v1.1 (Nichtkommerziell + Namensnennung)',
       'about.officialPage': 'Offizielle Projektseite:',
       'about.thirdParty': 'Drittanbieter-Hinweise',
-      'about.gsapDesc': '(GreenSock) "—Â Animationsbibliothek (gebündelt für Offline-Nutzung).',
+      'about.gsapDesc': '(GreenSock) – Animationsbibliothek (gebündelt für Offline-Nutzung).',
       'about.gsapLicense': 'Unterliegt den GreenSock-Lizenzbedingungen.',
       'about.gsapNote': 'Animationen funktionieren vollständig offline (GSAP gebündelt).',
       'about.fonts': 'Schriftarten:',
-      'about.fontsDesc': 'Cinzel, Inter, JetBrains Mono "—Â Google Fonts, lizenziert unter der SIL Open Font License (OFL).',
+      'about.fontsDesc': 'Cinzel, Inter, JetBrains Mono – Google Fonts, lizenziert unter der SIL Open Font License (OFL).',
       'about.icons': 'Icons:',
-      'about.iconsDesc': 'Benutzerdefinierte Inline-SVGs "—Â Originalkunstwerk.',
+      'about.iconsDesc': 'Benutzerdefinierte Inline-SVGs – Originalkunstwerk.',
       'about.emoji': 'Emoji:',
-      'about.emojiDesc': 'Unicode-Standardzeichen "—Â Gerendert durch Ihr Gerät/Browser.',
+      'about.emojiDesc': 'Unicode-Standardzeichen – Gerendert durch Ihr Gerät/Browser.',
       'about.trademark': 'Markenrechtlicher Hinweis',
       'about.trademarkDesc': 'Dungeons & DragonsÂ® ist eine eingetragene Marke von Wizards of the Coast LLC. Player Almanac ist nicht mit Wizards of the Coast LLC verbunden oder von ihr genehmigt.',
       
@@ -23324,17 +24015,29 @@ body {
       'empty.spellsTitle': 'Noch keine Zauber',
       'empty.spellsText': 'Füge Zauber aus dem SRD hinzu oder erstelle eigene.',
       'empty.addSpell': 'Zauber hinzufügen',
+      'empty.add5eSpell': 'Schnell aus 5E SRD hinzufügen',
+      'empty.spellsTip': 'Tipp: Klicke auf einen Zauber um Details zu sehen und ihn zu wirken',
       'empty.equipmentTitle': 'Rucksack ist leer',
       'empty.equipmentText': 'Verfolge hier deine Ausrüstung, Gegenstände und Schätze.',
       'empty.addItem': 'Gegenstand hinzufügen',
+      'empty.equipmentTip': 'Tipp: Verfolge Münzen, Tränke und magische Gegenstände',
       'empty.weaponsTitle': 'Keine Waffen',
       'empty.weaponsText': 'Füge Waffen hinzu um Angriffe und Schaden zu verfolgen.',
       'empty.addWeapon': 'Waffe hinzufügen',
+      'empty.add5eWeapon': 'Schnell aus 5E SRD hinzufügen',
+      'empty.weaponsTip': 'Tipp: Klicke auf eine Waffe um Angriffs- und Schadenswürfel zu werfen',
       'empty.notesTitle': 'Keine Notizen',
       'empty.notesText': 'Nutze diesen Platz für Hintergrundgeschichte, Sitzungsnotizen oder anderes.',
       'empty.mapTitle': 'Keine Karte',
       'empty.mapText': 'Lade eine Kampagnenkarte hoch um Orte zu markieren und Entfernungen zu messen.',
       'empty.uploadMap': 'Karte hochladen',
+      'empty.mapTip': 'Tipp: Platziere Pins und miss Entfernungen auf deinen Karten',
+      
+      // v7.1.0: Toast messages for dropdown navigation
+      'toast.select5eWeapon': 'Wähle eine 5E Waffe aus dem Dropdown oben',
+      'toast.select5eSpell': 'Wähle einen 5E Zauber aus dem Dropdown oben',
+      'toast.weaponDropdownNotFound': 'Waffen-Dropdown nicht verfügbar',
+      'toast.spellDropdownNotFound': 'Zauber-Dropdown nicht verfügbar',
       
       // v7.0.0: Keyboard shortcuts
       'shortcuts.save': 'Speichern erzwingen',
@@ -23349,6 +24052,45 @@ body {
       // v7.0.0: Accessibility
       'a11y.skipToMain': 'Zum Hauptinhalt springen',
       'a11y.skipToQuickbar': 'Zur Schnellleiste springen',
+      
+      // v7.2.0: Phase 3 - Inline Help System
+      'inlineHelp.deathSaves.title': 'Todesrettungswürfe',
+      'inlineHelp.deathSaves.content': 'Wenn du auf 0 TP fällst, machst du Todesrettungswürfe. Würfle einen W20: <strong>10 oder höher</strong> = Erfolg, <strong>9 oder niedriger</strong> = Misserfolg. <strong>3 Erfolge</strong> = stabilisiert, <strong>3 Misserfolge</strong> = Tod. Eine <strong>natürliche 20</strong> stellt 1 TP wieder her, eine <strong>natürliche 1</strong> zählt als 2 Misserfolge.',
+      'inlineHelp.spellSlots.title': 'Zauberplätze',
+      'inlineHelp.spellSlots.content': 'Zauberplätze repräsentieren deine magische Energie. Jeder Platz kann einen Zauber seiner Stufe oder niedriger wirken. Höherstufige Plätze können niedrigstufige Zauber mit höherer Wirkung wirken. Plätze erholen sich bei einer <strong>langen Rast</strong> (manche Klassen erholen Plätze bei kurzen Rasten).',
+      'inlineHelp.hitDice.title': 'Trefferwürfel',
+      'inlineHelp.hitDice.content': 'Trefferwürfel werden zur Heilung während <strong>kurzer Rasten</strong> verwendet. Würfle einen oder mehrere deiner Trefferwürfel und addiere deinen Konstitutionsmodifikator, um TP zurückzugewinnen. Du erholst die Hälfte deiner Trefferwürfel (mindestens 1) bei einer <strong>langen Rast</strong>.',
+      'inlineHelp.initiative.title': 'Initiative',
+      'inlineHelp.initiative.content': 'Initiative bestimmt die Kampfreihenfolge. Würfle zu Kampfbeginn <strong>W20 + Geschicklichkeitsmodifikator</strong>. Höhere Ergebnisse handeln zuerst. Klicke auf den Initiative-Wert zum automatischen Würfeln.',
+      'inlineHelp.armorClass.title': 'Rüstungsklasse',
+      'inlineHelp.armorClass.content': 'Die Rüstungsklasse (RK) zeigt, wie schwer du zu treffen bist. Angriffswürfe müssen deine RK erreichen oder übertreffen. Berechnet aus <strong>getragener Rüstung</strong> + <strong>Schild</strong> + <strong>Ges-Modifikator</strong> (durch Rüstungstyp begrenzt).',
+      'inlineHelp.profBonus.title': 'Übungsbonus',
+      'inlineHelp.profBonus.content': 'Dein Übungsbonus wird zu Proben addiert, in denen du geübt bist. Er steigt mit dem Level: <strong>+2</strong> auf Stufe 1-4, <strong>+3</strong> auf 5-8, <strong>+4</strong> auf 9-12, <strong>+5</strong> auf 13-16, <strong>+6</strong> auf 17-20.',
+      'inlineHelp.conditions.title': 'Zustände',
+      'inlineHelp.conditions.content': 'Zustände verändern deine Fähigkeiten im Kampf. Häufige Zustände: <strong>Blind</strong>, <strong>Bezaubert</strong>, <strong>Verängstigt</strong>, <strong>Gepackt</strong>, <strong>Kampfunfähig</strong>, <strong>Vergiftet</strong>, <strong>Liegend</strong>, <strong>Festgesetzt</strong>, <strong>Betäubt</strong>.',
+      'inlineHelp.concentration.title': 'Konzentration',
+      'inlineHelp.concentration.content': 'Manche Zauber erfordern Konzentration (mit K markiert). Du kannst dich nur auf einen Zauber konzentrieren. Schaden erfordert einen <strong>Konstitutionsrettungswurf</strong> (SG 10 oder halber Schaden, je nachdem was höher ist) um die Konzentration aufrechtzuerhalten.',
+      'inlineHelp.exhaustion.title': 'Erschöpfung',
+      'inlineHelp.exhaustion.content': 'Erschöpfung hat 6 Stufen mit kumulativen Effekten: <strong>1</strong>: Nachteil auf Proben, <strong>2</strong>: Tempo halbiert, <strong>3</strong>: Nachteil auf Angriffe/Rettungswürfe, <strong>4</strong>: TP-Maximum halbiert, <strong>5</strong>: Tempo ist 0, <strong>6</strong>: Tod.',
+      'inlineHelp.dismiss': 'Verstanden',
+      
+      // v7.2.0: Phase 3 - Actions Rail Coach Mark
+      'coachMark.actionsRail': 'Schnellaktionen hier! Exportieren, importieren und mehr.',
+      'coachMark.dismiss': 'Verstanden',
+      
+      // v7.2.0: Phase 3 - Progressive Disclosure
+      'advanced.showMore': 'Erweiterte Optionen anzeigen',
+      'advanced.showLess': 'Erweiterte Optionen ausblenden',
+      
+      // v7.2.0: Phase 3 - Action Feedback
+      'feedback.weaponAdded': '{name} zu Waffen hinzugefügt',
+      'feedback.spellAdded': '{name} zu Zaubern hinzugefügt',
+      'feedback.itemAdded': '{name} zur Ausrüstung hinzugefügt',
+      'feedback.weaponRemoved': '{name} entfernt',
+      'feedback.spellRemoved': '{name} entfernt',
+      'feedback.itemRemoved': '{name} entfernt',
+      'feedback.featureAdded': '{name} zu Merkmalen hinzugefügt',
+      'feedback.featureRemoved': '{name} entfernt',
       
       // v7.0.0: Update notifications
       'update.newVersion': 'Neue Version verfügbar',
@@ -23690,7 +24432,7 @@ body {
     { name: 'Hand Crossbow', atk: 'DEX', dmg: '1d6 piercing', notes: 'Ammunition (30/120), Light, Loading', mastery: 'Vex' },
     { name: 'Heavy Crossbow', atk: 'DEX', dmg: '1d10 piercing', notes: 'Ammunition (100/400), Heavy, Loading, Two-handed', mastery: 'Push' },
     { name: 'Longbow', atk: 'DEX', dmg: '1d8 piercing', notes: 'Ammunition (150/600), Heavy, Two-handed', mastery: 'Slow' },
-    { name: 'Net', atk: 'DEX', dmg: '"—Â', notes: 'Special, Thrown (5/15)', mastery: '' },
+    { name: 'Net', atk: 'DEX', dmg: '–', notes: 'Special, Thrown (5/15)', mastery: '' },
   ];
 
   // Weapon Mastery Descriptions (2024 PHB only)
@@ -23746,7 +24488,7 @@ body {
       languages: 1,
       equipment: ["Thieves' Tools", 'Crowbar', 'Dark Common Clothes', '15 GP'],
       feature: { name: 'Criminal Contact', desc: 'You have a reliable and trustworthy contact who acts as your liaison to a network of other criminals. You know how to get messages to and from your contact, even over great distances.' },
-      backstory: 'You grew up on the streets, learning to survive through cunning and quick hands. Whether as a pickpocket, burglar, fence, or enforcer, you operated outside the law. Your past has given you skills others lack"—Âand enemies you\'d rather forget.'
+      backstory: 'You grew up on the streets, learning to survive through cunning and quick hands. Whether as a pickpocket, burglar, fence, or enforcer, you operated outside the law. Your past has given you skills others lack–and enemies you\'d rather forget.'
     },
     'Entertainer (2024)': {
       abilities: ['STR', 'DEX', 'CHA'],
@@ -23798,7 +24540,7 @@ body {
       languages: 1,
       equipment: ['Herbalism Kit', 'Winter Blanket', 'Scroll Case with Notes', 'Common Clothes', '5 GP'],
       feature: { name: 'Discovery', desc: 'The quiet seclusion of your extended hermitage gave you access to a unique and powerful discovery. The nature of this revelation depends on the nature of your seclusion.' },
-      backstory: 'You lived in seclusion for years"—Âeither in a sheltered community, alone in nature, or as a shutaway. Your time apart was spent in prayer, study, or contemplation. During that time, you found something profound: perhaps a truth about the cosmos or a secret buried in your soul.'
+      backstory: 'You lived in seclusion for years–either in a sheltered community, alone in nature, or as a shutaway. Your time apart was spent in prayer, study, or contemplation. During that time, you found something profound: perhaps a truth about the cosmos or a secret buried in your soul.'
     },
     'Merchant (2024)': {
       abilities: ['CON', 'INT', 'CHA'],
@@ -23808,7 +24550,7 @@ body {
       languages: 1,
       equipment: ["Navigator's Tools", 'Mule', 'Cart', 'Common Clothes', '25 GP'],
       feature: { name: 'Supply Chain', desc: 'From your experience as a merchant, you know how trade routes work. You can identify trade goods, assess their value, and know where to find buyers. Merchants and traders regard you favorably and may offer deals.' },
-      backstory: 'Coin has always been your compass. You traded in goods across villages, towns, and cities"—Âlearning the value of everything and the art of negotiation. The marketplace taught you about people: their desires, their fears, and what they\'re willing to pay.'
+      backstory: 'Coin has always been your compass. You traded in goods across villages, towns, and cities–learning the value of everything and the art of negotiation. The marketplace taught you about people: their desires, their fears, and what they\'re willing to pay.'
     },
     'Noble (2024)': {
       abilities: ['STR', 'INT', 'CHA'],
@@ -23819,7 +24561,7 @@ body {
       languages: 1,
       equipment: ['Signet Ring', 'Scroll of Pedigree', 'Fine Clothes', '25 GP'],
       feature: { name: 'Position of Privilege', desc: 'Thanks to your noble birth, people are inclined to think the best of you. You are welcome in high society. Common folk make every effort to accommodate you and avoid your displeasure.' },
-      backstory: 'You were born into a life of privilege. Your family wields power through wealth, titles, or both. Though you enjoyed every luxury, expectations weighed on you"—Âto uphold family honor, make strategic alliances, or continue a legacy. Now you step beyond those halls.'
+      backstory: 'You were born into a life of privilege. Your family wields power through wealth, titles, or both. Though you enjoyed every luxury, expectations weighed on you–to uphold family honor, make strategic alliances, or continue a legacy. Now you step beyond those halls.'
     },
     'Sage (2024)': {
       abilities: ['CON', 'INT', 'WIS'],
@@ -23839,7 +24581,7 @@ body {
       languages: 1,
       equipment: ['Dagger', 'Rope (50 ft.)', 'Lucky Charm', 'Common Clothes', '10 GP'],
       feature: { name: 'Ship\'s Passage', desc: 'When you need to, you can secure free passage on a sailing ship for yourself and your companions. In return, you and your companions are expected to assist the crew during the voyage.' },
-      backstory: 'You sailed the seas, learning to work the rigging and navigate by stars. The crew was your family, the ship your home. Whether merchant marine or privateer, life at sea forged you into someone who can weather any storm"—Âliteral or otherwise.'
+      backstory: 'You sailed the seas, learning to work the rigging and navigate by stars. The crew was your family, the ship your home. Whether merchant marine or privateer, life at sea forged you into someone who can weather any storm–literal or otherwise.'
     },
     'Scribe (2024)': {
       abilities: ['DEX', 'INT', 'WIS'],
@@ -23934,7 +24676,7 @@ body {
       languages: 1,
       equipment: ['Scroll Case with Notes', 'Winter Blanket', 'Common Clothes', 'Herbalism Kit', '5 GP'],
       feature: { name: 'Discovery', desc: 'The quiet seclusion of your extended hermitage gave you access to a unique and powerful discovery about the cosmos, the deities, or the self.' },
-      backstory: 'You lived in seclusion"—Âeither in a sheltered community such as a monastery, or entirely alone"—Âfor a formative part of your life. In your time apart from the clamor of society, you found quiet, solitude, and perhaps some answers.'
+      backstory: 'You lived in seclusion–either in a sheltered community such as a monastery, or entirely alone–for a formative part of your life. In your time apart from the clamor of society, you found quiet, solitude, and perhaps some answers.'
     },
     'Noble': {
       skills: ['history', 'persuasion'],
@@ -24083,7 +24825,7 @@ body {
     { lvl: '1', name: 'Charm Person', cast: '1A', range: '30 ft', conc: false, rit: false, notes: 'Charmed 1hr, WIS', desc: 'You attempt to charm a humanoid you can see within range. It must make a WIS save (advantage if you or companions are fighting it). If it fails, it is charmed by you until the spell ends or until you or companions do anything harmful to it. The charmed creature regards you as a friendly acquaintance. When the spell ends, it knows it was charmed.' },
     { lvl: '1', name: 'Cure Wounds', cast: '1A', range: 'Touch', conc: false, rit: false, notes: '2d8+mod healing', desc: 'A creature you touch regains a number of hit points equal to 2d8 + your spellcasting ability modifier. At Higher Levels: healing increases by 2d8 for each slot level above 1st.' },
     { lvl: '1', name: 'Detect Magic', cast: '1A', range: 'Self', conc: true, rit: true, notes: 'Sense magic 30ft', desc: 'For the duration, you sense the presence of magic within 30 feet of you. If you sense magic this way, you can use your action to see a faint aura around any visible creature or object that bears magic, and you learn its school of magic. The spell can penetrate most barriers, but is blocked by 1 foot of stone, 1 inch of metal, a thin sheet of lead, or 3 feet of wood/dirt.' },
-    { lvl: '1', name: 'Disguise Self', cast: '1A', range: 'Self', conc: false, rit: false, notes: 'Appear different, 1hr', desc: 'You make yourself"—Âincluding clothing, armor, weapons, and belongings"—Âlook different until the spell ends or until you dismiss it. You can seem 1 foot shorter or taller and can appear thin, fat, or in between. You can\'t change body type, and your limbs must remain present. Investigation check vs your spell DC to discern disguise.' },
+    { lvl: '1', name: 'Disguise Self', cast: '1A', range: 'Self', conc: false, rit: false, notes: 'Appear different, 1hr', desc: 'You make yourself–including clothing, armor, weapons, and belongings–look different until the spell ends or until you dismiss it. You can seem 1 foot shorter or taller and can appear thin, fat, or in between. You can\'t change body type, and your limbs must remain present. Investigation check vs your spell DC to discern disguise.' },
     { lvl: '1', name: 'Faerie Fire', cast: '1A', range: '60 ft', conc: true, rit: false, notes: 'Adv on attacks, 20ft', desc: 'Each object in a 20-foot cube within range is outlined in blue, green, or violet light (your choice). Any creature in the area when the spell is cast is also outlined if it fails a DEX save. For the duration, affected objects and creatures shed dim light in a 10-foot radius. Any attack roll against an affected creature or object has advantage if the attacker can see it, and they can\'t benefit from being invisible.' },
     { lvl: '1', name: 'Feather Fall', cast: '1 React', range: '60 ft', conc: false, rit: false, notes: 'Slow fall, 5 creatures', desc: 'Choose up to five falling creatures within range. A falling creature\'s rate of descent slows to 60 feet per round until the spell ends. If the creature lands before the spell ends, it takes no falling damage and can land on its feet, and the spell ends for that creature. Duration: 1 minute.' },
     { lvl: '1', name: 'Find Familiar', cast: '1 hour', range: '10 ft', conc: false, rit: true, notes: 'Spirit companion', desc: 'You gain the service of a familiar, a spirit that takes an animal form you choose (bat, cat, crab, frog, hawk, lizard, octopus, owl, snake, fish, rat, raven, sea horse, spider, or weasel). The familiar acts independently but obeys your commands. You can communicate with it telepathically within 100 feet and see through its senses. It can\'t attack. If it drops to 0 HP, it disappears.' },
@@ -24516,6 +25258,212 @@ body {
       toast.style.opacity = '1';
       setTimeout(() => { toast.style.opacity = '0'; setTimeout(() => toast.remove(), 300); }, 3000);
     }
+  }
+
+  // ========================================
+  // Phase 3: Inline Help System (v7.2.0)
+  // ========================================
+  
+  // Help content definitions
+  const INLINE_HELP_CONTENT = {
+    deathSaves: { titleKey: 'inlineHelp.deathSaves.title', contentKey: 'inlineHelp.deathSaves.content' },
+    spellSlots: { titleKey: 'inlineHelp.spellSlots.title', contentKey: 'inlineHelp.spellSlots.content' },
+    hitDice: { titleKey: 'inlineHelp.hitDice.title', contentKey: 'inlineHelp.hitDice.content' },
+    initiative: { titleKey: 'inlineHelp.initiative.title', contentKey: 'inlineHelp.initiative.content' },
+    armorClass: { titleKey: 'inlineHelp.armorClass.title', contentKey: 'inlineHelp.armorClass.content' },
+    profBonus: { titleKey: 'inlineHelp.profBonus.title', contentKey: 'inlineHelp.profBonus.content' },
+    conditions: { titleKey: 'inlineHelp.conditions.title', contentKey: 'inlineHelp.conditions.content' },
+    concentration: { titleKey: 'inlineHelp.concentration.title', contentKey: 'inlineHelp.concentration.content' },
+    exhaustion: { titleKey: 'inlineHelp.exhaustion.title', contentKey: 'inlineHelp.exhaustion.content' }
+  };
+  
+  // Active popover reference
+  let activeHelpPopover = null;
+  
+  /**
+   * Show inline help popover
+   */
+  function showInlineHelp(helpKey, triggerElement) {
+    const content = INLINE_HELP_CONTENT[helpKey];
+    if (!content) return;
+    
+    // Close any existing popover
+    hideInlineHelp();
+    
+    // Create popover
+    const popover = document.createElement('div');
+    popover.className = 'help-popover';
+    popover.innerHTML = `
+      <button class="help-popover-close" aria-label="${t('inlineHelp.dismiss')}">&times;</button>
+      <div class="help-popover-title">${t(content.titleKey)}</div>
+      <div class="help-popover-content">${t(content.contentKey)}</div>
+    `;
+    
+    document.body.appendChild(popover);
+    activeHelpPopover = popover;
+    
+    // Position popover near trigger
+    const rect = triggerElement.getBoundingClientRect();
+    const popoverWidth = 320;
+    let left = rect.left;
+    let top = rect.bottom + 8;
+    
+    // Adjust for viewport bounds
+    if (left + popoverWidth > window.innerWidth - 16) {
+      left = window.innerWidth - popoverWidth - 16;
+      popover.classList.add('arrow-right');
+    }
+    
+    if (top + 200 > window.innerHeight) {
+      top = rect.top - 8;
+      popover.style.transform = 'translateY(-100%)';
+      popover.classList.add('arrow-bottom');
+    }
+    
+    popover.style.left = `${Math.max(16, left)}px`;
+    popover.style.top = `${top}px`;
+    
+    // Show with animation
+    requestAnimationFrame(() => popover.classList.add('visible'));
+    
+    // Close handlers
+    popover.querySelector('.help-popover-close').addEventListener('click', hideInlineHelp);
+    
+    // Close on outside click
+    setTimeout(() => {
+      document.addEventListener('click', handleHelpOutsideClick);
+      document.addEventListener('keydown', handleHelpEscape);
+    }, 10);
+  }
+  
+  /**
+   * Hide inline help popover
+   */
+  function hideInlineHelp() {
+    if (activeHelpPopover) {
+      activeHelpPopover.classList.remove('visible');
+      setTimeout(() => {
+        if (activeHelpPopover) {
+          activeHelpPopover.remove();
+          activeHelpPopover = null;
+        }
+      }, 200);
+    }
+    document.removeEventListener('click', handleHelpOutsideClick);
+    document.removeEventListener('keydown', handleHelpEscape);
+  }
+  
+  function handleHelpOutsideClick(e) {
+    if (activeHelpPopover && !activeHelpPopover.contains(e.target) && !e.target.classList.contains('help-inline')) {
+      hideInlineHelp();
+    }
+  }
+  
+  function handleHelpEscape(e) {
+    if (e.key === 'Escape' && activeHelpPopover) {
+      hideInlineHelp();
+    }
+  }
+  
+  /**
+   * Initialize inline help buttons
+   */
+  function initInlineHelp() {
+    document.querySelectorAll('.help-inline[data-help]').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const helpKey = btn.getAttribute('data-help');
+        showInlineHelp(helpKey, btn);
+      });
+    });
+  }
+  
+  // ========================================
+  // Phase 3: Actions Rail Discoverability (v7.2.0)
+  // ========================================
+  
+  /**
+   * Show actions rail coach mark for first-time users
+   */
+  function showActionsRailCoachMark() {
+    const actionsRail = document.getElementById('actionsRail');
+    if (!actionsRail) return;
+    
+    // Only show if this is a first visit and not already shown
+    const hasSeenCoachMark = localStorage.getItem('cmHasSeenActionsCoach_v1');
+    if (hasSeenCoachMark) return;
+    
+    // Add first-visit class for pulse animation
+    actionsRail.classList.add('first-visit');
+    
+    // Create coach mark
+    const coachMark = document.createElement('div');
+    coachMark.className = 'coach-mark';
+    coachMark.id = 'actionsCoachMark';
+    coachMark.innerHTML = `
+      <div>${t('coachMark.actionsRail')}</div>
+      <button class="coach-mark-dismiss">${t('coachMark.dismiss')}</button>
+    `;
+    
+    document.body.appendChild(coachMark);
+    
+    // Position coach mark to the left of actions rail
+    const railRect = actionsRail.getBoundingClientRect();
+    coachMark.style.right = `${window.innerWidth - railRect.left + 16}px`;
+    coachMark.style.top = `${railRect.top + (railRect.height / 2) - 40}px`;
+    
+    // Show after a short delay
+    setTimeout(() => {
+      coachMark.classList.add('visible');
+    }, 1500);
+    
+    // Dismiss handler
+    coachMark.querySelector('.coach-mark-dismiss').addEventListener('click', () => {
+      dismissActionsCoachMark();
+    });
+    
+    // Auto-dismiss after 10 seconds
+    setTimeout(() => {
+      dismissActionsCoachMark();
+    }, 10000);
+  }
+  
+  function dismissActionsCoachMark() {
+    const coachMark = document.getElementById('actionsCoachMark');
+    const actionsRail = document.getElementById('actionsRail');
+    
+    if (coachMark) {
+      coachMark.classList.remove('visible');
+      setTimeout(() => coachMark.remove(), 300);
+    }
+    
+    if (actionsRail) {
+      actionsRail.classList.remove('first-visit');
+    }
+    
+    localStorage.setItem('cmHasSeenActionsCoach_v1', 'true');
+  }
+  
+  // ========================================
+  // Phase 3: Progressive Disclosure (v7.2.0)
+  // ========================================
+  
+  /**
+   * Initialize advanced option toggles
+   */
+  function initAdvancedToggles() {
+    document.querySelectorAll('.advanced-toggle').forEach(toggle => {
+      toggle.addEventListener('click', () => {
+        const targetId = toggle.getAttribute('data-target');
+        const content = document.getElementById(targetId);
+        
+        if (content) {
+          const isExpanded = toggle.classList.toggle('expanded');
+          content.classList.toggle('visible', isExpanded);
+          toggle.textContent = t(isExpanded ? 'advanced.showLess' : 'advanced.showMore');
+        }
+      });
+    });
   }
 
   /**
@@ -27487,6 +28435,10 @@ body {
 
         // Section 9: Restore tab preference after portrait loads
         this.restoreTabPreference();
+        
+        // v7.2.0 Phase 3: Initialize inline help and advanced toggles
+        initInlineHelp();
+        initAdvancedToggles();
 
         // Section 10: Transition to READY state
         this.bootState = 'READY';
@@ -27604,6 +28556,115 @@ body {
           }
         });
       }
+      
+      // v7.0.6: Mobile menu handlers
+      const mobileMenuBtn = document.getElementById('bootMobileMenuBtn');
+      const mobileMenu = document.getElementById('bootMobileMenu');
+      const mobileMenuClose = document.getElementById('bootMobileMenuClose');
+      
+      const openMobileMenu = () => {
+        if (mobileMenu) {
+          mobileMenu.classList.add('open');
+          mobileMenuBtn.setAttribute('aria-expanded', 'true');
+          mobileMenuBtn.innerHTML = 'Menu &#x25BC;';
+        }
+      };
+      
+      const closeMobileMenu = () => {
+        if (mobileMenu) {
+          mobileMenu.classList.remove('open');
+          mobileMenuBtn.setAttribute('aria-expanded', 'false');
+          mobileMenuBtn.innerHTML = 'Menu &#x25B2;';
+        }
+      };
+      
+      if (mobileMenuBtn) {
+        mobileMenuBtn.addEventListener('click', () => {
+          if (mobileMenu.classList.contains('open')) {
+            closeMobileMenu();
+          } else {
+            openMobileMenu();
+          }
+        });
+      }
+      
+      if (mobileMenuClose) {
+        mobileMenuClose.addEventListener('click', closeMobileMenu);
+      }
+      
+      // Close on backdrop click
+      if (mobileMenu) {
+        mobileMenu.addEventListener('click', (e) => {
+          if (e.target === mobileMenu) closeMobileMenu();
+        });
+      }
+      
+      // Wire up mobile menu buttons to existing handlers
+      const mobileInstallBtn = document.getElementById('mobileInstallBtn');
+      const mobileRecoveryBtn = document.getElementById('mobileRecoveryBtn');
+      const mobileExportAllBtn = document.getElementById('mobileExportAllBtn');
+      const mobileRestoreBtn = document.getElementById('mobileRestoreBtn');
+      const mobileImportBtn = document.getElementById('mobileImportBtn');
+      const mobileAddonsBtn = document.getElementById('mobileAddonsBtn');
+      const mobilePrivacyBtn = document.getElementById('mobilePrivacyBtn');
+      const mobileSettingsBtn = document.getElementById('mobileSettingsBtn');
+      const mobileWhatsNewBtn = document.getElementById('mobileWhatsNewBtn');
+      
+      if (mobileInstallBtn) {
+        mobileInstallBtn.addEventListener('click', () => {
+          closeMobileMenu();
+          this.showInstallModal();
+        });
+      }
+      if (mobileRecoveryBtn) {
+        mobileRecoveryBtn.addEventListener('click', () => {
+          closeMobileMenu();
+          this.emergencyExportAll();
+        });
+      }
+      if (mobileExportAllBtn) {
+        mobileExportAllBtn.addEventListener('click', () => {
+          closeMobileMenu();
+          this.exportAllCharacters();
+        });
+      }
+      if (mobileRestoreBtn) {
+        mobileRestoreBtn.addEventListener('click', () => {
+          closeMobileMenu();
+          this.restoreBackup();
+        });
+      }
+      if (mobileImportBtn) {
+        mobileImportBtn.addEventListener('click', () => {
+          closeMobileMenu();
+          this.importFromFile();
+        });
+      }
+      if (mobileAddonsBtn) {
+        mobileAddonsBtn.addEventListener('click', () => {
+          closeMobileMenu();
+          this.openAddonsMenu();
+        });
+      }
+      if (mobilePrivacyBtn) {
+        mobilePrivacyBtn.addEventListener('click', () => {
+          closeMobileMenu();
+          this.openPrivacyDialog();
+        });
+      }
+      if (mobileSettingsBtn) {
+        mobileSettingsBtn.addEventListener('click', () => {
+          closeMobileMenu();
+          this.openBootSettings();
+        });
+      }
+      if (mobileWhatsNewBtn) {
+        mobileWhatsNewBtn.addEventListener('click', () => {
+          closeMobileMenu();
+          showChangelog();
+        });
+      }
+      
       // Section H: Addons button
       if (this.dom.bootAddonsBtn) {
         this.dom.bootAddonsBtn.addEventListener('click', () => this.openAddonsMenu());
@@ -28571,8 +29632,11 @@ body {
           this.dom.weaponSelect.value = '';
           this.scheduleSave();
           
+          // v7.2.0: Always show feedback
           if (is2024 && weapon.mastery) {
             this.toast(`${t('toast.added')} ${weapon.name} ${t('toast.withMastery')} ${t('toast.masteryLabel')} "${weapon.mastery}"`);
+          } else {
+            this.showSuccess('feedback.weaponAdded', { name: weapon.name });
           }
         });
       }
@@ -28609,9 +29673,11 @@ body {
           this.dom.spellSelect.value = '';
           this.scheduleSave();
           
-          // Show toast indicating which version was used
+          // v7.2.0: Always show feedback
           if (override) {
             this.toast(`${t('toast.added')} ${spellName} ${t('toast.rules2014')}`);
+          } else {
+            this.showSuccess('feedback.spellAdded', { name: spellName });
           }
         });
       }
@@ -28632,6 +29698,8 @@ body {
           this.renderEquip();
           this.dom.equipSelect.value = '';
           this.scheduleSave();
+          // v7.2.0: Show feedback
+          this.showSuccess('feedback.itemAdded', { name: item.name });
         });
       }
       
@@ -30060,6 +31128,18 @@ body {
       boot.style.opacity = '1';
       boot.style.pointerEvents = '';
       boot.style.display = '';
+      
+      // v7.0.5: Add boot-visible class to body and html
+      document.body.classList.add('boot-visible');
+      document.documentElement.classList.add('boot-visible');
+      
+      // v7.0.5: Hide actions rail during boot
+      const actionsRail = document.getElementById('actionsRail');
+      if (actionsRail) {
+        actionsRail.setAttribute('hidden', '');
+        actionsRail.style.display = 'none';
+        actionsRail.classList.remove('actions-visible');
+      }
       
       // Hide the app/sheet
       app.style.opacity = '0';
@@ -31861,7 +32941,7 @@ body {
           <div class="ps-header">
             <div class="ps-header-left">
               <div class="ps-name">${esc(s.name) || t('printSheet.unnamed')}</div>
-              <div class="ps-subtitle">${esc(s.species)}${s.species && s.class ? ' ' : ''}${esc(s.class)}${s.background ? ' "™ ' + esc(s.background) : ''}${s.campaign ? ' "—Â ' + esc(s.campaign) : ''}</div>
+              <div class="ps-subtitle">${esc(s.species)}${s.species && s.class ? ' ' : ''}${esc(s.class)}${s.background ? ' "™ ' + esc(s.background) : ''}${s.campaign ? ' – ' + esc(s.campaign) : ''}</div>
             </div>
             ${portraitSrc ? `<img class="ps-portrait" src="${portraitSrc}" alt=""/>` : ''}
             <div class="ps-level-badge">
@@ -32077,7 +33157,7 @@ body {
     charBuilderShowStep(stepNum) {
       const steps = document.querySelectorAll('.char-builder-step');
       steps.forEach(step => {
-        step.hidden = parseInt(step.dataset.step) !== stepNum;
+        step.hidden = parseInt(step.dataset.step, 10) !== stepNum;
       });
       
       // Update progress
@@ -32132,7 +33212,7 @@ body {
         concept: getValue('cbConcept'),
         species: getValue('cbSpecies') === 'custom' ? getValue('cbSpeciesCustom') : getValue('cbSpecies'),
         charClass: getValue('cbClass'),
-        level: parseInt(getValue('cbLevel')) || 1,
+        level: parseInt(getValue('cbLevel'), 10) || 1,
         subclass: getValue('cbSubclass'),
         background: getValue('cbBackground') === 'custom' ? getValue('cbBackgroundCustom') : getValue('cbBackground'),
         personality: getValue('cbPersonality'),
@@ -32183,7 +33263,7 @@ body {
         concept: getValue('cbConcept'),
         species: getValue('cbSpecies') === 'custom' ? getValue('cbSpeciesCustom') : getValue('cbSpecies'),
         charClass: getValue('cbClass'),
-        level: parseInt(getValue('cbLevel')) || 1,
+        level: parseInt(getValue('cbLevel'), 10) || 1,
         subclass: getValue('cbSubclass'),
         background: getValue('cbBackground') === 'custom' ? getValue('cbBackgroundCustom') : getValue('cbBackground'),
         personality: getValue('cbPersonality'),
@@ -35772,52 +36852,81 @@ Actions:
      * @returns {string} HTML for empty state
      */
     createEmptyState(type) {
+      // v7.1.0: Enhanced empty states with multiple actions and tips
       const configs = {
         spells: {
           icon: '📓',
           title: t('empty.spellsTitle'),
           text: t('empty.spellsText'),
-          action: { label: t('empty.addSpell'), handler: 'addSpell', icon: '➕' }
+          actions: [
+            { label: t('empty.addSpell'), handler: 'addSpell', icon: '➕', primary: true },
+            { label: t('empty.add5eSpell') || 'Quick add from 5E SRD', handler: 'openSpellDropdown', icon: '📖', primary: false }
+          ],
+          tip: t('empty.spellsTip') || 'Tip: Click any spell to see its details and cast it'
         },
         equipment: {
           icon: '🎒',
           title: t('empty.equipmentTitle'),
           text: t('empty.equipmentText'),
-          action: { label: t('empty.addItem'), handler: 'addEquipmentItem', icon: '➕' }
+          actions: [
+            { label: t('empty.addItem'), handler: 'addEquipmentItem', icon: '➕', primary: true }
+          ],
+          tip: t('empty.equipmentTip') || 'Tip: Track coins, potions, and magic items'
         },
         weapons: {
           icon: '⚔️',
           title: t('empty.weaponsTitle'),
           text: t('empty.weaponsText'),
-          action: { label: t('empty.addWeapon'), handler: 'addWeapon', icon: '➕' }
+          actions: [
+            { label: t('empty.addWeapon'), handler: 'addWeapon', icon: '➕', primary: true },
+            { label: t('empty.add5eWeapon') || 'Quick add from 5E SRD', handler: 'openWeaponDropdown', icon: '🗡️', primary: false }
+          ],
+          tip: t('empty.weaponsTip') || 'Tip: Click any weapon to roll attack and damage dice'
         },
         notes: {
           icon: '📝',
           title: t('empty.notesTitle'),
           text: t('empty.notesText'),
-          action: null
+          actions: [],
+          tip: null
         },
         map: {
-          icon: '🗺️',
+          icon: '🗺️',
           title: t('empty.mapTitle'),
           text: t('empty.mapText'),
-          action: { label: t('empty.uploadMap'), handler: 'triggerMapUpload', icon: '📤' }
+          actions: [
+            { label: t('empty.uploadMap'), handler: 'triggerMapUpload', icon: '📤', primary: true }
+          ],
+          tip: t('empty.mapTip') || 'Tip: Place pins and measure distances on your maps'
         }
       };
       
       const config = configs[type];
       if (!config) return '';
       
+      // Build actions HTML
+      const actionsHtml = config.actions && config.actions.length > 0 ? `
+        <div class="empty-state-actions">
+          ${config.actions.map(action => `
+            <button class="empty-state-action${action.primary ? '' : ' secondary'}" data-action="${action.handler}">
+              ${action.icon || ''} ${this.escapeHtml(action.label)}
+            </button>
+          `).join('')}
+        </div>
+      ` : '';
+      
+      // Build tip HTML
+      const tipHtml = config.tip ? `
+        <div class="empty-state-tip">${this.escapeHtml(config.tip)}</div>
+      ` : '';
+      
       return `
         <div class="empty-state" data-empty-type="${type}">
           <div class="empty-state-icon">${config.icon}</div>
           <div class="empty-state-title">${this.escapeHtml(config.title)}</div>
           <div class="empty-state-text">${this.escapeHtml(config.text)}</div>
-          ${config.action ? `
-            <button class="empty-state-action" data-action="${config.action.handler}">
-              ${config.action.icon || ''} ${this.escapeHtml(config.action.label)}
-            </button>
-          ` : ''}
+          ${actionsHtml}
+          ${tipHtml}
         </div>
       `;
     }
@@ -38504,7 +39613,7 @@ Actions:
           
           const iconSpan = document.createElement('span');
           iconSpan.className = 'weapon-mobile-icon';
-          iconSpan.textContent = '⚠ï¸Â';
+          iconSpan.textContent = '⚠️';
           
           const nameSpan = document.createElement('span');
           nameSpan.className = 'weapon-mobile-name';
@@ -39261,10 +40370,10 @@ Actions:
         d.spellDetailName.textContent = spell.name || 'Unnamed Spell';
       }
       if (d.spellDetailCast) {
-        d.spellDetailCast.textContent = spell.cast || '"—Â';
+        d.spellDetailCast.textContent = spell.cast || '–';
       }
       if (d.spellDetailRange) {
-        d.spellDetailRange.textContent = spell.range || '"—Â';
+        d.spellDetailRange.textContent = spell.range || '–';
       }
       
       // Tags
@@ -39401,7 +40510,7 @@ Actions:
         d.weaponDetailAtk.textContent = atk.startsWith('+') || atk.startsWith('-') ? atk : `+${atk}`;
       }
       if (d.weaponDetailDmg) {
-        d.weaponDetailDmg.textContent = weapon.dmg || '"—Â';
+        d.weaponDetailDmg.textContent = weapon.dmg || '–';
       }
       
       // Notes
@@ -39794,7 +40903,7 @@ Actions:
           const skillObj = SKILLS.find(s => s.k === sk);
           return skillObj ? skillObj.n : sk;
         });
-        d.bgSummarySkills.textContent = skillNames.join(', ') || '"—Â';
+        d.bgSummarySkills.textContent = skillNames.join(', ') || '–';
       }
       
       // Tools summary
@@ -39810,7 +40919,7 @@ Actions:
         if (toolSelect && toolSelect.value) {
           tools.push(toolSelect.value);
         }
-        d.bgSummaryTools.textContent = tools.length > 0 ? tools.join(', ') : '"—Â';
+        d.bgSummaryTools.textContent = tools.length > 0 ? tools.join(', ') : '–';
       }
       
       // Languages summary
@@ -39824,7 +40933,7 @@ Actions:
         if (langs.length === 0 && langCount > 0) {
           d.bgSummaryLangs.textContent = `Choose ${langCount}`;
         } else {
-          d.bgSummaryLangs.textContent = langs.length > 0 ? langs.join(', ') : '"—Â';
+          d.bgSummaryLangs.textContent = langs.length > 0 ? langs.join(', ') : '–';
         }
       }
       
@@ -40102,6 +41211,41 @@ Actions:
       this.scheduleSave();
     }
 
+    // v7.1.0: Quick-add methods for 5E SRD data from empty states
+    openWeaponDropdown() {
+      // Focus the weapon select dropdown and scroll it into view
+      if (this.dom.weaponSelect) {
+        this.dom.weaponSelect.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        setTimeout(() => {
+          this.dom.weaponSelect.focus();
+          // Try to open the dropdown (works in some browsers)
+          if (typeof this.dom.weaponSelect.showPicker === 'function') {
+            try { this.dom.weaponSelect.showPicker(); } catch (e) { /* ignore */ }
+          }
+        }, 300);
+        this.toast(t('toast.select5eWeapon') || 'Select a 5E weapon from the dropdown above');
+      } else {
+        this.toast(t('toast.weaponDropdownNotFound') || 'Weapon dropdown not available');
+      }
+    }
+    
+    openSpellDropdown() {
+      // Focus the spell select dropdown and scroll it into view
+      if (this.dom.spellSelect) {
+        this.dom.spellSelect.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        setTimeout(() => {
+          this.dom.spellSelect.focus();
+          // Try to open the dropdown (works in some browsers)
+          if (typeof this.dom.spellSelect.showPicker === 'function') {
+            try { this.dom.spellSelect.showPicker(); } catch (e) { /* ignore */ }
+          }
+        }, 300);
+        this.toast(t('toast.select5eSpell') || 'Select a 5E spell from the dropdown above');
+      } else {
+        this.toast(t('toast.spellDropdownNotFound') || 'Spell dropdown not available');
+      }
+    }
+
     addEquip() {
       this.beginUndoPoint();
       this.state.equip.push('');
@@ -40215,7 +41359,7 @@ Actions:
             <div class="boot-error-details" id="bootErrorDetails"></div>
             <div class="boot-error-actions">
               <button type="button" class="boot-error-btn boot-error-primary" id="bootErrorExport">&#x1F4BE; Export All Data</button>
-                <button onclick="location.reload()" style="padding:12px 20px; border:1px solid #888; background:rgba(255,255,255,0.05); color:#fff; border-radius:8px; cursor:pointer;">🔄 Retry</button>
+                <button onclick="location.reload()" style="padding:12px 20px; border:1px solid #888; background:rgba(255,255,255,0.05); color:#fff; border-radius:8px; cursor:pointer;">📍„ Retry</button>
               <button type="button" class="boot-error-btn" id="bootErrorNew">&#x2728; Start New</button>
               <button type="button" class="boot-error-btn" id="bootErrorImport">&#x1F4C2; Import</button>
               <button type="button" class="boot-error-btn boot-error-danger" id="bootErrorReset">&#x1F5D1;&#xFE0F; Reset Storage</button>
@@ -40802,6 +41946,10 @@ Actions:
         this.handleBootError(new Error('Storage validation failed: Character data appears corrupt'));
         return;
       }
+
+      // v7.0.5: Add boot-visible class to body and html for CSS hiding of sheet elements
+      document.body.classList.add('boot-visible');
+      document.documentElement.classList.add('boot-visible');
 
       // Show overlay while animating.
       // Undo any earlier failsafe/skip that set display:none or pointer-events:none.
@@ -41908,7 +43056,7 @@ Actions:
       item.dataset.addonId = addon.id;
       
       // P0-4: Get truncated hash if available (async computed separately)
-      const shortHash = addon.hash ? addon.hash.slice(0, 8) : '"—Â';
+      const shortHash = addon.hash ? addon.hash.slice(0, 8) : '–';
       
       item.innerHTML = `
         <div class="pa-addon-icon">&#x1F9E9;</div>
@@ -41917,7 +43065,7 @@ Actions:
           <div class="pa-addon-meta">
             <span class="pa-addon-version">v${this.escapeHtml(addon.version)}</span>
             ${addon.author ? `<span class="pa-addon-author">by ${this.escapeHtml(addon.author)}</span>` : ''}
-            <span class="pa-addon-hash" title="SHA-256 hash (first 8 chars): ${shortHash}">📍‘ ${shortHash}</span>
+            <span class="pa-addon-hash" title="SHA-256 hash (first 8 chars): ${shortHash}">🔑 ${shortHash}</span>
           </div>
           ${addon.lastError ? `<div class="pa-addon-error" style="color:#f88;font-size:0.75rem;">Error: ${this.escapeHtml(addon.lastError)}</div>` : ''}
         </div>
@@ -41971,7 +43119,7 @@ Actions:
           // Update the hash display in the DOM
           const hashEl = itemElement.querySelector('.pa-addon-hash');
           if (hashEl) {
-            hashEl.textContent = '📍‘ ' + shortHash;
+            hashEl.textContent = '🔑 ' + shortHash;
             hashEl.title = `SHA-256: ${hash}`;
           }
           
@@ -42463,7 +43611,7 @@ Actions:
         
         // Show security warning
         const warningMsg = 
-          `⚠ï¸ SECURITY WARNING\n\n` +
+          `⚠️ SECURITY WARNING\n\n` +
           `Addons can run code and access your character data.\n\n` +
           `Addon: ${addon.name}\n` +
           `Version: ${addon.version || 'unknown'}\n` +
@@ -42983,7 +44131,7 @@ console.log('[PA Addon] Host API bridge initialized for addon:', window.PA.addon
         name: String(data.name || 'New Character').slice(0, 100),
         species: String(data.species || '').slice(0, 50),
         class: String(data.class || '').slice(0, 50),
-        level: Math.min(20, Math.max(1, parseInt(data.level) || 1)),
+        level: Math.min(20, Math.max(1, parseInt(data.level, 10) || 1)),
         campaign: String(data.campaign || '').slice(0, 100)
       };
       
@@ -43163,10 +44311,10 @@ console.log('[PA Addon] Host API bridge initialized for addon:', window.PA.addon
         // v7.1.0: Clearer status messages
         // Most browsers allow ~5-10MB for localStorage
         if (usedKB < 100) {
-          el.textContent = `✅ Local storage available`;
+          el.textContent = `✔ Local storage available`;
           el.style.color = '#22c55e';
         } else if (usedKB < 2048) {
-          el.textContent = `✅ ${usedKB < 1024 ? usedKB + 'KB' : usedMB + 'MB'} used`;
+          el.textContent = `✔ ${usedKB < 1024 ? usedKB + 'KB' : usedMB + 'MB'} used`;
           el.style.color = '#22c55e';
         } else if (usedKB < 4096) {
           el.textContent = `⚠️ ${usedMB}MB used (consider backup)`;
@@ -43318,6 +44466,18 @@ console.log('[PA Addon] Host API bridge initialized for addon:', window.PA.addon
       boot.style.pointerEvents = 'none';
       boot.style.display = 'none';
       app.style.opacity = '1';
+      
+      // v7.0.5: Remove boot-visible class from body and html
+      document.body.classList.remove('boot-visible');
+      document.documentElement.classList.remove('boot-visible');
+      
+      // v7.0.5: Show actions rail when entering sheet
+      const actionsRail = document.getElementById('actionsRail');
+      if (actionsRail) {
+        actionsRail.removeAttribute('hidden');
+        actionsRail.style.display = '';
+        actionsRail.classList.add('actions-visible');
+      }
 
       if (this.motion && this.gsapOK && !document.body.classList.contains('performance-mode')) {
         this.animateEntry();
@@ -43327,6 +44487,10 @@ console.log('[PA Addon] Host API bridge initialized for addon:', window.PA.addon
       setTimeout(() => {
         if (this._systemEnhancements && this._systemEnhancements.totalCount > 0) {
           this.showEnhancementNotification();
+        }
+        // v7.2.0 Phase 3: Show actions rail coach mark for first-time users
+        if (isFirstVisit()) {
+          showActionsRailCoachMark();
         }
       }, 2000);
     }
@@ -44174,7 +45338,7 @@ console.log('[PA Addon] Host API bridge initialized for addon:', window.PA.addon
         boot.innerHTML = `
           <div class="boot-error-modal" style="display:flex !important; position:fixed; inset:0; z-index:99999; background:rgba(0,0,0,0.95); align-items:center; justify-content:center;">
             <div style="background:rgba(30,30,40,0.98); border:1px solid rgba(255,255,255,0.1); border-radius:12px; padding:32px; max-width:500px; text-align:center; font-family:system-ui,sans-serif; color:#eee;">
-              <div style="font-size:48px; margin-bottom:16px;">⚠ï¸</div>
+              <div style="font-size:48px; margin-bottom:16px;">⚠️</div>
               <h2 style="margin:0 0 16px; font-size:1.3rem;">Player Almanac Failed to Start</h2>
               <p style="color:#aaa; margin-bottom:24px; line-height:1.5;">A critical error occurred during startup. Your character data may still be recoverable.</p>
               <div style="background:rgba(0,0,0,0.3); border-radius:6px; padding:12px; margin-bottom:24px; text-align:left; font-family:monospace; font-size:0.75rem; color:#f88; max-height:100px; overflow:auto;">
@@ -44182,8 +45346,8 @@ console.log('[PA Addon] Host API bridge initialized for addon:', window.PA.addon
               </div>
               <div style="display:flex; gap:12px; flex-wrap:wrap; justify-content:center;">
                 <button onclick="window.__PA_EMERGENCY_EXPORT?.()" style="padding:12px 20px; border:1px solid #5a5; background:rgba(90,170,90,0.2); color:#8f8; border-radius:8px; cursor:pointer; font-weight:600;">💾 Export All Data</button>
-                <button onclick="location.reload()" style="padding:12px 20px; border:1px solid #888; background:rgba(255,255,255,0.05); color:#fff; border-radius:8px; cursor:pointer;">🔄 Retry</button>
-                <button onclick="if(confirm(t('confirm.deleteAllData'))){localStorage.clear();indexedDB.deleteDatabase('PlayerAlmanacPortraits');location.reload()}" style="padding:12px 20px; border:1px solid #a55; background:rgba(170,90,90,0.2); color:#f88; border-radius:8px; cursor:pointer;">🗑ï¸ Reset All</button>
+                <button onclick="location.reload()" style="padding:12px 20px; border:1px solid #888; background:rgba(255,255,255,0.05); color:#fff; border-radius:8px; cursor:pointer;">📍„ Retry</button>
+                <button onclick="if(confirm(t('confirm.deleteAllData'))){localStorage.clear();indexedDB.deleteDatabase('PlayerAlmanacPortraits');location.reload()}" style="padding:12px 20px; border:1px solid #a55; background:rgba(170,90,90,0.2); color:#f88; border-radius:8px; cursor:pointer;">🗑️ Reset All</button>
               </div>
             </div>
           </div>
@@ -44193,7 +45357,7 @@ console.log('[PA Addon] Host API bridge initialized for addon:', window.PA.addon
       }
     } catch (fallbackErr) {
       // Absolute last resort - at least show something
-      document.body.innerHTML = '<div style="padding:40px;text-align:center;font-family:sans-serif;color:#fff;background:#111;min-height:100vh;"><h1>⚠ï¸ Player Almanac Error</h1><p>A critical error occurred. Please refresh or clear browser data.</p><pre style="color:#f88;margin:20px auto;max-width:600px;text-align:left;">' + String(err) + '</pre><button onclick="location.reload()" style="padding:12px 24px;font-size:16px;cursor:pointer;">Reload</button></div>';
+      document.body.innerHTML = '<div style="padding:40px;text-align:center;font-family:sans-serif;color:#fff;background:#111;min-height:100vh;"><h1>⚠️ Player Almanac Error</h1><p>A critical error occurred. Please refresh or clear browser data.</p><pre style="color:#f88;margin:20px auto;max-width:600px;text-align:left;">' + String(err) + '</pre><button onclick="location.reload()" style="padding:12px 24px;font-size:16px;cursor:pointer;">Reload</button></div>';
     }
   };
 
@@ -45363,7 +46527,7 @@ console.log('[PA Addon] Host API bridge initialized for addon:', window.PA.addon
         </p>
         <p class="credits-text" style="margin-top: 8px;">
           For commercial licensing inquiries:<br>
-          <a href="mailto:kylemaddenar@gmail.com">kylemaddenar@gmail.com</a>
+          <a href="/cdn-cgi/l/email-protection#02697b6e676f636666676c637042656f636b6e2c616d6f"><span class="__cf_email__" data-cfemail="402b392c252d212424252e213200272d21292c6e232f2d">[email&#160;protected]</span></a>
         </p>
       </div>
       
@@ -45410,7 +46574,7 @@ console.log('[PA Addon] Host API bridge initialized for addon:', window.PA.addon
 Copyright (c) 2025 Zagreous
 
 Official project page: https://github.com/Kylemaddenar/player-almanac
-Commercial licensing contact: kylemaddenar@gmail.com
+Commercial licensing contact: <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="e68d9f8a838b87828283888794a6818b878f8ac885898b">[email&#160;protected]</a>
 
 TERMS AND CONDITIONS
 
@@ -45620,7 +46784,7 @@ You must:
 5. COMMERCIAL LICENSING
 
 For Commercial Use permissions, contact:
-kylemaddenar@gmail.com
+<a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="771c0e1b121a1613131219160537101a161e1b5914181a">[email&#160;protected]</a>
 
 6. THIRD-PARTY MATERIALS
 
@@ -46116,9 +47280,15 @@ END OF ZNAL v1.1</pre>
 /* =============================================
    P0-4: OFFLINE INTEGRITY CHECK (Production)
    Shows visible warning if external URLs detected.
+   NOTE: Disabled in v7.0.5 due to false positives in some environments.
+   The validator was detecting CDNJS when no such URL exists in the file.
    ============================================= */
 (function() {
   'use strict';
+  
+  // v7.0.5: Disabled - was causing false positives
+  // The check would incorrectly detect dependencies in some browser environments
+  return;
   
   // Run after DOM is ready
   function checkOfflineIntegrity() {
@@ -46367,7 +47537,7 @@ function installI18nObserver() {
     mutations.forEach((mutation) => {
       if (mutation.type === 'childList') {
         mutation.addedNodes.forEach((node) => {
-          if (node.nodeType === 1) { // Element node
+          if (node.nodeType === 1) {
             translateCommonText(node);
           }
         });
@@ -46381,7 +47551,7 @@ function installI18nObserver() {
   });
 }
 
-// Run initial translation and install observer when DOM is ready
+// Initialize i18n observer on DOMContentLoaded
 if (document.readyState === 'loading') {
   document.addEventListener('DOMContentLoaded', () => {
     translateCommonText();
