@@ -1538,6 +1538,10 @@ body.high-contrast .watermark {
   -webkit-text-fill-color: transparent;
   background-size: 200% 100%;
   animation: title-shimmer 8s ease-in-out infinite;
+  /* GPU acceleration to prevent rendering bugs on reload */
+  will-change: opacity, background-position;
+  transform: translateZ(0);
+  backface-visibility: hidden;
 }
 
 @keyframes title-shimmer {
@@ -3561,12 +3565,14 @@ body.high-contrast .watermark {
   font-family: var(--font-display);
   font-size: 1.375rem;
   font-weight: 600;
+  /* Note: color is overridden by gradient effect's text-fill-color: transparent */
   color: var(--accent-secondary);
   text-transform: uppercase;
   letter-spacing: 0.08em;
   opacity: 0;
   margin-bottom: 6px;
-  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.5);
+  /* Use filter drop-shadow instead of text-shadow (compatible with background-clip: text) */
+  filter: drop-shadow(0 1px 3px rgba(0, 0, 0, 0.4));
   white-space: nowrap;
 }
 
@@ -41986,6 +41992,24 @@ Actions:
       // Section C: Trigger pa-hero CSS animation (runs once, completes in <900ms)
       const paHero = document.getElementById('paHero');
       if (paHero) {
+        // v7.2.5: Reset animation state to prevent rendering bugs on page reload
+        // Browser may cache DOM state between reloads, causing gradient text to not render
+        paHero.classList.remove('is-animating', 'animation-complete');
+        
+        // Reset inline styles on elements that GSAP animates
+        const bootLogo = document.querySelector('.boot-logo');
+        const bootTitle = document.querySelector('.boot-title');
+        const bootTagline = document.querySelector('.boot-tagline');
+        [bootLogo, bootTitle, bootTagline].forEach(el => {
+          if (el) {
+            el.style.removeProperty('opacity');
+            el.style.removeProperty('transform');
+          }
+        });
+        
+        // Force browser repaint to ensure clean state
+        void paHero.offsetHeight;
+        
         paHero.classList.add('is-animating');
         // After animation completes, add persistent class and remove animating class
         setTimeout(() => {
