@@ -22230,7 +22230,7 @@ body.boot-visible .toast-wrap {
   };
 
   // App version constant for visibility
-  const APP_VERSION = '7.2.4';
+  const APP_VERSION = '7.2.5';
 
   // ============================================
   // ORDER 6: FIRST-VISIT DETECTION
@@ -28613,7 +28613,15 @@ body.boot-visible .toast-wrap {
       if (mobileInstallBtn) {
         mobileInstallBtn.addEventListener('click', () => {
           closeMobileMenu();
-          this.showInstallModal();
+          // Trigger the same install logic as the desktop button
+          const desktopInstallBtn = document.getElementById('bootInstallBtn');
+          if (desktopInstallBtn) {
+            desktopInstallBtn.click();
+          } else {
+            // Fallback: show install modal directly
+            const installModal = document.getElementById('bootInstallModal');
+            if (installModal) installModal.hidden = false;
+          }
         });
       }
       if (mobileRecoveryBtn) {
@@ -28625,19 +28633,19 @@ body.boot-visible .toast-wrap {
       if (mobileExportAllBtn) {
         mobileExportAllBtn.addEventListener('click', () => {
           closeMobileMenu();
-          this.exportAllCharacters();
+          this.bootExportAllCharacters();
         });
       }
       if (mobileRestoreBtn) {
         mobileRestoreBtn.addEventListener('click', () => {
           closeMobileMenu();
-          this.restoreBackup();
+          this.bootImportAllCharacters();
         });
       }
       if (mobileImportBtn) {
         mobileImportBtn.addEventListener('click', () => {
           closeMobileMenu();
-          this.importFromFile();
+          this.bootImportCharacter();
         });
       }
       if (mobileAddonsBtn) {
@@ -28649,7 +28657,14 @@ body.boot-visible .toast-wrap {
       if (mobilePrivacyBtn) {
         mobilePrivacyBtn.addEventListener('click', () => {
           closeMobileMenu();
-          this.openPrivacyDialog();
+          // openPrivacyDialog is a global function defined later, call via window
+          if (typeof window.openPrivacyDialog === 'function') {
+            window.openPrivacyDialog();
+          } else {
+            // Fallback: click the privacy button which has event delegation
+            const privacyLink = document.getElementById('bootPrivacyBtn');
+            if (privacyLink) privacyLink.click();
+          }
         });
       }
       if (mobileSettingsBtn) {
