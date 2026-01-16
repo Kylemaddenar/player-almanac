@@ -16,11 +16,24 @@
 ================================================================================
 -->
 <!--
-  Player Almanac Character Sheet - v7.0.5 OFFLINE BUILD (No External Dependencies)
+  Player Almanac Character Sheet - v7.2.7 OFFLINE BUILD (No External Dependencies)
   
-  CURRENT VERSION: v7.0.6 - January 4, 2026
+  CURRENT VERSION: v7.2.7 - January 16, 2026
   
-  NEW IN v7.0.6:
+  NEW IN v7.2.7:
+  - Version Synchronization: All files now reference v7.2.7 consistently
+  - Documentation: README.md, QUICKSTART.md, CHANGELOG.txt updated
+  - Service Worker: sw.js cache name updated to v7.2.7
+  - Manifest: manifest.json version updated to 7.2.5
+  
+  PREVIOUS v7.2.4:
+  - Service worker cache update
+  - Minor bug fixes
+  
+  PREVIOUS v7.2.2:
+  - Audit Fixes: Version drift, missing icons, parseInt radix issues resolved
+  
+  PREVIOUS v7.0.6:
   - REBUILT: Mobile boot menu completely rebuilt with simple button + modal pattern
   - Fixed: Horizontal overflow on mobile boot screen caused by complex CSS cascade
   - Added: New .boot-mobile-menu-btn button (hidden on desktop, shown on mobile)
@@ -32,16 +45,8 @@
   PREVIOUS v7.0.5:
   - Fixed: File truncation - completed installI18nObserver() function
   - Fixed: Added missing </script>, </body>, </html> closing tags
-  - Fixed: 48 mojibake (corrupted unicode) instances repaired:
-    * Em-dash with corrupted characters (17 instances)
-    * Warning emoji sequences (2 instances)
-    * Checkmark symbol (1 instance)
-    * Copyright symbol (2 instances)
-    * Registered trademark symbol (4 instances)
-    * Non-breaking space (2 instances)
-    * Half fraction (2 instances)
-    * GSAP text translation (17 instances)
-  - Fixed: Removed Cloudflare email-decode.min.js external dependency (line 46612)
+  - Fixed: 48 mojibake (corrupted unicode) instances repaired
+  - Fixed: Removed Cloudflare email-decode.min.js external dependency
   - File integrity verified: proper HTML structure with all tags balanced
   
   PREVIOUS v7.0.1:
@@ -5505,7 +5510,7 @@ body.addon-open{
   gap:4px;
 }
 .empty-state-tip::before{
-  content:'💡';
+  content:'❗';
   font-size:0.85rem;
 }
 
@@ -19153,7 +19158,7 @@ body {
 }
 
 .help-popover-title::before {
-  content: "💡";
+  content: "❗";
   font-size: 16px;
 }
 
@@ -19821,14 +19826,14 @@ body.boot-visible .toast-wrap {
           <span class="boot-install-icon">&#x1F34E;</span>
           <div class="boot-install-detail">
             <div class="boot-install-platform">iOS (Safari)</div>
-            <div class="boot-install-steps">Tap Share &#x2B06;&#xFE0F; → "Add to Home Screen"</div>
+            <div class="boot-install-steps">Tap Share &#x2B06;&#xFE0F;  â€™ "Add to Home Screen"</div>
           </div>
         </li>
         <li class="boot-install-item">
           <span class="boot-install-icon">&#x1F4F1;</span>
           <div class="boot-install-detail">
             <div class="boot-install-platform">Android (Chrome)</div>
-            <div class="boot-install-steps">Tap menu &#x22EE; → "Add to Home Screen" or "Install App"</div>
+            <div class="boot-install-steps">Tap menu &#x22EE;  â€™ "Add to Home Screen" or "Install App"</div>
           </div>
         </li>
         <li class="boot-install-item">
@@ -20267,7 +20272,7 @@ body.boot-visible .toast-wrap {
 <!-- v7.0.0: Destructive Action Confirmation Modal -->
 <div id="confirmDestructive" class="modal-overlay confirm-overlay" style="display:none;" role="dialog" aria-modal="true" aria-labelledby="confirmDestructiveTitle">
   <div class="modal confirm-destructive">
-    <div class="modal-icon danger">⚠️</div>
+    <div class="modal-icon danger">⚁ ️</div>
     <h2 id="confirmDestructiveTitle"></h2>
     <p id="confirmDestructiveMessage"></p>
     <div class="confirm-destructive-detail" id="confirmDestructiveDetail"></div>
@@ -20338,13 +20343,13 @@ body.boot-visible .toast-wrap {
       <ul class="changelog-list">
         <li><strong>🎯 Better Scroll Behavior</strong> - Nested scroll areas no longer trap scrolling</li>
         <li><strong>🎨 Theme-Aware Modals</strong> - Modal backgrounds now properly use theme colors</li>
-        <li><strong>⌨️ Shortcuts Hint</strong> - "Press ? for shortcuts" visible in footer on desktop</li>
+        <li><strong>✨️ Shortcuts Hint</strong> - "Press ? for shortcuts" visible in footer on desktop</li>
         <li><strong>💾 Enhanced Save Indicator</strong> - Clearer visual feedback with backgrounds and pulse animation</li>
         <li><strong>📥 Prominent Import</strong> - Import button more visible in empty state</li>
         <li><strong>✨ Enhanced Empty States</strong> - Quick-add buttons for 5E SRD content with helpful tips</li>
         <li><strong>📝 Editable Field Hints</strong> - Visual distinction between editable and read-only fields</li>
-        <li><strong>📍’ Data & Privacy Panel</strong> - New panel explaining how your data is handled</li>
-        <li><strong>⚠️ Addon Security Warning</strong> - Prominent warning before installing addons</li>
+        <li><strong>📜’ Data & Privacy Panel</strong> - New panel explaining how your data is handled</li>
+        <li><strong>⚁ ️ Addon Security Warning</strong> - Prominent warning before installing addons</li>
         <li><strong>™️ Trademark Notice</strong> - "Not affiliated with Wizards of the Coast" visible</li>
       </ul>
       
@@ -21576,7 +21581,7 @@ body.boot-visible .toast-wrap {
     <div class="char-builder-output" id="charBuilderOutput" hidden>
       <h3 class="char-builder-output-title">&#x1F4DC; Step 1: Copy This Prompt</h3>
       <p class="char-builder-output-hint">
-        <strong>How to use:</strong> 1) Copy this prompt → 2) Paste into an AI (Claude, ChatGPT, etc.) → 3) The AI will create a downloadable .json file → 4) Download it → 5) Import into Player Almanac using the Import button
+        <strong>How to use:</strong> 1) Copy this prompt  â€™ 2) Paste into an AI (Claude, ChatGPT, etc.)  â€™ 3) The AI will create a downloadable .json file  â€™ 4) Download it  â€™ 5) Import into Player Almanac using the Import button
       </p>
       <textarea class="char-builder-output-textarea" id="charBuilderPromptOutput" readonly></textarea>
       <div class="char-builder-output-actions">
@@ -21872,7 +21877,7 @@ body.boot-visible .toast-wrap {
 <div class="weapon-detail-modal" id="weaponDetailModal" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="weaponDetailTitle">
   <div class="weapon-detail-header">
     <div class="weapon-detail-title">
-      <span class="weapon-mobile-icon">⚠️</span>
+      <span class="weapon-mobile-icon">⚁ ️</span>
       <span id="weaponDetailName">Weapon Name</span>
     </div>
     <button class="weapon-detail-close" id="weaponDetailClose" type="button" aria-label="Close weapon details">&times;</button>
@@ -21934,7 +21939,7 @@ body.boot-visible .toast-wrap {
   <div class="bg-select-body" id="bgSelectBody">
     <!-- Feature Section -->
     <div class="bg-section">
-      <div class="bg-section-title"><span class="icon">⭐Â</span> Background Feature</div>
+      <div class="bg-section-title"><span class="icon">‚Â</span> Background Feature</div>
       <div class="bg-feature-box">
         <div class="bg-feature-name" id="bgFeatureName">Feature Name</div>
         <div class="bg-feature-desc" id="bgFeatureDesc">Feature description goes here.</div>
@@ -22236,7 +22241,7 @@ body.boot-visible .toast-wrap {
   };
 
   // App version constant for visibility
-  const APP_VERSION = '7.2.5';
+  const APP_VERSION = '7.2.7';
 
   // ============================================
   // ORDER 6: FIRST-VISIT DETECTION
@@ -22289,8 +22294,8 @@ body.boot-visible .toast-wrap {
       'settings.motion': 'Motion',
       'settings.contrast': 'Contrast',
       'settings.print': 'Print / Save PDF',
-      'settings.onePageSheet': '📄 One-Page Sheet',
-      'settings.help': '❓ Help',
+      'settings.onePageSheet': '📜 One-Page Sheet',
+      'settings.help': '❌ Help',
       'settings.about': 'ℹ️ About / Credits',
       
       // Quickbar
@@ -22551,7 +22556,7 @@ body.boot-visible .toast-wrap {
       'about.title': 'About Player Almanac',
       'about.project': 'PROJECT',
       'about.projectName': 'Player Almanac',
-      'about.copyright': 'Â© 2025 Zagreous',
+      'about.copyright': '© 2025 Zagreous',
       'about.description': 'A digital character sheet and campaign companion for tabletop RPGs.',
       'about.license': 'LICENSE',
       'about.licenseTitle': 'ZNAL v1.1',
@@ -22575,10 +22580,10 @@ body.boot-visible .toast-wrap {
       'about.emoji': 'Emoji:',
       'about.emojiText': 'Unicode standard characters – Rendered by your device/browser.',
       'about.trademark': 'TRADEMARK DISCLAIMER',
-      'about.trademarkText': 'Dungeons & DragonsÂ® is a registered trademark of Wizards of the Coast LLC. Player Almanac is not affiliated with, endorsed, sponsored, or specifically approved by Wizards of the Coast LLC.',
+      'about.trademarkText': 'Dungeons & Dragons® is a registered trademark of Wizards of the Coast LLC. Player Almanac is not affiliated with, endorsed, sponsored, or specifically approved by Wizards of the Coast LLC.',
       
       // v7.1.0: Privacy Dialog
-      'privacy.title': '📍’ Data & Privacy',
+      'privacy.title': '📜’ Data & Privacy',
       'privacy.summaryTitle': '✔ Your Data Stays With You',
       'privacy.summaryText': 'Player Almanac runs entirely in your browser. No servers, no accounts, no tracking – just you and your character sheets.',
       'privacy.localTitle': 'Runs Locally in Your Browser',
@@ -22606,7 +22611,7 @@ body.boot-visible .toast-wrap {
       'boot.trustStatement': 'Offline-first • Your data stays local • Export anytime',
       
       // v7.1.0: Settings menu items
-      'settings.privacy': '📍’ Data & Privacy',
+      'settings.privacy': '📜’ Data & Privacy',
       'settings.github': '💻 GitHub',
       
       // Conditions
@@ -22753,7 +22758,7 @@ body.boot-visible .toast-wrap {
       'about.emoji': 'Emoji:',
       'about.emojiDesc': 'Unicode standard characters – Rendered by your device/browser.',
       'about.trademark': 'Trademark Disclaimer',
-      'about.trademarkDesc': 'Dungeons & DragonsÂ® is a registered trademark of Wizards of the Coast LLC. Player Almanac is not affiliated with, endorsed, sponsored, or specifically approved by Wizards of the Coast LLC.',
+      'about.trademarkDesc': 'Dungeons & Dragons® is a registered trademark of Wizards of the Coast LLC. Player Almanac is not affiliated with, endorsed, sponsored, or specifically approved by Wizards of the Coast LLC.',
       
       // Map Screen
       'map.title': 'Campaign Map',
@@ -23211,8 +23216,8 @@ body.boot-visible .toast-wrap {
       'settings.motion': 'Animationen',
       'settings.contrast': 'Kontrast',
       'settings.print': 'Drucken / Als PDF speichern',
-      'settings.onePageSheet': '📄 Einzelseiten-Bogen',
-      'settings.help': '❓ Hilfe',
+      'settings.onePageSheet': '📜 Einzelseiten-Bogen',
+      'settings.help': '❌ Hilfe',
       'settings.about': 'ℹ️ Über / Credits',
       
       // Quickbar
@@ -23454,7 +23459,7 @@ body.boot-visible .toast-wrap {
       'about.title': 'Über Player Almanac',
       'about.project': 'PROJEKT',
       'about.projectName': 'Player Almanac',
-      'about.copyright': 'Â© 2025 Zagreous',
+      'about.copyright': '© 2025 Zagreous',
       'about.description': 'Ein digitaler Charakterbogen und Kampagnenbegleiter für Tischrollenspiele.',
       'about.license': 'LIZENZ',
       'about.licenseTitle': 'ZNAL v1.1',
@@ -23478,10 +23483,10 @@ body.boot-visible .toast-wrap {
       'about.emoji': 'Emoji:',
       'about.emojiText': 'Unicode-Standardzeichen – Gerendert durch Ihr Gerät/Browser.',
       'about.trademark': 'MARKENRECHTLICHER HINWEIS',
-      'about.trademarkText': 'Dungeons & DragonsÂ® ist eine eingetragene Marke von Wizards of the Coast LLC. Player Almanac ist nicht mit Wizards of the Coast LLC verbunden, wird nicht von ihr unterstützt, gesponsert oder speziell genehmigt.',
+      'about.trademarkText': 'Dungeons & Dragons® ist eine eingetragene Marke von Wizards of the Coast LLC. Player Almanac ist nicht mit Wizards of the Coast LLC verbunden, wird nicht von ihr unterstützt, gesponsert oder speziell genehmigt.',
       
       // v7.1.0: Privacy Dialog (German)
-      'privacy.title': '📍’ Daten & Datenschutz',
+      'privacy.title': '📜’ Daten & Datenschutz',
       'privacy.summaryTitle': '✔ Deine Daten bleiben bei dir',
       'privacy.summaryText': 'Player Almanac läuft vollständig in deinem Browser. Keine Server, keine Konten, kein Tracking – nur du und deine Charakterbögen.',
       'privacy.localTitle': 'Läuft lokal in deinem Browser',
@@ -23509,7 +23514,7 @@ body.boot-visible .toast-wrap {
       'boot.trustStatement': 'Offline-first • Deine Daten bleiben lokal • Jederzeit exportieren',
       
       // v7.1.0: Settings menu items (German)
-      'settings.privacy': '📍’ Daten & Datenschutz',
+      'settings.privacy': '📜’ Daten & Datenschutz',
       'settings.github': '💻 GitHub',
       
       // Conditions
@@ -23656,7 +23661,7 @@ body.boot-visible .toast-wrap {
       'about.emoji': 'Emoji:',
       'about.emojiDesc': 'Unicode-Standardzeichen – Gerendert durch Ihr Gerät/Browser.',
       'about.trademark': 'Markenrechtlicher Hinweis',
-      'about.trademarkDesc': 'Dungeons & DragonsÂ® ist eine eingetragene Marke von Wizards of the Coast LLC. Player Almanac ist nicht mit Wizards of the Coast LLC verbunden oder von ihr genehmigt.',
+      'about.trademarkDesc': 'Dungeons & Dragons® ist eine eingetragene Marke von Wizards of the Coast LLC. Player Almanac ist nicht mit Wizards of the Coast LLC verbunden oder von ihr genehmigt.',
       
       // Map Screen
       'map.title': 'Kampagnenkarte',
@@ -25056,11 +25061,6 @@ body.boot-visible .toast-wrap {
     return Math.floor((s - 10) / 2);
   }
 
-  /** @param {number} mod */
-  function fmtMod(mod) {
-    return mod >= 0 ? `+${mod}` : `${mod}`;
-  }
-
   /** 5e proficiency bonus */
   function profBonus(level) {
     const l = toInt(level, 1, { min: 1, max: 20 });
@@ -25557,12 +25557,12 @@ body.boot-visible .toast-wrap {
   }
 
   /**
-   * ORDER 9: Input validation helper
+   * ORDER 9: Input validation helper (for UI validation with rules)
    * @param {string} value - The value to validate
    * @param {Object} rules - Validation rules
    * @returns {string[]} Array of error messages
    */
-  function validateInput(value, rules) {
+  function validateUIInput(value, rules) {
     const errors = [];
     const strVal = String(value ?? '');
     
@@ -25636,7 +25636,7 @@ body.boot-visible .toast-wrap {
   function validateAndShowError(inputEl, rules) {
     if (!inputEl) return true;
     
-    const errors = validateInput(inputEl.value, rules);
+    const errors = validateUIInput(inputEl.value, rules);
     if (errors.length > 0) {
       showInputError(inputEl, errors[0]);
       return false;
@@ -25647,7 +25647,7 @@ body.boot-visible .toast-wrap {
   }
   
   // Make validation functions globally accessible
-  window.validateInput = validateInput;
+  window.validateUIInput = validateUIInput;
   window.showInputError = showInputError;
   window.clearInputError = clearInputError;
   window.validateAndShowError = validateAndShowError;
@@ -25880,7 +25880,8 @@ body.boot-visible .toast-wrap {
      ========================= */
   
   /**
-   * Validates and sanitizes user input according to a schema
+   * Validates and sanitizes user input according to a schema (for state/data validation).
+   * Different from validateUIInput which handles UI-level validation with error messages.
    * @param {any} value - Value to validate
    * @param {Object} schema - Validation schema
    * @param {string} schema.type - Expected type: 'string' | 'number' | 'boolean' | 'array' | 'object'
@@ -30464,7 +30465,7 @@ body.boot-visible .toast-wrap {
       const origLevel = this.state.level;
       this.state.level = toInt(this.state.level, 1, { min: 1, max: 20 });
       if (origLevel !== this.state.level) {
-        issues.push(`Level clamped: ${origLevel} → ${this.state.level}`);
+        issues.push(`Level clamped: ${origLevel}  â€™ ${this.state.level}`);
       }
       
       // Hit dice
@@ -30477,7 +30478,7 @@ body.boot-visible .toast-wrap {
       this.state.hp.max = toInt(this.state.hp.max, 0, { min: 0, max: 9999 });
       this.state.hp.tmp = toInt(this.state.hp.tmp, 0, { min: 0, max: 9999 });
       if (origHpCur !== this.state.hp.cur && origHpCur < 0) {
-        issues.push(`HP was negative: ${origHpCur} → 0`);
+        issues.push(`HP was negative: ${origHpCur}  â€™ 0`);
       }
       
       // P1.2: Ensure coins are non-negative
@@ -30486,7 +30487,7 @@ body.boot-visible .toast-wrap {
           const orig = this.state.coins[coinType];
           this.state.coins[coinType] = toInt(orig, 0, { min: 0, max: 999999 });
           if (orig < 0) {
-            issues.push(`${coinType.toUpperCase()} was negative: ${orig} → 0`);
+            issues.push(`${coinType.toUpperCase()} was negative: ${orig}  â€™ 0`);
           }
         }
       }
@@ -30603,7 +30604,7 @@ body.boot-visible .toast-wrap {
         lockIO(true);
         el.classList.add('saving');
         el.dataset.state = 'saving';
-        el.innerHTML = `<span class="save-status-icon">↻</span><span class="save-status-text">${t('save.saving')}</span>`;
+        el.innerHTML = `<span class="save-status-icon"> Â»</span><span class="save-status-text">${t('save.saving')}</span>`;
         el.title = t('save.saving');
         return;
       }
@@ -30627,7 +30628,7 @@ body.boot-visible .toast-wrap {
       lockIO(false);
       el.classList.add('error');
       el.dataset.state = 'failed';
-      el.innerHTML = `<span class="save-status-icon">⚠</span><span class="save-status-text">${t('save.failed')}</span><span class="save-status-retry" onclick="app.persist({force:true})">${t('save.retry')}</span>`;
+      el.innerHTML = `<span class="save-status-icon">⚁ </span><span class="save-status-text">${t('save.failed')}</span><span class="save-status-retry" onclick="app.persist({force:true})">${t('save.retry')}</span>`;
       el.title = t('save.failed');
     }
 
@@ -33580,7 +33581,7 @@ SKILLS:
 - "misc": miscellaneous bonus (usually 0)
 
 HIT POINTS (hp):
-- Calculate max HP: Hit die max at level 1 + CON modifier + ((average hit die + CON mod) × (level - 1))
+- Calculate max HP: Hit die max at level 1 + CON modifier + ((average hit die + CON mod) Ö (level - 1))
 - Set "cur" equal to "max" for a fresh character
 
 HIT DICE (hd):
@@ -35786,7 +35787,7 @@ Actions:
       
       // Update inspector title
       if (this.dom.mapRouteInspectorTitle) {
-        this.dom.mapRouteInspectorTitle.textContent = '📍 ' + (route.name || 'Route');
+        this.dom.mapRouteInspectorTitle.textContent = '📜 ' + (route.name || 'Route');
       }
       
       // Populate fields
@@ -35839,7 +35840,7 @@ Actions:
       if (this._selectedPinId) {
         // Pin selected - show pin inspector
         showPanels(panelPinInspector);
-        if (contextIcon) contextIcon.textContent = '📍';
+        if (contextIcon) contextIcon.textContent = '📜';
         if (contextText) contextText.textContent = 'Pin Inspector';
         return;
       }
@@ -35847,7 +35848,7 @@ Actions:
       if (this._selectedRouteId) {
         // Route selected - show route inspector
         showPanels(panelRouteInspector);
-        if (contextIcon) contextIcon.textContent = '📍';
+        if (contextIcon) contextIcon.textContent = '📜';
         if (contextText) contextText.textContent = 'Route Inspector';
         return;
       }
@@ -35858,7 +35859,7 @@ Actions:
       if (tool === 'scale') {
         // Scale tool - show scale panel prominently with map settings
         showPanels(panelScale, panelCampaign, panelMap);
-        if (contextIcon) contextIcon.textContent = '📍';
+        if (contextIcon) contextIcon.textContent = '📜';
         if (contextText) contextText.textContent = 'Scale Calibration';
         return;
       }
@@ -35866,7 +35867,7 @@ Actions:
       if (tool === 'route') {
         // Route tool - show route panel with instructions
         showPanels(panelRoutes, panelCampaign, panelMap);
-        if (contextIcon) contextIcon.textContent = '📍';
+        if (contextIcon) contextIcon.textContent = '📜';
         if (contextText) contextText.textContent = 'Route Planning';
         return;
       }
@@ -35874,7 +35875,7 @@ Actions:
       if (tool === 'pin') {
         // Pin tool - show pins browser with map settings
         showPanels(panelPins, panelCampaign, panelMap);
-        if (contextIcon) contextIcon.textContent = '📍';
+        if (contextIcon) contextIcon.textContent = '📜';
         if (contextText) contextText.textContent = 'Pins Browser';
         return;
       }
@@ -35882,14 +35883,14 @@ Actions:
       if (tool === 'origin' || tool === 'lastseen') {
         // Origin/LastSeen tool - show origin settings with map settings
         showPanels(panelOrigin, panelCampaign, panelMap);
-        if (contextIcon) contextIcon.textContent = tool === 'origin' ? '📍' : '📌';
+        if (contextIcon) contextIcon.textContent = tool === 'origin' ? '📜' : '📑';
         if (contextText) contextText.textContent = tool === 'origin' ? 'Place Origin' : 'Mark Last Seen';
         return;
       }
       
       // Default context - show map settings overview
       showPanels(panelCampaign, panelMap, panelScale, panelPins, panelRoutes);
-      if (contextIcon) contextIcon.textContent = '📍';
+      if (contextIcon) contextIcon.textContent = '📜';
       if (contextText) contextText.textContent = 'Map Settings';
     }
     
@@ -35911,7 +35912,7 @@ Actions:
       
       // Update inspector title
       if (this.dom.mapRouteInspectorTitle) {
-        this.dom.mapRouteInspectorTitle.textContent = '📍 ' + route.name;
+        this.dom.mapRouteInspectorTitle.textContent = '📜 ' + route.name;
       }
       
       // Re-render
@@ -36281,7 +36282,7 @@ Actions:
       // Update inspector title
       if (this.dom.mapPinInspectorTitle) {
         const pinIcons = { origin: '\uD83C\uDFE0', last_seen: '\uD83D\uDC64', town: '\uD83C\uDFD8\uFE0F', city: '\uD83C\uDFF0', dungeon: '\u2694\uFE0F', landmark: '\uD83D\uDDFF', quest: '\u2757', shop: '\uD83D\uDED2', tavern: '\uD83C\uDF7A', temple: '\u26EA', location: '\uD83D\uDCCD' };
-        this.dom.mapPinInspectorTitle.textContent = (pinIcons[pin.type] || '📍') + ' ' + (pin.name || 'Pin');
+        this.dom.mapPinInspectorTitle.textContent = (pinIcons[pin.type] || '📜') + ' ' + (pin.name || 'Pin');
       }
       
       // Populate fields
@@ -36319,7 +36320,7 @@ Actions:
       // Update title
       if (this.dom.mapPinInspectorTitle) {
         const pinIcons = { origin: '\uD83C\uDFE0', last_seen: '\uD83D\uDC64', town: '\uD83C\uDFD8\uFE0F', city: '\uD83C\uDFF0', dungeon: '\u2694\uFE0F', landmark: '\uD83D\uDDFF', quest: '\u2757', shop: '\uD83D\uDED2', tavern: '\uD83C\uDF7A', temple: '\u26EA', location: '\uD83D\uDCCD' };
-        this.dom.mapPinInspectorTitle.textContent = (pinIcons[pin.type] || '📍') + ' ' + pin.name;
+        this.dom.mapPinInspectorTitle.textContent = (pinIcons[pin.type] || '📜') + ' ' + pin.name;
       }
       
       this.renderMapPins();
@@ -36735,7 +36736,7 @@ Actions:
       const typeClass = type !== 'default' ? ` toast-${type}` : '';
       toast.className = `toast toast-enhanced${typeClass}`;
       
-      const icon = type === 'success' ? '✓' : type === 'error' ? '⚠' : type === 'warning' ? '⚡' : '';
+      const icon = type === 'success' ? '✓' : type === 'error' ? '⚁ ' : type === 'warning' ? '⚁¡' : '';
       
       toast.innerHTML = `
         ${icon ? `<span class="toast-icon">${icon}</span>` : ''}
@@ -36842,9 +36843,9 @@ Actions:
       if (!statusEl) return;
       
       const icons = {
-        saving: '↻',
+        saving: ' Â»',
         saved: '✓',
-        failed: '⚠'
+        failed: '⚁ '
       };
       
       const messages = {
@@ -36876,17 +36877,17 @@ Actions:
       // v7.1.0: Enhanced empty states with multiple actions and tips
       const configs = {
         spells: {
-          icon: '📓',
+          icon: '📜',
           title: t('empty.spellsTitle'),
           text: t('empty.spellsText'),
           actions: [
             { label: t('empty.addSpell'), handler: 'addSpell', icon: '➕', primary: true },
-            { label: t('empty.add5eSpell') || 'Quick add from 5E SRD', handler: 'openSpellDropdown', icon: '📖', primary: false }
+            { label: t('empty.add5eSpell') || 'Quick add from 5E SRD', handler: 'openSpellDropdown', icon: '📝', primary: false }
           ],
           tip: t('empty.spellsTip') || 'Tip: Click any spell to see its details and cast it'
         },
         equipment: {
-          icon: '🎒',
+          icon: '🎲',
           title: t('empty.equipmentTitle'),
           text: t('empty.equipmentText'),
           actions: [
@@ -36895,12 +36896,12 @@ Actions:
           tip: t('empty.equipmentTip') || 'Tip: Track coins, potions, and magic items'
         },
         weapons: {
-          icon: '⚔️',
+          icon: '⚅️',
           title: t('empty.weaponsTitle'),
           text: t('empty.weaponsText'),
           actions: [
             { label: t('empty.addWeapon'), handler: 'addWeapon', icon: '➕', primary: true },
-            { label: t('empty.add5eWeapon') || 'Quick add from 5E SRD', handler: 'openWeaponDropdown', icon: '🗡️', primary: false }
+            { label: t('empty.add5eWeapon') || 'Quick add from 5E SRD', handler: 'openWeaponDropdown', icon: '🖡️', primary: false }
           ],
           tip: t('empty.weaponsTip') || 'Tip: Click any weapon to roll attack and damage dice'
         },
@@ -36912,7 +36913,7 @@ Actions:
           tip: null
         },
         map: {
-          icon: '🗺️',
+          icon: '🖺️',
           title: t('empty.mapTitle'),
           text: t('empty.mapText'),
           actions: [
@@ -37988,10 +37989,10 @@ Actions:
       }
       
       if (is2024) {
-        // 2024 rules: -2×level to d20 tests, -5×level to speed
+        // 2024 rules: -2Ölevel to d20 tests, -5Ölevel to speed
         const d20Penalty = lvl * 2;
         const speedPenalty = lvl * 5;
-        this.dom.exhaustionEffects.textContent = `−${d20Penalty} to d20 tests, −${speedPenalty} ft speed`;
+        this.dom.exhaustionEffects.textContent = `∞${d20Penalty} to d20 tests, ∞${speedPenalty} ft speed`;
       } else {
         // 2014 rules: different effects per level, cumulative
         const effects2014 = [
@@ -38661,7 +38662,7 @@ Actions:
         <div class="roll-breakdown">d20(${roll}) ${modStr}</div>
         <div class="roll-name">${escapeHtml(name)}</div>
         ${isCrit ? '<div class="crit-label">&#x2728; CRITICAL!</div>' : ''}
-        ${isFumble ? '<div class="fumble-label">👀 FUMBLE</div>' : ''}
+        ${isFumble ? '<div class="fumble-label">💀 FUMBLE</div>' : ''}
       `;
 
       document.body.appendChild(toast);
@@ -39600,7 +39601,7 @@ Actions:
           const enhanceBtn = document.createElement('button');
           enhanceBtn.className = 'system-enhance-btn';
           enhanceBtn.type = 'button';
-          enhanceBtn.textContent = '←Â ';
+          enhanceBtn.textContent = ' Â ';
           enhanceBtn.title = 'Add system data: ' + enhancements.weapons[i].fields.join(', ');
           enhanceBtn.dataset.action = 'weapon-system-enhance';
           enhanceBtn.dataset.index = String(i);
@@ -39634,7 +39635,7 @@ Actions:
           
           const iconSpan = document.createElement('span');
           iconSpan.className = 'weapon-mobile-icon';
-          iconSpan.textContent = '⚠️';
+          iconSpan.textContent = '⚁ ️';
           
           const nameSpan = document.createElement('span');
           nameSpan.className = 'weapon-mobile-name';
@@ -39862,9 +39863,9 @@ Actions:
         if (exLvl === 6) {
           effectText = 'Death';
         } else if (is2024) {
-          effectText = `−${exLvl * 2} d20, −${exLvl * 5} ft`;
+          effectText = `∞${exLvl * 2} d20, ∞${exLvl * 5} ft`;
         } else {
-          const effects2014Short = ['Disadv checks', 'Speed Â½', 'Disadv atk/saves', 'HP max Â½', 'Speed 0'];
+          const effects2014Short = ['Disadv checks', 'Speed ½', 'Disadv atk/saves', 'HP max ½', 'Speed 0'];
           effectText = effects2014Short.slice(0, exLvl).join(', ');
         }
         
@@ -40140,7 +40141,7 @@ Actions:
           const enhanceBtn = document.createElement('button');
           enhanceBtn.className = 'system-enhance-btn';
           enhanceBtn.type = 'button';
-          enhanceBtn.textContent = '←Â  Enhance';
+          enhanceBtn.textContent = ' Â  Enhance';
           enhanceBtn.title = 'Add system data: ' + enhancements.spells[i].fields.join(', ');
           enhanceBtn.dataset.action = 'spell-system-enhance';
           enhanceBtn.dataset.index = String(i);
@@ -40410,13 +40411,13 @@ Actions:
         if (spell.rit) {
           const tag = document.createElement('span');
           tag.className = 'spell-detail-tag rit';
-          tag.textContent = '☆ Ritual';
+          tag.textContent = '⏳  Ritual';
           d.spellDetailTags.appendChild(tag);
         }
         
         const prepTag = document.createElement('span');
         prepTag.className = spell.prep ? 'spell-detail-tag prep' : 'spell-detail-tag not-prep';
-        prepTag.textContent = spell.prep ? '✓ Prepared' : '✗ Not Prepared';
+        prepTag.textContent = spell.prep ? '✓ Prepared' : '✔ Not Prepared';
         d.spellDetailTags.appendChild(prepTag);
       }
       
@@ -41380,7 +41381,7 @@ Actions:
             <div class="boot-error-details" id="bootErrorDetails"></div>
             <div class="boot-error-actions">
               <button type="button" class="boot-error-btn boot-error-primary" id="bootErrorExport">&#x1F4BE; Export All Data</button>
-                <button onclick="location.reload()" style="padding:12px 20px; border:1px solid #888; background:rgba(255,255,255,0.05); color:#fff; border-radius:8px; cursor:pointer;">📍„ Retry</button>
+                <button onclick="location.reload()" style="padding:12px 20px; border:1px solid #888; background:rgba(255,255,255,0.05); color:#fff; border-radius:8px; cursor:pointer;">📜„ Retry</button>
               <button type="button" class="boot-error-btn" id="bootErrorNew">&#x2728; Start New</button>
               <button type="button" class="boot-error-btn" id="bootErrorImport">&#x1F4C2; Import</button>
               <button type="button" class="boot-error-btn boot-error-danger" id="bootErrorReset">&#x1F5D1;&#xFE0F; Reset Storage</button>
@@ -41992,7 +41993,7 @@ Actions:
       // Section C: Trigger pa-hero CSS animation (runs once, completes in <900ms)
       const paHero = document.getElementById('paHero');
       if (paHero) {
-        // v7.2.5: Reset animation state to prevent rendering bugs on page reload
+        // v7.2.7: Reset animation state to prevent rendering bugs on page reload
         // Browser may cache DOM state between reloads, causing gradient text to not render
         paHero.classList.remove('is-animating', 'animation-complete');
         
@@ -43104,7 +43105,7 @@ Actions:
           <div class="pa-addon-meta">
             <span class="pa-addon-version">v${this.escapeHtml(addon.version)}</span>
             ${addon.author ? `<span class="pa-addon-author">by ${this.escapeHtml(addon.author)}</span>` : ''}
-            <span class="pa-addon-hash" title="SHA-256 hash (first 8 chars): ${shortHash}">🔑 ${shortHash}</span>
+            <span class="pa-addon-hash" title="SHA-256 hash (first 8 chars): ${shortHash}">👑 ${shortHash}</span>
           </div>
           ${addon.lastError ? `<div class="pa-addon-error" style="color:#f88;font-size:0.75rem;">Error: ${this.escapeHtml(addon.lastError)}</div>` : ''}
         </div>
@@ -43158,7 +43159,7 @@ Actions:
           // Update the hash display in the DOM
           const hashEl = itemElement.querySelector('.pa-addon-hash');
           if (hashEl) {
-            hashEl.textContent = '🔑 ' + shortHash;
+            hashEl.textContent = '👑 ' + shortHash;
             hashEl.title = `SHA-256: ${hash}`;
           }
           
@@ -43305,7 +43306,7 @@ Actions:
         if (!modal) {
           // Fallback to basic confirm if modal not found
           const confirmed = confirm(
-            '⚠️ SECURITY WARNING\n\n' +
+            '⚁ ️ SECURITY WARNING\n\n' +
             'Addons can run arbitrary code and access your character data.\n' +
             'Only install addons from sources you trust.\n\n' +
             `Install "${file.name}"?`
@@ -43650,7 +43651,7 @@ Actions:
         
         // Show security warning
         const warningMsg = 
-          `⚠️ SECURITY WARNING\n\n` +
+          `⚁ ️ SECURITY WARNING\n\n` +
           `Addons can run code and access your character data.\n\n` +
           `Addon: ${addon.name}\n` +
           `Version: ${addon.version || 'unknown'}\n` +
@@ -44356,10 +44357,10 @@ console.log('[PA Addon] Host API bridge initialized for addon:', window.PA.addon
           el.textContent = `✔ ${usedKB < 1024 ? usedKB + 'KB' : usedMB + 'MB'} used`;
           el.style.color = '#22c55e';
         } else if (usedKB < 4096) {
-          el.textContent = `⚠️ ${usedMB}MB used (consider backup)`;
+          el.textContent = `⚁ ️ ${usedMB}MB used (consider backup)`;
           el.style.color = '#eab308';
         } else {
-          el.textContent = `⚠️ Low space: ${usedMB}MB used`;
+          el.textContent = `⚁ ️ Low space: ${usedMB}MB used`;
           el.style.color = '#f97316';
         }
         el.classList.remove('error');
@@ -44370,7 +44371,7 @@ console.log('[PA Addon] Host API bridge initialized for addon:', window.PA.addon
                            e.name === 'QUOTA_EXCEEDED_ERR');
         
         if (isPrivate || navigator.cookieEnabled === false) {
-          el.textContent = '⚠️ Private browsing may block saving';
+          el.textContent = '⚁ ️ Private browsing may block saving';
           el.style.color = '#f97316';
         } else {
           el.textContent = '❌ Storage unavailable';
@@ -44705,9 +44706,6 @@ console.log('[PA Addon] Host API bridge initialized for addon:', window.PA.addon
   /* =========================
      DOM wiring
      ========================= */
-
-  /** @param {number} v @param {number} min @param {number} max */
-  function clamp(v, min, max) { return Math.max(min, Math.min(max, v)); }
 
   /**
    * Safe DOM element getter with optional strict mode
@@ -45377,7 +45375,7 @@ console.log('[PA Addon] Host API bridge initialized for addon:', window.PA.addon
         boot.innerHTML = `
           <div class="boot-error-modal" style="display:flex !important; position:fixed; inset:0; z-index:99999; background:rgba(0,0,0,0.95); align-items:center; justify-content:center;">
             <div style="background:rgba(30,30,40,0.98); border:1px solid rgba(255,255,255,0.1); border-radius:12px; padding:32px; max-width:500px; text-align:center; font-family:system-ui,sans-serif; color:#eee;">
-              <div style="font-size:48px; margin-bottom:16px;">⚠️</div>
+              <div style="font-size:48px; margin-bottom:16px;">⚁ ️</div>
               <h2 style="margin:0 0 16px; font-size:1.3rem;">Player Almanac Failed to Start</h2>
               <p style="color:#aaa; margin-bottom:24px; line-height:1.5;">A critical error occurred during startup. Your character data may still be recoverable.</p>
               <div style="background:rgba(0,0,0,0.3); border-radius:6px; padding:12px; margin-bottom:24px; text-align:left; font-family:monospace; font-size:0.75rem; color:#f88; max-height:100px; overflow:auto;">
@@ -45385,7 +45383,7 @@ console.log('[PA Addon] Host API bridge initialized for addon:', window.PA.addon
               </div>
               <div style="display:flex; gap:12px; flex-wrap:wrap; justify-content:center;">
                 <button onclick="window.__PA_EMERGENCY_EXPORT?.()" style="padding:12px 20px; border:1px solid #5a5; background:rgba(90,170,90,0.2); color:#8f8; border-radius:8px; cursor:pointer; font-weight:600;">💾 Export All Data</button>
-                <button onclick="location.reload()" style="padding:12px 20px; border:1px solid #888; background:rgba(255,255,255,0.05); color:#fff; border-radius:8px; cursor:pointer;">📍„ Retry</button>
+                <button onclick="location.reload()" style="padding:12px 20px; border:1px solid #888; background:rgba(255,255,255,0.05); color:#fff; border-radius:8px; cursor:pointer;">📜„ Retry</button>
                 <button onclick="if(confirm(t('confirm.deleteAllData'))){localStorage.clear();indexedDB.deleteDatabase('PlayerAlmanacPortraits');location.reload()}" style="padding:12px 20px; border:1px solid #a55; background:rgba(170,90,90,0.2); color:#f88; border-radius:8px; cursor:pointer;">🗑️ Reset All</button>
               </div>
             </div>
@@ -45396,7 +45394,7 @@ console.log('[PA Addon] Host API bridge initialized for addon:', window.PA.addon
       }
     } catch (fallbackErr) {
       // Absolute last resort - at least show something
-      document.body.innerHTML = '<div style="padding:40px;text-align:center;font-family:sans-serif;color:#fff;background:#111;min-height:100vh;"><h1>⚠️ Player Almanac Error</h1><p>A critical error occurred. Please refresh or clear browser data.</p><pre style="color:#f88;margin:20px auto;max-width:600px;text-align:left;">' + String(err) + '</pre><button onclick="location.reload()" style="padding:12px 24px;font-size:16px;cursor:pointer;">Reload</button></div>';
+      document.body.innerHTML = '<div style="padding:40px;text-align:center;font-family:sans-serif;color:#fff;background:#111;min-height:100vh;"><h1>⚁ ️ Player Almanac Error</h1><p>A critical error occurred. Please refresh or clear browser data.</p><pre style="color:#f88;margin:20px auto;max-width:600px;text-align:left;">' + String(err) + '</pre><button onclick="location.reload()" style="padding:12px 24px;font-size:16px;cursor:pointer;">Reload</button></div>';
     }
   };
 
@@ -45951,7 +45949,7 @@ console.log('[PA Addon] Host API bridge initialized for addon:', window.PA.addon
 <!-- PDF Print Sheet Container -->
 <div id="printSheet">
   <button class="ps-close" id="printSheetClose" type="button" onclick="window.__PA_INSTANCE && window.__PA_INSTANCE.closePrintSheet()">&#x2715; Close</button>
-  <button class="ps-print-btn" id="printSheetPrint" type="button" onclick="window.print()">🖨️ Print / Save PDF</button>
+  <button class="ps-print-btn" id="printSheetPrint" type="button" onclick="window.print()">🗈️ Print / Save PDF</button>
   <div class="ps-page" id="printSheetContent">
     <!-- Content populated by JavaScript -->
   </div>
