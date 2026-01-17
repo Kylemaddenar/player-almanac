@@ -2,7 +2,7 @@
   "name": "Player Almanac",
   "short_name": "Almanac",
   "description": "D&D 5e Character Sheet - Offline-first, fully featured",
-  "version": "7.2.9",
+  "version": "7.4.0",
   "start_url": "./player_almanac.html",
   "scope": "./",
   "display": "standalone",
