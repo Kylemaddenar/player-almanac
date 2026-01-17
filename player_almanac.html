@@ -449,6 +449,24 @@
   --pa-stagger-letters: 120ms;
   --pa-stagger-title: 200ms;
   --pa-stagger-tagline: 280ms;
+
+  /* --- SURFACE TOKENS --- */
+  --surface-primary: rgba(32, 30, 48, 0.85);
+  --surface-subtle: rgba(20, 18, 32, 0.6);
+  --surface-hover: rgba(255, 255, 255, 0.08);
+  --border-subtle: rgba(120, 105, 180, 0.2);
+
+  /* --- ANIMATION EASING --- */
+  --ease-premium: cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --ease-smooth: cubic-bezier(0.22, 0.61, 0.36, 1);
+
+  /* --- COMPONENT DIMENSIONS --- */
+  --quickbar-h: 68px;
+  --quickbar-min-h: 68px;
+  --qb-h: 36px;
+  --qb-r: 6px;
+  --boot-footer-h: 80px;
 }
 
 /* --- Animation Presets --- */
@@ -1803,10 +1821,7 @@ body.high-contrast .watermark {
   animation: icon-float 4s ease-in-out infinite;
 }
 
-@keyframes icon-float {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-4px); }
-}
+/* icon-float consolidated to Phase 3 section */
 
 /* Title enhancement */
 .boot-onboarding-title {
@@ -1855,10 +1870,7 @@ body.high-contrast .watermark {
   animation-delay: -4s;
 }
 
-@keyframes sparkle-drift {
-  0%, 100% { opacity: 0; transform: scale(0.5); }
-  50% { opacity: 0.8; transform: scale(1); }
-}
+/* sparkle-drift consolidated to Phase 3 section */
 
 /* =============================================
    13i. PHASE 2: ACTION BUTTON POLISH
@@ -2441,12 +2453,7 @@ body.high-contrast .watermark {
    Premium timing and easing
    ============================================= */
 
-/* Smoother, more expensive-feeling easing */
-:root {
-  --ease-premium: cubic-bezier(0.4, 0, 0.2, 1);
-  --ease-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
-  --ease-smooth: cubic-bezier(0.22, 0.61, 0.36, 1);
-}
+/* Smoother, more expensive-feeling easing (consolidated in main :root) */
 
 /* Mote animations - slower, more ethereal */
 .boot-mote {
@@ -5510,7 +5517,7 @@ body.addon-open{
   gap:4px;
 }
 .empty-state-tip::before{
-  content:'❗';
+  content:'❌';
   font-size:0.85rem;
 }
 
@@ -8524,14 +8531,7 @@ body.high-contrast #app select option{
 /* =============================================
    COMBAT QUICKBAR
    ============================================= */
-/* Quickbar-specific tokens (extend :root) */
-:root {
-  --quickbar-h: 68px;
-  --quickbar-min-h: 68px;
-  --qb-h: 36px;
-  --qb-r: 6px;
-  --boot-footer-h: 80px;
-}
+/* Quickbar-specific tokens consolidated in main :root */
 
 .quickbar {
   position: fixed;
@@ -15176,12 +15176,7 @@ body.reduced-motion .help-modal-content {
    ========================= */
 
 /* P2.1: Dynamic viewport height with safe areas via feature detection */
-:root {
-  --safe-area-top: env(safe-area-inset-top, 0px);
-  --safe-area-bottom: env(safe-area-inset-bottom, 0px);
-  --safe-area-left: env(safe-area-inset-left, 0px);
-  --safe-area-right: env(safe-area-inset-right, 0px);
-}
+/* Safe area variables already in main :root block */
 
 /* Use dynamic viewport height where supported */
 @supports (height: 100dvh) {
@@ -15541,10 +15536,10 @@ body.reduced-motion .help-modal-content {
     inset: 0;
     background: rgba(0,0,0,0.5);
     z-index: 1999;
-    animation: fadeIn 0.2s ease;
+    animation: fadeInSimple 0.2s ease;
   }
 
-  @keyframes fadeIn {
+  @keyframes fadeInSimple {
     from { opacity: 0; }
     to { opacity: 1; }
   }
@@ -19158,7 +19153,7 @@ body {
 }
 
 .help-popover-title::before {
-  content: "❗";
+  content: "❌";
   font-size: 16px;
 }
 
@@ -19826,14 +19821,14 @@ body.boot-visible .toast-wrap {
           <span class="boot-install-icon">&#x1F34E;</span>
           <div class="boot-install-detail">
             <div class="boot-install-platform">iOS (Safari)</div>
-            <div class="boot-install-steps">Tap Share &#x2B06;&#xFE0F;  â€™ "Add to Home Screen"</div>
+            <div class="boot-install-steps">Tap Share &#x2B06;&#xFE0F;  → "Add to Home Screen"</div>
           </div>
         </li>
         <li class="boot-install-item">
           <span class="boot-install-icon">&#x1F4F1;</span>
           <div class="boot-install-detail">
             <div class="boot-install-platform">Android (Chrome)</div>
-            <div class="boot-install-steps">Tap menu &#x22EE;  â€™ "Add to Home Screen" or "Install App"</div>
+            <div class="boot-install-steps">Tap menu &#x22EE;  → "Add to Home Screen" or "Install App"</div>
           </div>
         </li>
         <li class="boot-install-item">
@@ -20272,7 +20267,7 @@ body.boot-visible .toast-wrap {
 <!-- v7.0.0: Destructive Action Confirmation Modal -->
 <div id="confirmDestructive" class="modal-overlay confirm-overlay" style="display:none;" role="dialog" aria-modal="true" aria-labelledby="confirmDestructiveTitle">
   <div class="modal confirm-destructive">
-    <div class="modal-icon danger">⚁ ️</div>
+    <div class="modal-icon danger">⚠️</div>
     <h2 id="confirmDestructiveTitle"></h2>
     <p id="confirmDestructiveMessage"></p>
     <div class="confirm-destructive-detail" id="confirmDestructiveDetail"></div>
@@ -20349,7 +20344,7 @@ body.boot-visible .toast-wrap {
         <li><strong>✨ Enhanced Empty States</strong> - Quick-add buttons for 5E SRD content with helpful tips</li>
         <li><strong>📝 Editable Field Hints</strong> - Visual distinction between editable and read-only fields</li>
         <li><strong>📜’ Data & Privacy Panel</strong> - New panel explaining how your data is handled</li>
-        <li><strong>⚁ ️ Addon Security Warning</strong> - Prominent warning before installing addons</li>
+        <li><strong>⚠️ Addon Security Warning</strong> - Prominent warning before installing addons</li>
         <li><strong>™️ Trademark Notice</strong> - "Not affiliated with Wizards of the Coast" visible</li>
       </ul>
       
@@ -21581,7 +21576,7 @@ body.boot-visible .toast-wrap {
     <div class="char-builder-output" id="charBuilderOutput" hidden>
       <h3 class="char-builder-output-title">&#x1F4DC; Step 1: Copy This Prompt</h3>
       <p class="char-builder-output-hint">
-        <strong>How to use:</strong> 1) Copy this prompt  â€™ 2) Paste into an AI (Claude, ChatGPT, etc.)  â€™ 3) The AI will create a downloadable .json file  â€™ 4) Download it  â€™ 5) Import into Player Almanac using the Import button
+        <strong>How to use:</strong> 1) Copy this prompt  → 2) Paste into an AI (Claude, ChatGPT, etc.)  → 3) The AI will create a downloadable .json file  → 4) Download it  → 5) Import into Player Almanac using the Import button
       </p>
       <textarea class="char-builder-output-textarea" id="charBuilderPromptOutput" readonly></textarea>
       <div class="char-builder-output-actions">
@@ -21877,7 +21872,7 @@ body.boot-visible .toast-wrap {
 <div class="weapon-detail-modal" id="weaponDetailModal" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="weaponDetailTitle">
   <div class="weapon-detail-header">
     <div class="weapon-detail-title">
-      <span class="weapon-mobile-icon">⚁ ️</span>
+      <span class="weapon-mobile-icon">⚔️</span>
       <span id="weaponDetailName">Weapon Name</span>
     </div>
     <button class="weapon-detail-close" id="weaponDetailClose" type="button" aria-label="Close weapon details">&times;</button>
@@ -21897,7 +21892,7 @@ body.boot-visible .toast-wrap {
     </div>
     <div class="weapon-detail-notes" id="weaponDetailNotesWrap">
       <div class="weapon-detail-notes-label">Properties & Notes</div>
-      <div class="weapon-detail-notes-text" id="weaponDetailNotes">–</div>
+      <div class="weapon-detail-notes-text" id="weaponDetailNotes">—</div>
     </div>
   </div>
   <div class="weapon-detail-actions">
@@ -21939,7 +21934,7 @@ body.boot-visible .toast-wrap {
   <div class="bg-select-body" id="bgSelectBody">
     <!-- Feature Section -->
     <div class="bg-section">
-      <div class="bg-section-title"><span class="icon">‚Â</span> Background Feature</div>
+      <div class="bg-section-title"><span class="icon">‚</span> Background Feature</div>
       <div class="bg-feature-box">
         <div class="bg-feature-name" id="bgFeatureName">Feature Name</div>
         <div class="bg-feature-desc" id="bgFeatureDesc">Feature description goes here.</div>
@@ -22007,19 +22002,19 @@ body.boot-visible .toast-wrap {
       <div class="bg-summary-grid" id="bgSummaryGrid">
         <div class="bg-summary-item">
           <div class="bg-summary-item-label">Skills</div>
-          <div class="bg-summary-item-value" id="bgSummarySkills">–</div>
+          <div class="bg-summary-item-value" id="bgSummarySkills">—</div>
         </div>
         <div class="bg-summary-item">
           <div class="bg-summary-item-label">Tools</div>
-          <div class="bg-summary-item-value" id="bgSummaryTools">–</div>
+          <div class="bg-summary-item-value" id="bgSummaryTools">—</div>
         </div>
         <div class="bg-summary-item">
           <div class="bg-summary-item-label">Languages</div>
-          <div class="bg-summary-item-value" id="bgSummaryLangs">–</div>
+          <div class="bg-summary-item-value" id="bgSummaryLangs">—</div>
         </div>
         <div class="bg-summary-item" id="bgSummaryFeatItem" style="display:none;">
           <div class="bg-summary-item-label">Origin Feat</div>
-          <div class="bg-summary-item-value" id="bgSummaryFeat">–</div>
+          <div class="bg-summary-item-value" id="bgSummaryFeat">—</div>
         </div>
       </div>
     </div>
@@ -22222,7 +22217,7 @@ body.boot-visible .toast-wrap {
     network: {
       offline: {
         title: 'You\'re Offline',
-        message: 'No worries – Player Almanac works fully offline. Your data is safe.',
+        message: 'No worries — Player Almanac works fully offline. Your data is safe.',
         action: null
       }
     },
@@ -22241,7 +22236,7 @@ body.boot-visible .toast-wrap {
   };
 
   // App version constant for visibility
-  const APP_VERSION = '7.2.7';
+  const APP_VERSION = '7.2.8';
 
   // ============================================
   // ORDER 6: FIRST-VISIT DETECTION
@@ -22295,7 +22290,7 @@ body.boot-visible .toast-wrap {
       'settings.contrast': 'Contrast',
       'settings.print': 'Print / Save PDF',
       'settings.onePageSheet': '📜 One-Page Sheet',
-      'settings.help': '❌ Help',
+      'settings.help': '❓ Help',
       'settings.about': 'ℹ️ About / Credits',
       
       // Quickbar
@@ -22570,22 +22565,22 @@ body.boot-visible .toast-wrap {
       'about.attributionPage': 'Official project page:',
       'about.thirdParty': 'THIRD-PARTY NOTICES',
       'about.gsap': 'GSAP 6.16.0',
-      'about.gsapText': '(GreenSock) – Animation library (bundled for offline use).',
+      'about.gsapText': '(GreenSock) — Animation library (bundled for offline use).',
       'about.gsapLicense': 'Subject to GreenSock license terms.',
       'about.gsapNote': 'Animations work fully offline (GSAP bundled).',
       'about.fonts': 'Fonts:',
-      'about.fontsText': 'Cinzel, Inter, JetBrains Mono – Google Fonts, licensed under the SIL Open Font License (OFL).',
+      'about.fontsText': 'Cinzel, Inter, JetBrains Mono — Google Fonts, licensed under the SIL Open Font License (OFL).',
       'about.icons': 'Icons:',
-      'about.iconsText': 'Custom inline SVGs – Original artwork.',
+      'about.iconsText': 'Custom inline SVGs — Original artwork.',
       'about.emoji': 'Emoji:',
-      'about.emojiText': 'Unicode standard characters – Rendered by your device/browser.',
+      'about.emojiText': 'Unicode standard characters — Rendered by your device/browser.',
       'about.trademark': 'TRADEMARK DISCLAIMER',
       'about.trademarkText': 'Dungeons & Dragons® is a registered trademark of Wizards of the Coast LLC. Player Almanac is not affiliated with, endorsed, sponsored, or specifically approved by Wizards of the Coast LLC.',
       
       // v7.1.0: Privacy Dialog
       'privacy.title': '📜’ Data & Privacy',
       'privacy.summaryTitle': '✔ Your Data Stays With You',
-      'privacy.summaryText': 'Player Almanac runs entirely in your browser. No servers, no accounts, no tracking – just you and your character sheets.',
+      'privacy.summaryText': 'Player Almanac runs entirely in your browser. No servers, no accounts, no tracking — just you and your character sheets.',
       'privacy.localTitle': 'Runs Locally in Your Browser',
       'privacy.localDesc': 'The entire application runs on your device. No data is sent to any server. Works fully offline.',
       'privacy.noAccountTitle': 'No Account Required',
@@ -22748,15 +22743,15 @@ body.boot-visible .toast-wrap {
       'about.attributionLicense': 'Licensed under ZNAL v1.1 (Noncommercial + Attribution)',
       'about.officialPage': 'Official project page:',
       'about.thirdParty': 'Third-Party Notices',
-      'about.gsapDesc': '(GreenSock) – Animation library (bundled for offline use).',
+      'about.gsapDesc': '(GreenSock) — Animation library (bundled for offline use).',
       'about.gsapLicense': 'Subject to GreenSock license terms.',
       'about.gsapNote': 'Animations work fully offline (GSAP bundled).',
       'about.fonts': 'Fonts:',
-      'about.fontsDesc': 'Cinzel, Inter, JetBrains Mono – Google Fonts, licensed under the SIL Open Font License (OFL).',
+      'about.fontsDesc': 'Cinzel, Inter, JetBrains Mono — Google Fonts, licensed under the SIL Open Font License (OFL).',
       'about.icons': 'Icons:',
-      'about.iconsDesc': 'Custom inline SVGs – Original artwork.',
+      'about.iconsDesc': 'Custom inline SVGs — Original artwork.',
       'about.emoji': 'Emoji:',
-      'about.emojiDesc': 'Unicode standard characters – Rendered by your device/browser.',
+      'about.emojiDesc': 'Unicode standard characters — Rendered by your device/browser.',
       'about.trademark': 'Trademark Disclaimer',
       'about.trademarkDesc': 'Dungeons & Dragons® is a registered trademark of Wizards of the Coast LLC. Player Almanac is not affiliated with, endorsed, sponsored, or specifically approved by Wizards of the Coast LLC.',
       
@@ -23217,7 +23212,7 @@ body.boot-visible .toast-wrap {
       'settings.contrast': 'Kontrast',
       'settings.print': 'Drucken / Als PDF speichern',
       'settings.onePageSheet': '📜 Einzelseiten-Bogen',
-      'settings.help': '❌ Hilfe',
+      'settings.help': '❓ Hilfe',
       'settings.about': 'ℹ️ Über / Credits',
       
       // Quickbar
@@ -23473,22 +23468,22 @@ body.boot-visible .toast-wrap {
       'about.attributionPage': 'Offizielle Projektseite:',
       'about.thirdParty': 'DRITTANBIETER-HINWEISE',
       'about.gsap': 'GSAP 6.16.0',
-      'about.gsapText': '(GreenSock) – Animationsbibliothek (gebündelt für Offline-Nutzung).',
+      'about.gsapText': '(GreenSock) — Animationsbibliothek (gebündelt für Offline-Nutzung).',
       'about.gsapLicense': 'Unterliegt den GreenSock-Lizenzbedingungen.',
       'about.gsapNote': 'Animationen funktionieren vollständig offline (GSAP gebündelt).',
       'about.fonts': 'Schriftarten:',
-      'about.fontsText': 'Cinzel, Inter, JetBrains Mono – Google Fonts, lizenziert unter der SIL Open Font License (OFL).',
+      'about.fontsText': 'Cinzel, Inter, JetBrains Mono — Google Fonts, lizenziert unter der SIL Open Font License (OFL).',
       'about.icons': 'Icons:',
-      'about.iconsText': 'Benutzerdefinierte Inline-SVGs – Originalkunstwerk.',
+      'about.iconsText': 'Benutzerdefinierte Inline-SVGs — Originalkunstwerk.',
       'about.emoji': 'Emoji:',
-      'about.emojiText': 'Unicode-Standardzeichen – Gerendert durch Ihr Gerät/Browser.',
+      'about.emojiText': 'Unicode-Standardzeichen — Gerendert durch Ihr Gerät/Browser.',
       'about.trademark': 'MARKENRECHTLICHER HINWEIS',
       'about.trademarkText': 'Dungeons & Dragons® ist eine eingetragene Marke von Wizards of the Coast LLC. Player Almanac ist nicht mit Wizards of the Coast LLC verbunden, wird nicht von ihr unterstützt, gesponsert oder speziell genehmigt.',
       
       // v7.1.0: Privacy Dialog (German)
       'privacy.title': '📜’ Daten & Datenschutz',
       'privacy.summaryTitle': '✔ Deine Daten bleiben bei dir',
-      'privacy.summaryText': 'Player Almanac läuft vollständig in deinem Browser. Keine Server, keine Konten, kein Tracking – nur du und deine Charakterbögen.',
+      'privacy.summaryText': 'Player Almanac läuft vollständig in deinem Browser. Keine Server, keine Konten, kein Tracking — nur du und deine Charakterbögen.',
       'privacy.localTitle': 'Läuft lokal in deinem Browser',
       'privacy.localDesc': 'Die gesamte Anwendung läuft auf deinem Gerät. Keine Daten werden an Server gesendet. Funktioniert vollständig offline.',
       'privacy.noAccountTitle': 'Kein Konto erforderlich',
@@ -23651,15 +23646,15 @@ body.boot-visible .toast-wrap {
       'about.attributionLicense': 'Lizenziert unter ZNAL v1.1 (Nichtkommerziell + Namensnennung)',
       'about.officialPage': 'Offizielle Projektseite:',
       'about.thirdParty': 'Drittanbieter-Hinweise',
-      'about.gsapDesc': '(GreenSock) – Animationsbibliothek (gebündelt für Offline-Nutzung).',
+      'about.gsapDesc': '(GreenSock) — Animationsbibliothek (gebündelt für Offline-Nutzung).',
       'about.gsapLicense': 'Unterliegt den GreenSock-Lizenzbedingungen.',
       'about.gsapNote': 'Animationen funktionieren vollständig offline (GSAP gebündelt).',
       'about.fonts': 'Schriftarten:',
-      'about.fontsDesc': 'Cinzel, Inter, JetBrains Mono – Google Fonts, lizenziert unter der SIL Open Font License (OFL).',
+      'about.fontsDesc': 'Cinzel, Inter, JetBrains Mono — Google Fonts, lizenziert unter der SIL Open Font License (OFL).',
       'about.icons': 'Icons:',
-      'about.iconsDesc': 'Benutzerdefinierte Inline-SVGs – Originalkunstwerk.',
+      'about.iconsDesc': 'Benutzerdefinierte Inline-SVGs — Originalkunstwerk.',
       'about.emoji': 'Emoji:',
-      'about.emojiDesc': 'Unicode-Standardzeichen – Gerendert durch Ihr Gerät/Browser.',
+      'about.emojiDesc': 'Unicode-Standardzeichen — Gerendert durch Ihr Gerät/Browser.',
       'about.trademark': 'Markenrechtlicher Hinweis',
       'about.trademarkDesc': 'Dungeons & Dragons® ist eine eingetragene Marke von Wizards of the Coast LLC. Player Almanac ist nicht mit Wizards of the Coast LLC verbunden oder von ihr genehmigt.',
       
@@ -24443,7 +24438,7 @@ body.boot-visible .toast-wrap {
     { name: 'Hand Crossbow', atk: 'DEX', dmg: '1d6 piercing', notes: 'Ammunition (30/120), Light, Loading', mastery: 'Vex' },
     { name: 'Heavy Crossbow', atk: 'DEX', dmg: '1d10 piercing', notes: 'Ammunition (100/400), Heavy, Loading, Two-handed', mastery: 'Push' },
     { name: 'Longbow', atk: 'DEX', dmg: '1d8 piercing', notes: 'Ammunition (150/600), Heavy, Two-handed', mastery: 'Slow' },
-    { name: 'Net', atk: 'DEX', dmg: '–', notes: 'Special, Thrown (5/15)', mastery: '' },
+    { name: 'Net', atk: 'DEX', dmg: '—', notes: 'Special, Thrown (5/15)', mastery: '' },
   ];
 
   // Weapon Mastery Descriptions (2024 PHB only)
@@ -24499,7 +24494,7 @@ body.boot-visible .toast-wrap {
       languages: 1,
       equipment: ["Thieves' Tools", 'Crowbar', 'Dark Common Clothes', '15 GP'],
       feature: { name: 'Criminal Contact', desc: 'You have a reliable and trustworthy contact who acts as your liaison to a network of other criminals. You know how to get messages to and from your contact, even over great distances.' },
-      backstory: 'You grew up on the streets, learning to survive through cunning and quick hands. Whether as a pickpocket, burglar, fence, or enforcer, you operated outside the law. Your past has given you skills others lack–and enemies you\'d rather forget.'
+      backstory: 'You grew up on the streets, learning to survive through cunning and quick hands. Whether as a pickpocket, burglar, fence, or enforcer, you operated outside the law. Your past has given you skills others lack—and enemies you\'d rather forget.'
     },
     'Entertainer (2024)': {
       abilities: ['STR', 'DEX', 'CHA'],
@@ -24551,7 +24546,7 @@ body.boot-visible .toast-wrap {
       languages: 1,
       equipment: ['Herbalism Kit', 'Winter Blanket', 'Scroll Case with Notes', 'Common Clothes', '5 GP'],
       feature: { name: 'Discovery', desc: 'The quiet seclusion of your extended hermitage gave you access to a unique and powerful discovery. The nature of this revelation depends on the nature of your seclusion.' },
-      backstory: 'You lived in seclusion for years–either in a sheltered community, alone in nature, or as a shutaway. Your time apart was spent in prayer, study, or contemplation. During that time, you found something profound: perhaps a truth about the cosmos or a secret buried in your soul.'
+      backstory: 'You lived in seclusion for years—either in a sheltered community, alone in nature, or as a shutaway. Your time apart was spent in prayer, study, or contemplation. During that time, you found something profound: perhaps a truth about the cosmos or a secret buried in your soul.'
     },
     'Merchant (2024)': {
       abilities: ['CON', 'INT', 'CHA'],
@@ -24561,7 +24556,7 @@ body.boot-visible .toast-wrap {
       languages: 1,
       equipment: ["Navigator's Tools", 'Mule', 'Cart', 'Common Clothes', '25 GP'],
       feature: { name: 'Supply Chain', desc: 'From your experience as a merchant, you know how trade routes work. You can identify trade goods, assess their value, and know where to find buyers. Merchants and traders regard you favorably and may offer deals.' },
-      backstory: 'Coin has always been your compass. You traded in goods across villages, towns, and cities–learning the value of everything and the art of negotiation. The marketplace taught you about people: their desires, their fears, and what they\'re willing to pay.'
+      backstory: 'Coin has always been your compass. You traded in goods across villages, towns, and cities—learning the value of everything and the art of negotiation. The marketplace taught you about people: their desires, their fears, and what they\'re willing to pay.'
     },
     'Noble (2024)': {
       abilities: ['STR', 'INT', 'CHA'],
@@ -24572,7 +24567,7 @@ body.boot-visible .toast-wrap {
       languages: 1,
       equipment: ['Signet Ring', 'Scroll of Pedigree', 'Fine Clothes', '25 GP'],
       feature: { name: 'Position of Privilege', desc: 'Thanks to your noble birth, people are inclined to think the best of you. You are welcome in high society. Common folk make every effort to accommodate you and avoid your displeasure.' },
-      backstory: 'You were born into a life of privilege. Your family wields power through wealth, titles, or both. Though you enjoyed every luxury, expectations weighed on you–to uphold family honor, make strategic alliances, or continue a legacy. Now you step beyond those halls.'
+      backstory: 'You were born into a life of privilege. Your family wields power through wealth, titles, or both. Though you enjoyed every luxury, expectations weighed on you—to uphold family honor, make strategic alliances, or continue a legacy. Now you step beyond those halls.'
     },
     'Sage (2024)': {
       abilities: ['CON', 'INT', 'WIS'],
@@ -24592,7 +24587,7 @@ body.boot-visible .toast-wrap {
       languages: 1,
       equipment: ['Dagger', 'Rope (50 ft.)', 'Lucky Charm', 'Common Clothes', '10 GP'],
       feature: { name: 'Ship\'s Passage', desc: 'When you need to, you can secure free passage on a sailing ship for yourself and your companions. In return, you and your companions are expected to assist the crew during the voyage.' },
-      backstory: 'You sailed the seas, learning to work the rigging and navigate by stars. The crew was your family, the ship your home. Whether merchant marine or privateer, life at sea forged you into someone who can weather any storm–literal or otherwise.'
+      backstory: 'You sailed the seas, learning to work the rigging and navigate by stars. The crew was your family, the ship your home. Whether merchant marine or privateer, life at sea forged you into someone who can weather any storm—literal or otherwise.'
     },
     'Scribe (2024)': {
       abilities: ['DEX', 'INT', 'WIS'],
@@ -24687,7 +24682,7 @@ body.boot-visible .toast-wrap {
       languages: 1,
       equipment: ['Scroll Case with Notes', 'Winter Blanket', 'Common Clothes', 'Herbalism Kit', '5 GP'],
       feature: { name: 'Discovery', desc: 'The quiet seclusion of your extended hermitage gave you access to a unique and powerful discovery about the cosmos, the deities, or the self.' },
-      backstory: 'You lived in seclusion–either in a sheltered community such as a monastery, or entirely alone–for a formative part of your life. In your time apart from the clamor of society, you found quiet, solitude, and perhaps some answers.'
+      backstory: 'You lived in seclusion—either in a sheltered community such as a monastery, or entirely alone—for a formative part of your life. In your time apart from the clamor of society, you found quiet, solitude, and perhaps some answers.'
     },
     'Noble': {
       skills: ['history', 'persuasion'],
@@ -24836,7 +24831,7 @@ body.boot-visible .toast-wrap {
     { lvl: '1', name: 'Charm Person', cast: '1A', range: '30 ft', conc: false, rit: false, notes: 'Charmed 1hr, WIS', desc: 'You attempt to charm a humanoid you can see within range. It must make a WIS save (advantage if you or companions are fighting it). If it fails, it is charmed by you until the spell ends or until you or companions do anything harmful to it. The charmed creature regards you as a friendly acquaintance. When the spell ends, it knows it was charmed.' },
     { lvl: '1', name: 'Cure Wounds', cast: '1A', range: 'Touch', conc: false, rit: false, notes: '2d8+mod healing', desc: 'A creature you touch regains a number of hit points equal to 2d8 + your spellcasting ability modifier. At Higher Levels: healing increases by 2d8 for each slot level above 1st.' },
     { lvl: '1', name: 'Detect Magic', cast: '1A', range: 'Self', conc: true, rit: true, notes: 'Sense magic 30ft', desc: 'For the duration, you sense the presence of magic within 30 feet of you. If you sense magic this way, you can use your action to see a faint aura around any visible creature or object that bears magic, and you learn its school of magic. The spell can penetrate most barriers, but is blocked by 1 foot of stone, 1 inch of metal, a thin sheet of lead, or 3 feet of wood/dirt.' },
-    { lvl: '1', name: 'Disguise Self', cast: '1A', range: 'Self', conc: false, rit: false, notes: 'Appear different, 1hr', desc: 'You make yourself–including clothing, armor, weapons, and belongings–look different until the spell ends or until you dismiss it. You can seem 1 foot shorter or taller and can appear thin, fat, or in between. You can\'t change body type, and your limbs must remain present. Investigation check vs your spell DC to discern disguise.' },
+    { lvl: '1', name: 'Disguise Self', cast: '1A', range: 'Self', conc: false, rit: false, notes: 'Appear different, 1hr', desc: 'You make yourself—including clothing, armor, weapons, and belongings—look different until the spell ends or until you dismiss it. You can seem 1 foot shorter or taller and can appear thin, fat, or in between. You can\'t change body type, and your limbs must remain present. Investigation check vs your spell DC to discern disguise.' },
     { lvl: '1', name: 'Faerie Fire', cast: '1A', range: '60 ft', conc: true, rit: false, notes: 'Adv on attacks, 20ft', desc: 'Each object in a 20-foot cube within range is outlined in blue, green, or violet light (your choice). Any creature in the area when the spell is cast is also outlined if it fails a DEX save. For the duration, affected objects and creatures shed dim light in a 10-foot radius. Any attack roll against an affected creature or object has advantage if the attacker can see it, and they can\'t benefit from being invisible.' },
     { lvl: '1', name: 'Feather Fall', cast: '1 React', range: '60 ft', conc: false, rit: false, notes: 'Slow fall, 5 creatures', desc: 'Choose up to five falling creatures within range. A falling creature\'s rate of descent slows to 60 feet per round until the spell ends. If the creature lands before the spell ends, it takes no falling damage and can land on its feet, and the spell ends for that creature. Duration: 1 minute.' },
     { lvl: '1', name: 'Find Familiar', cast: '1 hour', range: '10 ft', conc: false, rit: true, notes: 'Spirit companion', desc: 'You gain the service of a familiar, a spirit that takes an animal form you choose (bat, cat, crab, frog, hawk, lizard, octopus, owl, snake, fish, rat, raven, sea horse, spider, or weasel). The familiar acts independently but obeys your commands. You can communicate with it telepathically within 100 feet and see through its senses. It can\'t attack. If it drops to 0 HP, it disappears.' },
@@ -30465,7 +30460,7 @@ body.boot-visible .toast-wrap {
       const origLevel = this.state.level;
       this.state.level = toInt(this.state.level, 1, { min: 1, max: 20 });
       if (origLevel !== this.state.level) {
-        issues.push(`Level clamped: ${origLevel}  â€™ ${this.state.level}`);
+        issues.push(`Level clamped: ${origLevel}  → ${this.state.level}`);
       }
       
       // Hit dice
@@ -30478,7 +30473,7 @@ body.boot-visible .toast-wrap {
       this.state.hp.max = toInt(this.state.hp.max, 0, { min: 0, max: 9999 });
       this.state.hp.tmp = toInt(this.state.hp.tmp, 0, { min: 0, max: 9999 });
       if (origHpCur !== this.state.hp.cur && origHpCur < 0) {
-        issues.push(`HP was negative: ${origHpCur}  â€™ 0`);
+        issues.push(`HP was negative: ${origHpCur}  → 0`);
       }
       
       // P1.2: Ensure coins are non-negative
@@ -30487,7 +30482,7 @@ body.boot-visible .toast-wrap {
           const orig = this.state.coins[coinType];
           this.state.coins[coinType] = toInt(orig, 0, { min: 0, max: 999999 });
           if (orig < 0) {
-            issues.push(`${coinType.toUpperCase()} was negative: ${orig}  â€™ 0`);
+            issues.push(`${coinType.toUpperCase()} was negative: ${orig}  → 0`);
           }
         }
       }
@@ -30604,7 +30599,7 @@ body.boot-visible .toast-wrap {
         lockIO(true);
         el.classList.add('saving');
         el.dataset.state = 'saving';
-        el.innerHTML = `<span class="save-status-icon"> Â»</span><span class="save-status-text">${t('save.saving')}</span>`;
+        el.innerHTML = `<span class="save-status-icon"> »</span><span class="save-status-text">${t('save.saving')}</span>`;
         el.title = t('save.saving');
         return;
       }
@@ -30628,7 +30623,7 @@ body.boot-visible .toast-wrap {
       lockIO(false);
       el.classList.add('error');
       el.dataset.state = 'failed';
-      el.innerHTML = `<span class="save-status-icon">⚁ </span><span class="save-status-text">${t('save.failed')}</span><span class="save-status-retry" onclick="app.persist({force:true})">${t('save.retry')}</span>`;
+      el.innerHTML = `<span class="save-status-icon">⚠ </span><span class="save-status-text">${t('save.failed')}</span><span class="save-status-retry" onclick="app.persist({force:true})">${t('save.retry')}</span>`;
       el.title = t('save.failed');
     }
 
@@ -32963,7 +32958,7 @@ body.boot-visible .toast-wrap {
           <div class="ps-header">
             <div class="ps-header-left">
               <div class="ps-name">${esc(s.name) || t('printSheet.unnamed')}</div>
-              <div class="ps-subtitle">${esc(s.species)}${s.species && s.class ? ' ' : ''}${esc(s.class)}${s.background ? ' "™ ' + esc(s.background) : ''}${s.campaign ? ' – ' + esc(s.campaign) : ''}</div>
+              <div class="ps-subtitle">${esc(s.species)}${s.species && s.class ? ' ' : ''}${esc(s.class)}${s.background ? ' "™ ' + esc(s.background) : ''}${s.campaign ? ' — ' + esc(s.campaign) : ''}</div>
             </div>
             ${portraitSrc ? `<img class="ps-portrait" src="${portraitSrc}" alt=""/>` : ''}
             <div class="ps-level-badge">
@@ -35883,7 +35878,7 @@ Actions:
       if (tool === 'origin' || tool === 'lastseen') {
         // Origin/LastSeen tool - show origin settings with map settings
         showPanels(panelOrigin, panelCampaign, panelMap);
-        if (contextIcon) contextIcon.textContent = tool === 'origin' ? '📜' : '📑';
+        if (contextIcon) contextIcon.textContent = tool === 'origin' ? '📜' : '🔑';
         if (contextText) contextText.textContent = tool === 'origin' ? 'Place Origin' : 'Mark Last Seen';
         return;
       }
@@ -36736,7 +36731,7 @@ Actions:
       const typeClass = type !== 'default' ? ` toast-${type}` : '';
       toast.className = `toast toast-enhanced${typeClass}`;
       
-      const icon = type === 'success' ? '✓' : type === 'error' ? '⚁ ' : type === 'warning' ? '⚁¡' : '';
+      const icon = type === 'success' ? '✓' : type === 'error' ? '⚠ ' : type === 'warning' ? '⚠️' : '';
       
       toast.innerHTML = `
         ${icon ? `<span class="toast-icon">${icon}</span>` : ''}
@@ -36843,9 +36838,9 @@ Actions:
       if (!statusEl) return;
       
       const icons = {
-        saving: ' Â»',
+        saving: ' »',
         saved: '✓',
-        failed: '⚁ '
+        failed: '⚠ '
       };
       
       const messages = {
@@ -36881,7 +36876,7 @@ Actions:
           title: t('empty.spellsTitle'),
           text: t('empty.spellsText'),
           actions: [
-            { label: t('empty.addSpell'), handler: 'addSpell', icon: '➕', primary: true },
+            { label: t('empty.addSpell'), handler: 'addSpell', icon: 'âž•', primary: true },
             { label: t('empty.add5eSpell') || 'Quick add from 5E SRD', handler: 'openSpellDropdown', icon: '📝', primary: false }
           ],
           tip: t('empty.spellsTip') || 'Tip: Click any spell to see its details and cast it'
@@ -36891,17 +36886,17 @@ Actions:
           title: t('empty.equipmentTitle'),
           text: t('empty.equipmentText'),
           actions: [
-            { label: t('empty.addItem'), handler: 'addEquipmentItem', icon: '➕', primary: true }
+            { label: t('empty.addItem'), handler: 'addEquipmentItem', icon: 'âž•', primary: true }
           ],
           tip: t('empty.equipmentTip') || 'Tip: Track coins, potions, and magic items'
         },
         weapons: {
-          icon: '⚅️',
+          icon: '⚔️',
           title: t('empty.weaponsTitle'),
           text: t('empty.weaponsText'),
           actions: [
-            { label: t('empty.addWeapon'), handler: 'addWeapon', icon: '➕', primary: true },
-            { label: t('empty.add5eWeapon') || 'Quick add from 5E SRD', handler: 'openWeaponDropdown', icon: '🖡️', primary: false }
+            { label: t('empty.addWeapon'), handler: 'addWeapon', icon: 'âž•', primary: true },
+            { label: t('empty.add5eWeapon') || 'Quick add from 5E SRD', handler: 'openWeaponDropdown', icon: '🖥️', primary: false }
           ],
           tip: t('empty.weaponsTip') || 'Tip: Click any weapon to roll attack and damage dice'
         },
@@ -36913,7 +36908,7 @@ Actions:
           tip: null
         },
         map: {
-          icon: '🖺️',
+          icon: '🗺️',
           title: t('empty.mapTitle'),
           text: t('empty.mapText'),
           actions: [
@@ -38662,7 +38657,7 @@ Actions:
         <div class="roll-breakdown">d20(${roll}) ${modStr}</div>
         <div class="roll-name">${escapeHtml(name)}</div>
         ${isCrit ? '<div class="crit-label">&#x2728; CRITICAL!</div>' : ''}
-        ${isFumble ? '<div class="fumble-label">💀 FUMBLE</div>' : ''}
+        ${isFumble ? '<div class="fumble-label">👀 FUMBLE</div>' : ''}
       `;
 
       document.body.appendChild(toast);
@@ -39601,7 +39596,7 @@ Actions:
           const enhanceBtn = document.createElement('button');
           enhanceBtn.className = 'system-enhance-btn';
           enhanceBtn.type = 'button';
-          enhanceBtn.textContent = ' Â ';
+          enhanceBtn.textContent = '  ';
           enhanceBtn.title = 'Add system data: ' + enhancements.weapons[i].fields.join(', ');
           enhanceBtn.dataset.action = 'weapon-system-enhance';
           enhanceBtn.dataset.index = String(i);
@@ -39635,7 +39630,7 @@ Actions:
           
           const iconSpan = document.createElement('span');
           iconSpan.className = 'weapon-mobile-icon';
-          iconSpan.textContent = '⚁ ️';
+          iconSpan.textContent = '⚔️';
           
           const nameSpan = document.createElement('span');
           nameSpan.className = 'weapon-mobile-name';
@@ -40141,7 +40136,7 @@ Actions:
           const enhanceBtn = document.createElement('button');
           enhanceBtn.className = 'system-enhance-btn';
           enhanceBtn.type = 'button';
-          enhanceBtn.textContent = ' Â  Enhance';
+          enhanceBtn.textContent = '   Enhance';
           enhanceBtn.title = 'Add system data: ' + enhancements.spells[i].fields.join(', ');
           enhanceBtn.dataset.action = 'spell-system-enhance';
           enhanceBtn.dataset.index = String(i);
@@ -40392,10 +40387,10 @@ Actions:
         d.spellDetailName.textContent = spell.name || 'Unnamed Spell';
       }
       if (d.spellDetailCast) {
-        d.spellDetailCast.textContent = spell.cast || '–';
+        d.spellDetailCast.textContent = spell.cast || '—';
       }
       if (d.spellDetailRange) {
-        d.spellDetailRange.textContent = spell.range || '–';
+        d.spellDetailRange.textContent = spell.range || '—';
       }
       
       // Tags
@@ -40532,7 +40527,7 @@ Actions:
         d.weaponDetailAtk.textContent = atk.startsWith('+') || atk.startsWith('-') ? atk : `+${atk}`;
       }
       if (d.weaponDetailDmg) {
-        d.weaponDetailDmg.textContent = weapon.dmg || '–';
+        d.weaponDetailDmg.textContent = weapon.dmg || '—';
       }
       
       // Notes
@@ -40925,7 +40920,7 @@ Actions:
           const skillObj = SKILLS.find(s => s.k === sk);
           return skillObj ? skillObj.n : sk;
         });
-        d.bgSummarySkills.textContent = skillNames.join(', ') || '–';
+        d.bgSummarySkills.textContent = skillNames.join(', ') || '—';
       }
       
       // Tools summary
@@ -40941,7 +40936,7 @@ Actions:
         if (toolSelect && toolSelect.value) {
           tools.push(toolSelect.value);
         }
-        d.bgSummaryTools.textContent = tools.length > 0 ? tools.join(', ') : '–';
+        d.bgSummaryTools.textContent = tools.length > 0 ? tools.join(', ') : '—';
       }
       
       // Languages summary
@@ -40955,7 +40950,7 @@ Actions:
         if (langs.length === 0 && langCount > 0) {
           d.bgSummaryLangs.textContent = `Choose ${langCount}`;
         } else {
-          d.bgSummaryLangs.textContent = langs.length > 0 ? langs.join(', ') : '–';
+          d.bgSummaryLangs.textContent = langs.length > 0 ? langs.join(', ') : '—';
         }
       }
       
@@ -43096,7 +43091,7 @@ Actions:
       item.dataset.addonId = addon.id;
       
       // P0-4: Get truncated hash if available (async computed separately)
-      const shortHash = addon.hash ? addon.hash.slice(0, 8) : '–';
+      const shortHash = addon.hash ? addon.hash.slice(0, 8) : '—';
       
       item.innerHTML = `
         <div class="pa-addon-icon">&#x1F9E9;</div>
@@ -43105,7 +43100,7 @@ Actions:
           <div class="pa-addon-meta">
             <span class="pa-addon-version">v${this.escapeHtml(addon.version)}</span>
             ${addon.author ? `<span class="pa-addon-author">by ${this.escapeHtml(addon.author)}</span>` : ''}
-            <span class="pa-addon-hash" title="SHA-256 hash (first 8 chars): ${shortHash}">👑 ${shortHash}</span>
+            <span class="pa-addon-hash" title="SHA-256 hash (first 8 chars): ${shortHash}">🔑 ${shortHash}</span>
           </div>
           ${addon.lastError ? `<div class="pa-addon-error" style="color:#f88;font-size:0.75rem;">Error: ${this.escapeHtml(addon.lastError)}</div>` : ''}
         </div>
@@ -43159,7 +43154,7 @@ Actions:
           // Update the hash display in the DOM
           const hashEl = itemElement.querySelector('.pa-addon-hash');
           if (hashEl) {
-            hashEl.textContent = '👑 ' + shortHash;
+            hashEl.textContent = '🔑 ' + shortHash;
             hashEl.title = `SHA-256: ${hash}`;
           }
           
@@ -43306,7 +43301,7 @@ Actions:
         if (!modal) {
           // Fallback to basic confirm if modal not found
           const confirmed = confirm(
-            '⚁ ️ SECURITY WARNING\n\n' +
+            '⚠️ SECURITY WARNING\n\n' +
             'Addons can run arbitrary code and access your character data.\n' +
             'Only install addons from sources you trust.\n\n' +
             `Install "${file.name}"?`
@@ -43651,7 +43646,7 @@ Actions:
         
         // Show security warning
         const warningMsg = 
-          `⚁ ️ SECURITY WARNING\n\n` +
+          `⚠️ SECURITY WARNING\n\n` +
           `Addons can run code and access your character data.\n\n` +
           `Addon: ${addon.name}\n` +
           `Version: ${addon.version || 'unknown'}\n` +
@@ -44357,10 +44352,10 @@ console.log('[PA Addon] Host API bridge initialized for addon:', window.PA.addon
           el.textContent = `✔ ${usedKB < 1024 ? usedKB + 'KB' : usedMB + 'MB'} used`;
           el.style.color = '#22c55e';
         } else if (usedKB < 4096) {
-          el.textContent = `⚁ ️ ${usedMB}MB used (consider backup)`;
+          el.textContent = `⚠️ ${usedMB}MB used (consider backup)`;
           el.style.color = '#eab308';
         } else {
-          el.textContent = `⚁ ️ Low space: ${usedMB}MB used`;
+          el.textContent = `⚠️ Low space: ${usedMB}MB used`;
           el.style.color = '#f97316';
         }
         el.classList.remove('error');
@@ -44371,10 +44366,10 @@ console.log('[PA Addon] Host API bridge initialized for addon:', window.PA.addon
                            e.name === 'QUOTA_EXCEEDED_ERR');
         
         if (isPrivate || navigator.cookieEnabled === false) {
-          el.textContent = '⚁ ️ Private browsing may block saving';
+          el.textContent = '⚠️ Private browsing may block saving';
           el.style.color = '#f97316';
         } else {
-          el.textContent = '❌ Storage unavailable';
+          el.textContent = '❓ Storage unavailable';
           el.style.color = '#ef4444';
         }
         el.classList.add('error');
@@ -45375,7 +45370,7 @@ console.log('[PA Addon] Host API bridge initialized for addon:', window.PA.addon
         boot.innerHTML = `
           <div class="boot-error-modal" style="display:flex !important; position:fixed; inset:0; z-index:99999; background:rgba(0,0,0,0.95); align-items:center; justify-content:center;">
             <div style="background:rgba(30,30,40,0.98); border:1px solid rgba(255,255,255,0.1); border-radius:12px; padding:32px; max-width:500px; text-align:center; font-family:system-ui,sans-serif; color:#eee;">
-              <div style="font-size:48px; margin-bottom:16px;">⚁ ️</div>
+              <div style="font-size:48px; margin-bottom:16px;">⚠️</div>
               <h2 style="margin:0 0 16px; font-size:1.3rem;">Player Almanac Failed to Start</h2>
               <p style="color:#aaa; margin-bottom:24px; line-height:1.5;">A critical error occurred during startup. Your character data may still be recoverable.</p>
               <div style="background:rgba(0,0,0,0.3); border-radius:6px; padding:12px; margin-bottom:24px; text-align:left; font-family:monospace; font-size:0.75rem; color:#f88; max-height:100px; overflow:auto;">
@@ -45394,7 +45389,7 @@ console.log('[PA Addon] Host API bridge initialized for addon:', window.PA.addon
       }
     } catch (fallbackErr) {
       // Absolute last resort - at least show something
-      document.body.innerHTML = '<div style="padding:40px;text-align:center;font-family:sans-serif;color:#fff;background:#111;min-height:100vh;"><h1>⚁ ️ Player Almanac Error</h1><p>A critical error occurred. Please refresh or clear browser data.</p><pre style="color:#f88;margin:20px auto;max-width:600px;text-align:left;">' + String(err) + '</pre><button onclick="location.reload()" style="padding:12px 24px;font-size:16px;cursor:pointer;">Reload</button></div>';
+      document.body.innerHTML = '<div style="padding:40px;text-align:center;font-family:sans-serif;color:#fff;background:#111;min-height:100vh;"><h1>⚠️ Player Almanac Error</h1><p>A critical error occurred. Please refresh or clear browser data.</p><pre style="color:#f88;margin:20px auto;max-width:600px;text-align:left;">' + String(err) + '</pre><button onclick="location.reload()" style="padding:12px 24px;font-size:16px;cursor:pointer;">Reload</button></div>';
     }
   };
 
@@ -45949,7 +45944,7 @@ console.log('[PA Addon] Host API bridge initialized for addon:', window.PA.addon
 <!-- PDF Print Sheet Container -->
 <div id="printSheet">
   <button class="ps-close" id="printSheetClose" type="button" onclick="window.__PA_INSTANCE && window.__PA_INSTANCE.closePrintSheet()">&#x2715; Close</button>
-  <button class="ps-print-btn" id="printSheetPrint" type="button" onclick="window.print()">🗈️ Print / Save PDF</button>
+  <button class="ps-print-btn" id="printSheetPrint" type="button" onclick="window.print()">🖨️ Print / Save PDF</button>
   <div class="ps-page" id="printSheetContent">
     <!-- Content populated by JavaScript -->
   </div>
