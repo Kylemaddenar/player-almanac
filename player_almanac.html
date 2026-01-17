@@ -253,7 +253,8 @@
   font-style: normal;
   font-weight: 400 700;
   font-display: swap;
-  src: local('Cinzel'), local('Times New Roman'), local('Georgia');
+  /* Only look for locally installed Cinzel - fallbacks are in font-family stacks */
+  src: local('Cinzel'), local('Cinzel Decorative'), local('Cinzel-Regular');
 }
 
 @font-face {
@@ -261,7 +262,8 @@
   font-style: normal;
   font-weight: 400 600;
   font-display: swap;
-  src: local('Inter'), local('Segoe UI'), local('system-ui');
+  /* Only look for locally installed Inter - fallbacks are in font-family stacks */
+  src: local('Inter'), local('Inter-Regular'), local('InterVariable');
 }
 
 @font-face {
@@ -269,7 +271,8 @@
   font-style: normal;
   font-weight: 400 600;
   font-display: swap;
-  src: local('JetBrains Mono'), local('Consolas'), local('Monaco'), local('monospace');
+  /* Only look for locally installed JetBrains Mono - fallbacks are in font-family stacks */
+  src: local('JetBrains Mono'), local('JetBrainsMono-Regular'), local('JetBrainsMono');
 }
 /*
  * Player Almanac by Zagreous
@@ -348,9 +351,9 @@
   --gradient-color2: 80, 70, 110;
 
   /* --- TYPOGRAPHY --- */
-  --font-display: 'Cinzel', serif;
+  --font-display: 'Cinzel', 'Times New Roman', Georgia, 'Palatino Linotype', serif;
   --font-body: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
-  --font-mono: 'JetBrains Mono', monospace;
+  --font-mono: 'JetBrains Mono', Consolas, Monaco, 'Courier New', monospace;
 
   --fs-base: 16px;
   --fs-h1: clamp(1.8rem, 4.5vw, 2.8rem);
@@ -1550,21 +1553,29 @@ body.high-contrast .watermark {
 
 .boot-title {
   position: relative;
-  background: linear-gradient(
-    135deg,
-    var(--accent-secondary) 0%,
-    var(--text-primary) 50%,
-    var(--accent-secondary) 100%
-  );
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-size: 200% 100%;
-  animation: title-shimmer 8s ease-in-out infinite;
-  /* GPU acceleration to prevent rendering bugs on reload */
-  will-change: opacity, background-position;
-  transform: translateZ(0);
-  backface-visibility: hidden;
+  /* Fallback solid color - always visible */
+  color: var(--accent-secondary, #cdb9f2);
+}
+
+/* Only apply gradient text effect when browser supports it */
+@supports (-webkit-background-clip: text) or (background-clip: text) {
+  .boot-title {
+    background: linear-gradient(
+      135deg,
+      var(--accent-secondary) 0%,
+      var(--text-primary) 50%,
+      var(--accent-secondary) 100%
+    );
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-size: 200% 100%;
+    animation: title-shimmer 8s ease-in-out infinite;
+    /* GPU acceleration to prevent rendering bugs on reload */
+    will-change: background-position;
+    transform: translateZ(0);
+    backface-visibility: hidden;
+  }
 }
 
 @keyframes title-shimmer {
@@ -1756,7 +1767,11 @@ body.high-contrast .watermark {
   .boot-zenith-glow { opacity: 0.6; }
   .boot-logo::before { opacity: 0.8; }
   .boot-logo::after { opacity: 0.4; }
-  .boot-title { background-position: 50% 50%; }
+  .boot-title { 
+    background-position: 50% 50%;
+    /* Ensure text is visible even if gradient fails */
+    -webkit-text-fill-color: var(--accent-secondary, #cdb9f2);
+  }
   .boot-primary::before { opacity: 0; }
   .boot-primary::after { opacity: 0.4; }
 }
@@ -3574,7 +3589,7 @@ body.high-contrast .watermark {
    19. BOOT SCREEN TYPOGRAPHY & PROGRESS
    ============================================= */
 .boot-title {
-  font-family: var(--font-display);
+  font-family: var(--font-display), 'Times New Roman', Georgia, serif;
   font-size: 1.375rem;
   font-weight: 600;
   /* Note: color is overridden by gradient effect's text-fill-color: transparent */
@@ -18982,6 +18997,15 @@ body {
   display: none !important;
 }
 
+/* Disable gradient text effect in performance mode - use solid color */
+.performance-mode .boot-title {
+  background: none !important;
+  -webkit-background-clip: unset !important;
+  background-clip: unset !important;
+  -webkit-text-fill-color: var(--accent-secondary, #cdb9f2) !important;
+  animation: none !important;
+}
+
 .performance-mode .boot-celestial-light::before,
 .performance-mode .boot-celestial-light::after {
   animation: none !important;
@@ -22236,7 +22260,7 @@ body.boot-visible .toast-wrap {
   };
 
   // App version constant for visibility
-  const APP_VERSION = '7.2.8';
+  const APP_VERSION = '7.2.9';
 
   // ============================================
   // ORDER 6: FIRST-VISIT DETECTION
