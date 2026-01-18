@@ -1,24 +1,24 @@
 /*
  * Player Almanac - Service Worker
- * Version: 7.3.6
+ * Version: 7.7.0
  * 
  * This service worker caches the app for full offline functionality.
  * After the first visit, the app works completely without internet.
  */
 
-const CACHE_NAME = 'player-almanac-v7.4.0';
+const CACHE_NAME = 'player-almanac-v7.7.0';
 
 // Files to cache for offline use
 const CACHE_FILES = [
   './',
   './player_almanac.html',
   './manifest.json',
-  './icons/icon-192.png',
-  './icons/icon-512.png'
+  './icon192.png',
+  './icon512.png'
 ];
 
 self.addEventListener('install', (event) => {
-  console.log('[ServiceWorker] Installing v7.3.6...');
+  console.log('[ServiceWorker] Installing v7.7.0...');
   event.waitUntil(
     caches.open(CACHE_NAME).then((cache) => {
       return Promise.allSettled(
@@ -29,7 +29,7 @@ self.addEventListener('install', (event) => {
 });
 
 self.addEventListener('activate', (event) => {
-  console.log('[ServiceWorker] Activating v7.3.6...');
+  console.log('[ServiceWorker] Activating v7.7.0...');
   event.waitUntil(
     caches.keys().then((cacheNames) =>
       Promise.all(
