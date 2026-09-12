@@ -18,7 +18,7 @@
 <!--
   Player Almanac Character Sheet - v7.3.1 VISUAL DESIGN OVERHAUL (Phase 2)
   
-  CURRENT VERSION: v7.8.0 - September 12, 2026
+  CURRENT VERSION: v7.8.1 - September 12, 2026
   
   NEW IN v7.3.1 (Phase 2 - Refinement):
   - Unified Button System: Consolidated modal-btn, btn, qb-btn with consistent variants
@@ -22380,6 +22380,42 @@ input::placeholder, textarea::placeholder { color: var(--text-muted); opacity: .
 #mapMenu .map-close-btn { background: var(--surface-3) !important; color: var(--text-primary) !important; border-color: var(--border-default) !important; }
 </style>
 
+
+
+<style id="flip-compatibility">
+/* Short phone windows: keep scrolling targets clear of fixed controls. */
+@media screen and (max-width: 520px) {
+  #boot { scroll-padding-block: 12px calc(80px + env(safe-area-inset-bottom, 0px)); }
+  #mobileMenuModal { height: 100dvh !important; }
+}
+@media screen and (max-height: 500px) {
+  html { scroll-padding-block: calc(var(--quickbar-h, 60px) + 48px) 80px; }
+}
+@media screen and (max-width: 520px) and (max-height: 500px) {
+  #quickBar:not(.collapsed) {
+    height: 100dvh !important;
+    padding: calc(72px + env(safe-area-inset-top, 0px)) 16px calc(24px + env(safe-area-inset-bottom, 0px)) !important;
+    justify-content: safe center !important;
+    overflow-y: auto !important;
+    overscroll-behavior-y: contain;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    scroll-padding-block: 72px 24px;
+  }
+}
+/* Keep floating actions reachable in short landscape or keyboard-height windows. */
+@media screen and (max-height: 600px) and (min-width: 769px) {
+  #actionsRail.actions-visible { display: grid !important; grid-template-columns: repeat(4, 50px); gap: 8px !important; width: max-content; }
+  #actionsRail .act-btn { width: 50px !important; height: 50px !important; min-width: 50px !important; min-height: 50px !important; }
+}
+@media screen and (max-height: 600px) and (max-width: 768px) {
+  #actionsRail.actions-visible[data-expanded="true"] { display: grid !important; grid-template-columns: repeat(4, 50px); gap: 8px !important; width: max-content; }
+  #actionsRail[data-expanded="true"] .act-fab-toggle { grid-column: 4; grid-row: 2; }
+}
+
+
+</style>
+
 <style id="premium-motion">
 /* Finite feedback uses translate/scale longhands, preserving menu positioning. */
 :root { --pa-ease-out: cubic-bezier(.2,.7,.2,1); }
@@ -22698,7 +22734,7 @@ html.pa-motion-ready:not(.pa-motion-enabled) :where(button, [role="button"]) {
         <span>Not affiliated with Wizards of the Coast</span>
       </div>
       <div>
-        <span>v<span id="mobileVersionNumber">7.8.0</span></span>
+        <span>v<span id="mobileVersionNumber">7.8.1</span></span>
         <button id="mobileWhatsNewBtn" type="button" style="background: none; border: none; color: var(--accent, #9b87f5); font-size: 0.7rem; cursor: pointer; padding: 2px 4px; text-decoration: underline;">What's New</button>
       </div>
     </div>
@@ -23278,6 +23314,15 @@ html.pa-motion-ready:not(.pa-motion-enabled) :where(button, [role="button"]) {
       <button class="modal-close" id="changelogClose" type="button" aria-label="Close">&#x2715;</button>
     </div>
     <div class="modal-body changelog-body">
+      <div class="changelog-version">
+        <h3>Version 7.8.1 <span class="changelog-date">September 12, 2026</span></h3>
+        <ul>
+          <li>Compact floating actions stay within short landscape and phone windows.</li>
+          <li>The expanded phone toolbar scrolls when space is limited, keeping every control reachable.</li>
+          <li>Improved scroll clearance around fixed phone controls, with the unfolded Fold still the primary layout.</li>
+        </ul>
+      </div>
+
       <div class="changelog-version">
         <h3>Version 7.8.0 <span class="changelog-date">September 12, 2026</span></h3>
         <ul>
@@ -25327,7 +25372,7 @@ html.pa-motion-ready:not(.pa-motion-enabled) :where(button, [role="button"]) {
   };
 
   // App version constant for visibility
-  const APP_VERSION = '7.8.0';
+  const APP_VERSION = '7.8.1';
 
   // ============================================
   // ORDER 6: FIRST-VISIT DETECTION
@@ -50040,7 +50085,7 @@ console.log('[PA Addon] Host API bridge initialized for addon:', window.PA.addon
       <!-- ORDER 8: Version Info Box -->
       <div class="credits-version-box">
         <div class="credits-version-info">
-          <strong>Version <span id="aboutVersionNumber">7.8.0</span></strong>
+          <strong>Version <span id="aboutVersionNumber">7.8.1</span></strong>
         </div>
         <button class="credits-whats-new-btn" id="whatsNewBtn" type="button" data-i18n="about.whatsNew">What's New</button>
       </div>
