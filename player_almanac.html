@@ -18,7 +18,7 @@
 <!--
   Player Almanac Character Sheet - v7.3.1 VISUAL DESIGN OVERHAUL (Phase 2)
   
-  CURRENT VERSION: v7.7.3 - September 11, 2026
+  CURRENT VERSION: v7.7.4 - September 11, 2026
   
   NEW IN v7.3.1 (Phase 2 - Refinement):
   - Unified Button System: Consolidated modal-btn, btn, qb-btn with consistent variants
@@ -22012,6 +22012,64 @@ html[data-force-dark="true"] { --text-muted: #9ba0aa; }
   #mapMenu .map-character-select { flex: 1; }
 }
 </style>
+<style id="foldable-usability">
+/* Primary device: user-supplied Samsung Ultra 8 Fold, 2256 x 2504 unfolded.
+   Layout follows CSS viewport space, not physical pixels. See DEVICE-PRIORITIES.md. */
+#boot .boot-footer-right { flex: 1 1 100%; min-width: 0; max-width: 100%; flex-wrap: wrap !important; justify-content: flex-end; }
+#boot .boot-footer-right > * { max-width: 100%; }
+#boot .boot-footer-row { flex: 0 0 auto; flex-direction: row; flex-wrap: wrap !important; height: auto; max-height: none; }
+#boot .boot-atmosphere { overflow: hidden; }
+#boot .boot-column-left, #boot .boot-column-right { box-sizing: border-box; padding-inline: 0; }
+
+@media (min-width: 521px) and (max-width: 768px) { #boot .boot-footer-row { display: flex; } #boot { padding-bottom: 24px !important; } }
+/* The persistent stats strip already shows HP above 520px. Reserve two clean
+   toolbar rows when character, combat and settings controls cannot share one. */
+@media (min-width: 521px) {
+  #quickBar .qb-stats { display: none !important; }
+  #quickBar .qb-center, #quickBar .qb-center-inline, #quickBar .qb-actions { min-width: 0; overflow: visible; }
+  #quickBar .qb-center-inline { display: flex; width: 100%; }
+  #quickBar .qb-actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px; padding: 0; }
+  #quickBar .qb-collapse-toggle { display: none; }
+  #quickBar #qbMoreMenu { left: auto; right: 0; transform: none; }
+  #quickBar #settingsMenu { left: auto; right: 0; transform: none; }
+}
+@media (min-width: 521px) and (max-width: 1399px) {
+  #quickBar:not(.collapsed) { grid-template-columns: minmax(0,1fr) auto !important; grid-template-areas: "character system" "combat combat"; gap: 8px 12px !important; height: auto !important; padding: 8px 14px 12px !important; }
+  #quickBar > .qb-vdiv { display: none !important; }
+  #quickBar .qb-left { grid-area: character; justify-content: flex-start; }
+  #quickBar .qb-right { grid-area: system; justify-content: flex-end; }
+  #quickBar .qb-center { grid-area: combat; justify-content: center; }
+  #quickBar .qb-zone { padding: 0; align-items: center; min-height: 0; }
+  #quickBar .qb-center-inline { justify-content: center; }
+  #quickBar .qb-charbtn { min-width: 120px; max-width: 220px; }
+  #quickBar #qbMoreMenu { max-height: min(60dvh,calc(100dvh - 210px)); }
+}
+@media (min-width: 701px) { #quickBar #charMenu { left: 0; right: auto; } }
+@media (min-width: 521px) and (max-width: 700px) {
+  #quickBar:not(.collapsed) { grid-template-columns: minmax(0,1fr) !important; grid-template-areas: "character" "combat" "system"; }
+  #quickBar .qb-left, #quickBar .qb-right { justify-content: center; }
+  #quickBar #qbShortRestDirect, #quickBar #qbLongRestDirect { display: none; }
+  #quickBar #settingsMenu { right: -12px; max-height: 50dvh; }
+}
+
+@media (pointer: coarse) { #app .identity-card:has(#portraitEditor:not([hidden])) { overflow: visible !important; z-index: 100; } }
+/* Touch controls stay discoverable on an unfolded screen without a mouse. */
+@media (pointer: coarse) {
+  #quickBar .qb-btn, #quickBar .qb-seg-btn { min-height: 44px !important; height: 44px; min-width: 44px; }
+  #quickBar .qb-menu-item, #quickBar .qb-overflow-btn, #quickBar .qb-select { min-height: 44px; }
+  #boot .boot-char-btn, #boot .boot-recent-viewall, #boot .boot-footer-link { min-height: 44px; }
+  #boot .boot-char-actions { opacity: 1; visibility: visible; pointer-events: auto; }
+  #app .section-jump-btn { min-height: 44px; }
+  #app .id-alignment select { min-height: 44px; }
+  #app .id-portrait .portrait-actions { position: static; transform: none; opacity: 1; pointer-events: auto; display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); width: 132px; gap: 4px; margin-top: 8px; }
+  #app .id-portrait .portrait-upload { grid-column: 1 / -1; }
+  #app .id-portrait .portrait-btn { min-height: 44px; min-width: 0; padding: 6px; border-radius: 8px; font: 500 11px var(--font-body); text-transform: none; letter-spacing: 0; display: flex; align-items: center; justify-content: center; color: var(--text-secondary); background: var(--surface-2); border-color: var(--border-default); }
+  #app .id-portrait .portrait-editor { left: 0; transform: none; max-width: calc(100vw - 64px); }
+  #app .id-portrait .portrait-editor .actions { position: static !important; flex-direction: row !important; }
+}
+</style>
+
+
 </head>
 <script>
 // Early theme application to prevent flash of unstyled content
@@ -22285,7 +22343,7 @@ html[data-force-dark="true"] { --text-muted: #9ba0aa; }
         <span>Not affiliated with Wizards of the Coast</span>
       </div>
       <div>
-        <span>v<span id="mobileVersionNumber">7.7.3</span></span>
+        <span>v<span id="mobileVersionNumber">7.7.4</span></span>
         <button id="mobileWhatsNewBtn" type="button" style="background: none; border: none; color: var(--accent, #9b87f5); font-size: 0.7rem; cursor: pointer; padding: 2px 4px; text-decoration: underline;">What's New</button>
       </div>
     </div>
@@ -22865,6 +22923,16 @@ html[data-force-dark="true"] { --text-muted: #9ba0aa; }
       <button class="modal-close" id="changelogClose" type="button" aria-label="Close">&#x2715;</button>
     </div>
     <div class="modal-body changelog-body">
+      <div class="changelog-version">
+        <h3>Version 7.7.4 <span class="changelog-date">September 11, 2026</span></h3>
+        <ul>
+          <li>Improved unfolded and intermediate tablet layouts, with separate toolbar rows and larger touch controls.</li>
+          <li>Portrait controls stay visible on touch screens, and portrait editing stays above nearby sections.</li>
+          <li>Kept character and settings menus within the screen; restored home actions at smaller tablet widths.</li>
+          <li>Preserved the custom dragon, eight themes, motion preferences, and existing character data.</li>
+        </ul>
+      </div>
+
       <div class="changelog-version">
         <h3>Version 7.7.3 <span class="changelog-date">September 11, 2026</span></h3>
         <ul>
@@ -24893,7 +24961,7 @@ html[data-force-dark="true"] { --text-muted: #9ba0aa; }
   };
 
   // App version constant for visibility
-  const APP_VERSION = '7.7.3';
+  const APP_VERSION = '7.7.4';
 
   // ============================================
   // ORDER 6: FIRST-VISIT DETECTION
@@ -49631,7 +49699,7 @@ console.log('[PA Addon] Host API bridge initialized for addon:', window.PA.addon
       <!-- ORDER 8: Version Info Box -->
       <div class="credits-version-box">
         <div class="credits-version-info">
-          <strong>Version <span id="aboutVersionNumber">7.7.3</span></strong>
+          <strong>Version <span id="aboutVersionNumber">7.7.4</span></strong>
         </div>
         <button class="credits-whats-new-btn" id="whatsNewBtn" type="button" data-i18n="about.whatsNew">What's New</button>
       </div>

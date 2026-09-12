@@ -1,12 +1,12 @@
 /*
  * Player Almanac - Service Worker
  * Original app by Zagreous.
- * Offline shell maintenance: 7.7.3
+ * Offline shell maintenance: 7.7.4
  */
 
 // Scope-specific names keep separate installations on the same host isolated.
 const CACHE_PREFIX = `player-almanac:${self.registration.scope}:`;
-const CACHE_NAME = `${CACHE_PREFIX}7.7.3`;
+const CACHE_NAME = `${CACHE_PREFIX}7.7.4`;
 const APP_URL = new URL('./player_almanac.html', self.registration.scope).href;
 const INDEX_URL = new URL('./index.html', self.registration.scope).href;
 const ROOT_URL = new URL('./', self.registration.scope).href;
