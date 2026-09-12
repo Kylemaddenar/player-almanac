@@ -18,7 +18,7 @@
 <!--
   Player Almanac Character Sheet - v7.3.1 VISUAL DESIGN OVERHAUL (Phase 2)
   
-  CURRENT VERSION: v7.7.4 - September 11, 2026
+  CURRENT VERSION: v7.8.0 - September 12, 2026
   
   NEW IN v7.3.1 (Phase 2 - Refinement):
   - Unified Button System: Consolidated modal-btn, btn, qb-btn with consistent variants
@@ -127,7 +127,10 @@
 <link rel="manifest" href="./manifest.json">
 <link rel="icon" type="image/png" sizes="192x192" href="./icons/icon-192.png">
 <link rel="apple-touch-icon" href="./icons/icon-512.png">
-<meta name="theme-color" content="#6b46c1">
+<meta name="theme-color" content="#111719">
+<meta name="color-scheme" content="only dark">
+<link rel="preload" href="./fonts/Manrope.ttf" as="font" type="font/ttf" crossorigin>
+<link rel="preload" href="./fonts/Fraunces.ttf" as="font" type="font/ttf" crossorigin>
 <!-- P0.4: Content Security Policy for hosted deployments
      Note: 'unsafe-inline' is required for embedded <style> and <script> in single-file architecture.
      For stricter CSP, consider extracting CSS/JS to external files with nonces. -->
@@ -21744,7 +21747,7 @@ button:disabled { opacity: .45; }
 .death-pip:focus-visible,.hd-pip:focus-visible,.slot-pip:focus-visible,.rest-hd-pip:focus-visible{outline:2px solid var(--accent-primary);outline-offset:3px}
 </style>
 <style id="almanac-visual-polish">
-/* Original dragon branding, theme-derived materials and consistent interaction polish. */
+/* Original canine emblem branding, theme-derived materials and consistent interaction polish. */
 html[data-force-dark="true"] {
   --surface-1: color-mix(in srgb, var(--accent-primary) 7%, #101114);
   --surface-2: color-mix(in srgb, var(--accent-primary) 11%, #17191d);
@@ -22070,6 +22073,358 @@ html[data-force-dark="true"] { --text-muted: #9ba0aa; }
 </style>
 
 
+<style id="almanac-studio">
+/* A shared visual system for the canine-emblem Almanac. Device priority lives
+   in DEVICE-PRIORITIES.md; CSS viewport space, not physical pixels, drives layout. */
+@font-face { font-family: 'Almanac Sans'; src: url('./fonts/Manrope.ttf') format('truetype'); font-style: normal; font-weight: 200 800; font-display: swap; }
+@font-face { font-family: 'Almanac Display'; src: url('./fonts/Fraunces.ttf') format('truetype'); font-style: normal; font-weight: 100 900; font-display: swap; }
+html[data-force-dark="true"] {
+  color-scheme: only dark;
+  --font-body: 'Almanac Sans', system-ui, sans-serif;
+  --font-display: 'Almanac Display', Georgia, serif;
+  --bg-deep: #111719 !important; --bg-dark: #161e20 !important;
+  --text-primary: #edf1ed !important; --text-secondary: #bdc7c4 !important; --text-muted: #a0afab !important; --text-label: #bdc7c4;
+  --surface-1: color-mix(in srgb,var(--accent-primary) 3%,#182022);
+  --surface-2: color-mix(in srgb,var(--accent-primary) 5%,#202a2c);
+  --surface-3: color-mix(in srgb,var(--accent-primary) 8%,#283437);
+  --surface-4: color-mix(in srgb,var(--accent-primary) 12%,#334245);
+  --border-subtle: #ffffff12; --border-default: #ffffff24; --border-strong: #ffffff4a;
+  --glass-bg: var(--surface-1); --glass-border: #ffffff20 !important;
+  --shadow-md: 0 12px 32px #050b0d40; --shadow-lg: 0 28px 90px #03070990;
+  --card-pad: 24px; --grid-gap: 18px;
+  --studio-ease: cubic-bezier(.2,.8,.2,1);
+}
+body { background: var(--bg-deep); color: var(--text-primary); font-family: var(--font-body); -webkit-font-smoothing: antialiased; }
+button, input, textarea, select, [contenteditable] { font-family: var(--font-body); }
+button { -webkit-tap-highlight-color: transparent; touch-action: manipulation; }
+button:not(:disabled) { cursor: pointer; }
+button:disabled { opacity: .42 !important; cursor: default; }
+button:focus-visible, input:focus-visible, textarea:focus-visible, select:focus-visible, [contenteditable]:focus-visible { outline: 2px solid var(--accent-secondary); outline-offset: 3px; }
+input::placeholder, textarea::placeholder { color: var(--text-muted); opacity: .8; }
+#bg .bg-grad { background: radial-gradient(ellipse at 10% 0,color-mix(in srgb,var(--accent-primary) 6%,transparent),transparent 55%),var(--bg-deep); }
+#bg .aurora, #bg .orbs, #bg .fog, #bg .watermark, #bg .vignette { display: none !important; }
+#bg #particles { opacity: .1; }
+#bg .grain { display: block; opacity: .018; }
+.studio-icon { width: 18px; height: 18px; flex: 0 0 18px; fill: none; stroke: currentColor; stroke-width: 1.65; stroke-linecap: round; stroke-linejoin: round; }
+
+/* Library: a working desk with one clear continuation point and a collection. */
+#boot { background: radial-gradient(ellipse at 80% 0,color-mix(in srgb,var(--accent-primary) 8%,transparent),transparent 60%),var(--bg-deep) !important; padding: 0 clamp(20px,4vw,64px) 24px !important; gap: 0; }
+#boot .boot-atmosphere { opacity: .12; }
+#boot .boot-celestial-light { display: none !important; }
+#boot .almanac-masthead { max-width: 1280px; min-height: 88px; padding-block: 22px; border-color: var(--border-default); }
+#boot .almanac-wordmark { color: var(--text-primary); font: 700 12px var(--font-body); letter-spacing: .16em; gap: 12px; }
+#boot .almanac-mark { width: 36px; height: 36px; flex-basis: 36px; }
+#boot .almanac-local { font: 500 11px/1.5 var(--font-body); color: var(--text-secondary); max-width: none; }
+#boot .boot-container { display: flex !important; flex-direction: column !important; flex: 1 0 auto; width: 100% !important; max-width: 1280px !important; padding: 36px 0 40px !important; gap: 32px !important; min-height: 0 !important; margin: 0 auto !important; align-items: stretch; justify-content: flex-start; }
+#boot .boot-column-left { position: relative; display: grid !important; grid-template-columns: minmax(0,1.15fr) minmax(280px,.85fr); align-items: center !important; gap: 18px 40px !important; padding: 32px !important; width: 100% !important; box-sizing: border-box; border: 1px solid var(--border-default); border-radius: 24px; background: radial-gradient(ellipse at 5% 0,color-mix(in srgb,var(--accent-primary) 12%,transparent),transparent 65%),var(--surface-1); box-shadow: inset 0 1px #ffffff08,0 14px 50px #0002; }
+#boot .boot-column-right { width: 100% !important; padding: 0 !important; }
+#boot .boot-zone-top { width: 100%; max-width: none; overflow: visible !important; }
+#boot .pa-hero { display: grid !important; grid-template-columns: 96px minmax(0,1fr); grid-template-rows: auto auto auto; align-items: center !important; gap: 8px 26px; text-align: left !important; width: 100% !important; }
+#boot .boot-logo { grid-area: 1 / 1 / 4 / 2; position: relative !important; display: flex !important; width: 96px !important; height: 96px !important; margin: 0 !important; align-self: center; }
+#boot .boot-logo svg { width: 100%; height: 100%; fill: var(--accent-secondary) !important; color: var(--accent-secondary); filter: drop-shadow(0 2px 14px color-mix(in srgb,var(--accent-primary) 24%,transparent)); }
+#boot .boot-logo::before { width: 145%; height: 145%; background: radial-gradient(circle,color-mix(in srgb,var(--accent-primary) 16%,transparent),transparent 70%); }
+#boot .boot-logo::after { width: 132%; height: 132%; border: 1px solid color-mix(in srgb,var(--accent-secondary) 20%,transparent); box-shadow: none; }
+#boot .almanac-eyebrow { grid-area: 1 / 2; margin: 0 !important; color: var(--accent-secondary); font: 700 9px/1.6 var(--font-body); letter-spacing: .17em; text-transform: uppercase; }
+#boot .boot-title { grid-area: 2 / 2; font: 450 clamp(32px,3.2vw,46px)/1.06 var(--font-display) !important; font-variation-settings: 'SOFT' 20,'WONK' 0; letter-spacing: -.045em !important; text-transform: none !important; text-align: left !important; margin: 0 !important; color: var(--text-primary) !important; -webkit-text-fill-color: var(--text-primary) !important; background: none !important; text-shadow: none !important; max-width: none !important; width: 100% !important; }
+#boot .boot-tagline { grid-area: 3 / 2; font: 400 13px/1.7 var(--font-body) !important; color: var(--text-secondary) !important; letter-spacing: 0 !important; text-align: left !important; margin: 4px 0 0 !important; max-width: 320px; }
+#boot .boot-actions-zone { min-width: 0; }
+#boot .boot-actions { display: grid !important; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 10px !important; width: 100% !important; max-width: none !important; padding: 0 !important; margin: 0 !important; }
+#boot .boot-action-btn { display: flex !important; gap: 12px; align-items: center; min-width: 0; width: 100% !important; min-height: 52px; padding: 13px 16px !important; border: 1px solid var(--border-default); border-radius: 12px !important; background: var(--surface-2) !important; color: var(--text-primary) !important; opacity: 1 !important; text-align: left; box-shadow: inset 0 1px #ffffff06 !important; translate: none !important; }
+#boot .boot-action-btn[hidden] { display: none !important; }
+#boot .boot-action-btn.boot-primary { grid-column: 1 / -1; min-height: 98px; padding: 18px 20px !important; background: linear-gradient(110deg,var(--accent-secondary),color-mix(in srgb,var(--accent-primary) 64%,var(--accent-secondary))) !important; border-color: transparent; color: #122022 !important; box-shadow: 0 6px 24px color-mix(in srgb,var(--accent-primary) 12%,transparent) !important; }
+#boot .boot-action-btn.boot-primary::after { content: '↗'; display: block !important; position: static !important; width: auto !important; height: auto !important; margin-left: auto; background: none !important; font: 27px var(--font-body); color: #122022; opacity: 1; transform: none !important; }
+#boot .boot-action-btn.boot-primary .boot-action-label, #boot .boot-action-btn.boot-primary .boot-action-char, #boot .boot-action-btn.boot-primary .boot-action-subtext { color: #122022 !important; opacity: 1 !important; }
+#boot .boot-action-label { font: 650 12px/1.5 var(--font-body) !important; letter-spacing: 0 !important; color: var(--text-primary) !important; text-transform: none !important; }
+#boot .boot-action-char { font: 500 25px/1.25 var(--font-display) !important; letter-spacing: -.035em; margin: 4px 0; }
+#boot .boot-action-subtext { font: 500 10px/1.6 var(--font-body) !important; color: var(--text-secondary) !important; }
+#boot .boot-action-icon { width: 24px !important; height: 24px !important; flex: 0 0 24px; background: none !important; border: 0 !important; box-shadow: none !important; margin: 0 !important; }
+#boot .boot-action-icon svg { width: 22px; height: 22px; }
+#boot .almanac-boot-note { grid-column: 1 / -1; margin: 0 !important; padding-top: 16px; border-top: 1px solid var(--border-subtle); max-width: none; text-align: left !important; font: 400 11px/1.6 var(--font-body); color: var(--text-muted); }
+#boot .boot-recent { border: 0 !important; border-radius: 0 !important; padding: 0 !important; background: none !important; box-shadow: none !important; max-height: none; }
+#boot .boot-recent-header { display: flex; align-items: center; padding: 0 0 18px !important; margin: 0 !important; }
+#boot .boot-recent-title { font: 450 25px/1.2 var(--font-display) !important; letter-spacing: -.025em; color: var(--text-primary) !important; }
+#boot .boot-recent-viewall { min-height: 44px; padding-inline: 14px; font: 600 11px var(--font-body); border: 1px solid var(--border-default); border-radius: 9px; color: var(--text-secondary); background: var(--surface-1); }
+#boot .almanac-search { margin: 0 0 18px; }
+#boot .almanac-search input { height: 48px !important; border: 1px solid var(--border-default) !important; background: var(--surface-1) !important; border-radius: 10px !important; padding: 0 16px 0 42px !important; font: 400 13px var(--font-body) !important; color: var(--text-primary) !important; }
+#boot .boot-recent-cards { display: grid !important; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 16px !important; max-height: none !important; overflow: visible !important; padding: 0 !important; }
+#boot .boot-char-card { display: grid !important; grid-template-columns: 56px minmax(0,1fr); gap: 16px !important; min-width: 0; min-height: 184px !important; padding: 20px !important; border: 1px solid var(--border-default) !important; border-radius: 16px !important; background: var(--surface-1) !important; box-shadow: inset 0 1px #ffffff05 !important; margin: 0 !important; position: relative; }
+#boot .boot-char-card.selected { background: linear-gradient(130deg,color-mix(in srgb,var(--accent-primary) 8%,var(--surface-1)),var(--surface-1)) !important; border-color: color-mix(in srgb,var(--accent-primary) 48%,var(--border-default)) !important; box-shadow: inset 0 2px var(--accent-primary) !important; }
+#boot .boot-char-card .boot-char-portrait { grid-area: 1 / 1; width: 56px !important; height: 64px !important; font: 500 23px var(--font-display); border-radius: 12px !important; color: var(--accent-secondary) !important; background: linear-gradient(150deg,var(--surface-4),var(--surface-2)) !important; border: 1px solid var(--border-default) !important; box-shadow: none !important; margin: 0; }
+#boot .boot-char-info { grid-area: 1 / 2; min-width: 0; align-self: center; }
+#boot .boot-char-name { font: 450 22px/1.25 var(--font-display) !important; letter-spacing: -.025em; color: var(--text-primary) !important; white-space: normal !important; overflow-wrap: anywhere; margin-bottom: 7px; }
+#boot .boot-char-meta { color: var(--text-secondary) !important; font: 400 11px/1.6 var(--font-body) !important; }
+#boot .last-played { color: var(--text-muted) !important; font: 400 10px/1.5 var(--font-body) !important; }
+#boot .boot-char-actions { grid-area: 2 / 1 / 3 / 3; gap: 8px !important; margin: 0 !important; opacity: 1 !important; visibility: visible !important; justify-content: flex-start !important; width: 100%; }
+#boot .boot-char-btn { min-height: 44px !important; min-width: 62px !important; padding: 8px 15px !important; border-radius: 8px !important; font: 650 11px var(--font-body) !important; letter-spacing: 0; color: var(--text-secondary) !important; background: transparent !important; border: 1px solid var(--border-default) !important; text-transform: none; }
+#boot .boot-char-btn.primary { color: var(--accent-secondary) !important; background: color-mix(in srgb,var(--accent-primary) 12%,var(--surface-2)) !important; border-color: color-mix(in srgb,var(--accent-primary) 30%,var(--border-default)) !important; }
+#boot .boot-char-overflow { min-width: 44px !important; padding-inline: 10px !important; margin-left: auto; font-size: 20px !important; }
+#boot .boot-onboarding { text-align: left; background: var(--surface-1); border: 1px solid var(--border-default); border-radius: 18px; padding: 28px; }
+#boot .boot-onboarding-title { font: 450 28px var(--font-display); color: var(--text-primary); }
+#boot .boot-onboarding-text { font: 400 14px/1.7 var(--font-body); color: var(--text-secondary); }
+#boot .boot-onboarding-icon { color: var(--accent-secondary); }
+#boot .boot-footer-row { border-top: 1px solid var(--border-default); padding: 18px 0 !important; gap: 10px 18px; align-items: center; max-width: 1280px; }
+#boot .boot-footer-left:has(#bootSkip[hidden]) { display: none; }
+#boot .boot-footer-right { flex: 1 1 600px; justify-content: flex-start; gap: 4px; padding: 0; order: 0; }
+#boot .boot-footer-link { display: inline-flex; align-items: center; justify-content: center; gap: 7px; min-height: 44px; padding: 8px 11px !important; border: 1px solid transparent !important; border-radius: 8px; background: transparent !important; box-shadow: none !important; font: 500 11px var(--font-body) !important; text-transform: none; letter-spacing: 0 !important; color: var(--text-secondary) !important; }
+#boot .boot-install-btn { color: var(--accent-secondary) !important; border-color: var(--border-default) !important; background: var(--surface-1) !important; }
+#boot .boot-social-links { order: 2; margin: 0 auto 0 0; }
+#boot .boot-footer-version { order: 3; border: 0; background: none; padding: 0; opacity: 1; color: var(--text-muted); font-size: 10px; }
+#boot .boot-build, #boot .boot-shortcuts-hint { display: none; }
+#boot .boot-social-link { color: var(--text-secondary); }
+#boot .boot-trademark-notice { font: 400 10px var(--font-body) !important; color: var(--text-muted) !important; }
+#boot .boot-mobile-menu-btn { background: var(--surface-3) !important; color: var(--text-primary) !important; border-color: var(--border-strong) !important; font: 650 13px var(--font-body); box-shadow: var(--shadow-md); }
+.boot-mobile-menu-sheet { background: var(--surface-1) !important; border-color: var(--border-default) !important; }
+.boot-mobile-menu-item { color: var(--text-primary) !important; background: var(--surface-2) !important; border-color: var(--border-default) !important; }
+
+/* Sheet: consistent materials, readable typesetting and distinct active states. */
+#app { max-width: 1480px; padding-top: 18px; }
+#app .identity-card { border: 1px solid var(--border-default); background: linear-gradient(110deg,var(--surface-2),var(--surface-1)); border-radius: 18px; box-shadow: inset 0 1px #ffffff08; padding: 24px !important; margin: 0 0 24px; gap: 24px; }
+#app .id-name { font: 450 clamp(28px,3vw,42px)/1.15 var(--font-display) !important; letter-spacing: -.04em !important; text-transform: none; color: var(--text-primary); }
+#app .id-meta, #app .id-meta span, #app .id-campaign { font-family: var(--font-body) !important; letter-spacing: 0 !important; color: var(--text-secondary); }
+#app .id-campaign { font-size: 12px; text-transform: none; }
+#app .id-level { background: var(--surface-3); border: 1px solid var(--border-default); color: var(--accent-secondary); }
+#app .id-portrait .portrait-frame { width: 88px; height: 96px; border: 1px solid var(--border-strong); background: var(--surface-3); box-shadow: none; border-radius: 12px; }
+#app .id-portrait .portrait-actions { width: 164px; grid-template-columns: repeat(3,minmax(0,1fr)); }
+#app .id-portrait .portrait-upload { grid-column: auto; }
+#app .id-portrait .portrait-btn { font-family: var(--font-body); }
+#app .tabs { gap: 6px !important; justify-content: flex-start !important; padding: 0 0 16px !important; border-bottom: 1px solid var(--border-default); margin-bottom: 14px; }
+#app .tab-btn { display: inline-flex; gap: 9px; align-items: center; justify-content: center; min-height: 48px; padding: 12px 20px !important; font: 650 12px var(--font-body) !important; letter-spacing: 0 !important; text-transform: none !important; border-radius: 10px !important; border: 1px solid transparent; background: transparent; color: var(--text-secondary); box-shadow: none; }
+#app .tab-btn.active { background: var(--surface-3) !important; border-color: var(--border-default) !important; color: var(--accent-secondary) !important; box-shadow: inset 0 -2px var(--accent-primary) !important; }
+#app .section-jump { gap: 4px !important; margin: 0 0 12px; padding: 0 0 8px; }
+#app .section-jump-label { font: 600 9px var(--font-body); letter-spacing: .1em; color: var(--text-muted); }
+#app .section-jump-btn { min-height: 40px; padding: 8px 12px; font: 550 11px var(--font-body); border: 0; color: var(--text-secondary); }
+#app .card { border: 1px solid var(--border-default) !important; border-radius: 16px !important; background: var(--surface-1) !important; box-shadow: inset 0 1px #ffffff05 !important; padding: 24px !important; }
+#app .card-title { font: 450 24px/1.2 var(--font-display) !important; color: var(--text-primary) !important; letter-spacing: -.025em !important; text-transform: none !important; margin-bottom: 22px !important; padding-bottom: 12px !important; }
+#app .card-title::after { background: var(--border-default); height: 1px; }
+#app #abilities { gap: 8px !important; }
+#app #abilities > .ability { border-radius: 11px !important; border: 1px solid var(--border-subtle) !important; background: linear-gradient(150deg,var(--surface-3),var(--surface-2)) !important; padding: 13px 5px !important; }
+#app #abilities .ability-name { font: 700 9px/1.5 var(--font-body) !important; letter-spacing: .055em !important; color: var(--text-secondary) !important; }
+#app #abilities .ability-mod { font: 600 31px/1.3 var(--font-body) !important; color: var(--accent-secondary); margin-block: 7px !important; }
+#app #abilities .ability-mod.neg { color: var(--danger); }
+#app #abilities .save { gap: 4px !important; }
+#app #abilities .save span { font: 500 10px var(--font-body) !important; color: var(--text-secondary); }
+#app input[type="number"], #app input[type="text"], #app input[type="search"], #app select, #app textarea { background: var(--surface-2) !important; color: var(--text-primary) !important; border: 1px solid var(--border-default); border-radius: 8px; box-shadow: inset 0 1px 3px #0001; }
+#app .hp-bar-wrap { background: var(--surface-3); height: 38px; border: 0; border-radius: 8px; }
+#app .hp-bar { background: linear-gradient(90deg,var(--accent-primary),var(--accent-secondary)); }
+#app .stat-label, #app .hp-inputs label { font: 500 11px/1.4 var(--font-body) !important; color: var(--text-secondary) !important; text-transform: none !important; letter-spacing: 0 !important; }
+#app .stat-value, #app .stat-value input { font-family: var(--font-body) !important; }
+#app .feature, #app .spell-item, #app .weapon-mobile-item, #app .equip-mobile-item, #app .spell-mobile-item { border: 1px solid var(--border-default) !important; background: var(--surface-2) !important; border-radius: 12px !important; }
+#app .btn, #app .pill, #app .mini-btn, .modal-btn, .modal-actions button { border-radius: 8px; font-family: var(--font-body); text-transform: none; letter-spacing: 0; }
+#app .btn { min-height: 40px; background: var(--surface-2); border-color: var(--border-default); color: var(--text-primary); }
+.almanac-find { font: 600 11px var(--font-body); background: var(--surface-3); border: 1px solid var(--border-default); gap: 12px; padding: 12px 15px; color: var(--text-secondary); box-shadow: none; }
+#quickBar { background: var(--surface-1) !important; box-shadow: 0 8px 24px #0002; border-bottom: 1px solid var(--border-default); }
+#quickBar .qb-btn { background: var(--surface-2); border: 1px solid var(--border-default); color: var(--text-primary); font: 600 11px var(--font-body) !important; padding-inline: 12px; }
+#quickBar .qb-btn.primary { background: var(--accent-secondary) !important; color: #122022 !important; border-color: transparent; }
+#quickBar .qb-seg { padding: 3px; gap: 2px; background: #0a1115a0; border: 1px solid var(--border-default); border-radius: 10px; }
+#quickBar .qb-seg-btn { font: 600 10px var(--font-body) !important; border-radius: 7px; color: var(--text-secondary); }
+#quickBar .qb-seg-btn.active { background: var(--surface-4) !important; color: var(--accent-secondary) !important; box-shadow: inset 0 1px #ffffff12; }
+#charStatsBar { background: #101618 !important; border-color: var(--border-default); }
+#charStatsBar .char-stats-name { font-family: var(--font-display); }
+#quickBar .qb-status { background: transparent; border: 0; font: 500 10px var(--font-body); color: var(--text-muted); }
+#actionsRail { padding: 6px; gap: 4px; border: 1px solid var(--border-default); border-radius: 16px; background: var(--surface-1); box-shadow: var(--shadow-md); }
+#actionsRail .act-btn { width: 44px; height: 44px; border-radius: 10px !important; border: 1px solid transparent; background: transparent !important; color: var(--text-secondary); box-shadow: none !important; }
+#actionsRail .act-btn:first-child, #actionsRail .act-fab-toggle { background: var(--surface-3) !important; color: var(--accent-secondary); }
+#actionsRail .act-btn svg { width: 21px; height: 21px; }
+#rollLog { background: var(--surface-1) !important; border: 1px solid var(--border-default); border-radius: 12px !important; box-shadow: var(--shadow-md); }
+#rollLog .roll-log-title { font: 650 10px var(--font-body); color: var(--text-secondary); letter-spacing: .04em; }
+#rollLog .roll-log-btn, #rollLog .roll-log-filter { font-family: var(--font-body); border-radius: 7px; background: var(--surface-2); border-color: var(--border-default); color: var(--text-secondary); }
+#rollLog .roll-log-filter.active { background: var(--surface-4); color: var(--accent-secondary); }
+
+/* The same materials extend through editing, navigation and the map. */
+.modal-wrap .modal, .modal-overlay .modal, #almanacNavigator, .qb-popover, .popover, #mobileMenuModal, .weapon-detail-modal, .equip-detail-modal, .spell-detail-modal { background: var(--surface-1) !important; border: 1px solid var(--border-strong) !important; color: var(--text-primary); border-radius: 18px !important; box-shadow: var(--shadow-lg) !important; }
+.modal-head, .modal-header, .modal-actions, .modal-footer { border-color: var(--border-default) !important; }
+.modal-title, .modal-header h2, .modal-head h2, #almanacFindTitle { font-family: var(--font-display) !important; font-weight: 450; text-transform: none; letter-spacing: -.02em; color: var(--text-primary); }
+.qb-menu-item, .qb-overflow-btn { border-radius: 8px; font-family: var(--font-body); color: var(--text-primary); }
+.qb-menu-item:hover, .qb-overflow-btn:hover { background: var(--surface-3); }
+.qb-popover .qb-select, .qb-popover .qb-input { background: var(--surface-2); color: var(--text-primary); border-color: var(--border-default); }
+.portrait-editor { background: var(--surface-1); border: 1px solid var(--border-strong); box-shadow: var(--shadow-lg); border-radius: 12px; }
+#mapMenu { background: var(--bg-deep); }
+#mapMenu .map-topbar { background: var(--surface-1) !important; border-color: var(--border-default) !important; box-shadow: 0 3px 16px #0002; }
+#mapMenu .map-name { font-family: var(--font-display); letter-spacing: -.02em; font-weight: 450; color: var(--text-primary); }
+#mapMenu .map-tools, #mapMenu .map-panel { background: var(--surface-1) !important; border-color: var(--border-default) !important; }
+#mapMenu .map-tool, #mapMenu .map-topbar-btn { background: var(--surface-2) !important; border: 1px solid var(--border-default) !important; border-radius: 9px; color: var(--text-secondary); box-shadow: none !important; }
+#mapMenu .map-tool.active, #mapMenu .map-tool[aria-pressed="true"] { background: var(--surface-4) !important; border-color: var(--accent-primary) !important; color: var(--accent-secondary) !important; }
+#mapMenu .map-section-title { font: 600 11px var(--font-body); color: var(--text-secondary); letter-spacing: .02em; }
+
+@media (hover:hover) and (pointer:fine) {
+  #boot .boot-action-btn:hover, #boot .boot-char-btn:hover, #boot .boot-footer-link:hover { border-color: var(--border-strong) !important; filter: brightness(1.08); }
+  #boot .boot-char-card:hover { border-color: var(--border-strong) !important; background: var(--surface-2) !important; }
+  #actionsRail .act-btn:hover, #app .section-jump-btn:hover { background: var(--surface-3) !important; color: var(--accent-secondary); }
+}
+@media (min-width: 1400px) { #boot .boot-column-left { padding: 42px; } }
+@media (max-width: 1050px) {
+  #boot .boot-column-left { gap: 18px 28px !important; padding: 28px !important; grid-template-columns: minmax(0,1fr) minmax(280px,.9fr); }
+  #boot .pa-hero { grid-template-columns: 1fr; gap: 10px; }
+  #boot .boot-logo { grid-area: auto; width: 84px !important; height: 84px !important; margin: 0 0 12px 4px !important; }
+  #boot .almanac-eyebrow, #boot .boot-title, #boot .boot-tagline { grid-area: auto; }
+  #boot .boot-title { font-size: 38px !important; }
+  #boot .boot-recent-cards { grid-template-columns: repeat(2,minmax(0,1fr)); }
+}
+@media (max-width: 700px) {
+  #boot { padding-inline: 20px !important; }
+  #boot .almanac-masthead { min-height: 72px; padding-block: 18px; }
+  #boot .almanac-wordmark { font-size: 10px; letter-spacing: .12em; gap: 8px; }
+  #boot .almanac-mark { width: 30px; height: 30px; flex-basis: 30px; }
+  #boot .almanac-local { font-size: 10px; max-width: 92px; }
+  #boot .boot-container { padding: 24px 0 28px !important; gap: 28px !important; }
+  #boot .boot-column-left { display: flex !important; flex-direction: column; align-items: stretch !important; gap: 24px !important; padding: 24px !important; border-radius: 18px; }
+  #boot .pa-hero { grid-template-columns: 84px minmax(0,1fr); gap: 8px 22px; }
+  #boot .boot-logo { grid-area: 1 / 1 / 4 / 2; width: 84px !important; height: 84px !important; margin: 0 !important; }
+  #boot .almanac-eyebrow { grid-area: 1 / 2; font-size: 8px; }
+  #boot .boot-title { grid-area: 2 / 2; font-size: 34px !important; }
+  #boot .boot-tagline { grid-area: 3 / 2; font-size: 12px !important; }
+  #boot .boot-action-btn.boot-primary { min-height: 96px; }
+  #boot .almanac-boot-note { font-size: 10px; padding-top: 14px; }
+  #boot .boot-recent-cards { grid-template-columns: 1fr; gap: 12px !important; }
+  #boot .boot-char-card { min-height: 154px !important; padding: 18px !important; gap: 12px 16px !important; }
+  #boot .boot-char-portrait { grid-row: 1 / 3 !important; }
+  #boot .boot-char-actions { grid-area: 2 / 2; }
+  #boot .boot-char-name { font-size: 22px !important; }
+  #boot .boot-char-btn { padding-inline: 12px !important; }
+  #boot .boot-recent-title { font-size: 25px !important; }
+  #boot .almanac-search input { font-size: 16px !important; }
+}
+@media (max-width: 520px) {
+  #boot { padding: 0 16px 88px !important; }
+  #boot .boot-column-left { padding: 22px 18px !important; }
+  #boot .pa-hero { grid-template-columns: 1fr 84px; gap: 8px 18px; }
+  #boot .boot-logo { grid-area: 1 / 2 / 4 / 3; }
+  #boot .almanac-eyebrow { grid-area: 1 / 1; }
+  #boot .boot-title { grid-area: 2 / 1; font-size: 35px !important; }
+  #boot .boot-tagline { grid-area: 3 / 1; font-size: 11px !important; }
+  #boot .boot-action-char { font-size: 24px !important; }
+  #boot .boot-actions { gap: 8px !important; }
+  #boot .boot-action-btn:not(.boot-primary) { padding: 12px !important; gap: 8px; }
+  #boot .boot-action-btn:not(.boot-primary) .boot-action-icon { width: 18px !important; flex-basis: 18px; }
+  #boot .boot-action-label { font-size: 11px !important; }
+  #boot .boot-char-card { grid-template-columns: 48px minmax(0,1fr); padding: 16px !important; gap: 12px !important; }
+  #boot .boot-char-card .boot-char-portrait { width: 48px !important; height: 62px !important; }
+  #boot .boot-char-btn { min-width: 56px !important; padding-inline: 10px !important; }
+  #boot .boot-char-overflow { min-width: 42px !important; }
+}
+@media (max-width: 768px) {
+  #app { padding: 10px 14px 116px !important; }
+  #app .identity-card { padding: 18px !important; margin-bottom: 20px; border-radius: 14px; }
+  #app .identity-card:has(.id-portrait-wrapper.collapsed) .id-name { font-family: var(--font-display) !important; font-size: 28px !important; }
+  #app .card { padding: 20px 16px !important; }
+  #app .card-title { font-size: 24px !important; }
+  #app .tabs { display: flex !important; gap: 4px !important; }
+  #app .tab-btn { flex: 1 1 0; padding: 12px 8px !important; font-size: 11px !important; min-width: 0; gap: 5px; }
+  #app .tab-btn .studio-icon { width: 16px; height: 16px; flex-basis: 16px; }
+  #app .section-jump { overflow-x: auto; flex-wrap: nowrap; }
+  #app .section-jump-btn { min-height: 44px; flex: 0 0 auto; }
+  #actionsRail { background: none; box-shadow: none; border: 0; padding: 0; }
+  #actionsRail .act-btn { width: 48px; height: 48px; background: var(--surface-2) !important; border: 1px solid var(--border-default); }
+  #actionsRail .act-fab-toggle { background: var(--accent-secondary) !important; color: #122022; }
+  #actionsRail[data-expanded="true"] { padding: 6px; background: var(--surface-1); border: 1px solid var(--border-default); box-shadow: var(--shadow-lg); }
+  #quickBar.collapsed { background: var(--surface-1) !important; }
+}
+@media (max-width: 360px) {
+  #boot { padding-inline: 12px !important; }
+  #boot .boot-column-left { padding: 20px 14px !important; }
+  #boot .boot-title { font-size: 30px !important; }
+  #boot .pa-hero { gap: 8px 14px; }
+  #boot .boot-char-card { grid-template-columns: 42px minmax(0,1fr); }
+  #boot .boot-char-card .boot-char-portrait { width: 42px !important; }
+  #boot .boot-char-btn { min-width: 52px !important; padding-inline: 8px !important; }
+  #boot .boot-char-overflow { min-width: 40px !important; }
+  #app { padding-inline: 10px !important; }
+  #app .card { padding-inline: 12px !important; }
+}
+.high-contrast #app .card, .high-contrast #boot .boot-column-left, .high-contrast #boot .boot-char-card { border-color: var(--text-secondary) !important; }
+@media print { html[data-force-dark="true"] { --text-primary: #111 !important; --text-secondary: #333 !important; --text-muted: #444 !important; } #app .card, #app .identity-card { background: white !important; border-color: #999 !important; box-shadow: none !important; } }
+/* Finish the inherited tablet constraints and keep small screens composed. */
+#boot .boot-recent { max-width: none !important; margin-top: 0 !important; }
+#boot .boot-zone-middle { max-width: none !important; width: 100% !important; }
+#boot .boot-action-text { min-width: 0; }
+#boot .boot-action-subtext { white-space: normal !important; text-overflow: clip !important; overflow: visible !important; }
+#boot .boot-char-meta-line { white-space: normal; overflow-wrap: anywhere; }
+#mapMenu .map-topbar-right [data-tip]::after { left: auto; right: 0; transform: translateY(6px); }
+#boot { scrollbar-width: thin; scrollbar-color: #51615d transparent; }
+#charStatsBar .csb-name { font: 500 13px var(--font-display); }
+#quickBar .qb-charbtn { border-color: var(--border-default) !important; background: var(--surface-2) !important; }
+#quickBar .qb-seg button.active { background: var(--surface-4) !important; color: var(--accent-secondary) !important; }
+.app-footer { position: static !important; inset: auto !important; margin: 22px auto 90px !important; width: calc(100% - 40px) !important; max-width: 1360px; padding: 16px !important; background: transparent !important; border: 0 !important; backdrop-filter: none !important; box-shadow: none !important; color: var(--text-muted); }
+.app-footer-copyright { font: 400 10px var(--font-body); }
+.toast { font: 500 12px/1.5 var(--font-body) !important; background: var(--surface-3) !important; border: 1px solid var(--border-strong) !important; color: var(--text-primary) !important; border-radius: 12px !important; box-shadow: var(--shadow-md); }
+@media (max-width:520px) {
+  #quickBar .qb-mini-char, #quickBar .qb-mini-hp, #quickBar .qb-mini-roll, #quickBar .qb-mini-expand { border: 1px solid var(--border-default) !important; border-radius: 9px !important; background: var(--surface-2) !important; color: var(--text-primary) !important; min-height: 44px !important; font-family: var(--font-body) !important; box-shadow: none !important; }
+  #quickBar .qb-mini-expand { background: var(--surface-3) !important; color: var(--accent-secondary) !important; }
+  #quickBar .qb-mini-roll[data-mode="adv"], #quickBar .qb-mini-roll[data-mode="dis"] { border-color: var(--accent-primary) !important; color: var(--accent-secondary) !important; }
+  #quickBar .qb-minimal-hud { gap: 7px !important; }
+  #quickBar .qb-mini-char-name { font-size: 11px !important; }
+  #boot .boot-column-left { gap: 20px !important; }
+  #boot .boot-logo::after { width: 118%; height: 118%; }
+  #boot .boot-recent-header { padding-bottom: 14px !important; }
+  #app .tabs { background: none !important; padding: 0 0 14px !important; }
+  #boot .boot-mobile-menu-btn { left: 16px !important; right: 16px !important; bottom: calc(12px + env(safe-area-inset-bottom,0px)) !important; width: calc(100% - 32px) !important; min-height: 48px; text-align: center; border-radius: 12px !important; }
+}
+#mapMenu .map-panel-title { font: 600 12px/1.4 var(--font-body) !important; text-transform: none !important; letter-spacing: 0 !important; color: var(--text-primary); }
+#mapMenu .map-panel-label { font: 550 11px/1.5 var(--font-body) !important; text-transform: none !important; letter-spacing: 0 !important; color: var(--text-secondary); }
+#mapMenu .map-panel-btn { font: 600 11px/1.4 var(--font-body) !important; text-transform: none !important; letter-spacing: 0 !important; min-height: 40px; border-radius: 8px; background: var(--surface-2) !important; border-color: var(--border-default) !important; color: var(--text-primary) !important; box-shadow: none !important; }
+#mapMenu .map-panel-btn.primary { background: var(--accent-secondary) !important; color: #122022 !important; border-color: transparent !important; }
+#mapMenu .map-empty-title { font: 450 28px/1.2 var(--font-display) !important; text-transform: none !important; letter-spacing: -.025em !important; color: var(--text-primary); }
+#mapMenu .map-empty-text { font: 400 13px/1.7 var(--font-body); color: var(--text-secondary); }
+#mapMenu .map-help-btn { font-family: var(--font-body); }
+
+#boot .boot-footer-link::before { content:""; width:15px; height:15px; flex:0 0 15px; background:currentColor; mask:var(--studio-icon) center/contain no-repeat; }
+#bootInstallBtn { --studio-icon: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%221.6%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M12%203v12m-4-4%204%204%204-4M5%2016v5h14v-5%22/%3E%3C/svg%3E"); }
+#bootRecoveryBtn { --studio-icon: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%221.6%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22m14%206%204-4%204%204-4%204m-4-4-3%203M3%2021l7-7m4-8a6%206%200%200%200-8%208l7-7a6%206%200%200%200%201-1%22/%3E%3C/svg%3E"); }
+#bootExportAll { --studio-icon: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%221.6%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M12%2016V3m-4%204%204-4%204%204M5%2014v7h14v-7%22/%3E%3C/svg%3E"); }
+#bootRestoreBackup { --studio-icon: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%221.6%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M4%2010a8%208%200%201%201%202%208M4%204v6h6M12%208v5l3%202%22/%3E%3C/svg%3E"); }
+#bootImportFile { --studio-icon: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%221.6%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M3%207h7l2%202h9v12H3ZM3%207V4h7l2%203M12%2011v6m-3-3%203%203%203-3%22/%3E%3C/svg%3E"); }
+#bootAddonsBtn { --studio-icon: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%221.6%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M4%204h6a3%203%200%201%201%206%200h4v6a3%203%200%201%200%200%206v4h-6a3%203%200%201%200-6%200H4v-6a3%203%200%201%201%200-6Z%22/%3E%3C/svg%3E"); }
+#bootPrivacyBtn { --studio-icon: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%221.6%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M6%2010h12v11H6ZM8%2010V6a4%204%200%200%201%208%200v4m-4%204v3%22/%3E%3C/svg%3E"); }
+#bootSettingsBtn { --studio-icon: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%221.6%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M12%203v3m0%2012v3M3%2012h3m12%200h3M5.6%205.6l2.1%202.1m8.6%208.6%202.1%202.1m0-12.8-2.1%202.1m-8.6%208.6-2.1%202.1M16%2012a4%204%200%201%201-8%200%204%204%200%200%201%208%200%22/%3E%3C/svg%3E"); }
+
+#mapMenu .map-close-btn { background: var(--surface-3) !important; color: var(--text-primary) !important; border-color: var(--border-default) !important; }
+</style>
+
+<style id="premium-motion">
+/* Finite feedback uses translate/scale longhands, preserving menu positioning. */
+:root { --pa-ease-out: cubic-bezier(.2,.7,.2,1); }
+html.pa-motion-ready :is(.modal-wrap .modal, .qb-popover, .boot-char-menu) {
+  animation: none !important;
+}
+html.pa-motion-enabled .modal-wrap.active .modal {
+  animation: pa-surface-enter 210ms var(--pa-ease-out) backwards !important;
+}
+html.pa-motion-enabled .qb-pop.open > .qb-popover,
+html.pa-motion-enabled .boot-char-menu {
+  animation: pa-menu-enter 160ms var(--pa-ease-out) backwards !important;
+}
+html.pa-motion-enabled :is(.spell-detail-modal, .weapon-detail-modal, .equip-detail-modal).active,
+html.pa-motion-enabled .map-menu:not([hidden]) {
+  animation: pa-overlay-enter 180ms ease-out backwards !important;
+}
+html.pa-motion-ready .boot-mobile-menu,
+html.pa-motion-ready .boot-mobile-menu-sheet { transition-duration: 180ms; transition-timing-function: var(--pa-ease-out); }
+html.pa-motion-enabled :where(button, [role="button"]) { transition: scale 110ms var(--pa-ease-out), background-color 150ms, border-color 150ms, box-shadow 150ms; }
+html.pa-motion-enabled .pa-touch-pressed { scale: .975; }
+@media (hover: hover) and (pointer: fine) {
+  html.pa-motion-enabled :where(button:not(:disabled), [role="button"]):active { scale: .98; }
+}
+@keyframes pa-surface-enter {
+  from { opacity: .4; translate: 0 8px; }
+  to { opacity: 1; translate: 0 0; }
+}
+@keyframes pa-menu-enter {
+  from { opacity: .45; translate: 0 5px; }
+  to { opacity: 1; translate: 0 0; }
+}
+@keyframes pa-overlay-enter { from { opacity: .5; } to { opacity: 1; } }
+html.pa-motion-ready:not(.pa-motion-enabled) :is(.modal-wrap, .modal-wrap .modal, .qb-popover, .boot-char-menu, .boot-mobile-menu, .boot-mobile-menu-sheet, .spell-detail-modal, .weapon-detail-modal, .equip-detail-modal, .map-menu),
+html.pa-motion-ready:not(.pa-motion-enabled) :where(button, [role="button"]) {
+  animation: none !important; transition: none !important;
+}
+@media (prefers-reduced-motion: reduce), print {
+  html.pa-motion-ready :is(.modal-wrap, .modal-wrap .modal, .qb-popover, .boot-char-menu, .boot-mobile-menu, .boot-mobile-menu-sheet, .spell-detail-modal, .weapon-detail-modal, .equip-detail-modal, .map-menu),
+  html.pa-motion-ready :where(button, [role="button"]) {
+    animation: none !important; transition: none !important; scale: none !important;
+  }
+}
+
+</style>
 </head>
 <script>
 // Early theme application to prevent flash of unstyled content
@@ -22110,7 +22465,7 @@ html[data-force-dark="true"] { --text-muted: #9ba0aa; }
   };
   try {
     var stored = localStorage.getItem('pa_theme');
-    var theme = THEMES[stored] || THEMES.forest;
+    var theme = THEMES[stored] || THEMES.arcane;
     var root = document.documentElement;
     root.style.setProperty('--accent-primary', theme.accentPrimary);
     root.style.setProperty('--accent-secondary', theme.accentSecondary);
@@ -22169,7 +22524,7 @@ html[data-force-dark="true"] { --text-muted: #9ba0aa; }
           </svg>
         </div>
         <div class="almanac-eyebrow" id="almanacEyebrow">Your adventuring journal</div>
-        <h1 class="boot-title pa-title">Player Almanac</h1>
+        <h1 class="boot-title pa-title" data-i18n="boot.chapter">Your next chapter.</h1>
         <div class="boot-tagline pa-tagline">Your tabletop companion. Every character, every roll, every chapter.</div>
       </div>
     </div>
@@ -22296,19 +22651,19 @@ html[data-force-dark="true"] { --text-muted: #9ba0aa; }
     <!-- v7.1.0: Keyboard shortcuts hint -->
     <span class="boot-shortcuts-hint" id="bootShortcutsHint" title="Press ? for keyboard shortcuts">Press <kbd>?</kbd> for shortcuts</span>
     <!-- PWA Install Button - always visible, handles both native prompt and manual instructions -->
-    <button class="boot-footer-link boot-install-btn" id="bootInstallBtn" type="button" title="Install app to your device">&#x1F4F2; Install App</button>
+    <button class="boot-footer-link boot-install-btn" id="bootInstallBtn" type="button" title="Install app to your device">Install App</button>
     <!-- P0-1: Recovery button always accessible for data export -->
-    <button class="boot-footer-link boot-recovery-btn" id="bootRecoveryBtn" type="button" title="Emergency data export if something goes wrong">&#x1F6E0; Recovery</button>
-    <button class="boot-footer-link" id="bootExportAll" type="button" title="Save all your characters to a backup file">&#x1F4BE; Export All</button>
-    <button class="boot-footer-link" id="bootRestoreBackup" type="button" title="Load characters from a backup file">&#x1F4E5; Restore Backup</button>
-    <button class="boot-footer-link" id="bootImportFile" type="button" title="Import character file">&#x1F4C2; Import</button>
-    <button class="boot-footer-link" id="bootAddonsBtn" type="button" title="Manage addons">&#x1F9E9; Addons</button>
-    <button class="boot-footer-link" id="bootPrivacyBtn" type="button" title="How your data is handled">&#x1F512; Privacy</button>
-    <button class="boot-footer-link boot-settings-btn" id="bootSettingsBtn" type="button" title="Settings">&#x2699; Settings</button>
+    <button class="boot-footer-link boot-recovery-btn" id="bootRecoveryBtn" type="button" title="Emergency data export if something goes wrong">Recovery</button>
+    <button class="boot-footer-link" id="bootExportAll" type="button" title="Save all your characters to a backup file">Export All</button>
+    <button class="boot-footer-link" id="bootRestoreBackup" type="button" title="Load characters from a backup file">Restore Backup</button>
+    <button class="boot-footer-link" id="bootImportFile" type="button" title="Import character file">Import</button>
+    <button class="boot-footer-link" id="bootAddonsBtn" type="button" title="Manage addons">Addons</button>
+    <button class="boot-footer-link" id="bootPrivacyBtn" type="button" title="How your data is handled">Privacy</button>
+    <button class="boot-footer-link boot-settings-btn" id="bootSettingsBtn" type="button" title="Settings">Settings</button>
   </div>
   <div class="boot-footer-version">
     <span class="boot-version">v<span id="bootVersionNumber"></span></span>
-    <span class="boot-build">(Sep 11, 2026)</span>
+    <span class="boot-build">(Sep 12, 2026)</span>
     <button class="boot-whats-new-link" id="bootWhatsNewBtn" type="button" style="background: none; border: none; color: var(--accent, #9b87f5); font-size: 0.7rem; cursor: pointer; padding: 2px 4px; margin-left: 4px;">What's New</button>
   </div>
 </footer>
@@ -22343,7 +22698,7 @@ html[data-force-dark="true"] { --text-muted: #9ba0aa; }
         <span>Not affiliated with Wizards of the Coast</span>
       </div>
       <div>
-        <span>v<span id="mobileVersionNumber">7.7.4</span></span>
+        <span>v<span id="mobileVersionNumber">7.8.0</span></span>
         <button id="mobileWhatsNewBtn" type="button" style="background: none; border: none; color: var(--accent, #9b87f5); font-size: 0.7rem; cursor: pointer; padding: 2px 4px; text-decoration: underline;">What's New</button>
       </div>
     </div>
@@ -22924,19 +23279,30 @@ html[data-force-dark="true"] { --text-muted: #9ba0aa; }
     </div>
     <div class="modal-body changelog-body">
       <div class="changelog-version">
+        <h3>Version 7.8.0 <span class="changelog-date">September 12, 2026</span></h3>
+        <ul>
+          <li>A new adventurer's desk, responsive character collection and a clearer sheet, built around the original canine emblem.</li>
+          <li>Consistent offline typography, stronger contrast and coordinated surfaces across all eight themes.</li>
+          <li>Immediate navigation with short native transitions, responsive touch feedback and polished menus.</li>
+          <li>Motion, Lite Mode and system reduced-motion preferences remain in control.</li>
+          <li>Refined unfolded, phone and desktop layouts, plus matching app icons.</li>
+        </ul>
+      </div>
+
+      <div class="changelog-version">
         <h3>Version 7.7.4 <span class="changelog-date">September 11, 2026</span></h3>
         <ul>
           <li>Improved unfolded and intermediate tablet layouts, with separate toolbar rows and larger touch controls.</li>
           <li>Portrait controls stay visible on touch screens, and portrait editing stays above nearby sections.</li>
           <li>Kept character and settings menus within the screen; restored home actions at smaller tablet widths.</li>
-          <li>Preserved the custom dragon, eight themes, motion preferences, and existing character data.</li>
+          <li>Preserved the custom canine emblem, eight themes, motion preferences, and existing character data.</li>
         </ul>
       </div>
 
       <div class="changelog-version">
         <h3>Version 7.7.3 <span class="changelog-date">September 11, 2026</span></h3>
         <ul>
-          <li>Restored the custom dragon logo, theme glow, atmosphere and a short, reliable entrance on desktop and phone.</li>
+          <li>Restored the custom canine emblem logo, theme glow, atmosphere and a short, reliable entrance on desktop and phone.</li>
           <li>All eight themes now color the library, sheet surfaces, controls and map panels consistently.</li>
           <li>Refined typography, character cards, input fields, toolbar contrast and phone spacing.</li>
           <li>Fixed floating controls and toolbar behavior when resizing between phone and desktop.</li>
@@ -24961,7 +25327,7 @@ html[data-force-dark="true"] { --text-muted: #9ba0aa; }
   };
 
   // App version constant for visibility
-  const APP_VERSION = '7.7.4';
+  const APP_VERSION = '7.8.0';
 
   // ============================================
   // ORDER 6: FIRST-VISIT DETECTION
@@ -25255,13 +25621,14 @@ html[data-force-dark="true"] { --text-muted: #9ba0aa; }
       
       // Boot Screen
       'boot.title': 'Player Almanac',
+      'boot.chapter': 'Your next chapter.',
       'boot.subtitle': 'Character Sheet Manager',
       'boot.newChar': '+ New Character',
       'boot.import': 'Import Character',
       'boot.yourChars': 'Your Characters',
       
       // Boot Screen Extended
-      'boot.tagline': 'Your tabletop companion',
+      'boot.tagline': 'Every character. Every roll. A story worth keeping.',
       'boot.welcomeTitle': 'Welcome, Adventurer',
       'boot.welcomeText': 'Create your first character to begin tracking your journey through any tabletop RPG campaign.',
       'boot.featureStats': 'Stats & Dice Rolls',
@@ -25272,7 +25639,7 @@ html[data-force-dark="true"] { --text-muted: #9ba0aa; }
       'boot.settingsBtn': 'Settings',
       'boot.addons': 'Addons',
       'boot.continue': 'Continue',
-      'boot.recentCharacters': 'Recent Characters',
+      'boot.recentCharacters': 'Your characters',
       'boot.viewAll': 'View All',
       'boot.lastCharacter': 'Last Character',
       
@@ -26179,13 +26546,14 @@ html[data-force-dark="true"] { --text-muted: #9ba0aa; }
       
       // Boot Screen
       'boot.title': 'Player Almanac',
+      'boot.chapter': 'Dein nächstes Kapitel.',
       'boot.subtitle': 'Charakterbogen-Manager',
       'boot.newChar': '+ Neuer Charakter',
       'boot.import': 'Charakter importieren',
       'boot.yourChars': 'Deine Charaktere',
       
       // Boot Screen Extended
-      'boot.tagline': 'Dein Tischrollenspiel-Begleiter',
+      'boot.tagline': 'Jeder Charakter. Jeder Wurf. Eine Geschichte, die bleibt.',
       'boot.welcomeTitle': 'Willkommen, Abenteurer',
       'boot.welcomeText': 'Erstelle deinen ersten Charakter, um deine Reise durch jede Tischrollenspiel-Kampagne zu verfolgen.',
       'boot.featureStats': 'Werte & Würfelwürfe',
@@ -35665,10 +36033,10 @@ html[data-force-dark="true"] { --text-muted: #9ba0aa; }
       if (bootRestoreBackup) bootRestoreBackup.textContent = t('boot.restoreBackup');
       
       const bootAddonsBtn = document.getElementById('bootAddonsBtn');
-      if (bootAddonsBtn) bootAddonsBtn.innerHTML = '&#x1F9E9; ' + t('boot.addons');
+      if (bootAddonsBtn) bootAddonsBtn.innerHTML = '' + t('boot.addons');
       
       const bootSettingsBtn = document.getElementById('bootSettingsBtn');
-      if (bootSettingsBtn) bootSettingsBtn.innerHTML = '&#x2699; ' + t('boot.settingsBtn');
+      if (bootSettingsBtn) bootSettingsBtn.innerHTML = '' + t('boot.settingsBtn');
       
       // Your Characters title
       const bootCharsTitle = document.querySelector('.boot-chars-title');
@@ -41927,47 +42295,25 @@ Actions:
       if (!next || cur === next) return;
 
       this.dom.tabButtons.forEach(b => b.classList.toggle('active', b.dataset.tab === tab));
-
-      // background grad class
       const bg = this.dom.bgGrad;
       bg.classList.remove('spells', 'fate');
       if (tab === 'spells') bg.classList.add('spells');
       if (tab === 'fate') bg.classList.add('fate');
+      if (!opts.skipPersist) this.saveTabPreference(tab);
 
-      // Section 9: Persist tab preference per character
-      if (!opts.skipPersist) {
-        this.saveTabPreference(tab);
-      }
-
-      if (opts.instant) {
-        window.gsap?.killTweensOf?.([cur, next]);
-        cur.classList.remove('active');
-        next.classList.add('active');
-        cur.style.opacity = '0';
-        next.style.opacity = '1';
-        next.style.transform = '';
-      } else if (this.motion && this.gsapOK && !document.body.classList.contains('performance-mode')) {
-        window.gsap.to(cur, {
-          opacity: 0, y: -20, duration: 0.25, ease: 'power2.in',
-          onComplete: () => {
-            cur.classList.remove('active');
-            next.classList.add('active');
-            window.gsap.fromTo(next, { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.3, ease: 'power2.out' });
-            window.gsap.from(next.querySelectorAll('.card'), { y: 24, opacity: 0, duration: 0.35, stagger: 0.05, ease: 'power2.out' });
-          }
-        });
-      } else if (this.motion && this.gsapOK) {
-        // Performance mode: simpler instant transition
-        cur.classList.remove('active');
-        next.classList.add('active');
-        next.style.opacity = '1';
-      } else {
-        cur.classList.remove('active');
-        cur.style.opacity = '0';
-        next.classList.add('active');
-        next.style.opacity = '1';
-      }
+      // Commit navigation immediately: fast taps can never leave a delayed old tab active.
+      window.almanacMotion?.cancelSurface(cur);
+      window.almanacMotion?.cancelSurface(next);
+      window.gsap?.killTweensOf?.([cur, next]);
+      cur.classList.remove('active');
+      next.classList.add('active');
+      cur.style.opacity = '0';
+      next.style.opacity = '1';
+      cur.style.removeProperty('transform');
+      next.style.removeProperty('transform');
+      if (!opts.instant) window.almanacMotion?.enter(next, 'section');
     }
+
 
     // Section 9: Tab persistence methods
     saveTabPreference(tab) {
@@ -47585,7 +47931,7 @@ console.log('[PA Addon] Host API bridge initialized for addon:', window.PA.addon
         actionsRail.classList.add('actions-visible');
       }
 
-      if (this.motion && this.gsapOK && !document.body.classList.contains('performance-mode')) {
+      if (window.almanacMotion?.enabled()) {
         this.animateEntry();
       }
       
@@ -47601,12 +47947,7 @@ console.log('[PA Addon] Host API bridge initialized for addon:', window.PA.addon
       }, 2000);
     }
 
-    animateEntry() {
-      // Skip if performance mode is active
-      if (document.body.classList.contains('performance-mode')) return;
-      window.gsap.from('.tab-btn', { y: 16, opacity: 0, duration: 0.35, stagger: 0.08, ease: 'power2.out', delay: 0.15, immediateRender: false });
-      window.gsap.from('.card', { y: 24, opacity: 0, duration: 0.45, stagger: 0.06, ease: 'power2.out', delay: 0.25, immediateRender: false });
-    }
+    animateEntry() { window.almanacMotion?.enter(this.dom.tabActive(), 'section'); }
 
     /* ===== Portrait ===== */
 
@@ -49699,7 +50040,7 @@ console.log('[PA Addon] Host API bridge initialized for addon:', window.PA.addon
       <!-- ORDER 8: Version Info Box -->
       <div class="credits-version-box">
         <div class="credits-version-info">
-          <strong>Version <span id="aboutVersionNumber">7.7.4</span></strong>
+          <strong>Version <span id="aboutVersionNumber">7.8.0</span></strong>
         </div>
         <button class="credits-whats-new-btn" id="whatsNewBtn" type="button" data-i18n="about.whatsNew">What's New</button>
       </div>
@@ -51499,8 +51840,8 @@ if (document.readyState === 'loading') {
 (() => {
   const $ = id => document.getElementById(id);
   const words = {
-    en: { search: 'Search recent characters or campaigns…', empty: 'No matching characters. Try another name or campaign.', find: 'Find a section', placeholder: 'Search abilities, spells, equipment…', hint: 'Type to filter · Tab or ↓ to navigate · Esc to close', none: 'No matching sections.', library: 'Your adventuring journal', local: 'Saved on this device', note: 'Pick up where you left off. Your characters stay on this device; export a backup to take them with you.', close: 'Close section finder' },
-    de: { search: 'Letzte Charaktere oder Kampagnen suchen…', empty: 'Keine passenden Charaktere. Versuche einen anderen Namen.', find: 'Abschnitt finden', placeholder: 'Attribute, Zauber, Ausrüstung suchen…', hint: 'Tippen zum Filtern · Tab oder ↓ zur Auswahl · Esc zum Schließen', none: 'Keine passenden Abschnitte.', library: 'Dein Abenteuerjournal', local: 'Auf diesem Gerät gespeichert', note: 'Setze dein Abenteuer fort. Deine Charaktere bleiben auf diesem Gerät; exportiere eine Sicherung, um sie mitzunehmen.', close: 'Abschnittsuche schließen' }
+    en: { search: 'Search recent characters or campaigns…', empty: 'No matching characters. Try another name or campaign.', find: 'Find a section', placeholder: 'Search abilities, spells, equipment…', hint: 'Type to filter · Tab or ↓ to navigate · Esc to close', none: 'No matching sections.', library: 'The adventurer’s desk', local: 'Saved on this device', note: 'Your characters save on this device. Export a backup whenever you need one.', close: 'Close section finder' },
+    de: { search: 'Letzte Charaktere oder Kampagnen suchen…', empty: 'Keine passenden Charaktere. Versuche einen anderen Namen.', find: 'Abschnitt finden', placeholder: 'Attribute, Zauber, Ausrüstung suchen…', hint: 'Tippen zum Filtern · Tab oder ↓ zur Auswahl · Esc zum Schließen', none: 'Keine passenden Abschnitte.', library: 'Dein Abenteuerplatz', local: 'Auf diesem Gerät gespeichert', note: 'Deine Charaktere werden auf diesem Gerät gespeichert. Exportiere bei Bedarf eine Sicherung.', close: 'Abschnittsuche schließen' }
   };
   const copy = () => words[document.documentElement.lang.startsWith('de') ? 'de' : 'en'];
   const search = $('almanacCharacterSearch');
@@ -51599,6 +51940,98 @@ if (document.readyState === 'loading') {
   translate();
   new MutationObserver(translate).observe(document.documentElement, {attributes:true, attributeFilter:['lang']});
   filterCharacters();
+})();
+
+</script>
+<script id="almanac-native-motion">
+/* Player Almanac: finite motion and delegated touch feedback.
+   Install once, after the app script. No controls or app data are replaced. */
+(() => {
+  'use strict';
+  if (window.almanacMotion) return;
+  const root = document.documentElement;
+  const reduced = window.matchMedia('(prefers-reduced-motion: reduce)');
+  const running = new Set();
+  const byElement = new WeakMap();
+  let pressed = null;
+  const allowed = () => !reduced.matches && window.app?.motion !== false &&
+    !root.classList.contains('reduced-motion') &&
+    !document.body.classList.contains('reduced-motion') &&
+    !document.body.classList.contains('performance-mode') &&
+    !document.body.classList.contains('print-mode');
+
+  function clearPress() {
+    pressed?.element.classList.remove('pa-touch-pressed');
+    pressed = null;
+  }
+  function cancelSurface(element) {
+    const animation = byElement.get(element);
+    if (animation) {
+      animation.cancel();
+      running.delete(animation);
+      byElement.delete(element);
+    }
+  }
+  function cancelAll() {
+    clearPress();
+    for (const animation of running) animation.cancel();
+    running.clear();
+  }
+  function sync() {
+    const enabled = allowed();
+    root.classList.toggle('pa-motion-enabled', enabled);
+    if (!enabled) cancelAll();
+  }
+  function enter(element, kind = 'section') {
+    if (!element) return;
+    cancelSurface(element);
+    if (!allowed() || typeof element.animate !== 'function') return;
+    try {
+      const animation = element.animate([
+        { opacity: .35, translate: kind === 'section' ? '0 6px' : '0 3px' },
+        { opacity: 1, translate: '0 0' }
+      ], { duration: kind === 'section' ? 190 : 150, easing: 'cubic-bezier(.2,.7,.2,1)' });
+      running.add(animation);
+      byElement.set(element, animation);
+      animation.finished.then(() => {
+        running.delete(animation);
+        if (byElement.get(element) === animation) byElement.delete(element);
+        animation.cancel();
+      }, () => {
+        running.delete(animation);
+        if (byElement.get(element) === animation) byElement.delete(element);
+      });
+    } catch (_) { /* A static, usable page is the fallback. */ }
+  }
+
+  document.addEventListener('pointerdown', event => {
+    if (!allowed() || !event.isPrimary || event.button !== 0 || event.pointerType === 'mouse') return;
+    const element = event.target.closest?.('button, [role="button"]');
+    if (!element || element.disabled || element.getAttribute('aria-disabled') === 'true') return;
+    clearPress();
+    pressed = { element, id: event.pointerId, x: event.clientX, y: event.clientY };
+    element.classList.add('pa-touch-pressed');
+  }, { capture: true, passive: true });
+  document.addEventListener('pointermove', event => {
+    if (pressed && event.pointerId === pressed.id &&
+        Math.hypot(event.clientX - pressed.x, event.clientY - pressed.y) > 10) clearPress();
+  }, { capture: true, passive: true });
+  for (const name of ['pointerup', 'pointercancel', 'lostpointercapture']) {
+    document.addEventListener(name, event => {
+      if (pressed?.id === event.pointerId) clearPress();
+    }, { capture: true, passive: true });
+  }
+  window.addEventListener('blur', clearPress);
+  window.addEventListener('resize', clearPress, { passive: true });
+  window.addEventListener('pagehide', cancelAll);
+  document.addEventListener('visibilitychange', () => { if (document.hidden) cancelAll(); });
+  reduced.addEventListener('change', sync);
+  const preferences = new MutationObserver(sync);
+  preferences.observe(root, { attributes: true, attributeFilter: ['class'] });
+  preferences.observe(document.body, { attributes: true, attributeFilter: ['class'] });
+  window.almanacMotion = Object.freeze({ enter, cancelSurface, cancelAll, enabled: allowed });
+  root.classList.add('pa-motion-ready');
+  sync();
 })();
 
 </script>

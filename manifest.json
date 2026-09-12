@@ -8,9 +8,12 @@
   "scope": "./",
   "display": "standalone",
   "orientation": "any",
-  "background_color": "#1a1625",
-  "theme_color": "#6b46c1",
-  "categories": ["games", "utilities"],
+  "background_color": "#111719",
+  "theme_color": "#111719",
+  "categories": [
+    "games",
+    "utilities"
+  ],
   "icons": [
     {
       "src": "./icons/icon-192.png",
