@@ -18,7 +18,7 @@
 <!--
   Player Almanac Character Sheet - v7.3.1 VISUAL DESIGN OVERHAUL (Phase 2)
   
-  CURRENT VERSION: v7.8.1 - September 12, 2026
+  CURRENT VERSION: v7.8.2 - September 13, 2026
   
   NEW IN v7.3.1 (Phase 2 - Refinement):
   - Unified Button System: Consolidated modal-btn, btn, qb-btn with consistent variants
@@ -22382,6 +22382,133 @@ input::placeholder, textarea::placeholder { color: var(--text-muted); opacity: .
 
 
 
+
+
+<style id="menu-refinement">
+/* Emblem-led home, with the existing collection and actions kept intact. */
+#boot { background: radial-gradient(ellipse at 26% 15%,color-mix(in srgb,var(--accent-primary) 10%,transparent),transparent 42%),radial-gradient(ellipse at 90% 90%,color-mix(in srgb,var(--accent-primary) 4%,transparent),transparent 48%),#0c1317 !important; }
+#boot .almanac-masthead { min-height: 76px; padding-block: 18px; border-color: #ffffff12; }
+#boot .boot-container { padding-top: 26px !important; gap: 28px !important; }
+#boot .boot-column-left { grid-template-columns: minmax(0,1.1fr) minmax(300px,.9fr); gap: 26px 60px !important; padding: 20px 20px 32px !important; border: 0 !important; border-radius: 0 !important; background: none !important; box-shadow: none !important; }
+#boot .pa-hero { display: flex !important; flex-direction: column; text-align: center !important; align-items: center !important; gap: 0 !important; }
+#boot .boot-logo { width: 128px !important; height: 128px !important; margin: 10px 0 25px !important; }
+#boot .boot-logo svg { filter: drop-shadow(0 0 20px color-mix(in srgb,var(--accent-primary) 35%,transparent)); }
+#boot .boot-logo::before { width: 190%; height: 190%; background: radial-gradient(circle,color-mix(in srgb,var(--accent-primary) 16%,transparent),transparent 65%); }
+#boot .boot-logo::after { width: 138%; height: 138%; border-color: color-mix(in srgb,var(--accent-secondary) 12%,transparent); }
+#boot .almanac-eyebrow { display: none !important; }
+#boot .boot-title { width: auto !important; font-size: clamp(36px,4vw,50px) !important; font-weight: 400 !important; letter-spacing: -.035em !important; text-align: center !important; line-height: 1.14 !important; }
+#boot .boot-tagline { max-width: 360px; margin: 12px 0 0 !important; font-size: 12px !important; text-align: center !important; color: var(--text-muted) !important; }
+#boot .boot-actions-zone { width: 100%; max-width: 470px; justify-self: end; }
+#boot .boot-action-btn { border-radius: 11px !important; background: #ffffff03 !important; border-color: #ffffff20; box-shadow: none !important; }
+#boot .boot-action-btn.boot-primary { min-height: 112px; background: linear-gradient(120deg,color-mix(in srgb,var(--accent-primary) 12%,#142023),#152024) !important; border: 1px solid color-mix(in srgb,var(--accent-secondary) 36%,transparent) !important; box-shadow: inset 0 1px #ffffff09,0 10px 38px #0002 !important; color: var(--text-primary) !important; }
+#boot .boot-action-btn.boot-primary .boot-action-label { color: var(--accent-secondary) !important; font-size: 11px !important; }
+#boot .boot-action-btn.boot-primary .boot-action-char { color: var(--text-primary) !important; font-size: 28px !important; }
+#boot .boot-action-btn.boot-primary .boot-action-subtext { color: var(--text-secondary) !important; }
+#boot .boot-action-btn.boot-primary::after { content: '→'; color: var(--accent-secondary); font-size: 23px; }
+#boot .almanac-boot-note { border: 0; padding-top: 8px; font-size: 10px; line-height: 1.7; }
+#boot .boot-recent-header { border-bottom: 1px solid #ffffff14; padding-bottom: 16px !important; margin-bottom: 18px !important; }
+#boot .boot-recent-title { font-size: 24px !important; }
+#boot .boot-recent-viewall { background: transparent; border-color: transparent; color: var(--accent-secondary); }
+#boot .almanac-search input { background: #ffffff04 !important; border-color: #ffffff1c !important; }
+#boot .boot-char-card { background: #ffffff03 !important; border-color: #ffffff19 !important; box-shadow: none !important; border-radius: 12px !important; }
+#boot .boot-char-card.selected { background: linear-gradient(135deg,color-mix(in srgb,var(--accent-primary) 7%,#121c20),#11191d) !important; border-color: color-mix(in srgb,var(--accent-primary) 28%,#ffffff12) !important; box-shadow: inset 2px 0 var(--accent-secondary) !important; }
+#boot .boot-char-card .boot-char-portrait { background: #ffffff05 !important; border-color: #ffffff18 !important; }
+#boot .boot-char-btn { background: transparent !important; border-color: #ffffff24 !important; }
+#boot .boot-char-btn.primary { background: color-mix(in srgb,var(--accent-primary) 12%,#162125) !important; color: var(--accent-secondary) !important; border-color: color-mix(in srgb,var(--accent-primary) 25%,transparent) !important; }
+#boot .boot-footer-row { border-color: #ffffff14; }
+
+/* Clear section selection and quieter secondary navigation. */
+#app .tabs { display: grid !important; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 4px !important; padding: 5px !important; border: 1px solid var(--border-default) !important; border-radius: 13px !important; background: var(--surface-1) !important; margin-bottom: 20px; }
+#app .tab-btn { min-height: 48px; min-width: 0; border: 1px solid transparent !important; border-radius: 9px !important; padding: 11px 10px !important; font: 600 12px/1.4 var(--font-body) !important; white-space: normal; justify-content: center; color: var(--text-secondary); }
+#app .tab-btn.active { background: color-mix(in srgb,var(--accent-primary) 10%,var(--surface-2)) !important; color: var(--accent-secondary) !important; border-color: color-mix(in srgb,var(--accent-primary) 25%,transparent) !important; box-shadow: inset 0 1px #ffffff06 !important; }
+#app .tab-btn::before, #app .tab-btn::after { display: none !important; }
+#app .section-jump { gap: 6px; padding: 0 0 12px; border: 0; background: none; }
+#app .section-jump-btn { min-height: 44px; border-radius: 8px; border: 1px solid var(--border-subtle); font: 500 11px/1.4 var(--font-body); padding-inline: 12px; }
+.qb-popover { padding: 14px; border-color: var(--border-default) !important; border-radius: 13px !important; }
+.qb-menu-item, .qb-overflow-btn { border-radius: 8px; min-height: 44px; font-family: var(--font-body); }
+.qb-overflow-title { font: 650 10px/1.5 var(--font-body); letter-spacing: .075em; color: var(--text-muted); }
+.boot-char-menu { padding: 6px; border-radius: 12px; border-color: var(--border-default); background: var(--surface-1); box-shadow: var(--shadow-lg); }
+.boot-char-menu button { min-height: 44px; font: 500 12px/1.4 var(--font-body); border-radius: 7px; }
+#almanacNavigator { border-color: var(--border-default) !important; }
+#almanacFindResults button { padding: 13px 16px; border-bottom-color: var(--border-subtle); border-radius: 8px; }
+#almanacFindResults small { font-size: 10px; text-align: right; flex: 0 0 auto; }
+
+/* Shared mobile submenu treatment; styles are no longer copied inline. */
+#mobileMenuModal { border-radius: 0 !important; border: 0 !important; }
+#mobileMenuModal .pa-menu-header { gap: 16px; background: var(--surface-1); border-bottom-color: var(--border-default) !important; }
+#mobileMenuModal .pa-menu-header h2 { font: 450 26px/1.2 var(--font-display) !important; letter-spacing: -.025em; color: var(--text-primary) !important; }
+#mobileMenuModal .pa-menu-header button { flex: 0 0 44px; background: var(--surface-3) !important; color: var(--text-secondary) !important; border: 1px solid var(--border-default) !important; border-radius: 10px !important; }
+#mobileMenuModal .pa-menu-content { min-height: 0; padding: 18px 20px calc(24px + env(safe-area-inset-bottom,0px)) !important; overscroll-behavior: contain; }
+#mobileMenuModal .pa-menu-action { min-height: 48px !important; width: 100% !important; display: flex !important; align-items: center; gap: 10px; margin: 0 0 7px !important; padding: 12px 14px !important; border: 1px solid var(--border-default) !important; border-radius: 10px !important; background: var(--surface-2) !important; color: var(--text-primary); font: 550 13px/1.5 var(--font-body) !important; text-align: left; }
+#mobileMenuModal .pa-menu-action.danger { color: var(--danger) !important; border-color: color-mix(in srgb,var(--danger) 30%,transparent) !important; background: color-mix(in srgb,var(--danger) 5%,var(--surface-1)) !important; }
+#mobileMenuModal .qb-overflow-section { margin-bottom: 22px !important; }
+#mobileMenuModal .qb-overflow-title { margin: 0 0 9px; padding-inline: 2px; font: 650 10px/1.5 var(--font-body); letter-spacing: .07em; color: var(--text-muted); }
+#mobileMenuModal .qb-overflow-stats, #mobileMenuModal .qb-overflow-actions { display: grid !important; grid-template-columns: 1fr; gap: 0 !important; }
+#mobileMenuModal select { min-height: 48px !important; width: 100% !important; font: 500 14px var(--font-body) !important; padding: 10px 12px !important; border: 1px solid var(--border-default) !important; border-radius: 9px !important; color: var(--text-primary) !important; background: var(--surface-2) !important; }
+.boot-mobile-menu { background: var(--surface-1) !important; border-color: var(--border-default) !important; border-radius: 20px 20px 0 0 !important; }
+.boot-mobile-menu-item { min-height: 50px; border-radius: 10px; font: 550 12px/1.5 var(--font-body); background: var(--surface-2); border-color: var(--border-default); color: var(--text-primary); }
+
+@media (hover:hover) and (pointer:fine) {
+  #boot .boot-action-btn:hover, #boot .boot-char-card:hover { border-color: color-mix(in srgb,var(--accent-secondary) 48%,transparent) !important; background-color: #ffffff08 !important; }
+  #app .tab-btn:not(.active):hover, #mobileMenuModal .pa-menu-action:hover { background: var(--surface-3) !important; }
+}
+@media screen and (max-width: 700px) {
+  #boot .boot-column-left { gap: 22px !important; padding: 8px 0 20px !important; }
+  #boot .boot-logo { width: 106px !important; height: 106px !important; margin: 8px 0 20px !important; }
+  #boot .boot-title { font-size: 39px !important; }
+  #boot .boot-actions-zone { max-width: 520px; align-self: center; }
+  #boot .boot-container { padding-top: 18px !important; gap: 14px !important; }
+  #boot .boot-action-btn.boot-primary { min-height: 100px; }
+  #boot .boot-action-btn.boot-primary .boot-action-char { font-size: 25px !important; }
+  #boot .boot-char-card { min-height: 144px !important; }
+}
+@media screen and (max-width: 520px) {
+  #boot .almanac-masthead { min-height: 64px; padding-block: 14px; }
+  #boot .boot-tagline { font-size: 11px !important; margin-top: 8px !important; }
+  #app .tab-btn { font-size: 11px !important; padding: 10px 4px !important; }
+  #quickBar:not(.collapsed) #settingsBtn { gap: 10px; justify-content: center !important; }
+  #quickBar:not(.collapsed) #settingsBtn::after { content: attr(aria-label); font: 600 12px var(--font-body); }
+  #almanacFindResults button { gap: 12px; }
+  #almanacFindResults small { max-width: 40%; }
+}
+@media screen and (max-width: 360px) { #boot .boot-title { font-size: 34px !important; } }
+@media screen and (max-height: 500px) {
+  #boot .boot-logo { width: 88px !important; height: 88px !important; margin-block: 0 15px !important; }
+  #boot .boot-column-left { padding-block: 6px 18px !important; }
+}
+@media print { #app .tabs { display:none !important; } }
+/* Compact stats and aligned, native settings controls inside phone menus. */
+#mobileMenuModal .qb-overflow-stats { grid-template-columns: repeat(3,minmax(0,1fr)) !important; gap: 8px !important; margin-bottom: 8px; }
+#mobileMenuModal .qb-overflow-stat { min-width: 0; min-height: 68px; display: flex; flex-direction: column; gap: 5px; justify-content: center; border: 1px solid var(--border-default); border-radius: 10px; background: var(--surface-2); }
+#mobileMenuModal .qb-overflow-stat .qb-label { font: 600 10px var(--font-body); color: var(--text-muted); }
+#mobileMenuModal .qb-overflow-stat .qb-value { font-size: 19px; color: var(--accent-secondary); }
+#mobileMenuModal .qb-setting { padding-block: 10px; margin: 0; border-bottom: 1px solid var(--border-subtle); }
+#mobileMenuModal .qb-field { display: grid !important; grid-template-columns: minmax(90px,.8fr) minmax(0,1.2fr); gap: 12px; align-items: center; width: 100%; font: 550 12px/1.5 var(--font-body); }
+#mobileMenuModal .theme-selector-wrap { min-width: 0; width: 100%; }
+#mobileMenuModal .qb-field > select { min-width: 0; }
+#mobileMenuModal .qb-switch { display: flex !important; flex-direction: row-reverse; align-items: center; justify-content: space-between; gap: 16px; width: 100%; min-height: 44px; font: 550 12px/1.5 var(--font-body); cursor: pointer; }
+#mobileMenuModal .qb-switch input[type="checkbox"] { appearance: none; -webkit-appearance: none; flex: 0 0 40px; width: 40px !important; height: 24px !important; min-width: 40px !important; min-height: 24px !important; margin: 0; padding: 2px !important; border: 1px solid var(--border-strong) !important; border-radius: 14px; background: var(--surface-3) !important; position: relative; cursor: pointer; }
+#mobileMenuModal .qb-switch input[type="checkbox"]::before { content: ''; display: block; width: 16px; height: 16px; border-radius: 50%; background: var(--text-secondary); position: absolute; top: 3px; left: 3px; transform: none; }
+#mobileMenuModal .qb-switch input[type="checkbox"]:checked { background: var(--accent-secondary) !important; border-color: transparent !important; }
+#mobileMenuModal .qb-switch input[type="checkbox"]:checked::before { left: 19px; background: #122022; }
+#mobileMenuModal .qb-switch input[type="checkbox"]::after { display:none; }
+@media (forced-colors: active) { #mobileMenuModal .qb-switch input[type="checkbox"] { appearance: auto; } #mobileMenuModal .qb-switch input[type="checkbox"]::before { display:none; } }
+
+
+/* Final home composition and consistent monochrome menu icons. */
+@media screen and (min-width:701px) {
+  #boot .boot-zone-top { grid-column: 1; grid-row: 1 / 3; }
+  #boot .boot-actions-zone { grid-column: 2; grid-row: 1; align-self: end; }
+  #boot .almanac-boot-note { grid-column: 2; grid-row: 2; justify-self: end; align-self: start; max-width: 470px; padding-top: 0; }
+}
+#qbShortRestBtn::before, #qbLongRestBtn::before, #qbMapBtn::before, #qbAddonsBtn::before { content: ''; display: block; position: static; inset: auto; width: 18px; height: 18px; flex: 0 0 18px; margin-right: 2px; background: currentColor; mask: var(--menu-icon) center / contain no-repeat; -webkit-mask: var(--menu-icon) center / contain no-repeat; transform: none; opacity: .85; border: 0; box-shadow: none; }
+#qbShortRestBtn { --menu-icon: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%221.6%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M19%2016a8%208%200%200%201-11-11%208%208%200%201%200%2011%2011Z%22%2F%3E%3C%2Fsvg%3E"); }
+#qbLongRestBtn { --menu-icon: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%221.6%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M3%2019h18M5%2015h14M7%2011h10M12%203v3m-7%200%202%202m12-2-2%202%22%2F%3E%3C%2Fsvg%3E"); }
+#qbMapBtn { --menu-icon: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%221.6%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22m3%205%206-2%206%202%206-2v16l-6%202-6-2-6%202Zm6-2v16m6-14v16%22%2F%3E%3C%2Fsvg%3E"); }
+#qbAddonsBtn { --menu-icon: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%221.6%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M4%204h6a3%203%200%201%201%206%200h4v6a3%203%200%201%200%200%206v4h-6a3%203%200%201%200-6%200H4v-6a3%203%200%201%201%200-6Z%22%2F%3E%3C%2Fsvg%3E"); }
+</style>
+
+
 <style id="flip-compatibility">
 /* Short phone windows: keep scrolling targets clear of fixed controls. */
 @media screen and (max-width: 520px) {
@@ -22405,8 +22532,10 @@ input::placeholder, textarea::placeholder { color: var(--text-muted); opacity: .
 }
 /* Keep floating actions reachable in short landscape or keyboard-height windows. */
 @media screen and (max-height: 600px) and (min-width: 769px) {
-  #actionsRail.actions-visible { display: grid !important; grid-template-columns: repeat(4, 50px); gap: 8px !important; width: max-content; }
-  #actionsRail .act-btn { width: 50px !important; height: 50px !important; min-width: 50px !important; min-height: 50px !important; }
+  /* A bottom row leaves the full-width section tabs clear in landscape. */
+  #actionsRail.actions-visible { display: grid !important; grid-template-columns: repeat(7, 44px); gap: 4px !important; width: max-content; top: auto !important; bottom: calc(16px + env(safe-area-inset-bottom, 0px)) !important; padding: 6px; }
+  #actionsRail .act-btn { width: 44px !important; height: 44px !important; min-width: 44px !important; min-height: 44px !important; }
+  #rollLog { max-width: calc(100vw - 390px) !important; }
 }
 @media screen and (max-height: 600px) and (max-width: 768px) {
   #actionsRail.actions-visible[data-expanded="true"] { display: grid !important; grid-template-columns: repeat(4, 50px); gap: 8px !important; width: max-content; }
@@ -22560,8 +22689,8 @@ html.pa-motion-ready:not(.pa-motion-enabled) :where(button, [role="button"]) {
           </svg>
         </div>
         <div class="almanac-eyebrow" id="almanacEyebrow">Your adventuring journal</div>
-        <h1 class="boot-title pa-title" data-i18n="boot.chapter">Your next chapter.</h1>
-        <div class="boot-tagline pa-tagline">Your tabletop companion. Every character, every roll, every chapter.</div>
+        <h1 class="boot-title pa-title" data-i18n="boot.title">Player Almanac</h1>
+        <div class="boot-tagline pa-tagline">Characters, notes and campaign tools.</div>
       </div>
     </div>
     
@@ -22573,7 +22702,7 @@ html.pa-motion-ready:not(.pa-motion-enabled) :where(button, [role="button"]) {
           <span class="boot-action-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H19v18H6.5A2.5 2.5 0 0 1 4 18.5Zm0 13A2.5 2.5 0 0 1 6.5 16H19M9 7h6m-6 4h4"/></svg></span>
           <span class="boot-action-text">
             <span class="boot-action-label" data-i18n="boot.continue">Continue</span>
-            <span class="boot-action-char" id="bootCharName" data-i18n="boot.lastCharacter">Last Character</span>
+            <span class="boot-action-char" id="bootCharName">Last Character</span>
             <span class="boot-action-subtext" id="bootCharSubtext"></span>
           </span>
         </button>
@@ -22680,62 +22809,62 @@ html.pa-motion-ready:not(.pa-motion-enabled) :where(button, [role="button"]) {
     </a>
     <div class="boot-social-divider"></div>
     <!-- v7.1.0: Trademark notice visible on boot screen -->
-    <span class="boot-trademark-notice" style="font-size: 0.65rem; color: var(--text-muted, #6b6b6b); opacity: 0.7;">Not affiliated with Wizards of the Coast</span>
+    <span class="boot-trademark-notice" data-i18n="boot.trademark" style="font-size: 0.65rem; color: var(--text-muted, #6b6b6b); opacity: 0.7;">Not affiliated with Wizards of the Coast</span>
   </div>
   
   <div class="boot-footer-right">
     <!-- v7.1.0: Keyboard shortcuts hint -->
     <span class="boot-shortcuts-hint" id="bootShortcutsHint" title="Press ? for keyboard shortcuts">Press <kbd>?</kbd> for shortcuts</span>
     <!-- PWA Install Button - always visible, handles both native prompt and manual instructions -->
-    <button class="boot-footer-link boot-install-btn" id="bootInstallBtn" type="button" title="Install app to your device">Install App</button>
+    <button class="boot-footer-link boot-install-btn" id="bootInstallBtn" type="button" title="Install app to your device" data-i18n="boot.install">Install App</button>
     <!-- P0-1: Recovery button always accessible for data export -->
-    <button class="boot-footer-link boot-recovery-btn" id="bootRecoveryBtn" type="button" title="Emergency data export if something goes wrong">Recovery</button>
+    <button class="boot-footer-link boot-recovery-btn" id="bootRecoveryBtn" type="button" title="Emergency data export if something goes wrong" data-i18n="boot.recovery">Recovery</button>
     <button class="boot-footer-link" id="bootExportAll" type="button" title="Save all your characters to a backup file">Export All</button>
     <button class="boot-footer-link" id="bootRestoreBackup" type="button" title="Load characters from a backup file">Restore Backup</button>
     <button class="boot-footer-link" id="bootImportFile" type="button" title="Import character file">Import</button>
     <button class="boot-footer-link" id="bootAddonsBtn" type="button" title="Manage addons">Addons</button>
-    <button class="boot-footer-link" id="bootPrivacyBtn" type="button" title="How your data is handled">Privacy</button>
+    <button class="boot-footer-link" id="bootPrivacyBtn" type="button" title="How your data is handled" data-i18n="boot.privacy">Privacy</button>
     <button class="boot-footer-link boot-settings-btn" id="bootSettingsBtn" type="button" title="Settings">Settings</button>
   </div>
   <div class="boot-footer-version">
     <span class="boot-version">v<span id="bootVersionNumber"></span></span>
-    <span class="boot-build">(Sep 12, 2026)</span>
-    <button class="boot-whats-new-link" id="bootWhatsNewBtn" type="button" style="background: none; border: none; color: var(--accent, #9b87f5); font-size: 0.7rem; cursor: pointer; padding: 2px 4px; margin-left: 4px;">What's New</button>
+    <span class="boot-build">(Sep 13, 2026)</span>
+    <button class="boot-whats-new-link" id="bootWhatsNewBtn" type="button" style="background: none; border: none; color: var(--accent, #9b87f5); font-size: 0.7rem; cursor: pointer; padding: 2px 4px; margin-left: 4px;" data-i18n="changelog.title">What's New</button>
   </div>
 </footer>
 
 <!-- v7.0.6: Mobile Menu Button (shown only on mobile via CSS) -->
-<button class="boot-mobile-menu-btn" id="bootMobileMenuBtn" type="button" aria-label="Open menu" aria-expanded="false">
-  Menu &#x25B2;
+<button class="boot-mobile-menu-btn" id="bootMobileMenuBtn" type="button" aria-label="Open menu" aria-expanded="false" data-i18n-aria-label="nav.openMenu">
+  <span data-i18n="nav.menu">Menu</span> &#x25B2;
 </button>
 
 <!-- v7.0.6: Mobile Menu Modal (full-screen bottom sheet) -->
 <div class="boot-mobile-menu" id="bootMobileMenu" role="dialog" aria-modal="true" aria-labelledby="bootMobileMenuTitle">
   <div class="boot-mobile-menu-sheet">
     <div class="boot-mobile-menu-header">
-      <span class="boot-mobile-menu-title" id="bootMobileMenuTitle">Menu</span>
-      <button class="boot-mobile-menu-close" id="bootMobileMenuClose" type="button" aria-label="Close menu">&times;</button>
+      <span class="boot-mobile-menu-title" id="bootMobileMenuTitle" data-i18n="nav.menu">Menu</span>
+      <button class="boot-mobile-menu-close" id="bootMobileMenuClose" type="button" aria-label="Close menu" data-i18n-aria-label="action.close">&times;</button>
     </div>
     <div class="boot-mobile-menu-grid">
-      <button class="boot-mobile-menu-item primary" id="mobileInstallBtn" type="button">&#x1F4F2; Install App</button>
-      <button class="boot-mobile-menu-item danger" id="mobileRecoveryBtn" type="button">&#x1F6E0; Recovery</button>
-      <button class="boot-mobile-menu-item" id="mobileExportAllBtn" type="button">&#x1F4BE; Export All</button>
-      <button class="boot-mobile-menu-item" id="mobileRestoreBtn" type="button">&#x1F4E5; Restore</button>
-      <button class="boot-mobile-menu-item" id="mobileImportBtn" type="button">&#x1F4C2; Import</button>
-      <button class="boot-mobile-menu-item" id="mobileAddonsBtn" type="button">&#x1F9E9; Addons</button>
-      <button class="boot-mobile-menu-item" id="mobilePrivacyBtn" type="button">&#x1F512; Privacy</button>
-      <button class="boot-mobile-menu-item" id="mobileSettingsBtn" type="button">&#x2699; Settings</button>
+      <button class="boot-mobile-menu-item primary" id="mobileInstallBtn" type="button" data-i18n="boot.install">&#x1F4F2; Install App</button>
+      <button class="boot-mobile-menu-item danger" id="mobileRecoveryBtn" type="button" data-i18n="boot.recovery">&#x1F6E0; Recovery</button>
+      <button class="boot-mobile-menu-item" id="mobileExportAllBtn" type="button" data-i18n="boot.exportAll">&#x1F4BE; Export All</button>
+      <button class="boot-mobile-menu-item" id="mobileRestoreBtn" type="button" data-i18n="boot.restoreBackup">&#x1F4E5; Restore</button>
+      <button class="boot-mobile-menu-item" id="mobileImportBtn" type="button" data-i18n="action.import">&#x1F4C2; Import</button>
+      <button class="boot-mobile-menu-item" id="mobileAddonsBtn" type="button" data-i18n="boot.addons">&#x1F9E9; Addons</button>
+      <button class="boot-mobile-menu-item" id="mobilePrivacyBtn" type="button" data-i18n="boot.privacy">&#x1F512; Privacy</button>
+      <button class="boot-mobile-menu-item" id="mobileSettingsBtn" type="button" data-i18n="boot.settingsBtn">&#x2699; Settings</button>
     </div>
     <div class="boot-mobile-menu-footer">
       <div class="boot-mobile-menu-social">
         <a href="https://github.com/Kylemaddenar/player-almanac" target="_blank" rel="noopener" title="GitHub" aria-label="GitHub">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
         </a>
-        <span>Not affiliated with Wizards of the Coast</span>
+        <span data-i18n="boot.trademark">Not affiliated with Wizards of the Coast</span>
       </div>
       <div>
-        <span>v<span id="mobileVersionNumber">7.8.1</span></span>
-        <button id="mobileWhatsNewBtn" type="button" style="background: none; border: none; color: var(--accent, #9b87f5); font-size: 0.7rem; cursor: pointer; padding: 2px 4px; text-decoration: underline;">What's New</button>
+        <span>v<span id="mobileVersionNumber">7.8.2</span></span>
+        <button id="mobileWhatsNewBtn" type="button" style="background: none; border: none; color: var(--accent, #9b87f5); font-size: 0.7rem; cursor: pointer; padding: 2px 4px; text-decoration: underline;" data-i18n="changelog.title">What's New</button>
       </div>
     </div>
   </div>
@@ -22746,7 +22875,7 @@ html.pa-motion-ready:not(.pa-motion-enabled) :where(button, [role="button"]) {
     <div class="boot-settings-content">
       <div class="boot-settings-header">
         <span class="boot-settings-title" data-i18n="bootSettings.title">Settings</span>
-        <button class="boot-settings-close" id="bootSettingsClose" type="button" aria-label="Close settings">&#xD7;</button>
+        <button class="boot-settings-close" id="bootSettingsClose" type="button" aria-label="Close settings" data-i18n-aria-label="action.close">&#xD7;</button>
       </div>
       <div class="boot-settings-body">
         <div class="boot-setting-row">
@@ -22966,7 +23095,7 @@ html.pa-motion-ready:not(.pa-motion-enabled) :where(button, [role="button"]) {
     <select class="qb-select qb-hidden" id="charSelect" title="Select character" data-no-mode-disable="1" aria-hidden="true" tabindex="-1" aria-label="Active character"></select>
 
     <div class="qb-pop qb-charpicker" data-no-mode-disable="1">
-      <button class="qb-btn secondary qb-charbtn" id="charPickerBtn" type="button" title="Select character" aria-haspopup="listbox" aria-expanded="false" data-no-mode-disable="1" data-tip="Switch between your characters" aria-label="Select character">
+      <button class="qb-btn secondary qb-charbtn" id="charPickerBtn" type="button" title="Select character" aria-haspopup="listbox" aria-expanded="false" data-no-mode-disable="1" data-tip="Switch between your characters" aria-label="Select character" data-i18n-aria-label="nav.characters" data-i18n-title="nav.characters" data-i18n-tip="nav.characters">
         <span class="qb-charname" id="charPickerLabel">Character</span>
         <span class="qb-caret" aria-hidden="true">&#x25BE;</span>
       </button>
@@ -22979,7 +23108,7 @@ html.pa-motion-ready:not(.pa-motion-enabled) :where(button, [role="button"]) {
     <button class="qb-btn secondary" id="charNewBtn" type="button" title="Create a new character" data-no-mode-disable="1" data-tip="Create a new character" aria-label="Create new character">+ New</button>
 
     <div class="qb-pop" data-no-mode-disable="1">
-      <button class="qb-btn secondary qb-iconbtn" id="charMenuBtn" type="button" title="More character actions" aria-haspopup="menu" aria-expanded="false" data-no-mode-disable="1" data-tip="Duplicate or delete character" aria-label="More character actions">&#x22EF;</button>
+      <button class="qb-btn secondary qb-iconbtn" id="charMenuBtn" type="button" title="More character actions" aria-haspopup="menu" aria-expanded="false" data-no-mode-disable="1" data-tip="Duplicate or delete character" aria-label="More character actions" data-i18n-aria-label="nav.characterActions" data-i18n-title="nav.characterActions" data-i18n-tip="nav.characterActions">&#x22EF;</button>
       <div class="qb-popover qb-menu" id="charMenu" role="menu" aria-label="Character actions">
         <button class="qb-menu-item" id="charDupBtn" type="button" role="menuitem" data-close-pop="1" data-tip="Create a copy of this character" aria-label="Duplicate character">Duplicate</button>
         <button class="qb-menu-item danger" id="charDelBtn" type="button" role="menuitem" data-tip="Permanently delete this character" aria-label="Delete character">Delete</button>
@@ -23036,12 +23165,12 @@ html.pa-motion-ready:not(.pa-motion-enabled) :where(button, [role="button"]) {
 
         <!-- Overflow menu for secondary actions -->
         <div class="qb-pop qb-more" id="qbMoreWrap">
-          <button class="qb-btn secondary" id="qbMoreBtn" type="button" title="More actions" aria-haspopup="menu" aria-expanded="false" data-tip="More actions: rest, stats, map" aria-label="More actions menu">More &#x25BE;</button>
+          <button class="qb-btn secondary" id="qbMoreBtn" type="button" title="More actions" aria-haspopup="menu" aria-expanded="false" data-tip="More actions: rest, stats, map" aria-label="More actions menu" data-i18n-aria-label="nav.actions" data-i18n-title="nav.actions" data-i18n-tip="nav.actions">More &#x25BE;</button>
           <div class="qb-popover qb-menu qb-moremenu" id="qbMoreMenu" role="menu" aria-label="More actions">
             <div class="qb-overflow-section">
               <div class="qb-overflow-title">Stats</div>
               <div class="qb-overflow-stats">
-                <div class="qb-overflow-stat" data-jump="pp" title="Passive Perception" tabindex="0" role="button" data-tip="10 + Perception modifier" aria-label="Passive Perception">
+                <div class="qb-overflow-stat" data-jump="passive-perception" title="Passive Perception" tabindex="0" role="button" data-tip="10 + Perception modifier" aria-label="Passive Perception">
                   <span class="qb-label">PP</span>
                   <span class="qb-value mono" id="qbPP">10</span>
                 </div>
@@ -23088,7 +23217,7 @@ html.pa-motion-ready:not(.pa-motion-enabled) :where(button, [role="button"]) {
     </div>
 
     <div class="qb-pop" id="settingsWrap">
-      <button class="qb-btn secondary qb-iconbtn" id="settingsBtn" type="button" title="Settings" aria-haspopup="menu" aria-expanded="false" data-tip="Theme, print mode, and more" aria-label="Settings menu">&#x2699;</button>
+      <button class="qb-btn secondary qb-iconbtn" id="settingsBtn" type="button" title="Settings" aria-haspopup="menu" aria-expanded="false" data-tip="Theme, print mode, and more" aria-label="Settings menu" data-i18n-aria-label="boot.settingsBtn" data-i18n-title="boot.settingsBtn" data-i18n-tip="boot.settingsBtn">&#x2699;</button>
       <div class="qb-popover qb-menu qb-settings" id="settingsMenu" role="menu" aria-label="Settings">
         <div class="qb-setting">
           <label class="qb-field">
@@ -23143,7 +23272,7 @@ html.pa-motion-ready:not(.pa-motion-enabled) :where(button, [role="button"]) {
         <div class="qb-setting">
           <label class="qb-switch" title="Reduces visual effects for better performance on older devices">
             <input type="checkbox" id="perfModeToggle" />
-            <span>Lite Mode</span>
+            <span data-i18n="settings.liteMode">Lite Mode</span>
           </label>
         </div>
         <div class="qb-setting">
@@ -23169,7 +23298,7 @@ html.pa-motion-ready:not(.pa-motion-enabled) :where(button, [role="button"]) {
           <button class="qb-menu-item" id="settingsAboutBtn" type="button" data-close-pop="1" title="View credits and license information" data-tip="About Player Almanac" aria-label="About and Credits">&#x2139;&#xFE0F; About / Credits</button>
         </div>
         <div class="qb-setting">
-          <button class="qb-menu-item" id="privacyBtn" type="button" data-close-pop="1" title="How your data is handled" data-tip="Data &amp; Privacy" aria-label="Data and Privacy">&#x1F512; Data &amp; Privacy</button>
+          <button class="qb-menu-item" id="privacyBtn" type="button" data-close-pop="1" title="How your data is handled" data-tip="Data &amp; Privacy" aria-label="Data and Privacy" data-i18n="settings.dataPrivacy">&#x1F512; Data &amp; Privacy</button>
         </div>
         <div class="qb-setting">
           <a class="qb-menu-item" href="https://github.com/Kylemaddenar/player-almanac" target="_blank" rel="noopener" title="View source code on GitHub" data-tip="View on GitHub" aria-label="GitHub Repository" style="text-decoration: none;">&#x1F4BB; GitHub</a>
@@ -23314,6 +23443,17 @@ html.pa-motion-ready:not(.pa-motion-enabled) :where(button, [role="button"]) {
       <button class="modal-close" id="changelogClose" type="button" aria-label="Close">&#x2715;</button>
     </div>
     <div class="modal-body changelog-body">
+      <div class="changelog-version">
+        <h3>Version 7.8.2 <span class="changelog-date">September 13, 2026</span></h3>
+        <ul>
+          <li>Swipe both ways through Core, Spells &amp; Gear and Fateweaving, including with motion disabled.</li>
+          <li>A sleeker home screen built around the original canine emblem, with clearer section navigation and menus.</li>
+          <li>Mobile settings now apply correctly, character search filters the displayed list, and menus support Escape and keyboard focus.</li>
+          <li>Expanded German translations for the library, navigation, common editors and map tools.</li>
+          <li>Plain descriptive intro text replaces the previous slogan.</li>
+        </ul>
+      </div>
+
       <div class="changelog-version">
         <h3>Version 7.8.1 <span class="changelog-date">September 12, 2026</span></h3>
         <ul>
@@ -23466,7 +23606,7 @@ html.pa-motion-ready:not(.pa-motion-enabled) :where(button, [role="button"]) {
 </div>
 
 <!-- Section B: Help FAB Button -->
-<button id="helpFab" type="button" aria-label="Help" data-tip="Quick help (press ?)" data-tip-pos="left">?</button>
+<button id="helpFab" type="button" aria-label="Help" data-tip="Quick help (press ?)" data-tip-pos="left" data-i18n-aria-label="help.title" data-i18n-title="help.title" data-i18n-tip="help.title">?</button>
 
 <!-- Section B: Help Modal -->
 <div id="helpModal" role="dialog" aria-modal="true" aria-labelledby="helpModalTitle">
@@ -23660,7 +23800,7 @@ html.pa-motion-ready:not(.pa-motion-enabled) :where(button, [role="button"]) {
     <div class="stat-row"><span class="stat-label">Initiative<button class="help-inline" data-help="initiative" type="button" aria-label="Help with initiative">?</button></span><span class="stat-value" id="init">+3</span></div>
     <div class="stat-row"><span class="stat-label">Speed</span><span class="stat-value"><input type="text" id="speed" aria-label="Speed" value=""></span></div>
     <div class="stat-row"><span class="stat-label">Proficiency<button class="help-inline" data-help="profBonus" type="button" aria-label="Help with proficiency bonus">?</button></span><span class="prof-badge" id="prof">+2</span></div>
-    <div class="stat-row"><span class="stat-label">Passive Perception</span><span class="stat-value" id="passive-perception" style="font-family:var(--font-mono)">10</span></div>
+    <div class="stat-row"><span class="stat-label" data-i18n="ui.passivePerception">Passive Perception</span><span class="stat-value" id="passive-perception" style="font-family:var(--font-mono)">10</span></div>
   </div>
 </div>
 
@@ -23734,7 +23874,7 @@ html.pa-motion-ready:not(.pa-motion-enabled) :where(button, [role="button"]) {
           <option value="Net">Net</option>
         </optgroup>
       </select>
-      <button class="add-btn" id="addWeaponFromListBtn" type="button" style="padding:6px 10px;font-size:0.8rem" data-tip="Add selected 5E weapon with stats">Add 5E</button>
+      <button class="add-btn" id="addWeaponFromListBtn" type="button" style="padding:6px 10px;font-size:0.8rem" data-tip="Add selected 5E weapon with stats" data-i18n="ui.add5e">Add 5E</button>
       <button class="add-btn" id="addWeaponBtn" type="button" data-tip="Add a custom weapon or attack" aria-label="Add weapon">+ Custom</button>
     </div>
   </div>
@@ -23847,7 +23987,7 @@ html.pa-motion-ready:not(.pa-motion-enabled) :where(button, [role="button"]) {
   </div>
 </div>
 <div class="spells-table-wrap">
-<table><thead><tr><th data-i18n="table.lvl">Lvl</th><th data-i18n="table.name">Name</th><th data-i18n="table.cast">Cast</th><th data-i18n="table.range">Range</th><th>C</th><th>R</th><th title="Prepared">P</th><th data-i18n="table.notes">Notes</th><th></th></tr></thead><tbody id="spells-list"></tbody></table>
+<table><thead><tr><th data-i18n="table.lvl">Lvl</th><th data-i18n="table.name">Name</th><th data-i18n="table.cast">Cast</th><th data-i18n="table.range">Range</th><th data-i18n="spellTable.c">C</th><th data-i18n="spellTable.r">R</th><th data-i18n="spellTable.p" data-i18n-title="spell.prepared" title="Prepared">P</th><th data-i18n="table.notes">Notes</th><th></th></tr></thead><tbody id="spells-list"></tbody></table>
 </div>
 <!-- Mobile spell list (visible on mobile only) -->
 <div class="spell-mobile-list" id="spellMobileList"></div>
@@ -23936,7 +24076,7 @@ html.pa-motion-ready:not(.pa-motion-enabled) :where(button, [role="button"]) {
       <option value="Wish">Wish</option>
     </optgroup>
   </select>
-  <button class="add-btn" id="addSpellFromListBtn" type="button" style="padding:6px 10px;font-size:0.8rem" data-tip="Add selected 5E spell with stats">Add 5E</button>
+  <button class="add-btn" id="addSpellFromListBtn" type="button" style="padding:6px 10px;font-size:0.8rem" data-tip="Add selected 5E spell with stats" data-i18n="ui.add5e">Add 5E</button>
   <button class="add-btn" id="addSpellBtn" type="button" data-tip="Add a custom spell" aria-label="Add spell">+ Custom</button>
 </div>
 </div>
@@ -23945,7 +24085,7 @@ html.pa-motion-ready:not(.pa-motion-enabled) :where(button, [role="button"]) {
 <div class="equip-mobile-list" id="equipMobileList"></div>
 <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:8px">
   <select id="equip-select" style="flex:1;min-width:140px;background:transparent;border:1px solid var(--glass-border);color:var(--text-primary);padding:6px;border-radius:4px;font-size:0.85rem" aria-label="Equipment catalog">
-    <option value="">-- Select 5E Gear --</option>
+    <option value="" data-i18n="ui.select5eGear">-- Select 5E Gear --</option>
     <optgroup label="Adventuring Gear">
       <option value="Backpack">Backpack</option>
       <option value="Bedroll">Bedroll</option>
@@ -23994,15 +24134,15 @@ html.pa-motion-ready:not(.pa-motion-enabled) :where(button, [role="button"]) {
       <option value="Shield">Shield</option>
     </optgroup>
   </select>
-  <button class="add-btn" id="addEquipFromListBtn" type="button" style="padding:6px 10px;font-size:0.8rem" data-tip="Add selected 5E item with description">Add 5E</button>
+  <button class="add-btn" id="addEquipFromListBtn" type="button" style="padding:6px 10px;font-size:0.8rem" data-tip="Add selected 5E item with description" data-i18n="ui.add5e">Add 5E</button>
   <button class="add-btn" id="addEquipBtn" type="button" data-tip="Add custom gear" aria-label="Add equipment item">+ Custom</button>
 </div>
 <h2 class="card-title" style="margin-top:24px">Magic Item Attunement</h2><ul class="equip-list" id="attune"></ul><button class="add-btn" id="addAttuneBtn" type="button" data-tip="Track magic items requiring attunement" aria-label="Add attunement slot">+ Add Attunement</button></div>
 <div class="card col-6" data-section="spells-training"><h2 class="card-title">Training & Proficiencies</h2>
-<div class="prof-cat"><div class="prof-cat-title">Armor</div><div class="prof-checks"><label class="prof-check"><input type="checkbox" data-prof="light" checked> Light</label><label class="prof-check"><input type="checkbox" data-prof="medium"> Medium</label><label class="prof-check"><input type="checkbox" data-prof="heavy"> Heavy</label><label class="prof-check"><input type="checkbox" data-prof="shields"> Shields</label></div></div>
-<div class="prof-cat"><div class="prof-cat-title">Weapons</div><textarea id="wpn-prof" style="min-height:60px" aria-label="Weapon proficiencies"></textarea></div>
-<div class="prof-cat"><div class="prof-cat-title">Tools</div><textarea id="tool-prof" style="min-height:60px" aria-label="Tool proficiencies"></textarea></div>
-<div class="prof-cat"><div class="prof-cat-title">Languages</div>
+<div class="prof-cat"><div class="prof-cat-title" data-i18n="training.armor">Armor</div><div class="prof-checks"><label class="prof-check"><input type="checkbox" data-prof="light" checked> <span data-i18n="training.light">Light</span></label><label class="prof-check"><input type="checkbox" data-prof="medium"> <span data-i18n="training.medium">Medium</span></label><label class="prof-check"><input type="checkbox" data-prof="heavy"> <span data-i18n="training.heavy">Heavy</span></label><label class="prof-check"><input type="checkbox" data-prof="shields"> <span data-i18n="training.shields">Shields</span></label></div></div>
+<div class="prof-cat"><div class="prof-cat-title" data-i18n="training.weapons">Weapons</div><textarea id="wpn-prof" style="min-height:60px" aria-label="Weapon proficiencies"></textarea></div>
+<div class="prof-cat"><div class="prof-cat-title" data-i18n="training.tools">Tools</div><textarea id="tool-prof" style="min-height:60px" aria-label="Tool proficiencies"></textarea></div>
+<div class="prof-cat"><div class="prof-cat-title" data-i18n="training.languages">Languages</div>
 <div style="margin-bottom:8px;display:flex;gap:4px;flex-wrap:wrap;align-items:center">
   <select id="lang-select" style="flex:1;min-width:140px;background:transparent;border:1px solid var(--glass-border);color:var(--text-primary);padding:6px;border-radius:4px;font-size:0.85rem" aria-label="Language catalog">
     <option value="" data-i18n="language.add">+ Add Language</option>
@@ -24031,7 +24171,7 @@ html.pa-motion-ready:not(.pa-motion-enabled) :where(button, [role="button"]) {
       <option value="Thieves' Cant">Thieves' Cant</option>
     </optgroup>
   </select>
-  <button type="button" id="addLangBtn" class="add-btn" style="padding:6px 10px;font-size:0.8rem" data-tip="Add selected language">Add</button>
+  <button type="button" id="addLangBtn" class="add-btn" style="padding:6px 10px;font-size:0.8rem" data-tip="Add selected language" data-i18n="ui.add">Add</button>
 </div>
 <textarea id="langs" style="min-height:40px" aria-label="Known languages"></textarea></div>
 </div>
@@ -24058,28 +24198,28 @@ html.pa-motion-ready:not(.pa-motion-enabled) :where(button, [role="button"]) {
 <div class="card fate-card" data-section="fate-thread"><h2 class="card-title">Thread of Fate</h2><div class="thread" contenteditable="true" id="thread"></div></div>
 <div class="card fate-card" data-section="fate-notes"><h2 class="card-title">Fateweaving Notes</h2><textarea id="fate-notes" style="min-height:120px" aria-label="Fate notes"></textarea></div>
 <div class="card fate-card" data-section="fate-rewards"><h2 class="card-title">Fateweaving Rewards</h2><textarea id="fate-rewards" style="min-height:100px" aria-label="Fate rewards"></textarea></div>
-<div class="card fate-card" data-section="fate-curse"><h2 class="card-title">Curse</h2><textarea id="curse" style="min-height:140px" aria-label="Curse"></textarea></div>
+<div class="card fate-card" data-section="fate-curse"><h2 class="card-title" data-i18n="fate.curse">Curse</h2><textarea id="curse" style="min-height:140px" aria-label="Curse"></textarea></div>
 </div>
 <div class="col-5">
 <div class="card fate-card" data-section="fate-bargains"><h2 class="card-title">Dark Bargains</h2>
-<div class="bargain"><div class="bargain-title">Bargain 1</div><textarea id="b1" aria-label="First blessing"></textarea></div>
-<div class="bargain"><div class="bargain-title">Bargain 2</div><textarea id="b2" aria-label="Second blessing"></textarea></div>
-<div class="bargain"><div class="bargain-title">Bargain 3</div><textarea id="b3" aria-label="Third blessing"></textarea></div>
+<div class="bargain"><div class="bargain-title" data-i18n="fate.bargain1">Bargain 1</div><textarea id="b1" aria-label="First blessing"></textarea></div>
+<div class="bargain"><div class="bargain-title" data-i18n="fate.bargain2">Bargain 2</div><textarea id="b2" aria-label="Second blessing"></textarea></div>
+<div class="bargain"><div class="bargain-title" data-i18n="fate.bargain3">Bargain 3</div><textarea id="b3" aria-label="Third blessing"></textarea></div>
 </div>
 </div>
-<div class="card" data-section="fate-misc"><h2 class="card-title">Notes</h2><textarea id="notes" style="min-height:200px" aria-label="Notes"></textarea></div>
+<div class="card" data-section="fate-misc"><h2 class="card-title" data-i18n="weapon.notes">Notes</h2><textarea id="notes" style="min-height:200px" aria-label="Notes"></textarea></div>
 </div>
 </section>
 </div>
 <div class="actions" id="actionsRail" hidden style="display:none !important">
-<button class="act-btn act-fab-toggle" id="actionsFabToggle" type="button" title="Actions" aria-haspopup="menu" aria-expanded="false" aria-label="Toggle actions menu"><span class="tip">Actions</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="1"/><circle cx="12" cy="5" r="1"/><circle cx="12" cy="19" r="1"/></svg></button>
-<button class="act-btn act-home" id="homeBtn" type="button" title="Return to main menu" data-tip="Return to character selection" aria-label="Return to main menu" data-tip-pos="left"><span class="tip">Menu</span><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 3L2 12h3v9h6v-6h2v6h6v-9h3L12 3zm0 2.84L19 12h-1v8h-4v-6H10v6H6v-8H5l7-6.16z"/></svg></button>
-<button class="act-btn" id="mapBtn" type="button" title="Map" data-tip="Open campaign map" aria-label="Open map" data-tip-pos="left"><span class="tip">Map</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 6v16l7-4 8 4 7-4V2l-7 4-8-4-7 4z"/><path d="M8 2v16"/><path d="M16 6v16"/></svg></button>
-<button class="act-btn" id="saveBtn" type="button" title="Save" data-tip="Save character (auto-saves)" aria-label="Save character" data-tip-pos="left"><span class="tip">Save</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg></button>
-<button class="act-btn" id="exportBtn" type="button" data-tip="Export character to file" aria-label="Export character" data-tip-pos="left"><span class="tip">Export</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></button>
-<button class="act-btn" id="importBtn" type="button" data-tip="Import character from file" aria-label="Import character" data-tip-pos="left"><span class="tip">Import</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg></button>
-<button class="act-btn" id="printBtn" type="button" data-tip="Print or save as PDF" aria-label="Print character sheet" data-tip-pos="left"><span class="tip">Print</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg></button>
-<button class="act-btn" id="charBuilderBtn" type="button" data-tip="Character Builder Questionnaire" aria-label="Open character builder" data-tip-pos="left"><span class="tip">Builder</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="7" r="4"/><path d="M5.5 21a7.5 7.5 0 0 1 13 0"/><path d="M16 11l2 2 4-4"/></svg></button>
+<button class="act-btn act-fab-toggle" id="actionsFabToggle" type="button" title="Actions" aria-haspopup="menu" aria-expanded="false" aria-label="Toggle actions menu" data-i18n-aria-label="nav.actions" data-i18n-title="nav.actions" data-i18n-tip="nav.actions"><span class="tip">Actions</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="1"/><circle cx="12" cy="5" r="1"/><circle cx="12" cy="19" r="1"/></svg></button>
+<button class="act-btn act-home" id="homeBtn" type="button" title="Return to main menu" data-tip="Return to character selection" aria-label="Return to main menu" data-tip-pos="left" data-i18n-aria-label="nav.menu" data-i18n-title="nav.menu" data-i18n-tip="nav.menu"><span class="tip">Menu</span><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 3L2 12h3v9h6v-6h2v6h6v-9h3L12 3zm0 2.84L19 12h-1v8h-4v-6H10v6H6v-8H5l7-6.16z"/></svg></button>
+<button class="act-btn" id="mapBtn" type="button" title="Map" data-tip="Open campaign map" aria-label="Open map" data-tip-pos="left" data-i18n-aria-label="tooltip.mapView" data-i18n-title="tooltip.mapView" data-i18n-tip="tooltip.mapView"><span class="tip">Map</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 6v16l7-4 8 4 7-4V2l-7 4-8-4-7 4z"/><path d="M8 2v16"/><path d="M16 6v16"/></svg></button>
+<button class="act-btn" id="saveBtn" type="button" title="Save" data-tip="Save character (auto-saves)" aria-label="Save character" data-tip-pos="left" data-i18n-aria-label="tooltip.saveChar" data-i18n-title="tooltip.saveChar" data-i18n-tip="tooltip.saveChar"><span class="tip">Save</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg></button>
+<button class="act-btn" id="exportBtn" type="button" data-tip="Export character to file" aria-label="Export character" data-tip-pos="left" data-i18n-aria-label="tooltip.exportChar" data-i18n-title="tooltip.exportChar" data-i18n-tip="tooltip.exportChar"><span class="tip">Export</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></button>
+<button class="act-btn" id="importBtn" type="button" data-tip="Import character from file" aria-label="Import character" data-tip-pos="left" data-i18n-aria-label="tooltip.importChar" data-i18n-title="tooltip.importChar" data-i18n-tip="tooltip.importChar"><span class="tip">Import</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg></button>
+<button class="act-btn" id="printBtn" type="button" data-tip="Print or save as PDF" aria-label="Print character sheet" data-tip-pos="left" data-i18n-aria-label="tooltip.printChar" data-i18n-title="tooltip.printChar" data-i18n-tip="tooltip.printChar"><span class="tip">Print</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg></button>
+<button class="act-btn" id="charBuilderBtn" type="button" data-tip="Character Builder Questionnaire" aria-label="Open character builder" data-tip-pos="left" data-i18n-aria-label="nav.builder" data-i18n-title="nav.builder" data-i18n-tip="nav.builder"><span class="tip">Builder</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="7" r="4"/><path d="M5.5 21a7.5 7.5 0 0 1 13 0"/><path d="M16 11l2 2 4-4"/></svg></button>
 </div>
 
 <!-- Map Menu (Full-screen overlay) -->
@@ -24098,7 +24238,7 @@ html.pa-motion-ready:not(.pa-motion-enabled) :where(button, [role="button"]) {
     </div>
     <div class="map-topbar-right">
       <button class="map-topbar-btn" id="mapHelpBtn" type="button" title="Help" data-tip="Show map keyboard shortcuts" aria-label="Map help">?</button>
-      <button class="map-topbar-btn map-close-btn" id="mapCloseBtn" type="button" title="Close map (Esc)" data-tip="Close map and return to sheet" aria-label="Close map">&#x2715;</button>
+      <button class="map-topbar-btn map-close-btn" id="mapCloseBtn" type="button" title="Close map (Esc)" data-tip="Close map and return to sheet" aria-label="Close map" data-i18n-aria-label="action.close">&#x2715;</button>
     </div>
   </div>
   
@@ -24111,11 +24251,11 @@ html.pa-motion-ready:not(.pa-motion-enabled) :where(button, [role="button"]) {
       </button>
       <button class="map-tool" id="mapToolOrigin" type="button" data-tool="origin" title="Place Origin (O)" data-tip="Mark character's hometown (O)" aria-label="Place Origin tool">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="10" r="3"/><path d="M12 21.7C17.3 17 20 13 20 10a8 8 0 1 0-16 0c0 3 2.7 7 8 11.7z"/></svg>
-        <span class="map-tool-label">Origin</span>
+        <span class="map-tool-label" data-i18n="map.tools.origin">Origin</span>
       </button>
       <button class="map-tool" id="mapToolLastSeen" type="button" data-tool="lastseen" title="Mark Last Seen Location (L)" data-tip="Mark character's last known location (L)" aria-label="Mark Last Seen tool">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="5"/><path d="M20 21a8 8 0 0 0-16 0"/></svg>
-        <span class="map-tool-label">Last Seen</span>
+        <span class="map-tool-label" data-i18n="map.tools.lastSeen">Last Seen</span>
       </button>
       <button class="map-tool" id="mapToolMeasure" type="button" data-tool="measure" title="Measure Distance (M)" data-tip="Measure distance between points (M)" aria-label="Measure Distance tool">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 12h20M12 2v20M17 7l-5 5-5-5"/></svg>
@@ -24177,10 +24317,10 @@ html.pa-motion-ready:not(.pa-motion-enabled) :where(button, [role="button"]) {
       
       <!-- Zoom controls -->
       <div class="map-zoom-controls" id="mapZoomControls">
-        <button class="map-zoom-btn" id="mapZoomIn" type="button" title="Zoom in (+)" data-tip="Zoom in (+)" aria-label="Zoom in">+</button>
+        <button class="map-zoom-btn" id="mapZoomIn" type="button" title="Zoom in (+)" data-tip="Zoom in (+)" aria-label="Zoom in" data-i18n-aria-label="map.zoomIn" data-i18n-title="map.zoomIn" data-i18n-tip="map.zoomIn">+</button>
         <span class="map-zoom-level" id="mapZoomLevel">100%</span>
-        <button class="map-zoom-btn" id="mapZoomOut" type="button" title="Zoom out (-)" data-tip="Zoom out (-)" aria-label="Zoom out">&#x2212;</button>
-        <button class="map-zoom-btn" id="mapZoomFit" type="button" title="Fit to view (0)" data-tip="Fit map to window (0)" aria-label="Fit to view">&#x22A1;</button>
+        <button class="map-zoom-btn" id="mapZoomOut" type="button" title="Zoom out (-)" data-tip="Zoom out (-)" aria-label="Zoom out" data-i18n-aria-label="map.zoomOut" data-i18n-title="map.zoomOut" data-i18n-tip="map.zoomOut">&#x2212;</button>
+        <button class="map-zoom-btn" id="mapZoomFit" type="button" title="Fit to view (0)" data-tip="Fit map to window (0)" aria-label="Fit to view" data-i18n-aria-label="map.zoomFit" data-i18n-title="map.zoomFit" data-i18n-tip="map.zoomFit">&#x22A1;</button>
       </div>
       
       <!-- Measurement display -->
@@ -24204,7 +24344,7 @@ html.pa-motion-ready:not(.pa-motion-enabled) :where(button, [role="button"]) {
       
       <!-- Section G: Campaign Selector -->
       <div class="map-panel-section" id="mapPanelCampaign">
-        <div class="map-panel-title">Campaign</div>
+        <div class="map-panel-title" data-i18n="map.campaign">Campaign</div>
         <div class="map-panel-content">
           <select class="map-panel-select" id="mapCampaignSelect" aria-label="Campaign map">
             <option value="">No campaigns</option>
@@ -24224,7 +24364,7 @@ html.pa-motion-ready:not(.pa-motion-enabled) :where(button, [role="button"]) {
       </div>
       
       <div class="map-panel-section" id="mapPanelMap">
-        <div class="map-panel-title">Map</div>
+        <div class="map-panel-title" data-i18n="map.mapSection">Map</div>
         <div class="map-panel-content">
           <label class="map-panel-label">Map Image</label>
           <div class="map-panel-row">
@@ -24240,29 +24380,29 @@ html.pa-motion-ready:not(.pa-motion-enabled) :where(button, [role="button"]) {
       </div>
       
       <div class="map-panel-section" id="mapPanelOrigin">
-        <div class="map-panel-title">Origin</div>
+        <div class="map-panel-title" data-i18n="map.tools.origin">Origin</div>
         <div class="map-panel-content">
-          <label class="map-panel-label">Name</label>
+          <label class="map-panel-label" data-i18n="weapon.name">Name</label>
           <input class="map-panel-input" id="mapOriginName" type="text" placeholder="Hometown" data-i18n-placeholder="origin.defaultName" maxlength="60" / aria-label="Origin name">
-          <label class="map-panel-label">Region</label>
+          <label class="map-panel-label" data-i18n="map.region">Region</label>
           <input class="map-panel-input" id="mapOriginRegion" type="text" placeholder="Northern Province" data-i18n-placeholder="origin.defaultRegion" maxlength="60" / aria-label="Origin region">
-          <label class="map-panel-label">Notes</label>
+          <label class="map-panel-label" data-i18n="weapon.notes">Notes</label>
           <textarea class="map-panel-textarea" id="mapOriginNotes" placeholder="Details about your origin..." data-i18n-placeholder="origin.defaultNotes" maxlength="500" aria-label="Origin notes"></textarea>
         </div>
       </div>
       
       <div class="map-panel-section" id="mapPanelScale">
-        <div class="map-panel-title">Scale</div>
+        <div class="map-panel-title" data-i18n="map.scale">Scale</div>
         <div class="map-panel-content">
           <!-- Section 8: Enhanced scale calibration -->
           <div class="map-scale-info" id="mapScaleInfo">
             <span class="map-scale-status"><span data-i18n="scale.notCalibrated">Not calibrated</span></span>
           </div>
           <div class="map-scale-instructions" id="mapScaleInstructions" hidden>
-            <p>1. Click the Scale tool in the toolbar</p>
-            <p>2. Click two points on the map to draw a reference line</p>
-            <p>3. Enter the real-world distance below</p>
-            <p>4. Click "Set Scale" to calibrate</p>
+            <p data-i18n="map.scaleStep1">1. Click the Scale tool in the toolbar</p>
+            <p data-i18n="map.scaleStep2">2. Click two points on the map to draw a reference line</p>
+            <p data-i18n="map.scaleStep3">3. Enter the real-world distance below</p>
+            <p data-i18n="map.scaleStep4">4. Click "Set Scale" to calibrate</p>
           </div>
           <div class="map-scale-line-status" id="mapScaleLineStatus" hidden>
             <span class="map-scale-line-indicator">&#x1F4CD;</span>
@@ -24272,13 +24412,13 @@ html.pa-motion-ready:not(.pa-motion-enabled) :where(button, [role="button"]) {
           <div class="map-panel-row">
             <input class="map-panel-input" id="mapScaleDistance" type="number" min="0" step="any" placeholder="100" / aria-label="Scale distance">
             <select class="map-panel-select" id="mapScaleUnit" aria-label="Scale unit">
-              <option value="mi">miles</option>
+              <option value="mi" data-i18n="unit.miPlural">miles</option>
               <option value="km">km</option>
-              <option value="ft">feet</option>
-              <option value="m">meters</option>
-              <option value="hex">hexes</option>
-              <option value="sq">squares</option>
-              <option value="lg">leagues</option>
+              <option value="ft" data-i18n="unit.ftPlural">feet</option>
+              <option value="m" data-i18n="unit.mPlural">meters</option>
+              <option value="hex" data-i18n="unit.hexPlural">hexes</option>
+              <option value="sq" data-i18n="unit.sqPlural">squares</option>
+              <option value="lg" data-i18n="unit.lgPlural">leagues</option>
             </select>
           </div>
           <div class="map-panel-row" style="margin-top: 8px;">
@@ -24290,30 +24430,30 @@ html.pa-motion-ready:not(.pa-motion-enabled) :where(button, [role="button"]) {
       </div>
       
       <div class="map-panel-section" id="mapPanelPins">
-        <div class="map-panel-title">Pins <span class="map-panel-count" id="mapPinCount">0</span></div>
+        <div class="map-panel-title"><span data-i18n="map.pins">Pins</span> <span class="map-panel-count" id="mapPinCount">0</span></div>
         <div class="map-panel-content">
-          <input class="map-panel-search" id="mapPinSearch" type="search" placeholder="Search name, region, character..." / aria-label="Search map pins">
+          <input class="map-panel-search" id="mapPinSearch" type="search" placeholder="Search name, region, character..." / aria-label="Search map pins" data-i18n-placeholder="map.searchPins" data-i18n-aria-label="map.searchPins">
           <!-- Section 6: Pin Filters -->
           <div class="map-pin-filters" id="mapPinFilters">
             <select class="map-pin-filter-select" id="mapPinFilterType" title="Filter by type" aria-label="Filter pins by type">
-              <option value="">All Types</option>
-              <option value="origin">&#x1F3E0; Origins</option>
-              <option value="last_seen">&#x1F464; Last Seen</option>
-              <option value="town">&#x1F3D9;&#xFE0F; Towns</option>
-              <option value="city">&#x1F3F0; Cities</option>
-              <option value="dungeon">&#x2694;&#xFE0F; Dungeons</option>
-              <option value="landmark">&#x1F5FF; Landmarks</option>
-              <option value="quest">&#x2757; Quests</option>
-              <option value="shop">&#x1F6D2; Shops</option>
-              <option value="tavern">&#x1F37A; Taverns</option>
-              <option value="temple">&#x26EA; Temples</option>
-              <option value="location">&#x1F4CD; Locations</option>
+              <option value="" data-i18n="map.allTypes">All Types</option>
+              <option value="origin" data-i18n="map.tools.origin">&#x1F3E0; Origins</option>
+              <option value="last_seen" data-i18n="map.tools.lastSeen">&#x1F464; Last Seen</option>
+              <option value="town" data-i18n="map.town">&#x1F3D9;&#xFE0F; Towns</option>
+              <option value="city" data-i18n="map.city">&#x1F3F0; Cities</option>
+              <option value="dungeon" data-i18n="map.dungeon">&#x2694;&#xFE0F; Dungeons</option>
+              <option value="landmark" data-i18n="map.landmark">&#x1F5FF; Landmarks</option>
+              <option value="quest" data-i18n="map.quest">&#x2757; Quests</option>
+              <option value="shop" data-i18n="map.shop">&#x1F6D2; Shops</option>
+              <option value="tavern" data-i18n="map.tavern">&#x1F37A; Taverns</option>
+              <option value="temple" data-i18n="map.temple">&#x26EA; Temples</option>
+              <option value="location" data-i18n="map.location">&#x1F4CD; Locations</option>
             </select>
             <select class="map-pin-filter-select" id="mapPinFilterCharacter" title="Filter by character" aria-label="Filter pins by character">
-              <option value="">All Characters</option>
+              <option value="" data-i18n="map.allCharacters">All Characters</option>
             </select>
             <select class="map-pin-filter-select" id="mapPinFilterSeason" title="Filter by season/session" aria-label="Filter pins by season">
-              <option value="">All Seasons</option>
+              <option value="" data-i18n="map.allSeasons">All Seasons</option>
             </select>
           </div>
           <div class="map-pin-list" id="mapPinList">
@@ -24329,71 +24469,71 @@ html.pa-motion-ready:not(.pa-motion-enabled) :where(button, [role="button"]) {
           <button class="map-panel-close" id="mapPinInspectorClose" type="button" title="Close" data-tip="Close pin inspector" aria-label="Close pin inspector">&#x2715;</button>
         </div>
         <div class="map-panel-content">
-          <label class="map-panel-label">Name</label>
-          <input class="map-panel-input" id="mapPinName" type="text" placeholder="Pin name" maxlength="60" / aria-label="Pin name">
+          <label class="map-panel-label" data-i18n="weapon.name">Name</label>
+          <input class="map-panel-input" id="mapPinName" type="text" placeholder="Pin name" maxlength="60" / aria-label="Pin name" data-i18n-placeholder="map.pinName">
           
-          <label class="map-panel-label">Type</label>
+          <label class="map-panel-label" data-i18n="map.type">Type</label>
           <select class="map-panel-select" id="mapPinType" aria-label="Pin type">
-            <option value="location">&#x1F4CD; Location</option>
-            <option value="origin">&#x1F3E0; Origin</option>
-            <option value="last_seen">&#x1F464; Last Seen</option>
-            <option value="town">&#x1F3D9;&#xFE0F; Town</option>
-            <option value="city">&#x1F3F0; City</option>
-            <option value="dungeon">&#x2694;&#xFE0F; Dungeon</option>
-            <option value="landmark">&#x1F5FF; Landmark</option>
-            <option value="quest">&#x2757; Quest</option>
-            <option value="shop">&#x1F6D2; Shop</option>
-            <option value="tavern">&#x1F37A; Tavern</option>
-            <option value="temple">&#x26EA; Temple</option>
+            <option value="location" data-i18n="map.location">&#x1F4CD; Location</option>
+            <option value="origin" data-i18n="map.tools.origin">&#x1F3E0; Origin</option>
+            <option value="last_seen" data-i18n="map.tools.lastSeen">&#x1F464; Last Seen</option>
+            <option value="town" data-i18n="map.town">&#x1F3D9;&#xFE0F; Town</option>
+            <option value="city" data-i18n="map.city">&#x1F3F0; City</option>
+            <option value="dungeon" data-i18n="map.dungeon">&#x2694;&#xFE0F; Dungeon</option>
+            <option value="landmark" data-i18n="map.landmark">&#x1F5FF; Landmark</option>
+            <option value="quest" data-i18n="map.quest">&#x2757; Quest</option>
+            <option value="shop" data-i18n="map.shop">&#x1F6D2; Shop</option>
+            <option value="tavern" data-i18n="map.tavern">&#x1F37A; Tavern</option>
+            <option value="temple" data-i18n="map.temple">&#x26EA; Temple</option>
           </select>
           
-          <label class="map-panel-label">Region</label>
+          <label class="map-panel-label" data-i18n="map.region">Region</label>
           <input class="map-panel-input" id="mapPinRegion" type="text" placeholder="Northern Province" data-i18n-placeholder="origin.defaultRegion" maxlength="60" / aria-label="Pin region">
           
           <div class="map-panel-row">
             <div style="flex:1">
-              <label class="map-panel-label">Season</label>
-              <input class="map-panel-input" id="mapPinSeason" type="text" placeholder="Season 1" maxlength="30" / aria-label="Pin season">
+              <label class="map-panel-label" data-i18n="map.season">Season</label>
+              <input class="map-panel-input" id="mapPinSeason" type="text" placeholder="Season 1" maxlength="30" / aria-label="Pin season" data-i18n-placeholder="map.seasonExample">
             </div>
             <div style="flex:1">
-              <label class="map-panel-label">Session</label>
-              <input class="map-panel-input" id="mapPinSession" type="text" placeholder="Session 5" maxlength="30" / aria-label="Pin session">
+              <label class="map-panel-label" data-i18n="map.session">Session</label>
+              <input class="map-panel-input" id="mapPinSession" type="text" placeholder="Session 5" maxlength="30" / aria-label="Pin session" data-i18n-placeholder="map.sessionExample">
             </div>
           </div>
           
-          <label class="map-panel-label">Notes</label>
-          <textarea class="map-panel-textarea" id="mapPinNotes" placeholder="Additional details..." maxlength="500" aria-label="Pin notes"></textarea>
+          <label class="map-panel-label" data-i18n="weapon.notes">Notes</label>
+          <textarea class="map-panel-textarea" id="mapPinNotes" placeholder="Additional details..." maxlength="500" aria-label="Pin notes" data-i18n-placeholder="map.additionalDetails"></textarea>
           
           <div class="map-panel-row" style="margin-top: 8px;">
-            <button class="map-panel-btn secondary" id="mapPinDeleteBtn" type="button" data-tip="Delete the selected pin" aria-label="Delete pin">Delete Pin</button>
+            <button class="map-panel-btn secondary" id="mapPinDeleteBtn" type="button" data-tip="Delete the selected pin" aria-label="Delete pin" data-i18n="map.deletePin">Delete Pin</button>
           </div>
         </div>
       </div>
       
       <!-- Section 10: Routes Panel -->
       <div class="map-panel-section" id="mapPanelRoutes">
-        <div class="map-panel-title">Routes <span class="map-panel-count" id="mapRouteCount">0</span></div>
+        <div class="map-panel-title"><span data-i18n="map.routes">Routes</span> <span class="map-panel-count" id="mapRouteCount">0</span></div>
         <div class="map-panel-content">
           <!-- Route tool instructions panel -->
           <div class="map-route-instructions-panel" id="mapRouteInstructionsPanel" hidden>
             <div class="map-route-instructions-text">
-              <p>Click on the map to add route points</p>
-              <p><strong>Enter</strong> to save &#x2022; <strong>Esc</strong> to cancel &#x2022; <strong>Backspace</strong> to undo</p>
+              <p data-i18n="map.routePoints">Click on the map to add route points</p>
+              <p data-i18n="map.routeKeys">Enter to save · Esc to cancel · Backspace to undo</p>
             </div>
-            <label class="map-panel-label">Route Owner</label>
+            <label class="map-panel-label" data-i18n="map.routeOwner">Route Owner</label>
             <select class="map-panel-select" id="mapRouteOwnerType" aria-label="Route owner type">
-              <option value="character">&#x1F464; Character</option>
-              <option value="party">&#x1F465; Party</option>
-              <option value="campaign">&#x1F5FA;&#xFE0F; Campaign</option>
+              <option value="character" data-i18n="map.character">&#x1F464; Character</option>
+              <option value="party" data-i18n="map.party">&#x1F465; Party</option>
+              <option value="campaign" data-i18n="map.campaign">&#x1F5FA;&#xFE0F; Campaign</option>
             </select>
             <div class="map-panel-row">
               <div style="flex:1">
-                <label class="map-panel-label">Season</label>
-                <input class="map-panel-input" id="mapRouteSeason" type="text" placeholder="Season 1" maxlength="30" / aria-label="Route season">
+                <label class="map-panel-label" data-i18n="map.season">Season</label>
+                <input class="map-panel-input" id="mapRouteSeason" type="text" placeholder="Season 1" maxlength="30" / aria-label="Route season" data-i18n-placeholder="map.seasonExample">
               </div>
               <div style="flex:1">
-                <label class="map-panel-label">Session</label>
-                <input class="map-panel-input" id="mapRouteSession" type="text" placeholder="Session 5" maxlength="30" / aria-label="Route session">
+                <label class="map-panel-label" data-i18n="map.session">Session</label>
+                <input class="map-panel-input" id="mapRouteSession" type="text" placeholder="Session 5" maxlength="30" / aria-label="Route session" data-i18n-placeholder="map.sessionExample">
               </div>
             </div>
           </div>
@@ -24410,35 +24550,35 @@ html.pa-motion-ready:not(.pa-motion-enabled) :where(button, [role="button"]) {
           <button class="map-panel-close" id="mapRouteInspectorClose" type="button" title="Close" data-tip="Close route inspector" aria-label="Close route inspector">&#x2715;</button>
         </div>
         <div class="map-panel-content">
-          <label class="map-panel-label">Name</label>
-          <input class="map-panel-input" id="mapRouteInspectorName" type="text" placeholder="Route name" maxlength="60" / aria-label="Route name">
+          <label class="map-panel-label" data-i18n="weapon.name">Name</label>
+          <input class="map-panel-input" id="mapRouteInspectorName" type="text" placeholder="Route name" maxlength="60" / aria-label="Route name" data-i18n-placeholder="map.routeName">
           
           <label class="map-panel-label">Distance</label>
           <div class="map-route-inspector-distance" id="mapRouteInspectorDistance">0 px</div>
           
-          <label class="map-panel-label">Owner Type</label>
+          <label class="map-panel-label" data-i18n="map.ownerType">Owner Type</label>
           <select class="map-panel-select" id="mapRouteInspectorOwner" aria-label="Route owner">
-            <option value="character">&#x1F464; Character</option>
-            <option value="party">&#x1F465; Party</option>
-            <option value="campaign">&#x1F5FA;&#xFE0F; Campaign</option>
+            <option value="character" data-i18n="map.character">&#x1F464; Character</option>
+            <option value="party" data-i18n="map.party">&#x1F465; Party</option>
+            <option value="campaign" data-i18n="map.campaign">&#x1F5FA;&#xFE0F; Campaign</option>
           </select>
           
           <div class="map-panel-row">
             <div style="flex:1">
-              <label class="map-panel-label">Season</label>
-              <input class="map-panel-input" id="mapRouteInspectorSeason" type="text" placeholder="Season 1" maxlength="30" / aria-label="Route season">
+              <label class="map-panel-label" data-i18n="map.season">Season</label>
+              <input class="map-panel-input" id="mapRouteInspectorSeason" type="text" placeholder="Season 1" maxlength="30" / aria-label="Route season" data-i18n-placeholder="map.seasonExample">
             </div>
             <div style="flex:1">
-              <label class="map-panel-label">Session</label>
-              <input class="map-panel-input" id="mapRouteInspectorSession" type="text" placeholder="Session 5" maxlength="30" / aria-label="Route session">
+              <label class="map-panel-label" data-i18n="map.session">Session</label>
+              <input class="map-panel-input" id="mapRouteInspectorSession" type="text" placeholder="Session 5" maxlength="30" / aria-label="Route session" data-i18n-placeholder="map.sessionExample">
             </div>
           </div>
           
-          <label class="map-panel-label">Notes</label>
-          <textarea class="map-panel-textarea" id="mapRouteInspectorNotes" placeholder="Additional details..." maxlength="500" aria-label="Route notes"></textarea>
+          <label class="map-panel-label" data-i18n="weapon.notes">Notes</label>
+          <textarea class="map-panel-textarea" id="mapRouteInspectorNotes" placeholder="Additional details..." maxlength="500" aria-label="Route notes" data-i18n-placeholder="map.additionalDetails"></textarea>
           
           <div class="map-panel-row" style="margin-top: 8px;">
-            <button class="map-panel-btn secondary" id="mapRouteDeleteBtn" type="button" data-tip="Delete the selected route" aria-label="Delete route">Delete Route</button>
+            <button class="map-panel-btn secondary" id="mapRouteDeleteBtn" type="button" data-tip="Delete the selected route" aria-label="Delete route" data-i18n="map.deleteRoute">Delete Route</button>
           </div>
         </div>
       </div>
@@ -24947,30 +25087,30 @@ html.pa-motion-ready:not(.pa-motion-enabled) :where(button, [role="button"]) {
       <span class="spell-mobile-level" id="spellDetailLevel">0</span>
       <span id="spellDetailName">Spell Name</span>
     </div>
-    <button class="spell-detail-close" id="spellDetailClose" type="button" aria-label="Close spell details">&times;</button>
+    <button class="spell-detail-close" id="spellDetailClose" type="button" aria-label="Close spell details" data-i18n-aria-label="action.close">&times;</button>
   </div>
   <div class="spell-detail-body">
     <div id="spellDetailEditor" class="spell-detail-editor" hidden>
-      <label for="spellDetailEditName">Spell name<input id="spellDetailEditName" type="text" maxlength="120"></label>
+      <label for="spellDetailEditName"><span data-i18n="editor.spellName">Spell name</span><input id="spellDetailEditName" type="text" maxlength="120"></label>
       <div class="spell-editor-pair">
-        <label for="spellDetailEditLevel">Level (0 = cantrip)<input id="spellDetailEditLevel" type="number" min="0" max="9"></label>
-        <label for="spellDetailEditCast">Casting time<input id="spellDetailEditCast" type="text" maxlength="10"></label>
+        <label for="spellDetailEditLevel"><span data-i18n="editor.spellLevel">Level (0 = cantrip)</span><input id="spellDetailEditLevel" type="number" min="0" max="9"></label>
+        <label for="spellDetailEditCast"><span data-i18n="editor.castingTime">Casting time</span><input id="spellDetailEditCast" type="text" maxlength="10"></label>
       </div>
-      <label for="spellDetailEditRange">Range<input id="spellDetailEditRange" type="text" maxlength="20"></label>
+      <label for="spellDetailEditRange"><span data-i18n="editor.range">Range</span><input id="spellDetailEditRange" type="text" maxlength="20"></label>
       <div class="spell-editor-pair">
-        <label><input id="spellDetailEditConc" type="checkbox"> Concentration</label>
-        <label><input id="spellDetailEditRit" type="checkbox"> Ritual</label>
+        <label><input id="spellDetailEditConc" type="checkbox"> <span data-i18n="spell.concentration">Concentration</span></label>
+        <label><input id="spellDetailEditRit" type="checkbox"> <span data-i18n="spell.ritual">Ritual</span></label>
       </div>
-      <label for="spellDetailEditNotes">Notes<input id="spellDetailEditNotes" type="text" maxlength="200"></label>
-      <label for="spellDetailEditDesc">Description<textarea id="spellDetailEditDesc" rows="7" maxlength="5000"></textarea></label>
+      <label for="spellDetailEditNotes"><span data-i18n="weapon.notes">Notes</span><input id="spellDetailEditNotes" type="text" maxlength="200"></label>
+      <label for="spellDetailEditDesc"><span data-i18n="editor.description">Description</span><textarea id="spellDetailEditDesc" rows="7" maxlength="5000"></textarea></label>
     </div>
     <div class="spell-detail-stats">
       <div class="spell-detail-stat">
-        <div class="spell-detail-stat-label">Casting Time</div>
+        <div class="spell-detail-stat-label" data-i18n="editor.castingTime">Casting Time</div>
         <div class="spell-detail-stat-value" id="spellDetailCast">1 Action</div>
       </div>
       <div class="spell-detail-stat">
-        <div class="spell-detail-stat-label">Range</div>
+        <div class="spell-detail-stat-label" data-i18n="editor.range">Range</div>
         <div class="spell-detail-stat-value" id="spellDetailRange">60 ft</div>
       </div>
     </div>
@@ -24978,19 +25118,19 @@ html.pa-motion-ready:not(.pa-motion-enabled) :where(button, [role="button"]) {
       <!-- Tags populated dynamically -->
     </div>
     <div class="spell-detail-notes" id="spellDetailNotesWrap">
-      <div class="spell-detail-notes-label">Notes</div>
+      <div class="spell-detail-notes-label" data-i18n="weapon.notes">Notes</div>
       <div class="spell-detail-notes-text" id="spellDetailNotes">-</div>
     </div>
     <div class="spell-detail-desc">
-      <div class="spell-detail-desc-label">Description</div>
+      <div class="spell-detail-desc-label" data-i18n="editor.description">Description</div>
       <div class="spell-detail-desc-text" id="spellDetailDesc">No description provided.</div>
     </div>
   </div>
   <div class="spell-detail-actions">
-    <button class="spell-detail-btn edit" id="spellDetailEdit" type="button">Edit</button>
-    <button class="spell-detail-btn edit" id="spellDetailSave" type="button" hidden>Save Changes</button>
+    <button class="spell-detail-btn edit" id="spellDetailEdit" type="button" data-i18n="qb.edit">Edit</button>
+    <button class="spell-detail-btn edit" id="spellDetailSave" type="button" hidden data-i18n="editor.saveChanges">Save Changes</button>
     <button class="spell-detail-btn toggle-prep" id="spellDetailTogglePrep" type="button">Toggle Prepared</button>
-    <button class="spell-detail-btn delete" id="spellDetailDelete" type="button">Delete</button>
+    <button class="spell-detail-btn delete" id="spellDetailDelete" type="button" data-i18n="action.delete">Delete</button>
   </div>
 </div>
 
@@ -25001,38 +25141,38 @@ html.pa-motion-ready:not(.pa-motion-enabled) :where(button, [role="button"]) {
       <span class="weapon-mobile-icon">⚔️</span>
       <span id="weaponDetailName">Weapon Name</span>
     </div>
-    <button class="weapon-detail-close" id="weaponDetailClose" type="button" aria-label="Close weapon details">&times;</button>
+    <button class="weapon-detail-close" id="weaponDetailClose" type="button" aria-label="Close weapon details" data-i18n-aria-label="action.close">&times;</button>
   </div>
   <div class="weapon-detail-body">
     <div id="weaponDetailEditor" class="spell-detail-editor" hidden>
-      <label for="weaponDetailEditName">Weapon name<input id="weaponDetailEditName" type="text" maxlength="80"></label>
-      <label for="weaponDetailEditAtk">Attack bonus or ability<input id="weaponDetailEditAtk" type="text" maxlength="20" placeholder="+5 or STR/DEX"></label>
-      <label for="weaponDetailEditDmg">Damage<input id="weaponDetailEditDmg" type="text" maxlength="30" placeholder="1d8+3 slashing"></label>
-      <label for="weaponDetailEditNotes">Properties and notes<textarea id="weaponDetailEditNotes" rows="5" maxlength="120"></textarea></label>
+      <label for="weaponDetailEditName"><span data-i18n="editor.weaponName">Weapon name</span><input id="weaponDetailEditName" type="text" maxlength="80"></label>
+      <label for="weaponDetailEditAtk"><span data-i18n="editor.attackAbility">Attack bonus or ability</span><input id="weaponDetailEditAtk" type="text" maxlength="20" placeholder="+5 or STR/DEX"></label>
+      <label for="weaponDetailEditDmg"><span data-i18n="weapon.damage">Damage</span><input id="weaponDetailEditDmg" type="text" maxlength="30" placeholder="1d8+3 slashing"></label>
+      <label for="weaponDetailEditNotes"><span data-i18n="editor.weaponProperties">Properties and notes</span><textarea id="weaponDetailEditNotes" rows="5" maxlength="120"></textarea></label>
     </div>
     <div class="weapon-detail-stats">
       <div class="weapon-detail-stat rollable" id="weaponDetailAtkWrap" data-action="weapon-detail-roll-atk">
-        <div class="weapon-detail-stat-label">Attack Bonus</div>
+        <div class="weapon-detail-stat-label" data-i18n="editor.attackBonus">Attack Bonus</div>
         <div class="weapon-detail-stat-value" id="weaponDetailAtk">+0</div>
-        <div class="weapon-detail-stat-hint">Tap to roll</div>
+        <div class="weapon-detail-stat-hint" data-i18n="editor.tapRoll">Tap to roll</div>
       </div>
       <div class="weapon-detail-stat rollable" id="weaponDetailDmgWrap" data-action="weapon-detail-roll-dmg">
-        <div class="weapon-detail-stat-label">Damage</div>
+        <div class="weapon-detail-stat-label" data-i18n="weapon.damage">Damage</div>
         <div class="weapon-detail-stat-value" id="weaponDetailDmg">1d6</div>
-        <div class="weapon-detail-stat-hint">Tap to roll</div>
+        <div class="weapon-detail-stat-hint" data-i18n="editor.tapRoll">Tap to roll</div>
       </div>
     </div>
     <div class="weapon-detail-notes" id="weaponDetailNotesWrap">
-      <div class="weapon-detail-notes-label">Properties & Notes</div>
+      <div class="weapon-detail-notes-label" data-i18n="editor.weaponProperties">Properties & Notes</div>
       <div class="weapon-detail-notes-text" id="weaponDetailNotes">"</div>
     </div>
   </div>
   <div class="weapon-detail-actions">
-    <button class="weapon-detail-btn roll-atk" id="weaponDetailEdit" type="button">Edit</button>
-    <button class="weapon-detail-btn roll-atk" id="weaponDetailSave" type="button" hidden>Save Changes</button>
-    <button class="weapon-detail-btn roll-atk" id="weaponDetailRollAtk" type="button">Roll Attack</button>
-    <button class="weapon-detail-btn roll-dmg" id="weaponDetailRollDmg" type="button">Roll Damage</button>
-    <button class="weapon-detail-btn delete" id="weaponDetailDelete" type="button">Delete</button>
+    <button class="weapon-detail-btn roll-atk" id="weaponDetailEdit" type="button" data-i18n="qb.edit">Edit</button>
+    <button class="weapon-detail-btn roll-atk" id="weaponDetailSave" type="button" hidden data-i18n="editor.saveChanges">Save Changes</button>
+    <button class="weapon-detail-btn roll-atk" id="weaponDetailRollAtk" type="button" data-i18n="editor.rollAttack">Roll Attack</button>
+    <button class="weapon-detail-btn roll-dmg" id="weaponDetailRollDmg" type="button" data-i18n="editor.rollDamage">Roll Damage</button>
+    <button class="weapon-detail-btn delete" id="weaponDetailDelete" type="button" data-i18n="action.delete">Delete</button>
   </div>
 </div>
 
@@ -25043,16 +25183,16 @@ html.pa-motion-ready:not(.pa-motion-enabled) :where(button, [role="button"]) {
       <span class="equip-mobile-icon">&#x1F4E6;</span>
       <span id="equipDetailTitleText">Equipment</span>
     </div>
-    <button class="equip-detail-close" id="equipDetailClose" type="button" aria-label="Close equipment details">&times;</button>
+    <button class="equip-detail-close" id="equipDetailClose" type="button" aria-label="Close equipment details" data-i18n-aria-label="action.close">&times;</button>
   </div>
   <div class="equip-detail-body">
     <div class="equip-detail-content">
-      <textarea class="equip-detail-textarea" id="equipDetailText" placeholder="Enter item name and description..." aria-label="Equipment name and description"></textarea>
+      <textarea class="equip-detail-textarea" id="equipDetailText" placeholder="Enter item name and description..." aria-label="Equipment name and description" data-i18n-placeholder="editor.equipmentPrompt" data-i18n-aria-label="editor.equipmentLabel"></textarea>
     </div>
   </div>
   <div class="equip-detail-actions">
-    <button class="equip-detail-btn save" id="equipDetailSave" type="button">Save Changes</button>
-    <button class="equip-detail-btn delete" id="equipDetailDelete" type="button">Delete</button>
+    <button class="equip-detail-btn save" id="equipDetailSave" type="button" data-i18n="editor.saveChanges">Save Changes</button>
+    <button class="equip-detail-btn delete" id="equipDetailDelete" type="button" data-i18n="action.delete">Delete</button>
   </div>
 </div>
 
@@ -25372,7 +25512,7 @@ html.pa-motion-ready:not(.pa-motion-enabled) :where(button, [role="button"]) {
   };
 
   // App version constant for visibility
-  const APP_VERSION = '7.8.1';
+  const APP_VERSION = '7.8.2';
 
   // ============================================
   // ORDER 6: FIRST-VISIT DETECTION
@@ -25417,6 +25557,120 @@ html.pa-motion-ready:not(.pa-motion-enabled) :where(button, [role="button"]) {
   // Internationalization - Translation strings
   const TRANSLATIONS = {
     en: {
+      "nav.noMatchingCharacters": "No matching characters.",
+      "nav.deleteNamedCharacter": "Delete character: {name}",
+      "settings.liteMode": "Lite Mode",
+      "settings.dataPrivacy": "Data & Privacy",
+      "map.region": "Region",
+      "map.type": "Type",
+      "map.season": "Season",
+      "map.session": "Session",
+      "map.ownerType": "Owner Type",
+      "map.routeOwner": "Route Owner",
+      "map.character": "Character",
+      "map.party": "Party",
+      "map.allSeasons": "All Seasons",
+      "map.deletePin": "Delete Pin",
+      "map.deleteRoute": "Delete Route",
+      "map.routePoints": "Click on the map to add route points",
+      "map.routeKeys": "Enter to save · Esc to cancel · Backspace to undo",
+      "map.town": "Town",
+      "map.city": "City",
+      "map.dungeon": "Dungeon",
+      "map.landmark": "Landmark",
+      "map.quest": "Quest",
+      "map.shop": "Shop",
+      "map.tavern": "Tavern",
+      "map.temple": "Temple",
+      "map.location": "Location",
+      "map.pinName": "Pin name",
+      "map.routeName": "Route name",
+      "map.additionalDetails": "Additional details…",
+      "map.seasonExample": "Season 1",
+      "map.sessionExample": "Session 5",
+      "map.scaleStep1": "1. Click the Scale tool in the toolbar",
+      "map.scaleStep2": "2. Click two points on the map to draw a reference line",
+      "map.scaleStep3": "3. Enter the real-world distance below",
+      "map.scaleStep4": "4. Click \"Set Scale\" to calibrate",
+      "map.zoomIn": "Zoom in",
+      "map.zoomOut": "Zoom out",
+      "map.zoomFit": "Fit map to view",
+      "unit.miPlural": "miles",
+      "unit.ftPlural": "feet",
+      "unit.mPlural": "meters",
+      "unit.hexPlural": "hexes",
+      "unit.sqPlural": "squares",
+      "unit.lgPlural": "leagues",
+
+      // Stable interface labels added in the navigation and localization pass.
+      "nav.menu": "Menu",
+      "nav.actions": "More Actions",
+      "nav.characters": "Characters",
+      "nav.characterActions": "Character Actions",
+      "nav.builder": "Builder",
+      "nav.openMenu": "Open menu",
+      "nav.closeMenu": "Close menu",
+      "boot.install": "Install App",
+      "boot.recovery": "Recovery",
+      "boot.privacy": "Privacy",
+      "boot.trademark": "Not affiliated with Wizards of the Coast",
+      "boot.unnamed": "Unnamed",
+      "boot.noDetails": "No details",
+      "boot.justNow": "Just now",
+      "boot.minutesAgo": "{count}m ago",
+      "boot.hoursAgo": "{count}h ago",
+      "boot.daysAgo": "{count}d ago",
+      "boot.weeksAgo": "{count}w ago",
+      "boot.playNamed": "Play {name}",
+      "boot.editNamed": "Edit {name}",
+      "boot.moreNamed": "More actions for {name}",
+      "boot.savedCount": "{count} characters saved",
+      "editor.saveChanges": "Save Changes",
+      "editor.spellName": "Spell name",
+      "editor.spellLevel": "Level (0 = cantrip)",
+      "editor.castingTime": "Casting time",
+      "editor.range": "Range",
+      "editor.description": "Description",
+      "editor.weaponName": "Weapon name",
+      "editor.attackAbility": "Attack bonus or ability",
+      "editor.attackBonus": "Attack Bonus",
+      "editor.weaponProperties": "Properties & Notes",
+      "editor.tapRoll": "Tap to roll",
+      "editor.rollAttack": "Roll Attack",
+      "editor.rollDamage": "Roll Damage",
+      "editor.equipmentPrompt": "Enter item name and description…",
+      "editor.equipmentLabel": "Equipment name and description",
+      "editor.markPrepared": "Mark Prepared",
+      "editor.notPrepared": "Not Prepared",
+      "editor.noDescription": "No description yet.",
+      "slot.level": "Level {level}",
+      "slot.spellSlot": "Level {level} spell slot {slot}",
+      "slot.maximum": "Level {level} maximum spell slots",
+      "map.noPins": "No pins yet. Click the map to add one.",
+      "map.noRoutes": "No routes yet. Use the Route tool to draw one.",
+      "map.pinCount": "{count} pins",
+      "map.scaled": "Scaled",
+      "map.routes": "Routes",
+      "map.pinInspector": "Pin Inspector",
+      "map.routeInspector": "Route Inspector",
+      "map.scaleCalibration": "Scale Calibration",
+      "map.routePlanning": "Route Planning",
+      "map.pinsBrowser": "Pins Browser",
+      "map.placeOrigin": "Place Origin",
+      "map.markLastSeen": "Mark Last Seen",
+      "unit.mi": "mile",
+      "unit.km": "km",
+      "unit.ft": "foot",
+      "unit.m": "meter",
+      "unit.hex": "hex",
+      "unit.sq": "square",
+      "unit.lg": "league",
+      "settings.on": "On",
+      "settings.off": "Off",
+      "settings.full": "Full",
+      "settings.reduced": "Reduced",
+      "settings.lite": "Lite",
+
       // Settings Menu
       'settings.theme': 'Theme',
       'settings.rules': 'Rules',
@@ -25425,7 +25679,7 @@ html.pa-motion-ready:not(.pa-motion-enabled) :where(button, [role="button"]) {
       'settings.motion': 'Motion',
       'settings.contrast': 'Contrast',
       'settings.print': 'Print / Save PDF',
-      'settings.onePageSheet': '📜 One-Page Sheet',
+      'settings.onePageSheet': 'One-Page Sheet',
       'settings.help': 'ℹ Help',
       'settings.about': 'ℹ️ About / Credits',
       
@@ -25666,14 +25920,14 @@ html.pa-motion-ready:not(.pa-motion-enabled) :where(button, [role="button"]) {
       
       // Boot Screen
       'boot.title': 'Player Almanac',
-      'boot.chapter': 'Your next chapter.',
+      'boot.chapter': 'Player Almanac',
       'boot.subtitle': 'Character Sheet Manager',
       'boot.newChar': '+ New Character',
       'boot.import': 'Import Character',
       'boot.yourChars': 'Your Characters',
       
       // Boot Screen Extended
-      'boot.tagline': 'Every character. Every roll. A story worth keeping.',
+      'boot.tagline': 'Characters, notes and campaign tools.',
       'boot.welcomeTitle': 'Welcome, Adventurer',
       'boot.welcomeText': 'Create your first character to begin tracking your journey through any tabletop RPG campaign.',
       'boot.featureStats': 'Stats & Dice Rolls',
@@ -26357,6 +26611,120 @@ html.pa-motion-ready:not(.pa-motion-enabled) :where(button, [role="button"]) {
       'validation.invalid': 'Invalid input',
 },
     de: {
+      "nav.noMatchingCharacters": "Keine passenden Charaktere.",
+      "nav.deleteNamedCharacter": "Charakter löschen: {name}",
+      "settings.liteMode": "Sparsamer Modus",
+      "settings.dataPrivacy": "Daten & Datenschutz",
+      "map.region": "Region",
+      "map.type": "Typ",
+      "map.season": "Staffel",
+      "map.session": "Sitzung",
+      "map.ownerType": "Zugehörigkeit",
+      "map.routeOwner": "Zugehörigkeit der Route",
+      "map.character": "Charakter",
+      "map.party": "Gruppe",
+      "map.allSeasons": "Alle Staffeln",
+      "map.deletePin": "Markierung löschen",
+      "map.deleteRoute": "Route löschen",
+      "map.routePoints": "Tippe auf die Karte, um Routenpunkte hinzuzufügen.",
+      "map.routeKeys": "Enter zum Speichern · Esc zum Abbrechen · Rücktaste zum Rückgängigmachen",
+      "map.town": "Ortschaft",
+      "map.city": "Stadt",
+      "map.dungeon": "Verlies",
+      "map.landmark": "Wahrzeichen",
+      "map.quest": "Auftrag",
+      "map.shop": "Laden",
+      "map.tavern": "Taverne",
+      "map.temple": "Tempel",
+      "map.location": "Ort",
+      "map.pinName": "Name der Markierung",
+      "map.routeName": "Routenname",
+      "map.additionalDetails": "Weitere Einzelheiten…",
+      "map.seasonExample": "Staffel 1",
+      "map.sessionExample": "Sitzung 5",
+      "map.scaleStep1": "1. Wähle das Maßstab-Werkzeug in der Werkzeugleiste.",
+      "map.scaleStep2": "2. Tippe auf zwei Kartenpunkte, um eine Referenzlinie zu zeichnen.",
+      "map.scaleStep3": "3. Gib unten die tatsächliche Entfernung ein.",
+      "map.scaleStep4": "4. Wähle „Maßstab setzen“ zum Kalibrieren.",
+      "map.zoomIn": "Vergrößern",
+      "map.zoomOut": "Verkleinern",
+      "map.zoomFit": "Karte an Ansicht anpassen",
+      "unit.miPlural": "Meilen",
+      "unit.ftPlural": "Fuß",
+      "unit.mPlural": "Meter",
+      "unit.hexPlural": "Hexfelder",
+      "unit.sqPlural": "Felder",
+      "unit.lgPlural": "Wegstunden",
+
+      // Stable interface labels added in the navigation and localization pass.
+      "nav.menu": "Menü",
+      "nav.actions": "Weitere Aktionen",
+      "nav.characters": "Charaktere",
+      "nav.characterActions": "Charakteraktionen",
+      "nav.builder": "Charakterbau",
+      "nav.openMenu": "Menü öffnen",
+      "nav.closeMenu": "Menü schließen",
+      "boot.install": "App installieren",
+      "boot.recovery": "Wiederherstellung",
+      "boot.privacy": "Datenschutz",
+      "boot.trademark": "Keine Verbindung zu Wizards of the Coast",
+      "boot.unnamed": "Unbenannt",
+      "boot.noDetails": "Keine Angaben",
+      "boot.justNow": "Gerade eben",
+      "boot.minutesAgo": "Vor {count} Min.",
+      "boot.hoursAgo": "Vor {count} Std.",
+      "boot.daysAgo": "Vor {count} Tagen",
+      "boot.weeksAgo": "Vor {count} Wochen",
+      "boot.playNamed": "{name} spielen",
+      "boot.editNamed": "{name} bearbeiten",
+      "boot.moreNamed": "Weitere Aktionen für {name}",
+      "boot.savedCount": "{count} Charaktere gespeichert",
+      "editor.saveChanges": "Änderungen speichern",
+      "editor.spellName": "Zaubername",
+      "editor.spellLevel": "Stufe (0 = Zaubertrick)",
+      "editor.castingTime": "Wirkzeit",
+      "editor.range": "Reichweite",
+      "editor.description": "Beschreibung",
+      "editor.weaponName": "Waffenname",
+      "editor.attackAbility": "Angriffsbonus oder Attribut",
+      "editor.attackBonus": "Angriffsbonus",
+      "editor.weaponProperties": "Eigenschaften & Notizen",
+      "editor.tapRoll": "Zum Würfeln tippen",
+      "editor.rollAttack": "Angriff würfeln",
+      "editor.rollDamage": "Schaden würfeln",
+      "editor.equipmentPrompt": "Name und Beschreibung des Gegenstands eingeben…",
+      "editor.equipmentLabel": "Name und Beschreibung der Ausrüstung",
+      "editor.markPrepared": "Als vorbereitet markieren",
+      "editor.notPrepared": "Nicht vorbereitet",
+      "editor.noDescription": "Noch keine Beschreibung.",
+      "slot.level": "Stufe {level}",
+      "slot.spellSlot": "Zauberplatz {slot}, Stufe {level}",
+      "slot.maximum": "Maximale Zauberplätze der Stufe {level}",
+      "map.noPins": "Noch keine Markierungen. Tippe auf die Karte, um eine hinzuzufügen.",
+      "map.noRoutes": "Noch keine Routen. Zeichne mit dem Routenwerkzeug eine Route.",
+      "map.pinCount": "{count} Markierungen",
+      "map.scaled": "Kalibriert",
+      "map.routes": "Routen",
+      "map.pinInspector": "Markierung bearbeiten",
+      "map.routeInspector": "Route bearbeiten",
+      "map.scaleCalibration": "Maßstab kalibrieren",
+      "map.routePlanning": "Routenplanung",
+      "map.pinsBrowser": "Markierungsübersicht",
+      "map.placeOrigin": "Herkunft platzieren",
+      "map.markLastSeen": "Letzten Standort markieren",
+      "unit.mi": "Meile",
+      "unit.km": "km",
+      "unit.ft": "Fuß",
+      "unit.m": "Meter",
+      "unit.hex": "Hexfeld",
+      "unit.sq": "Feld",
+      "unit.lg": "Wegstunde",
+      "settings.on": "Ein",
+      "settings.off": "Aus",
+      "settings.full": "Voll",
+      "settings.reduced": "Reduziert",
+      "settings.lite": "Sparsam",
+
       // Settings Menu
       'settings.theme': 'Design',
       'settings.rules': 'Regeln',
@@ -26365,7 +26733,7 @@ html.pa-motion-ready:not(.pa-motion-enabled) :where(button, [role="button"]) {
       'settings.motion': 'Animationen',
       'settings.contrast': 'Kontrast',
       'settings.print': 'Drucken / Als PDF speichern',
-      'settings.onePageSheet': '📜 Einzelseiten-Bogen',
+      'settings.onePageSheet': 'Einzelseiten-Bogen',
       'settings.help': 'ℹ Hilfe',
       'settings.about': 'ℹ️ Über / Credits',
       
@@ -26591,14 +26959,14 @@ html.pa-motion-ready:not(.pa-motion-enabled) :where(button, [role="button"]) {
       
       // Boot Screen
       'boot.title': 'Player Almanac',
-      'boot.chapter': 'Dein nächstes Kapitel.',
+      'boot.chapter': 'Player Almanac',
       'boot.subtitle': 'Charakterbogen-Manager',
       'boot.newChar': '+ Neuer Charakter',
       'boot.import': 'Charakter importieren',
       'boot.yourChars': 'Deine Charaktere',
       
       // Boot Screen Extended
-      'boot.tagline': 'Jeder Charakter. Jeder Wurf. Eine Geschichte, die bleibt.',
+      'boot.tagline': 'Charaktere, Notizen und Kampagnenwerkzeuge.',
       'boot.welcomeTitle': 'Willkommen, Abenteurer',
       'boot.welcomeText': 'Erstelle deinen ersten Charakter, um deine Reise durch jede Tischrollenspiel-Kampagne zu verfolgen.',
       'boot.featureStats': 'Werte & Würfelwürfe',
@@ -27113,7 +27481,7 @@ html.pa-motion-ready:not(.pa-motion-enabled) :where(button, [role="button"]) {
 
         "map.emptyText": "Lade ein Bild hoch, um mit deiner Kampagnenkarte zu starten.",
         "map.uploadMap": "Karte hochladen",
-        "boot.recentCharacters": "Letzte Charaktere",
+        "boot.recentCharacters": "Deine Charaktere",
         "boot.viewAll": "Alle ansehen",
         "boot.continue": "Fortfahren",
         "boot.lastCharacter": "Letzter Charakter",
@@ -27321,6 +27689,21 @@ html.pa-motion-ready:not(.pa-motion-enabled) :where(button, [role="button"]) {
     return str;
   }
   
+  function localizeInterface(root = document) {
+    const selector = '[data-i18n], [data-i18n-placeholder], [data-i18n-title], [data-i18n-aria-label], [data-i18n-tip]';
+    const nodes = [...(root.matches?.(selector) ? [root] : []), ...root.querySelectorAll(selector)];
+    for (const el of nodes) {
+      if (el.isContentEditable) continue;
+      const key = el.dataset.i18n;
+      if (key && !el.matches('input, textarea') && el.textContent !== t(key)) el.textContent = t(key);
+      for (const [name, attribute] of [['i18nPlaceholder', 'placeholder'], ['i18nTitle', 'title'], ['i18nAriaLabel', 'aria-label'], ['i18nTip', 'data-tip']]) {
+        const attrKey = el.dataset[name];
+        if (attrKey && el.getAttribute(attribute) !== t(attrKey)) el.setAttribute(attribute, t(attrKey));
+      }
+    }
+  }
+  window.PlayerAlmanacI18n = Object.freeze({ t, apply: localizeInterface });
+
   // Alias for translation function to avoid shadowing in event handlers where 't' is the target element
   const translate = t;
 
@@ -31959,7 +32342,7 @@ html.pa-motion-ready:not(.pa-motion-enabled) :where(button, [role="button"]) {
         if (mobileMenu) {
           mobileMenu.classList.add('open');
           mobileMenuBtn.setAttribute('aria-expanded', 'true');
-          mobileMenuBtn.innerHTML = 'Menu &#x25BC;';
+          mobileMenuBtn.innerHTML = '<span data-i18n="nav.menu">' + t('nav.menu') + '</span> &#x25BC;';
         }
       };
       
@@ -31967,7 +32350,7 @@ html.pa-motion-ready:not(.pa-motion-enabled) :where(button, [role="button"]) {
         if (mobileMenu) {
           mobileMenu.classList.remove('open');
           mobileMenuBtn.setAttribute('aria-expanded', 'false');
-          mobileMenuBtn.innerHTML = 'Menu &#x25B2;';
+          mobileMenuBtn.innerHTML = '<span data-i18n="nav.menu">' + t('nav.menu') + '</span> &#x25B2;';
         }
       };
       
@@ -34034,7 +34417,7 @@ html.pa-motion-ready:not(.pa-motion-enabled) :where(button, [role="button"]) {
         lockIO(true);
         el.classList.add('saving');
         el.dataset.state = 'saving';
-        el.innerHTML = `<span class="save-status-icon"> »</span><span class="save-status-text">${t('save.saving')}</span>`;
+        el.innerHTML = `<span class="save-status-icon"> »</span><span class="save-status-text" data-i18n="save.saving">${t('save.saving')}</span>`;
         el.title = t('save.saving');
         return;
       }
@@ -34043,7 +34426,7 @@ html.pa-motion-ready:not(.pa-motion-enabled) :where(button, [role="button"]) {
         lockIO(false);
         el.classList.add('saved');
         el.dataset.state = 'saved';
-        el.innerHTML = `<span class="save-status-icon">✓</span><span class="save-status-text">${t('save.saved')}</span>`;
+        el.innerHTML = `<span class="save-status-icon">✓</span><span class="save-status-text" data-i18n="save.saved">${t('save.saved')}</span>`;
         if (this.lastSavedAt) {
           const d = new Date(this.lastSavedAt);
           const hh = String(d.getHours()).padStart(2, '0');
@@ -34058,7 +34441,7 @@ html.pa-motion-ready:not(.pa-motion-enabled) :where(button, [role="button"]) {
       lockIO(false);
       el.classList.add('error');
       el.dataset.state = 'failed';
-      el.innerHTML = `<span class="save-status-icon">⚠  </span><span class="save-status-text">${t('save.failed')}</span><span class="save-status-retry" data-action="retryPersist">${t('save.retry')}</span>`;
+      el.innerHTML = `<span class="save-status-icon">⚠  </span><span class="save-status-text" data-i18n="save.failed">${t('save.failed')}</span><span class="save-status-retry" data-i18n="save.retry" data-action="retryPersist">${t('save.retry')}</span>`;
       el.title = t('save.failed');
     }
 
@@ -35251,30 +35634,62 @@ html.pa-motion-ready:not(.pa-motion-enabled) :where(button, [role="button"]) {
       if (this.dom.bootLanguageSelect) this.dom.bootLanguageSelect.value = langCode;
       if (persist) storageSet(LANGUAGE_KEY, langCode);
 
-      // Update all elements with data-i18n attribute
-      document.querySelectorAll('[data-i18n]').forEach(el => {
-        const key = el.getAttribute('data-i18n');
-        if (key) {
-          el.textContent = t(key);
-        }
-      });
-
-      // Update placeholders with data-i18n-placeholder attribute
-      document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
-        const key = el.getAttribute('data-i18n-placeholder');
-        if (key) {
-          el.setAttribute('placeholder', t(key));
-        }
-      });
-
-      // Update specific UI elements that don't use data-i18n
       this.updateUILanguage();
+      this.refreshInterfaceLanguage();
+      localizeInterface();
+      document.dispatchEvent(new CustomEvent('almanac:languagechange', { detail: { language: langCode } }));
 
       // Toast feedback
       if (persist) {
         const langName = langCode === 'de' ? 'Deutsch' : 'English';
         this.toast(`${t('settings.language')}: ${langName}`);
       }
+    }
+
+    refreshInterfaceLanguage() {
+      // Only application labels are updated; form values and stored character content are untouched.
+      const bindings = {
+        '#homeBtn .tip': 'nav.menu', '#mapBtn .tip': 'map.mapSection', '#saveBtn .tip': 'action.save',
+        '#exportBtn .tip': 'action.export', '#importBtn .tip': 'action.import', '#printBtn .tip': 'action.print',
+        '#charBuilderBtn .tip': 'nav.builder',
+      };
+      for (const [selector, key] of Object.entries(bindings)) {
+        document.querySelectorAll(selector).forEach(el => { el.dataset.i18n = key; });
+      }
+      document.querySelectorAll('.empty-state[data-empty-type]').forEach(el => {
+        const type = el.dataset.emptyType;
+        const title = el.querySelector('.empty-state-title');
+        const body = el.querySelector('.empty-state-text');
+        const tip = el.querySelector('.empty-state-tip');
+        if (title) title.dataset.i18n = `empty.${type}Title`;
+        if (body) body.dataset.i18n = `empty.${type}Text`;
+        if (tip) tip.dataset.i18n = `empty.${type}Tip`;
+        const keys = { addSpell:'empty.addSpell', openSpellDropdown:'empty.add5eSpell', addEquipmentItem:'empty.addItem', addWeapon:'empty.addWeapon', openWeaponDropdown:'empty.add5eWeapon', triggerMapUpload:'empty.uploadMap' };
+        el.querySelectorAll('[data-action]').forEach(button => {
+          const key = keys[button.dataset.action];
+          if (key) { button.dataset.i18n = key; button.textContent = t(key); }
+        });
+      });
+      document.querySelectorAll('.slot-label').forEach((el, index) => { el.textContent = t('slot.level', {level:index+1}); });
+      if (this.charIndex?.length) {
+        this.renderBootRecentCharacters();
+        this.updateBootContinueButton();
+      }
+      const prepButton = document.getElementById('spellDetailTogglePrep');
+      if (prepButton) prepButton.textContent = prepButton.classList.contains('is-prepared') ? '✓ ' + t('spell.prepared') : t('editor.markPrepared');
+      document.querySelectorAll('.spell-detail-tag.prep, .spell-detail-tag.not-prep').forEach(el => { el.textContent = el.classList.contains('prep') ? '✓ ' + t('spell.prepared') : '✗ ' + t('editor.notPrepared'); });
+      document.querySelectorAll('.spell-detail-desc-empty').forEach(el => { el.textContent = t('editor.noDescription'); });
+      if (this.state) this.updateMapStatus();
+      const context = document.getElementById('mapPanelContextText');
+      if (context) {
+        const key = this._selectedPinId ? 'map.pinInspector' : this._selectedRouteId ? 'map.routeInspector' :
+          ({scale:'map.scaleCalibration',route:'map.routePlanning',pin:'map.pinsBrowser',origin:'map.placeOrigin',lastseen:'map.markLastSeen'}[this._mapTool] || 'map.settings');
+        context.textContent = t(key);
+      }
+      const scale = document.querySelector('#mapScaleInfo .map-scale-status');
+      if (scale && !this.state?.map?.scale) scale.textContent = t('map.notCalibrated');
+      document.querySelectorAll('.map-pin-empty').forEach(el => { el.dataset.i18n = 'map.noPins'; });
+      document.querySelectorAll('.map-route-empty').forEach(el => { el.dataset.i18n = 'map.noRoutes'; });
     }
 
     updateUILanguage() {
@@ -35320,7 +35735,6 @@ html.pa-motion-ready:not(.pa-motion-enabled) :where(button, [role="button"]) {
 
       // Update quickbar buttons
       const qbMappings = [
-        { id: 'saveStatus', key: 'qb.saved' },
         { id: 'undoBtn', key: 'qb.undo' },
         { id: 'charNewBtn', key: 'qb.newChar' },
       ];
@@ -35394,10 +35808,10 @@ html.pa-motion-ready:not(.pa-motion-enabled) :where(button, [role="button"]) {
       // Update More menu items
       const moreMappings = [
         { id: 'qbHealDmgBtn', keys: ['more.heal', 'more.damage'], format: (h, d) => `${h}/${d}` },
-        { id: 'qbShortRestBtn', key: 'more.shortRest', icon: '&#x263E; ' },
-        { id: 'qbLongRestBtn', key: 'more.longRest', icon: '&#x1F319; ' },
-        { id: 'qbMapBtn', key: 'more.map', icon: '&#x1F5FA;&#xFE0F; ' },
-        { id: 'qbAddonsBtn', key: 'more.addons', icon: '&#x1F9E9; ' },
+        { id: 'qbShortRestBtn', key: 'more.shortRest' },
+        { id: 'qbLongRestBtn', key: 'more.longRest' },
+        { id: 'qbMapBtn', key: 'more.map' },
+        { id: 'qbAddonsBtn', key: 'more.addons' },
       ];
 
       moreMappings.forEach(item => {
@@ -38012,9 +38426,9 @@ Actions:
       if (this.state.map?.imageKey) {
         const pinCount = this.state.map.pins?.length || 0;
         const hasScale = !!this.state.map.scale;
-        status.textContent = `${pinCount} pin${pinCount !== 1 ? 's' : ''}${hasScale ? ' \u2022 Scaled' : ''}`;
+        status.textContent = `${t('map.pinCount', {count: pinCount})}${hasScale ? ' \u2022 ' + t('map.scaled') : ''}`;
       } else {
-        status.textContent = 'No map loaded';
+        status.textContent = t('map.noMapLoaded');
       }
     }
     
@@ -38040,7 +38454,7 @@ Actions:
       // Scale
       const scaleInfo = this.dom.mapScaleInfo;
       if (scaleInfo) {
-        const unitLabels = { mi: 'mile', km: 'km', ft: 'foot', m: 'meter', hex: 'hex', sq: 'square', lg: 'league' };
+        const unitLabels = Object.fromEntries(['mi','km','ft','m','hex','sq','lg'].map(unit => [unit, t('unit.' + unit)]));
         if (map?.scale) {
           scaleInfo.classList.add('calibrated');
           const ppu = map.scale.pixelsPerUnit;
@@ -38049,11 +38463,11 @@ Actions:
           if (ppu >= 1) {
             scaleInfo.querySelector('.map-scale-status').textContent = `✓ 1 ${unit} = ${ppu.toFixed(1)} px`;
           } else {
-            scaleInfo.querySelector('.map-scale-status').textContent = `✓ 1 px = ${(1/ppu).toFixed(2)} ${unit}s`;
+            scaleInfo.querySelector('.map-scale-status').textContent = `✓ 1 px = ${(1/ppu).toFixed(2)} ${unit}`;
           }
         } else {
           scaleInfo.classList.remove('calibrated');
-          scaleInfo.querySelector('.map-scale-status').textContent = 'Not calibrated';
+          scaleInfo.querySelector('.map-scale-status').textContent = t('map.notCalibrated');
         }
       }
       
@@ -38108,7 +38522,7 @@ Actions:
       });
       
       if (!allPins.length) {
-        list.innerHTML = '<div class="map-pin-empty">No pins yet. Click the map to add one.</div>';
+        list.innerHTML = `<div class="map-pin-empty" data-i18n="map.noPins">${t('map.noPins')}</div>`;
         return;
       }
       
@@ -38193,7 +38607,7 @@ Actions:
         const charIds = new Set(pins.map(p => p.characterId).filter(Boolean));
         const charLookup = this.getCharacterNameLookup();
         
-        charSelect.innerHTML = '<option value="">All Characters</option>';
+        charSelect.innerHTML = `<option value="" data-i18n="map.allCharacters">${t('map.allCharacters')}</option>`;
         for (const charId of charIds) {
           const opt = document.createElement('option');
           opt.value = charId;
@@ -39171,7 +39585,7 @@ Actions:
       if (routeCount) routeCount.textContent = String(routes.length);
       
       if (!routes.length) {
-        list.innerHTML = '<div class="map-route-empty">No routes yet. Use the Route tool to draw one.</div>';
+        list.innerHTML = `<div class="map-route-empty" data-i18n="map.noRoutes">${t('map.noRoutes')}</div>`;
         return;
       }
       
@@ -39339,7 +39753,7 @@ Actions:
         // Pin selected - show pin inspector
         showPanels(panelPinInspector);
         if (contextIcon) contextIcon.textContent = '📜';
-        if (contextText) contextText.textContent = 'Pin Inspector';
+        if (contextText) contextText.textContent = t('map.pinInspector');
         return;
       }
       
@@ -39347,7 +39761,7 @@ Actions:
         // Route selected - show route inspector
         showPanels(panelRouteInspector);
         if (contextIcon) contextIcon.textContent = '📜';
-        if (contextText) contextText.textContent = 'Route Inspector';
+        if (contextText) contextText.textContent = t('map.routeInspector');
         return;
       }
       
@@ -39358,7 +39772,7 @@ Actions:
         // Scale tool - show scale panel prominently with map settings
         showPanels(panelScale, panelCampaign, panelMap);
         if (contextIcon) contextIcon.textContent = '📜';
-        if (contextText) contextText.textContent = 'Scale Calibration';
+        if (contextText) contextText.textContent = t('map.scaleCalibration');
         return;
       }
       
@@ -39366,7 +39780,7 @@ Actions:
         // Route tool - show route panel with instructions
         showPanels(panelRoutes, panelCampaign, panelMap);
         if (contextIcon) contextIcon.textContent = '📜';
-        if (contextText) contextText.textContent = 'Route Planning';
+        if (contextText) contextText.textContent = t('map.routePlanning');
         return;
       }
       
@@ -39374,7 +39788,7 @@ Actions:
         // Pin tool - show pins browser with map settings
         showPanels(panelPins, panelCampaign, panelMap);
         if (contextIcon) contextIcon.textContent = '📜';
-        if (contextText) contextText.textContent = 'Pins Browser';
+        if (contextText) contextText.textContent = t('map.pinsBrowser');
         return;
       }
       
@@ -39382,14 +39796,14 @@ Actions:
         // Origin/LastSeen tool - show origin settings with map settings
         showPanels(panelOrigin, panelCampaign, panelMap);
         if (contextIcon) contextIcon.textContent = tool === 'origin' ? '📜' : '📜';
-        if (contextText) contextText.textContent = tool === 'origin' ? 'Place Origin' : 'Mark Last Seen';
+        if (contextText) contextText.textContent = tool === 'origin' ? t('map.placeOrigin') : t('map.markLastSeen');
         return;
       }
       
       // Default context - show map settings overview
       showPanels(panelCampaign, panelMap, panelScale, panelPins, panelRoutes);
       if (contextIcon) contextIcon.textContent = '📜';
-      if (contextText) contextText.textContent = 'Map Settings';
+      if (contextText) contextText.textContent = t('map.settings');
     }
     
     // Section 10: Update route from inspector
@@ -40214,8 +40628,8 @@ Actions:
       statusEl.className = 'save-status';
       statusEl.innerHTML = `
         <span class="save-status-icon">${icons[state] || ''}</span>
-        <span class="save-status-text">${message || messages[state] || ''}</span>
-        ${state === 'failed' ? `<span class="save-status-retry" data-action="retryPersist">${t('save.retry')}</span>` : ''}
+        <span class="save-status-text" ${!message ? `data-i18n="save.${state}"` : ''}>${message || messages[state] || ''}</span>
+        ${state === 'failed' ? `<span class="save-status-retry" data-i18n="save.retry" data-action="retryPersist">${t('save.retry')}</span>` : ''}
       `;
       
       // Update timestamp for saved state
@@ -42401,94 +42815,92 @@ Actions:
     // =============================================
 
     /**
-     * Initialize touch swipe gestures for tab navigation
-     * @description Enables left/right swipe to switch between tabs on touch devices.
-     * Minimum swipe distance: 50px, maximum vertical movement: 100px
-     * Respects reduced motion preferences.
+     * Delegate tab swipes from the stable sheet root so every section responds.
+     * Passive listeners leave native scrolling, text editing and widgets alone.
      */
     initTabSwipeGestures() {
-      // Only initialize on touch-capable devices
-      if (!('ontouchstart' in window)) return;
-      
-      const tabContent = document.querySelector('.tab-content-wrap') || document.querySelector('.tab-content');
-      if (!tabContent) return;
+      const root = document.getElementById('app');
+      if (!root || this._tabSwipeRoot === root) return;
+      this._tabSwipeCleanup?.();
 
       const tabs = ['core', 'spells', 'fate'];
-      let touchStartX = 0;
-      let touchStartY = 0;
-      let touchEndX = 0;
-      let touchEndY = 0;
+      const interactive = 'input, textarea, select, button, a, label, [contenteditable]:not([contenteditable="false"]), [role="slider"], [role="spinbutton"], canvas, video, [data-no-tab-swipe], .portrait-editor, .modal, [role="dialog"], dialog, .map-menu';
+      let gesture = null;
+      const cancel = () => { gesture = null; };
+      const start = (event) => {
+        cancel();
+        if (event.touches.length !== 1) return;
+        const target = event.target instanceof Element ? event.target : event.target?.parentElement;
+        const section = target?.closest('.tab-content.active');
+        if (!section || !root.contains(section) || target.closest(interactive)) return;
 
-      const handleTouchStart = (e) => {
-        touchStartX = e.changedTouches[0].screenX;
-        touchStartY = e.changedTouches[0].screenY;
+        // A horizontal table, carousel or custom drag surface owns its gesture,
+        // including when it has reached either end of its scroll range.
+        for (let node = target; node && node !== root; node = node.parentElement) {
+          const style = getComputedStyle(node);
+          if ((/auto|scroll/.test(style.overflowX) && node.scrollWidth > node.clientWidth + 2) ||
+              /^(none|pan-x)(\s|$)/.test(style.touchAction)) return;
+        }
+        const touch = event.touches[0];
+        gesture = { id: touch.identifier, x: touch.clientX, y: touch.clientY, section };
       };
-
-      const handleTouchEnd = (e) => {
-        touchEndX = e.changedTouches[0].screenX;
-        touchEndY = e.changedTouches[0].screenY;
-        this.handleTabSwipe(touchStartX, touchStartY, touchEndX, touchEndY, tabs);
+      const move = (event) => {
+        if (!gesture) return;
+        const touch = Array.from(event.touches).find(item => item.identifier === gesture.id);
+        if (event.touches.length !== 1 || !touch) return cancel();
+        const dx = Math.abs(touch.clientX - gesture.x);
+        const dy = Math.abs(touch.clientY - gesture.y);
+        // Once the finger establishes a vertical scroll, never turn it into a
+        // section change even if the finger later moves sideways.
+        if (dy > 100 || (dy > 12 && dy >= dx)) cancel();
       };
-
-      // Use passive listeners for better scroll performance
-      tabContent.addEventListener('touchstart', handleTouchStart, { passive: true });
-      tabContent.addEventListener('touchend', handleTouchEnd, { passive: true });
-      
-      if (window.__CM_DEBUG) {
-        console.log('[PlayerAlmanac] Tab swipe gestures initialized');
-      }
+      const end = (event) => {
+        const completed = gesture;
+        cancel();
+        if (!completed || event.touches.length || !completed.section.classList.contains('active')) return;
+        const touch = Array.from(event.changedTouches).find(item => item.identifier === completed.id);
+        if (!touch) return;
+        this.handleTabSwipe(completed.x, completed.y, touch.clientX, touch.clientY, tabs);
+      };
+      const onVisibility = () => { if (document.hidden) cancel(); };
+      root.addEventListener('touchstart', start, { passive: true });
+      root.addEventListener('touchmove', move, { passive: true });
+      root.addEventListener('touchend', end, { passive: true });
+      root.addEventListener('touchcancel', cancel, { passive: true });
+      window.addEventListener('resize', cancel, { passive: true });
+      window.addEventListener('blur', cancel);
+      document.addEventListener('visibilitychange', onVisibility);
+      this._tabSwipeRoot = root;
+      this._tabSwipeCleanup = () => {
+        root.removeEventListener('touchstart', start);
+        root.removeEventListener('touchmove', move);
+        root.removeEventListener('touchend', end);
+        root.removeEventListener('touchcancel', cancel);
+        window.removeEventListener('resize', cancel);
+        window.removeEventListener('blur', cancel);
+        document.removeEventListener('visibilitychange', onVisibility);
+        this._tabSwipeRoot = null;
+        cancel();
+      };
     }
 
-    /**
-     * Handle swipe gesture to determine tab navigation direction
-     * @param {number} startX - Touch start X coordinate
-     * @param {number} startY - Touch start Y coordinate
-     * @param {number} endX - Touch end X coordinate
-     * @param {number} endY - Touch end Y coordinate
-     * @param {string[]} tabs - Array of tab names in order
-     */
-    handleTabSwipe(startX, startY, endX, endY, tabs) {
-      // Minimum swipe distance threshold
-      const minSwipeDistance = 50;
-      // Maximum vertical movement (to distinguish from scrolling)
-      const maxVerticalMovement = 100;
-      
+    /** Switch one adjacent section for a clearly horizontal swipe. */
+    handleTabSwipe(startX, startY, endX, endY, tabs = ['core', 'spells', 'fate']) {
       const deltaX = endX - startX;
       const deltaY = Math.abs(endY - startY);
-      
-      // Ignore if vertical movement exceeds threshold (user is scrolling)
-      if (deltaY > maxVerticalMovement) return;
-      
-      // Ignore if horizontal movement is too small
-      if (Math.abs(deltaX) < minSwipeDistance) return;
-      
-      // Respect reduced motion preference
-      if (document.documentElement.classList.contains('reduced-motion')) return;
-      
-      const currentTabBtn = document.querySelector('.tab-btn.active');
-      const currentTab = currentTabBtn?.dataset?.tab || 'core';
+      if (Math.abs(deltaX) < 56 || deltaY > 100 || Math.abs(deltaX) < deltaY * 1.5) return;
+
+      const currentTab = document.querySelector('.tab-btn.active')?.dataset.tab;
       const currentIndex = tabs.indexOf(currentTab);
-      
       if (currentIndex === -1) return;
-      
-      let newIndex;
-      if (deltaX < 0) {
-        // Swipe left - go to next tab
-        newIndex = Math.min(currentIndex + 1, tabs.length - 1);
-      } else {
-        // Swipe right - go to previous tab
-        newIndex = Math.max(currentIndex - 1, 0);
-      }
-      
-      if (newIndex !== currentIndex) {
-        this.switchTab(tabs[newIndex]);
-        
-        // Provide haptic feedback if available
-        if (navigator.vibrate) {
-          navigator.vibrate(10);
-        }
-      }
+      const nextIndex = currentIndex + (deltaX < 0 ? 1 : -1);
+      if (nextIndex < 0 || nextIndex >= tabs.length) return;
+
+      // Motion preferences control animation, not access to navigation.
+      this.switchTab(tabs[nextIndex]);
+      if (navigator.vibrate) navigator.vibrate(10);
     }
+
 
     // Section 9: Jump to section
     jumpToSection(sectionId) {
@@ -43307,7 +43719,7 @@ Actions:
 
         const label = document.createElement('div');
         label.className = 'slot-label';
-        label.textContent = `Level ${l}`;
+        label.textContent = t('slot.level', {level: l});
 
         const pips = document.createElement('div');
         pips.className = 'slot-pips';
@@ -43318,7 +43730,7 @@ Actions:
         pip.type = 'button';
           pip.className = 'slot-pip' + (i >= s.e ? ' on' : '');
           pip.dataset.action = 'slot-toggle';
-          pip.setAttribute('aria-label', `Level ${l} spell slot ${i + 1}`);
+          pip.setAttribute('aria-label', t('slot.spellSlot', {level: l, slot: i + 1}));
           pip.setAttribute('aria-pressed', String(i >= s.e));
           pip.dataset.level = lvl;
           pip.dataset.index = String(i);
@@ -43334,7 +43746,7 @@ Actions:
         input.max = '9';
         input.value = String(s.t);
         input.dataset.action = 'slot-total';
-        input.setAttribute('aria-label', `Level ${l} maximum spell slots`);
+        input.setAttribute('aria-label', t('slot.maximum', {level: l}));
         input.dataset.level = lvl;
         input.style.width = '40px';
         input.style.background = 'transparent';
@@ -43808,19 +44220,19 @@ Actions:
         if (spell.conc) {
           const tag = document.createElement('span');
           tag.className = 'spell-detail-tag conc';
-          tag.textContent = '✨ Concentration';
+          tag.textContent = '✨ ' + t('spell.concentration'); tag.dataset.i18n = 'spell.concentration';
           d.spellDetailTags.appendChild(tag);
         }
         if (spell.rit) {
           const tag = document.createElement('span');
           tag.className = 'spell-detail-tag rit';
-          tag.textContent = '⏳  Ritual';
+          tag.textContent = '⏳ ' + t('spell.ritual'); tag.dataset.i18n = 'spell.ritual';
           d.spellDetailTags.appendChild(tag);
         }
         
         const prepTag = document.createElement('span');
         prepTag.className = spell.prep ? 'spell-detail-tag prep' : 'spell-detail-tag not-prep';
-        prepTag.textContent = spell.prep ? '✓ Prepared' : '✗ Not Prepared';
+        prepTag.textContent = spell.prep ? '✓ ' + t('spell.prepared') : '✗ ' + t('editor.notPrepared');
         d.spellDetailTags.appendChild(prepTag);
       }
       
@@ -43838,7 +44250,7 @@ Actions:
           d.spellDetailDesc.textContent = spell.desc;
           d.spellDetailDesc.classList.remove('spell-detail-desc-empty');
         } else {
-          d.spellDetailDesc.textContent = 'No description yet.';
+          d.spellDetailDesc.textContent = t('editor.noDescription');
           d.spellDetailDesc.classList.add('spell-detail-desc-empty');
         }
       }
@@ -43846,7 +44258,7 @@ Actions:
       // Update toggle prep button state
       if (d.spellDetailTogglePrep) {
         d.spellDetailTogglePrep.classList.toggle('is-prepared', !!spell.prep);
-        d.spellDetailTogglePrep.textContent = spell.prep ? '✓ Prepared' : 'Mark Prepared';
+        d.spellDetailTogglePrep.textContent = spell.prep ? '✓ ' + t('spell.prepared') : t('editor.markPrepared');
       }
       
       // Show modal
@@ -45746,9 +46158,9 @@ Actions:
             const cls = st.class || '';
             const campaign = st.campaign || '';
             const parts = [];
-            if (level && cls) parts.push(`Level ${level} ${cls}`);
+            if (level && cls) parts.push(`${t('slot.level', {level})} ${cls}`);
             else if (cls) parts.push(cls);
-            else if (level) parts.push(`Level ${level}`);
+            else if (level) parts.push(t('slot.level', {level}));
             if (campaign) parts.push(campaign);
             charSubtext = parts.join(' \u2022 ');
             
@@ -45759,11 +46171,11 @@ Actions:
               const hours = Math.floor(diff / 3600000);
               const days = Math.floor(diff / 86400000);
               let lastPlayed = '';
-              if (mins < 1) lastPlayed = 'Just now';
-              else if (mins < 60) lastPlayed = `${mins}m ago`;
-              else if (hours < 24) lastPlayed = `${hours}h ago`;
-              else if (days < 7) lastPlayed = `${days}d ago`;
-              else lastPlayed = new Date(activeChar.updatedAt).toLocaleDateString();
+              if (mins < 1) lastPlayed = t('boot.justNow');
+              else if (mins < 60) lastPlayed = t('boot.minutesAgo', {count: mins});
+              else if (hours < 24) lastPlayed = t('boot.hoursAgo', {count: hours});
+              else if (days < 7) lastPlayed = t('boot.daysAgo', {count: days});
+              else lastPlayed = new Date(activeChar.updatedAt).toLocaleDateString(currentLanguage);
               if (charSubtext) charSubtext += ` \u2022 ${lastPlayed}`;
               else charSubtext = lastPlayed;
             }
@@ -45773,7 +46185,7 @@ Actions:
         if (this.dom.bootCharName) this.dom.bootCharName.textContent = charName;
         if (this.dom.bootCharSubtext) this.dom.bootCharSubtext.textContent = charSubtext;
         if (this.dom.bootCharCount) {
-          this.dom.bootCharCount.textContent = `${this.charIndex.length} character${this.charIndex.length !== 1 ? 's' : ''} saved`;
+          this.dom.bootCharCount.textContent = t('boot.savedCount', {count: this.charIndex.length});
         }
         
         // Section 12/2: Render recent character cards
@@ -45854,12 +46266,12 @@ Actions:
           const mins = Math.floor(diff / 60000);
           const hours = Math.floor(diff / 3600000);
           const days = Math.floor(diff / 86400000);
-          if (mins < 1) lastPlayed = 'Just now';
-          else if (mins < 60) lastPlayed = `${mins}m ago`;
-          else if (hours < 24) lastPlayed = `${hours}h ago`;
-          else if (days < 7) lastPlayed = `${days}d ago`;
-          else if (days < 30) lastPlayed = `${Math.floor(days / 7)}w ago`;
-          else lastPlayed = new Date(char.updatedAt).toLocaleDateString();
+          if (mins < 1) lastPlayed = t('boot.justNow');
+          else if (mins < 60) lastPlayed = t('boot.minutesAgo', {count: mins});
+          else if (hours < 24) lastPlayed = t('boot.hoursAgo', {count: hours});
+          else if (days < 7) lastPlayed = t('boot.daysAgo', {count: days});
+          else if (days < 30) lastPlayed = t('boot.weeksAgo', {count: Math.floor(days / 7)});
+          else lastPlayed = new Date(char.updatedAt).toLocaleDateString(currentLanguage);
         }
         
         // Portrait with initials fallback or actual portrait
@@ -45902,9 +46314,9 @@ Actions:
         
         // Level/Class line
         const metaParts = [];
-        if (level && cls) metaParts.push(`Lv${level} ${cls}`);
+        if (level && cls) metaParts.push(`${t('slot.level', {level})} ${cls}`);
         else if (cls) metaParts.push(cls);
-        else if (level) metaParts.push(`Level ${level}`);
+        else if (level) metaParts.push(t('slot.level', {level}));
         if (campaign) metaParts.push(campaign);
         
         if (metaParts.length > 0) {
@@ -45923,7 +46335,7 @@ Actions:
         }
         
         if (!metaParts.length && !lastPlayed) {
-          meta.textContent = 'No details';
+          meta.textContent = t('boot.noDetails');
         }
         
         info.appendChild(nameEl);
@@ -45936,16 +46348,16 @@ Actions:
         const playBtn = document.createElement('button');
         playBtn.className = 'boot-char-btn primary';
         playBtn.type = 'button';
-        playBtn.textContent = 'Play';
-        playBtn.setAttribute('aria-label', `Play ${char.name || 'character'}`);
+        playBtn.textContent = t('qb.play');
+        playBtn.setAttribute('aria-label', t('boot.playNamed', {name: char.name || t('boot.unnamed')}));
         playBtn.dataset.action = 'boot-play';
         playBtn.dataset.charId = char.id;
         
         const editBtn = document.createElement('button');
         editBtn.className = 'boot-char-btn';
         editBtn.type = 'button';
-        editBtn.textContent = 'Edit';
-        editBtn.setAttribute('aria-label', `Edit ${char.name || 'character'}`);
+        editBtn.textContent = t('qb.edit');
+        editBtn.setAttribute('aria-label', t('boot.editNamed', {name: char.name || t('boot.unnamed')}));
         editBtn.dataset.action = 'boot-edit';
         editBtn.dataset.charId = char.id;
         
@@ -45953,8 +46365,8 @@ Actions:
         overflowBtn.className = 'boot-char-btn boot-char-overflow';
         overflowBtn.type = 'button';
         overflowBtn.innerHTML = '&#x22EF;'; // Use innerHTML for HTML entity (horizontal ellipsis)
-        overflowBtn.title = 'More actions';
-        overflowBtn.setAttribute('aria-label', `More actions for ${char.name || 'character'}`);
+        overflowBtn.title = t('nav.actions');
+        overflowBtn.setAttribute('aria-label', t('boot.moreNamed', {name: char.name || t('boot.unnamed')}));
         overflowBtn.dataset.action = 'boot-overflow';
         overflowBtn.dataset.charId = char.id;
         
@@ -46034,9 +46446,9 @@ Actions:
           const cls = st.class || '';
           const campaign = st.campaign || '';
           const parts = [];
-          if (level && cls) parts.push(`Level ${level} ${cls}`);
+          if (level && cls) parts.push(`${t('slot.level', {level})} ${cls}`);
           else if (cls) parts.push(cls);
-          else if (level) parts.push(`Level ${level}`);
+          else if (level) parts.push(t('slot.level', {level}));
           if (campaign) parts.push(campaign);
           charSubtext = parts.join(' \u2022 ');
           
@@ -46047,11 +46459,11 @@ Actions:
             const hours = Math.floor(diff / 3600000);
             const days = Math.floor(diff / 86400000);
             let lastPlayed = '';
-            if (mins < 1) lastPlayed = 'Just now';
-            else if (mins < 60) lastPlayed = `${mins}m ago`;
-            else if (hours < 24) lastPlayed = `${hours}h ago`;
-            else if (days < 7) lastPlayed = `${days}d ago`;
-            else lastPlayed = new Date(activeChar.updatedAt).toLocaleDateString();
+            if (mins < 1) lastPlayed = t('boot.justNow');
+            else if (mins < 60) lastPlayed = t('boot.minutesAgo', {count: mins});
+            else if (hours < 24) lastPlayed = t('boot.hoursAgo', {count: hours});
+            else if (days < 7) lastPlayed = t('boot.daysAgo', {count: days});
+            else lastPlayed = new Date(activeChar.updatedAt).toLocaleDateString(currentLanguage);
             if (charSubtext) charSubtext += ` \u2022 ${lastPlayed}`;
             else charSubtext = lastPlayed;
           }
@@ -46118,9 +46530,9 @@ Actions:
       }
       
       const actions = [
-        { label: 'Duplicate', action: () => this.bootDuplicateCharacter(charId) },
-        { label: 'Export', action: () => this.bootExportCharacter(charId) },
-        { label: 'Delete', action: () => this.bootConfirmDeleteCharacter(charId), danger: true }
+        { label: t('action.duplicate'), action: () => this.bootDuplicateCharacter(charId) },
+        { label: t('action.export'), action: () => this.bootExportCharacter(charId) },
+        { label: t('action.delete'), action: () => this.bootConfirmDeleteCharacter(charId), danger: true }
       ];
       
       for (const act of actions) {
@@ -49514,12 +49926,21 @@ console.log('[PA Addon] Host API bridge initialized for addon:', window.PA.addon
   
   // Create a full-screen modal for menu content
   function createMobileMenuModal(menuContent, title) {
-    // Remove any existing modal
-    const existing = document.getElementById('mobileMenuModal');
-    if (existing) existing.remove();
+    const menuText = (key, fallback, params) => window.PlayerAlmanacI18n?.t(key, params) || fallback;
+    const titleKey = ({ 'Menu': 'nav.menu', 'Settings': 'boot.settingsBtn', 'More Actions': 'nav.actions', 'Characters': 'nav.characters', 'Character Actions': 'nav.characterActions' })[title] || 'nav.menu';
+    const opener = document.activeElement;
+    // Close through the shared path so a replacement retains the prior scroll state.
+    closeMobileMenuModal(false);
+    const priorOverflow = document.body.style.overflow;
     
     const modal = document.createElement('div');
     modal.id = 'mobileMenuModal';
+    modal.setAttribute('role', 'dialog');
+    modal.setAttribute('aria-modal', 'true');
+    modal.setAttribute('aria-labelledby', 'paMobileMenuTitle');
+    modal.tabIndex = -1;
+    modal._paOpener = opener;
+    modal._paPriorOverflow = priorOverflow;
     modal.style.cssText = `
       position: fixed;
       top: 0;
@@ -49537,6 +49958,7 @@ console.log('[PA Addon] Host API bridge initialized for addon:', window.PA.addon
     
     // Header with close button
     const header = document.createElement('div');
+    header.className = 'pa-menu-header';
     header.style.cssText = `
       display: flex;
       align-items: center;
@@ -49548,7 +49970,9 @@ console.log('[PA Addon] Host API bridge initialized for addon:', window.PA.addon
     `;
     
     const titleEl = document.createElement('h2');
-    titleEl.textContent = title || 'Menu';
+    titleEl.id = 'paMobileMenuTitle';
+    titleEl.setAttribute('data-i18n', titleKey);
+    titleEl.textContent = menuText(titleKey, title || 'Menu');
     titleEl.style.cssText = `
       margin: 0;
       font-size: 1.1rem;
@@ -49558,6 +49982,9 @@ console.log('[PA Addon] Host API bridge initialized for addon:', window.PA.addon
     
     const closeBtn = document.createElement('button');
     closeBtn.innerHTML = '&#x2715;';
+    closeBtn.type = 'button';
+    closeBtn.setAttribute('data-i18n-aria-label', 'action.close');
+    closeBtn.setAttribute('aria-label', menuText('action.close', 'Close menu'));
     closeBtn.style.cssText = `
       background: rgba(255,255,255,0.1);
       border: none;
@@ -49578,6 +50005,7 @@ console.log('[PA Addon] Host API bridge initialized for addon:', window.PA.addon
     
     // Content area
     const content = document.createElement('div');
+    content.className = 'pa-menu-content';
     content.style.cssText = `
       flex: 1;
       overflow-y: auto;
@@ -49600,72 +50028,41 @@ console.log('[PA Addon] Host API bridge initialized for addon:', window.PA.addon
       margin: 0 !important;
     `;
     
-    // Style all buttons and items in the clone for mobile
+    // Shared menu styles keep touch targets and theme treatment consistent.
     clone.querySelectorAll('button, .qb-menu-item, .qb-overflow-btn, .qb-list-item').forEach(btn => {
-      btn.style.cssText += `
-        min-height: 54px !important;
-        font-size: 1rem !important;
-        padding: 16px !important;
-        margin-bottom: 8px !important;
-        border-radius: 12px !important;
-        background: rgba(255,255,255,0.06) !important;
-        border: 1px solid rgba(255,255,255,0.1) !important;
-        width: 100% !important;
-        text-align: left !important;
-        display: flex !important;
-        align-items: center !important;
-      `;
+      btn.classList.add('pa-menu-action');
     });
-    
-    // Style danger buttons (like Delete)
-    clone.querySelectorAll('.danger').forEach(btn => {
-      btn.style.cssText += `
-        color: #dc3545 !important;
-        border-color: rgba(220, 53, 69, 0.3) !important;
-      `;
+
+    // Actions leave the expanded phone toolbar before opening another surface.
+    // Closing Settings with its close button still returns to the toolbar itself.
+    const dismissForAction = () => {
+      closeMobileMenuModal(false);
+      const app = window.__PA_INSTANCE || window.app;
+      if (window.innerWidth <= 520) {
+        app?.setQuickbarCollapsed(true, { persist: false });
+        document.getElementById('qbMiniExpand')?.focus({ preventScroll: true });
+      } else if (opener?.isConnected) opener.focus({ preventScroll: true });
+    };
+
+    clone.querySelectorAll('[data-jump][role="button"]').forEach(stat => {
+      const activate = event => {
+        event.preventDefault();
+        event.stopPropagation();
+        const targetId = stat.dataset.jump === 'pp' ? 'passive-perception' : stat.dataset.jump;
+        const target = document.getElementById(targetId);
+        const app = window.__PA_INSTANCE || window.app;
+        if (!target || !app) return;
+        dismissForAction();
+        const tab = target.closest('.tab-content')?.id.replace(/^tab-/, '');
+        if (tab) app.switchTab(tab, { instant: true });
+        app.jumpTo(targetId);
+      };
+      stat.addEventListener('click', activate);
+      stat.addEventListener('keydown', event => {
+        if (event.key === 'Enter' || event.key === ' ') activate(event);
+      });
     });
-    
-    // Style sections
-    clone.querySelectorAll('.qb-overflow-section').forEach(section => {
-      section.style.cssText = `
-        margin-bottom: 24px !important;
-      `;
-    });
-    
-    clone.querySelectorAll('.qb-overflow-title').forEach(title => {
-      title.style.cssText = `
-        font-size: 0.8rem !important;
-        font-weight: 600 !important;
-        text-transform: uppercase !important;
-        letter-spacing: 0.1em !important;
-        color: rgba(255,255,255,0.5) !important;
-        margin-bottom: 12px !important;
-        padding-left: 4px !important;
-      `;
-    });
-    
-    clone.querySelectorAll('.qb-overflow-stats, .qb-overflow-actions').forEach(grid => {
-      grid.style.cssText = `
-        display: flex !important;
-        flex-direction: column !important;
-        gap: 8px !important;
-      `;
-    });
-    
-    // Make sure select elements are styled
-    clone.querySelectorAll('select').forEach(sel => {
-      sel.style.cssText = `
-        min-height: 44px !important;
-        font-size: 1rem !important;
-        padding: 12px !important;
-        border-radius: 8px !important;
-        background: rgba(255,255,255,0.1) !important;
-        border: 1px solid rgba(255,255,255,0.2) !important;
-        color: #fff !important;
-        width: 100% !important;
-      `;
-    });
-    
+
     // Wire up click handlers
     clone.querySelectorAll('button, .qb-list-item').forEach(btn => {
       btn.addEventListener('click', (e) => {
@@ -49697,7 +50094,7 @@ console.log('[PA Addon] Host API bridge initialized for addon:', window.PA.addon
           if (!btn._pendingDelete) {
             // First click - show confirmation
             btn._pendingDelete = true;
-            btn.textContent = 'Confirm Delete';
+            btn.textContent = menuText('charMenu.deleteConfirm', 'Confirm Delete');
             btn.style.background = 'rgba(220, 53, 69, 0.3) !important';
             btn.style.borderColor = 'rgba(220, 53, 69, 0.5) !important';
             
@@ -49706,7 +50103,7 @@ console.log('[PA Addon] Host API bridge initialized for addon:', window.PA.addon
             if (!hint) {
               hint = document.createElement('div');
               hint.className = 'mobile-delete-hint';
-              hint.textContent = 'Tap again to permanently delete this character';
+              hint.textContent = document.documentElement.lang === 'de' ? 'Erneut tippen, um diesen Charakter dauerhaft zu löschen.' : 'Tap again to permanently delete this character';
               hint.style.cssText = `
                 color: #dc3545;
                 font-size: 0.85rem;
@@ -49721,7 +50118,7 @@ console.log('[PA Addon] Host API bridge initialized for addon:', window.PA.addon
             setTimeout(() => {
               if (btn._pendingDelete) {
                 btn._pendingDelete = false;
-                btn.textContent = 'Delete';
+                btn.textContent = menuText('action.delete', 'Delete');
                 btn.style.background = 'rgba(255,255,255,0.06) !important';
                 btn.style.borderColor = 'rgba(255,255,255,0.1) !important';
                 if (hint) hint.remove();
@@ -49730,7 +50127,7 @@ console.log('[PA Addon] Host API bridge initialized for addon:', window.PA.addon
           } else {
             // Second click - actually delete
             btn._pendingDelete = false;
-            closeMobileMenuModal();
+            dismissForAction();
             const app = window.__PA_INSTANCE || window.app;
             if (app) {
               // Directly call deleteActiveCharacter
@@ -49743,7 +50140,7 @@ console.log('[PA Addon] Host API bridge initialized for addon:', window.PA.addon
         if (origId) {
           const orig = document.getElementById(origId);
           if (orig && orig !== btn) {
-            closeMobileMenuModal();
+            dismissForAction();
             setTimeout(() => orig.click(), 50);
             e.preventDefault();
             e.stopPropagation();
@@ -49753,7 +50150,7 @@ console.log('[PA Addon] Host API bridge initialized for addon:', window.PA.addon
         
         if (origDataCharId) {
           // Directly call selectCharacter instead of trying to click original
-          closeMobileMenuModal();
+          dismissForAction();
           const app = window.__PA_INSTANCE || window.app;
           if (app) {
             setTimeout(() => {
@@ -49769,7 +50166,7 @@ console.log('[PA Addon] Host API bridge initialized for addon:', window.PA.addon
         // For buttons with data-action
         const action = btn.getAttribute('data-action');
         if (action) {
-          closeMobileMenuModal();
+          dismissForAction();
           const origBtn = document.querySelector(`[data-action="${action}"]`);
           if (origBtn) {
             setTimeout(() => origBtn.click(), 50);
@@ -49780,50 +50177,41 @@ console.log('[PA Addon] Host API bridge initialized for addon:', window.PA.addon
       });
     });
     
-    // Wire up select change handlers
-    clone.querySelectorAll('select').forEach(sel => {
-      const origId = sel.id;
-      sel.addEventListener('change', () => {
-        const orig = document.getElementById(origId);
-        if (orig) {
-          orig.value = sel.value;
-          orig.dispatchEvent(new Event('change', { bubbles: true }));
-        }
+    // Cloning preserves markup, but not listeners. Forward preferences to the
+    // original controls so the existing handlers persist and apply each choice.
+    const preferencePairs = [];
+    clone.querySelectorAll('select, input[type="checkbox"], input[type="radio"]').forEach(control => {
+      const original = control.id ? menuContent.querySelector(`[id="${control.id}"]`) : null;
+      if (!original) return;
+      const checkedControl = control.matches('input[type="checkbox"], input[type="radio"]');
+      if (control.type === 'radio' && control.name) control.name = `pa-mobile-${control.name}`;
+      const sync = () => {
+        if (checkedControl) control.checked = original.checked;
+        else control.value = original.value;
+        control.disabled = original.disabled;
+      };
+      preferencePairs.push(sync);
+      sync();
+      control.addEventListener('change', () => {
+        if (checkedControl) original.checked = control.checked;
+        else original.value = control.value;
+        original.dispatchEvent(new Event('change', { bubbles: true }));
+        preferencePairs.forEach(update => update());
       });
-      
-      // Sync current value
-      const orig = document.getElementById(origId);
-      if (orig) {
-        sel.value = orig.value;
-      }
     });
-    
+
     content.appendChild(clone);
     
     // Special handling for Character Picker menu
     if (menuContent.id === 'charPickerMenu') {
       // Add "New Character" button at the bottom
       const newCharBtn = document.createElement('button');
-      newCharBtn.textContent = '+ New Character';
-      newCharBtn.style.cssText = `
-        min-height: 54px !important;
-        font-size: 1rem !important;
-        padding: 16px !important;
-        margin-top: 16px !important;
-        border-radius: 12px !important;
-        background: linear-gradient(135deg, rgba(90, 200, 120, 0.2), rgba(90, 200, 120, 0.1)) !important;
-        border: 1px solid rgba(90, 200, 120, 0.4) !important;
-        color: #5ac878 !important;
-        width: 100% !important;
-        text-align: center !important;
-        display: flex !important;
-        align-items: center !important;
-        justify-content: center !important;
-        font-weight: 600 !important;
-        cursor: pointer !important;
-      `;
+      newCharBtn.setAttribute('data-i18n', 'boot.newCharLabel');
+      newCharBtn.textContent = menuText('boot.newCharLabel', 'New Character');
+      newCharBtn.type = 'button';
+      newCharBtn.className = 'pa-menu-action pa-menu-new-character';
       newCharBtn.onclick = () => {
-        closeMobileMenuModal();
+        dismissForAction();
         const origNewBtn = document.getElementById('charNewBtn');
         if (origNewBtn) {
           setTimeout(() => origNewBtn.click(), 50);
@@ -49831,6 +50219,34 @@ console.log('[PA Addon] Host API bridge initialized for addon:', window.PA.addon
       };
       content.appendChild(newCharBtn);
       
+      // Search the visible copy, independently of any hidden desktop filter.
+      const search = clone.querySelector('#charSearch');
+      const searchEmpty = document.createElement('p');
+      searchEmpty.className = 'pa-menu-empty';
+      searchEmpty.setAttribute('role', 'status');
+      searchEmpty.setAttribute('data-i18n', 'nav.noMatchingCharacters');
+      searchEmpty.textContent = menuText('nav.noMatchingCharacters', 'No matching characters.');
+      searchEmpty.hidden = true;
+      clone.appendChild(searchEmpty);
+      const filterVisibleCharacters = () => {
+        const query = (search?.value || '').trim().toLocaleLowerCase();
+        let visible = 0;
+        clone.querySelectorAll('.qb-list-item').forEach(item => {
+          const matches = (item.getAttribute('data-char-name') || '').toLocaleLowerCase().includes(query);
+          item.hidden = !matches;
+          // The desktop filter may have left an inline display value on the clone.
+          if (matches) item.style.removeProperty('display');
+          else item.style.setProperty('display', 'none', 'important');
+          if (matches) visible++;
+        });
+        searchEmpty.hidden = visible > 0;
+      };
+      if (search) {
+        search.value = '';
+        search.addEventListener('input', filterVisibleCharacters);
+      }
+      filterVisibleCharacters();
+
       // Add delete buttons to each character item
       clone.querySelectorAll('.qb-list-item').forEach(item => {
         const charId = item.getAttribute('data-char-id');
@@ -49855,6 +50271,9 @@ console.log('[PA Addon] Host API bridge initialized for addon:', window.PA.addon
         const delBtn = document.createElement('button');
         delBtn.innerHTML = '&#x1F5D1;'; // Trash icon
         delBtn.className = 'mobile-char-delete';
+        delBtn.type = 'button';
+        delBtn.setAttribute('aria-label', menuText('nav.deleteNamedCharacter', 'Delete character: {name}', { name: item.getAttribute('data-char-name') || '' }));
+        delBtn.title = delBtn.getAttribute('aria-label');
         delBtn.setAttribute('data-delete-char-id', charId);
         delBtn.setAttribute('data-confirm-state', 'initial');
         delBtn.style.cssText = `
@@ -49922,7 +50341,7 @@ console.log('[PA Addon] Host API bridge initialized for addon:', window.PA.addon
             
             if (app && app.charIndex) {
               if (charId === app.activeCharId) {
-                closeMobileMenuModal();
+                dismissForAction();
                 setTimeout(() => {
                   console.log('[Delete v6.16.0] Calling deleteActiveCharacter');
                   app.deleteActiveCharacter(true);
@@ -49943,7 +50362,7 @@ console.log('[PA Addon] Host API bridge initialized for addon:', window.PA.addon
                   item.style.transition = 'opacity 0.2s, transform 0.2s';
                   item.style.opacity = '0';
                   item.style.transform = 'translateX(50px)';
-                  setTimeout(() => item.remove(), 200);
+                  setTimeout(() => { item.remove(); filterVisibleCharacters(); }, 200);
                 }
               }
             } else {
@@ -49980,17 +50399,41 @@ console.log('[PA Addon] Host API bridge initialized for addon:', window.PA.addon
     modal.appendChild(content);
     document.body.appendChild(modal);
     
-    // Prevent body scroll
+    // Keep keyboard navigation inside the visible menu without changing its controls.
+    modal.addEventListener('keydown', event => {
+      if (event.key === 'Escape') {
+        event.preventDefault();
+        event.stopPropagation();
+        closeMobileMenuModal();
+        return;
+      }
+      if (event.key !== 'Tab') return;
+      const focusable = [...modal.querySelectorAll('button, input, select, textarea, a[href], [tabindex]')]
+        .filter(el => !el.disabled && el.tabIndex >= 0 && el.getClientRects().length && getComputedStyle(el).visibility !== 'hidden');
+      const first = focusable[0], last = focusable[focusable.length - 1];
+      if (!first) { event.preventDefault(); modal.focus(); return; }
+      if (event.shiftKey && (document.activeElement === first || document.activeElement === modal)) {
+        event.preventDefault(); last.focus();
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault(); first.focus();
+      }
+    });
+
     document.body.style.overflow = 'hidden';
+    // Focus the close button: opening a picker should not summon the phone keyboard.
+    closeBtn.focus({ preventScroll: true });
     
     console.log('[v6.3] Mobile menu modal opened:', title);
   }
   
-  function closeMobileMenuModal() {
+  function closeMobileMenuModal(restoreFocus = true) {
     const modal = document.getElementById('mobileMenuModal');
     if (modal) {
+      const opener = modal._paOpener;
+      const priorOverflow = modal._paPriorOverflow ?? '';
       modal.remove();
-      document.body.style.overflow = '';
+      document.body.style.overflow = priorOverflow;
+      if (restoreFocus && opener?.isConnected && !opener.disabled) opener.focus({ preventScroll: true });
       
       // Also close any open popovers
       document.querySelectorAll('.qb-pop.open').forEach(w => {
@@ -50067,7 +50510,7 @@ console.log('[PA Addon] Host API bridge initialized for addon:', window.PA.addon
 <footer class="app-footer" id="appFooter">
   <div class="app-footer-left">
     <span class="app-footer-copyright">&copy; <span id="footerYear">2025</span> Zagreous. Player Almanac.</span>
-    <button class="app-footer-btn" id="aboutCreditsBtn" type="button">About / Credits</button>
+    <button class="app-footer-btn" id="aboutCreditsBtn" type="button" data-i18n="about.title">About / Credits</button>
   </div>
 </footer>
 
@@ -50085,7 +50528,7 @@ console.log('[PA Addon] Host API bridge initialized for addon:', window.PA.addon
       <!-- ORDER 8: Version Info Box -->
       <div class="credits-version-box">
         <div class="credits-version-info">
-          <strong>Version <span id="aboutVersionNumber">7.8.1</span></strong>
+          <strong>Version <span id="aboutVersionNumber">7.8.2</span></strong>
         </div>
         <button class="credits-whats-new-btn" id="whatsNewBtn" type="button" data-i18n="about.whatsNew">What's New</button>
       </div>
@@ -51758,120 +52201,20 @@ if ('serviceWorker' in navigator && window.isSecureContext) {
   });
 }
 
-/* --- P2: i18n: sweep leftover hardcoded English labels (buttons/options/headers) --- */
-/* Cached translation map - rebuilt when language changes */
-let __i18nCachedMap = null;
-let __i18nCachedLang = null;
-
-/**
- * P2: Get or build the cached translation map
- * Only rebuilds when language actually changes, eliminating runtime Map() construction
- */
-function getI18nTranslationMap() {
-  // Check if we need to rebuild the cache
-  const currentLang = (typeof currentLanguage !== 'undefined') ? currentLanguage : 'en';
-  
-  if (__i18nCachedMap && __i18nCachedLang === currentLang) {
-    return __i18nCachedMap;
-  }
-  
-  // Check if translation function is available
-  if (typeof t === 'undefined') return null;
-  
-  // Build and cache the map
-  __i18nCachedLang = currentLang;
-  __i18nCachedMap = new Map([
-    ['No campaigns', t('ui.noCampaigns')],
-    ['REPLACE', t('ui.replace')], ['Replace', t('ui.replace')],
-    ['None', t('ui.none')],
-    ['Auto-calculate', t('ui.autoCalculate')],
-    ['Conditions', t('ui.conditions')],
-    ['Passive Perception', t('ui.passivePerception')],
-    ['Light', t('ui.lightArmor')], ['Medium', t('ui.mediumArmor')], ['Heavy', t('ui.heavyArmor')], ['Shields', t('ui.shields')],
-    ['-- Select 5E Gear --', t('ui.select5eGear')],
-    ['ADD 5E', t('ui.add5e')],
-    ['+ Add Item', t('ui.addItem')],
-    ['+ Add Language', t('ui.addLanguage')],
-    ['ADD', t('ui.add')],
-    ['Saved', t('ui.saved')],
-    ['EDIT', t('ui.edit')], ['Edit', t('ui.edit')],
-    ['PLAY', t('ui.play')], ['Play', t('ui.play')],
-  ]);
-  
-  return __i18nCachedMap;
-}
-
-/**
- * P2: Invalidate the i18n cache when language changes
- * Should be called from the language change handler
- */
-function invalidateI18nCache() {
-  __i18nCachedMap = null;
-  __i18nCachedLang = null;
-}
-
-// Make invalidateI18nCache available globally for the language switcher
-window.__PA_invalidateI18nCache = invalidateI18nCache;
-
-function translateCommonText(root=document) {
-  if (!root) return;
-  
-  const map = getI18nTranslationMap();
-  if (!map) return;
-
-  const isEditable = (el) => el && (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA');
-  const candidates = root.querySelectorAll ? root.querySelectorAll('*') : [];
-  candidates.forEach(el => {
-    if (!el || isEditable(el)) return;
-    if (el.hasAttribute && (el.hasAttribute('data-i18n') || el.hasAttribute('data-i18n-placeholder') || el.hasAttribute('data-i18n-title'))) return;
-
-    if (el.tagName === 'OPTION') {
-      const raw = (el.textContent || '').trim();
-      if (map.has(raw)) el.textContent = map.get(raw);
-      return;
-    }
-    if (el.childElementCount === 0) {
-      const raw = (el.textContent || '').trim();
-      if (map.has(raw)) el.textContent = map.get(raw);
-    }
-  });
-}
-
-let __i18nObserverInstalled = false;
-
-// Install a MutationObserver to handle dynamically added content
-function installI18nObserver() {
-  if (__i18nObserverInstalled || typeof MutationObserver === 'undefined') return;
-  __i18nObserverInstalled = true;
-  
-  const observer = new MutationObserver((mutations) => {
-    mutations.forEach((mutation) => {
-      if (mutation.type === 'childList') {
-        mutation.addedNodes.forEach((node) => {
-          if (node.nodeType === 1) {
-            translateCommonText(node);
-          }
-        });
+/* Translate only explicitly keyed UI labels, never user text. */
+(() => {
+  const apply = root => window.PlayerAlmanacI18n?.apply(root);
+  const start = () => {
+    apply(document);
+    new MutationObserver(records => {
+      for (const record of records) for (const node of record.addedNodes) {
+        if (node.nodeType === 1) apply(node);
       }
-    });
-  });
-  
-  observer.observe(document.body, {
-    childList: true,
-    subtree: true
-  });
-}
-
-// Initialize i18n observer on DOMContentLoaded
-if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', () => {
-    translateCommonText();
-    installI18nObserver();
-  });
-} else {
-  translateCommonText();
-  installI18nObserver();
-}
+    }).observe(document.body, { childList: true, subtree: true });
+  };
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', start, {once:true});
+  else start();
+})();
 </script>
 
 <dialog id="almanacNavigator" aria-labelledby="almanacFindTitle">
@@ -51981,6 +52324,14 @@ if (document.readyState === 'loading') {
     $('almanacEyebrow').textContent = text.library;
     $('almanacLocal').textContent = text.local;
     $('almanacBootNote').textContent = text.note;
+    if (dialog.open) {
+      entries = entries.map(entry => {
+        const heading = entry.card.querySelector('.card-title').cloneNode(true);
+        heading.querySelectorAll('button').forEach(button => button.remove());
+        return {...entry, name: heading.textContent.trim(), tabName: document.querySelector(`.tab-btn[data-tab="${entry.tab}"]`).textContent.trim()};
+      });
+      renderResults();
+    }
   }
   translate();
   new MutationObserver(translate).observe(document.documentElement, {attributes:true, attributeFilter:['lang']});
