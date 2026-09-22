@@ -1,13 +1,13 @@
 {
-  "version": "7.9.0-dev.1",
-  "appBuild": "47695610d731e02b40ed30e0e07e59e66cb0cfe3d52f446df2bef07156f8a844",
-  "id": "102775ba3c83accfb66cc6aa",
+  "version": "7.9.0-folio.2",
+  "appBuild": "b914ed43694482b1ef3d378307e7c97cc644799968bb184f7bba7a8f2282da7a",
+  "id": "8952a83b1bc621a8792a4250",
   "protocol": 1,
   "files": [
     {
       "url": "./player_almanac.html",
-      "sha256": "f7df89fa2d321310c5bf820ffab47aa94599e7f8774d0097ef633e2e24fad4f8",
-      "bytes": 758923
+      "sha256": "3c35137dfad55fd2043811bf8d5214fd4f6973c81f9efe5430bb6c19864d09fc",
+      "bytes": 952445
     },
     {
       "url": "./index.html",
@@ -16,7 +16,7 @@
     },
     {
       "url": "./manifest.json",
-      "sha256": "0e801f713ae452aca2e9656c3b8f3b01cefa2c088932b9e39ee9af9d61191a18",
+      "sha256": "9faa9dbf173d197291b174f12ee87f3ec27ae9576cc34c6804d54d0e33c9d7d1",
       "bytes": 1001
     },
     {

@@ -1,0 +1,1252 @@
+{
+  "suite": "Rendered Chromium UI with isolated memory adapters",
+  "nativeStorageVerified": false,
+  "nativeOfflineVerified": false,
+  "externalDownloadVerified": false,
+  "elapsedSeconds": 65.4,
+  "checks": [
+    {
+      "check": "Fresh Library is empty",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "First-use offer is visible and optional",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "No forced walkthrough overlay at boot",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "Dismissing offer leaves Library unchanged",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "Persistent Help entry exists without a character",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "All 26 task topics are reachable",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "Skip walkthrough closes it",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "Starting/skipping never creates sample records",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "landing: no uncaught JavaScript errors",
+      "passed": true,
+      "detail": []
+    },
+    {
+      "check": "landing: no online requests from tutorial/help",
+      "passed": true,
+      "detail": []
+    },
+    {
+      "check": "Create step waits for a real creation",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "Successful creation advances to its actual identity screen",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "Identity points to the real Character name field",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "Back after creation teaches opening, not creating another copy",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "Back does not duplicate the created character",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "Ability target resolves to actual score",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "Real ability edit commits and derives +3",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "Level automatically updates total hit dice, as taught",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "Tutorial does not demonstrate damage by changing HP",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "Normal Damage control works during walkthrough",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "Undo still restores the real action",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "Companion joins existing native dialog",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "Real dice result is detected",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "Practice roll does not mutate character record",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "Section navigation remains usable",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "Export retains the Backup coverage review",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "Existing exporter serialized a file for the download adapter",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "Export preserves sheet-v1 and state-version-4 metadata",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "Companion reports download requested, not externally verified",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "Backup completion wording asks user to verify saved file",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "Finish opens persistent Help",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "Completion metadata is separate from character state",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "Full create path created exactly one user-requested record",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "creation: no uncaught JavaScript errors",
+      "passed": true,
+      "detail": []
+    },
+    {
+      "check": "creation: no online requests from tutorial/help",
+      "passed": true,
+      "detail": []
+    },
+    {
+      "check": "Import path excludes creation step",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "Invalid JSON neither imports nor advances",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "Canonical sheet-v1 fixture is accepted without parser problems",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "Import fixture matches the implemented sheet-v1 contract",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "Import preview remains a nested native dialog",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "Preview alone does not import records",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "Add as new characters remains the default",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "Successful import advances to Open in the Library",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "Open success uses state-aware Play instructions",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "Imported values are preserved",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "Restarting after import preserves imported record",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "imports: no uncaught JavaScript errors",
+      "passed": true,
+      "detail": []
+    },
+    {
+      "check": "imports: no online requests from tutorial/help",
+      "passed": true,
+      "detail": []
+    },
+    {
+      "check": "Review-only existing-character path changes no payload, revision, media refs or Library membership",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "Close preserves resumable place",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "Restart and resume are available from Help",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "Restart instructions does not reset character data",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "existing: no uncaught JavaScript errors",
+      "passed": true,
+      "detail": []
+    },
+    {
+      "check": "existing: no online requests from tutorial/help",
+      "passed": true,
+      "detail": []
+    },
+    {
+      "check": "Interrupted session does not force an overlay on remount",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "Help offers resume after adapter-backed remount",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "Resume returns to selected character and step",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "Resuming does not alter character data",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "Unavailable tutorial preference storage does not block or mutate work",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "interruption: no uncaught JavaScript errors",
+      "passed": true,
+      "detail": []
+    },
+    {
+      "check": "interruption: no online requests from tutorial/help",
+      "passed": true,
+      "detail": []
+    },
+    {
+      "check": "Switching to another character pauses tutorial progression",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "No unrelated target is highlighted on the other character",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "Explicit Return to this step restores intended character",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "Unrelated navigation offers a safe return instead of a phantom target",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "Navigating away and back leaves both characters unchanged",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "Simulated read-only state is explained",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "Disabled input is not highlighted as usable",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "Closing removes every highlight",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "Closing restores target descriptions",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "navigation: no uncaught JavaScript errors",
+      "passed": true,
+      "detail": []
+    },
+    {
+      "check": "navigation: no online requests from tutorial/help",
+      "passed": true,
+      "detail": []
+    },
+    {
+      "check": "Invalid field still blocks tutorial navigation through the existing save barrier",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "Invalid HP is not committed as a demonstration value",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "Correcting the field allows normal continuation",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "validation: no uncaught JavaScript errors",
+      "passed": true,
+      "detail": []
+    },
+    {
+      "check": "validation: no online requests from tutorial/help",
+      "passed": true,
+      "detail": []
+    },
+    {
+      "check": "Help search filters actual task content",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "Clicking a search result opens its article",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "Opening a task clears the result query",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "No-match search has a readable explanation",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "Clearing search restores the task article",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "Existing language preference translates Help",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "German task article is localized",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "All 310 tutorial translation keys have German content",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "en: start has no unresolved label tokens",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "en: saving has no unresolved label tokens",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "en: import has no unresolved label tokens",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "en: library-actions has no unresolved label tokens",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "en: identity has no unresolved label tokens",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "en: abilities has no unresolved label tokens",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "en: vitals has no unresolved label tokens",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "en: portrait has no unresolved label tokens",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "en: attacks has no unresolved label tokens",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "en: spellsetup has no unresolved label tokens",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "en: hp has no unresolved label tokens",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "en: dice has no unresolved label tokens",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "en: rest has no unresolved label tokens",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "en: spells has no unresolved label tokens",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "en: gear has no unresolved label tokens",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "en: journal has no unresolved label tokens",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "en: maps has no unresolved label tokens",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "en: map-tools has no unresolved label tokens",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "en: history has no unresolved label tokens",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "en: backup has no unresolved label tokens",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "en: recovery has no unresolved label tokens",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "en: print has no unresolved label tokens",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "en: appearance has no unresolved label tokens",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "en: offline has no unresolved label tokens",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "en: optional has no unresolved label tokens",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "en: troubleshoot has no unresolved label tokens",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "de: start has no unresolved label tokens",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "de: saving has no unresolved label tokens",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "de: import has no unresolved label tokens",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "de: library-actions has no unresolved label tokens",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "de: identity has no unresolved label tokens",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "de: abilities has no unresolved label tokens",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "de: vitals has no unresolved label tokens",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "de: portrait has no unresolved label tokens",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "de: attacks has no unresolved label tokens",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "de: spellsetup has no unresolved label tokens",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "de: hp has no unresolved label tokens",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "de: dice has no unresolved label tokens",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "de: rest has no unresolved label tokens",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "de: spells has no unresolved label tokens",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "de: gear has no unresolved label tokens",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "de: journal has no unresolved label tokens",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "de: maps has no unresolved label tokens",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "de: map-tools has no unresolved label tokens",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "de: history has no unresolved label tokens",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "de: backup has no unresolved label tokens",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "de: recovery has no unresolved label tokens",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "de: print has no unresolved label tokens",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "de: appearance has no unresolved label tokens",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "de: offline has no unresolved label tokens",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "de: optional has no unresolved label tokens",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "de: troubleshoot has no unresolved label tokens",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "Phone guide has compact task navigation",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "help_content: no uncaught JavaScript errors",
+      "passed": true,
+      "detail": []
+    },
+    {
+      "check": "help_content: no online requests from tutorial/help",
+      "passed": true,
+      "detail": []
+    },
+    {
+      "check": "Starting gives meaningful heading focus",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "Show control reaches target by keyboard",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "Keyboard-opened native dialog owns companion",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "Tab remains within existing native modal trap",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "Escape closes native dialog without ending walkthrough",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "Escape within nonmodal companion closes instructions",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "Close restores focus to a usable real control",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "Tutorial never leaves the application inert",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "keyboard: no uncaught JavaScript errors",
+      "passed": true,
+      "detail": []
+    },
+    {
+      "check": "keyboard: no online requests from tutorial/help",
+      "passed": true,
+      "detail": []
+    },
+    {
+      "check": "No horizontal overflow at 1440x1000",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "Target stays outside companion after resize/show at 1440x1000",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "Close remains available at 1440x1000",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "Skip and Restart remain reachable at 1440x1000",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "No horizontal overflow at 1024x768",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "Target stays outside companion after resize/show at 1024x768",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "Close remains available at 1024x768",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "Skip and Restart remain reachable at 1024x768",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "No horizontal overflow at 768x1024",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "Target stays outside companion after resize/show at 768x1024",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "Close remains available at 768x1024",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "Skip and Restart remain reachable at 768x1024",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "No horizontal overflow at 390x844",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "Target stays outside companion after resize/show at 390x844",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "Close remains available at 390x844",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "Skip and Restart remain reachable at 390x844",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "No horizontal overflow at 320x640",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "Target stays outside companion after resize/show at 320x640",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "Close remains available at 320x640",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "Skip and Restart remain reachable at 320x640",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "No horizontal overflow at 844x390",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "Target stays outside companion after resize/show at 844x390",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "Close remains available at 844x390",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "Skip and Restart remain reachable at 844x390",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "System reduced motion is honored",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "Walkthrough does not animate under reduced motion",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "Existing arcane theme remains selectable during walkthrough",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "Existing ember theme remains selectable during walkthrough",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "Existing forest theme remains selectable during walkthrough",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "Existing ocean theme remains selectable during walkthrough",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "Existing blood theme remains selectable during walkthrough",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "Existing golden theme remains selectable during walkthrough",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "Existing void theme remains selectable during walkthrough",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "Existing frost theme remains selectable during walkthrough",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "High contrast remains available",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "Close removes responsive layout reservation",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "responsive: no uncaught JavaScript errors",
+      "passed": true,
+      "detail": []
+    },
+    {
+      "check": "responsive: no online requests from tutorial/help",
+      "passed": true,
+      "detail": []
+    },
+    {
+      "check": "Closing companion keeps the real dice dialog open",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "Focus stays inside native dialog after companion closes",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "Closing companion in a dialog changes no character data",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "Original dialog closes cleanly afterward",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "dialogs_close: no uncaught JavaScript errors",
+      "passed": true,
+      "detail": []
+    },
+    {
+      "check": "dialogs_close: no online requests from tutorial/help",
+      "passed": true,
+      "detail": []
+    },
+    {
+      "check": "Damage uses temporary HP before current HP",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "Healing caps at maximum",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "Undo works after healing",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "Redo reuses committed healing",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "Guide describes actual accessible spell-slot control label",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "Configured spell-slot spend commits normally",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "Configured spell-slot restore commits normally",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "Journal explicit Save still applies document",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "Library duplication still adds a separate character",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "Deleting still requires confirmation",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "Cancel deletion preserves both records",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "regression: no uncaught JavaScript errors",
+      "passed": true,
+      "detail": []
+    },
+    {
+      "check": "regression: no online requests from tutorial/help",
+      "passed": true,
+      "detail": []
+    },
+    {
+      "check": "Reading map Help does not add maps or media",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "Map Help opens actual empty map workspace",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "Map tools are absent before a map exists, as taught",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "Staging a map image does not add the map before Save",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "Map Save commits the named campaign",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "Staged map image renders through the test media adapter",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "Zoom and Fit map do not change saved character records",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "Add pin uses the original explicit Save form",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "Keyboard arrow moves an unlocked pin",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "Opening and leaving map tools Help preserves map data",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "Choosing a portrait commits its media reference after staging",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "Actual Zoom field applies portrait framing",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "Portrait Help is non-mutating",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "Identity with portrait has no phone overflow after Help",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "media_maps: no uncaught JavaScript errors",
+      "passed": true,
+      "detail": []
+    },
+    {
+      "check": "media_maps: no online requests from tutorial/help",
+      "passed": true,
+      "detail": []
+    },
+    {
+      "check": "A condition commits while its dialog stays open",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "Spend & roll hit dice commits before closing the dialog",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "Closing a short-rest dialog does not refund the spent die",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "Undo refunds the committed short-rest die",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "Long-rest review alone has not recovered HP",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "Cancelling long-rest review changes no character data",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "Recording a long rest applies configured HP and clears temporary HP/death counters",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "Long rest leaves conditions unchanged, as taught",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "Print Help opens the original saved-snapshot print workspace",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "Print preview uses a committed character snapshot",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "Actual paper control prepares Letter print CSS",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "Print content, paper and fit controls do not change character data",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "Native Print / save PDF entry is present (not invoked)",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "rest_print: no uncaught JavaScript errors",
+      "passed": true,
+      "detail": []
+    },
+    {
+      "check": "rest_print: no online requests from tutorial/help",
+      "passed": true,
+      "detail": []
+    },
+    {
+      "check": "Phone import keeps the companion inside the original modal",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "Phone Show control reaches the real import textarea",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "Phone import tutorial has no horizontal overflow",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "Phone dice instructions reach a usable expression field",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "Phone dice tutorial has no horizontal overflow",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "Narrow reduced-motion dialog retains its Close control",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "phone_dialogs: no uncaught JavaScript errors",
+      "passed": true,
+      "detail": []
+    },
+    {
+      "check": "phone_dialogs: no online requests from tutorial/help",
+      "passed": true,
+      "detail": []
+    }
+  ],
+  "errors": [],
+  "screenshots": [
+    "library-after-skip.png",
+    "walkthrough-finish-desktop.png",
+    "import-path-completed.png",
+    "help-desktop.png",
+    "help-hp-german-phone.png",
+    "tour-play-1440.png",
+    "tour-play-390.png",
+    "tour-play-320.png",
+    "phone-import-dialog.png",
+    "phone-dice-dialog.png"
+  ]
+}

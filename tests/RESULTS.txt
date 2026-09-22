@@ -1,0 +1,278 @@
+
+CASE landing
+PASS Fresh Library is empty
+PASS First-use offer is visible and optional
+PASS No forced walkthrough overlay at boot
+PASS Dismissing offer leaves Library unchanged
+PASS Persistent Help entry exists without a character
+PASS All 26 task topics are reachable
+PASS Skip walkthrough closes it
+PASS Starting/skipping never creates sample records
+PASS landing: no uncaught JavaScript errors
+PASS landing: no online requests from tutorial/help
+
+CASE creation
+PASS Create step waits for a real creation
+PASS Successful creation advances to its actual identity screen
+PASS Identity points to the real Character name field
+PASS Back after creation teaches opening, not creating another copy
+PASS Back does not duplicate the created character
+PASS Ability target resolves to actual score
+PASS Real ability edit commits and derives +3
+PASS Level automatically updates total hit dice, as taught
+PASS Tutorial does not demonstrate damage by changing HP
+PASS Normal Damage control works during walkthrough
+PASS Undo still restores the real action
+PASS Companion joins existing native dialog
+PASS Real dice result is detected
+PASS Practice roll does not mutate character record
+PASS Section navigation remains usable
+PASS Export retains the Backup coverage review
+PASS Existing exporter serialized a file for the download adapter
+PASS Export preserves sheet-v1 and state-version-4 metadata
+PASS Companion reports download requested, not externally verified
+PASS Backup completion wording asks user to verify saved file
+PASS Finish opens persistent Help
+PASS Completion metadata is separate from character state
+PASS Full create path created exactly one user-requested record
+PASS creation: no uncaught JavaScript errors
+PASS creation: no online requests from tutorial/help
+
+CASE imports
+PASS Import path excludes creation step
+PASS Invalid JSON neither imports nor advances
+PASS Canonical sheet-v1 fixture is accepted without parser problems
+PASS Import fixture matches the implemented sheet-v1 contract
+PASS Import preview remains a nested native dialog
+PASS Preview alone does not import records
+PASS Add as new characters remains the default
+PASS Successful import advances to Open in the Library
+PASS Open success uses state-aware Play instructions
+PASS Imported values are preserved
+PASS Restarting after import preserves imported record
+PASS imports: no uncaught JavaScript errors
+PASS imports: no online requests from tutorial/help
+
+CASE existing
+PASS Review-only existing-character path changes no payload, revision, media refs or Library membership
+PASS Close preserves resumable place
+PASS Restart and resume are available from Help
+PASS Restart instructions does not reset character data
+PASS existing: no uncaught JavaScript errors
+PASS existing: no online requests from tutorial/help
+
+CASE interruption
+PASS Interrupted session does not force an overlay on remount
+PASS Help offers resume after adapter-backed remount
+PASS Resume returns to selected character and step
+PASS Resuming does not alter character data
+PASS Unavailable tutorial preference storage does not block or mutate work
+PASS interruption: no uncaught JavaScript errors
+PASS interruption: no online requests from tutorial/help
+
+CASE navigation
+PASS Switching to another character pauses tutorial progression
+PASS No unrelated target is highlighted on the other character
+PASS Explicit Return to this step restores intended character
+PASS Unrelated navigation offers a safe return instead of a phantom target
+PASS Navigating away and back leaves both characters unchanged
+PASS Simulated read-only state is explained
+PASS Disabled input is not highlighted as usable
+PASS Closing removes every highlight
+PASS Closing restores target descriptions
+PASS navigation: no uncaught JavaScript errors
+PASS navigation: no online requests from tutorial/help
+
+CASE validation
+PASS Invalid field still blocks tutorial navigation through the existing save barrier
+PASS Invalid HP is not committed as a demonstration value
+PASS Correcting the field allows normal continuation
+PASS validation: no uncaught JavaScript errors
+PASS validation: no online requests from tutorial/help
+
+CASE help_content
+PASS Help search filters actual task content
+PASS Clicking a search result opens its article
+PASS Opening a task clears the result query
+PASS No-match search has a readable explanation
+PASS Clearing search restores the task article
+PASS Existing language preference translates Help
+PASS German task article is localized
+PASS All 310 tutorial translation keys have German content
+PASS en: start has no unresolved label tokens
+PASS en: saving has no unresolved label tokens
+PASS en: import has no unresolved label tokens
+PASS en: library-actions has no unresolved label tokens
+PASS en: identity has no unresolved label tokens
+PASS en: abilities has no unresolved label tokens
+PASS en: vitals has no unresolved label tokens
+PASS en: portrait has no unresolved label tokens
+PASS en: attacks has no unresolved label tokens
+PASS en: spellsetup has no unresolved label tokens
+PASS en: hp has no unresolved label tokens
+PASS en: dice has no unresolved label tokens
+PASS en: rest has no unresolved label tokens
+PASS en: spells has no unresolved label tokens
+PASS en: gear has no unresolved label tokens
+PASS en: journal has no unresolved label tokens
+PASS en: maps has no unresolved label tokens
+PASS en: map-tools has no unresolved label tokens
+PASS en: history has no unresolved label tokens
+PASS en: backup has no unresolved label tokens
+PASS en: recovery has no unresolved label tokens
+PASS en: print has no unresolved label tokens
+PASS en: appearance has no unresolved label tokens
+PASS en: offline has no unresolved label tokens
+PASS en: optional has no unresolved label tokens
+PASS en: troubleshoot has no unresolved label tokens
+PASS de: start has no unresolved label tokens
+PASS de: saving has no unresolved label tokens
+PASS de: import has no unresolved label tokens
+PASS de: library-actions has no unresolved label tokens
+PASS de: identity has no unresolved label tokens
+PASS de: abilities has no unresolved label tokens
+PASS de: vitals has no unresolved label tokens
+PASS de: portrait has no unresolved label tokens
+PASS de: attacks has no unresolved label tokens
+PASS de: spellsetup has no unresolved label tokens
+PASS de: hp has no unresolved label tokens
+PASS de: dice has no unresolved label tokens
+PASS de: rest has no unresolved label tokens
+PASS de: spells has no unresolved label tokens
+PASS de: gear has no unresolved label tokens
+PASS de: journal has no unresolved label tokens
+PASS de: maps has no unresolved label tokens
+PASS de: map-tools has no unresolved label tokens
+PASS de: history has no unresolved label tokens
+PASS de: backup has no unresolved label tokens
+PASS de: recovery has no unresolved label tokens
+PASS de: print has no unresolved label tokens
+PASS de: appearance has no unresolved label tokens
+PASS de: offline has no unresolved label tokens
+PASS de: optional has no unresolved label tokens
+PASS de: troubleshoot has no unresolved label tokens
+PASS Phone guide has compact task navigation
+PASS help_content: no uncaught JavaScript errors
+PASS help_content: no online requests from tutorial/help
+
+CASE keyboard
+PASS Starting gives meaningful heading focus
+PASS Show control reaches target by keyboard
+PASS Keyboard-opened native dialog owns companion
+PASS Tab remains within existing native modal trap
+PASS Escape closes native dialog without ending walkthrough
+PASS Escape within nonmodal companion closes instructions
+PASS Close restores focus to a usable real control
+PASS Tutorial never leaves the application inert
+PASS keyboard: no uncaught JavaScript errors
+PASS keyboard: no online requests from tutorial/help
+
+CASE responsive
+PASS No horizontal overflow at 1440x1000
+PASS Target stays outside companion after resize/show at 1440x1000
+PASS Close remains available at 1440x1000
+PASS Skip and Restart remain reachable at 1440x1000
+PASS No horizontal overflow at 1024x768
+PASS Target stays outside companion after resize/show at 1024x768
+PASS Close remains available at 1024x768
+PASS Skip and Restart remain reachable at 1024x768
+PASS No horizontal overflow at 768x1024
+PASS Target stays outside companion after resize/show at 768x1024
+PASS Close remains available at 768x1024
+PASS Skip and Restart remain reachable at 768x1024
+PASS No horizontal overflow at 390x844
+PASS Target stays outside companion after resize/show at 390x844
+PASS Close remains available at 390x844
+PASS Skip and Restart remain reachable at 390x844
+PASS No horizontal overflow at 320x640
+PASS Target stays outside companion after resize/show at 320x640
+PASS Close remains available at 320x640
+PASS Skip and Restart remain reachable at 320x640
+PASS No horizontal overflow at 844x390
+PASS Target stays outside companion after resize/show at 844x390
+PASS Close remains available at 844x390
+PASS Skip and Restart remain reachable at 844x390
+PASS System reduced motion is honored
+PASS Walkthrough does not animate under reduced motion
+PASS Existing arcane theme remains selectable during walkthrough
+PASS Existing ember theme remains selectable during walkthrough
+PASS Existing forest theme remains selectable during walkthrough
+PASS Existing ocean theme remains selectable during walkthrough
+PASS Existing blood theme remains selectable during walkthrough
+PASS Existing golden theme remains selectable during walkthrough
+PASS Existing void theme remains selectable during walkthrough
+PASS Existing frost theme remains selectable during walkthrough
+PASS High contrast remains available
+PASS Close removes responsive layout reservation
+PASS responsive: no uncaught JavaScript errors
+PASS responsive: no online requests from tutorial/help
+
+CASE dialogs_close
+PASS Closing companion keeps the real dice dialog open
+PASS Focus stays inside native dialog after companion closes
+PASS Closing companion in a dialog changes no character data
+PASS Original dialog closes cleanly afterward
+PASS dialogs_close: no uncaught JavaScript errors
+PASS dialogs_close: no online requests from tutorial/help
+
+CASE regression
+PASS Damage uses temporary HP before current HP
+PASS Healing caps at maximum
+PASS Undo works after healing
+PASS Redo reuses committed healing
+PASS Guide describes actual accessible spell-slot control label
+PASS Configured spell-slot spend commits normally
+PASS Configured spell-slot restore commits normally
+PASS Journal explicit Save still applies document
+PASS Library duplication still adds a separate character
+PASS Deleting still requires confirmation
+PASS Cancel deletion preserves both records
+PASS regression: no uncaught JavaScript errors
+PASS regression: no online requests from tutorial/help
+
+CASE media_maps
+PASS Reading map Help does not add maps or media
+PASS Map Help opens actual empty map workspace
+PASS Map tools are absent before a map exists, as taught
+PASS Staging a map image does not add the map before Save
+PASS Map Save commits the named campaign
+PASS Staged map image renders through the test media adapter
+PASS Zoom and Fit map do not change saved character records
+PASS Add pin uses the original explicit Save form
+PASS Keyboard arrow moves an unlocked pin
+PASS Opening and leaving map tools Help preserves map data
+PASS Choosing a portrait commits its media reference after staging
+PASS Actual Zoom field applies portrait framing
+PASS Portrait Help is non-mutating
+PASS Identity with portrait has no phone overflow after Help
+PASS media_maps: no uncaught JavaScript errors
+PASS media_maps: no online requests from tutorial/help
+
+CASE rest_print
+PASS A condition commits while its dialog stays open
+PASS Spend & roll hit dice commits before closing the dialog
+PASS Closing a short-rest dialog does not refund the spent die
+PASS Undo refunds the committed short-rest die
+PASS Long-rest review alone has not recovered HP
+PASS Cancelling long-rest review changes no character data
+PASS Recording a long rest applies configured HP and clears temporary HP/death counters
+PASS Long rest leaves conditions unchanged, as taught
+PASS Print Help opens the original saved-snapshot print workspace
+PASS Print preview uses a committed character snapshot
+PASS Actual paper control prepares Letter print CSS
+PASS Print content, paper and fit controls do not change character data
+PASS Native Print / save PDF entry is present (not invoked)
+PASS rest_print: no uncaught JavaScript errors
+PASS rest_print: no online requests from tutorial/help
+
+CASE phone_dialogs
+PASS Phone import keeps the companion inside the original modal
+PASS Phone Show control reaches the real import textarea
+PASS Phone import tutorial has no horizontal overflow
+PASS Phone dice instructions reach a usable expression field
+PASS Phone dice tutorial has no horizontal overflow
+PASS Narrow reduced-motion dialog retains its Close control
+PASS phone_dialogs: no uncaught JavaScript errors
+PASS phone_dialogs: no online requests from tutorial/help
+
+RESULT 246 passed checks; 0 failed cases
