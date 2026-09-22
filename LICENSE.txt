@@ -1,0 +1,272 @@
+ZAGREOUS NONCOMMERCIAL ATTRIBUTION LICENSE (ZNAL) v1.1
+=====================================================
+
+Copyright (c) 2025 Zagreous
+
+Official project page: https://github.com/Kylemaddenar/player-almanac
+Commercial licensing contact: kylemaddenar@gmail.com
+
+TERMS AND CONDITIONS
+
+1. DEFINITIONS
+
+1.1 "Work" means the software and/or content known as "Player Almanac",
+    including its source code, documentation, assets, and any other
+    materials distributed with this license.
+
+1.2 "You" means any individual or entity exercising permissions granted
+    by this license.
+
+1.3 "Noncommercial" means not primarily intended for or directed toward
+    commercial advantage or monetary compensation. Activities qualifying
+    as Permitted Media Use (Section 2.6) are not considered Commercial
+    Use even when monetized, provided all conditions are met.
+
+1.4 "Commercial Use" means any use that is primarily intended for or
+    directed toward commercial advantage, monetary compensation, or
+    business benefit, whether through Direct or Indirect Monetization.
+
+1.5 "Direct Monetization" means selling, licensing for a fee, or otherwise
+    exchanging the Work or Derivatives for monetary compensation.
+
+1.6 "Indirect Monetization" includes but is not limited to:
+    - advertising revenue (display ads, video ads, pre-roll, etc.)
+    - sponsorships or brand deals
+    - affiliate links or referral programs
+    - donations, tips, subscriptions, or memberships tied to access
+    - lead generation or user acquisition for paid products/services
+    - paid hosting, support, analytics, or "premium features"
+    - any arrangement where the Work provides meaningful value toward
+      revenue generation, even if access to the Work itself is free
+
+1.7 "Attribution" means crediting the Work as required in Section 3.
+
+1.8 "Derivatives" means modifications, adaptations, remixes, translations,
+    or other works based on the Work.
+
+2. LICENSE GRANT (NONCOMMERCIAL)
+
+Subject to the terms of this license, You are granted a worldwide,
+royalty-free, non-exclusive license to, for Noncommercial purposes only:
+
+2.1 Use the Work.
+
+2.2 Copy and redistribute the Work in any medium or format.
+
+2.3 Create and distribute Derivatives.
+
+2.4 Rehost the Work and/or Derivatives, and allow others to access them,
+    provided You comply with Section 3 and Section 4.
+
+2.5 Use the Work (and Derivatives) in automated systems, including
+    analysis, indexing, extraction, and machine learning or AI-related
+    workflows, provided the use is Noncommercial and attribution is
+    preserved where technically feasible.
+
+2.6 PERMITTED MEDIA USE (YouTube/Twitch/Streaming Carve-Out)
+
+    Notwithstanding the Noncommercial restriction, You may feature the
+    Work in videos, livestreams, tutorials, reviews, commentary, actual
+    play recordings, or similar media content, including monetized content
+    (advertising, sponsorships, affiliate links), provided that:
+
+    (a) You do not sell the Work or Derivatives directly;
+
+    (b) You do not gate access to downloads of the Work or Derivatives
+        behind payment, memberships, subscriptions, donations, tips, or
+        any other form of monetary exchange;
+
+    (c) You comply with all Attribution requirements (Section 3), including
+        the Media Attribution requirement (Section 3.6);
+
+    (d) The primary value of your content is your own commentary, gameplay,
+        instruction, or creative contribution—not mere redistribution of
+        the Work.
+
+    This carve-out applies only to the media content itself (the video,
+    stream, etc.), not to separate distribution or hosting of the Work.
+
+3. ATTRIBUTION AND NOTICE REQUIREMENTS
+
+If You use, copy, distribute, rehost, or publish Derivatives of the Work,
+You must:
+
+3.1 Provide clear, visible attribution that includes at minimum:
+    "Player Almanac by Zagreous"
+
+3.2 Provide a link back to the official project page:
+    https://github.com/Kylemaddenar/player-almanac
+    This link must be included wherever You present the Work, whenever
+    technically feasible (for example: README, About page, footer, credits
+    screen, or distribution listing).
+
+3.3 Indicate if You made changes (for example: "Modified from Player Almanac").
+
+3.4 Keep intact all copyright, attribution, and license notices included
+    with the Work.
+
+3.5 Include a copy of this license with any distribution of the Work or
+    Derivatives (for example: LICENSE.txt in the same folder/archive).
+
+3.6 MEDIA ATTRIBUTION (for Permitted Media Use)
+    When featuring the Work in videos, streams, or similar media content
+    under Section 2.6, You must include attribution in the video/stream
+    description or equivalent metadata field. At minimum:
+    "Player Almanac by Zagreous - https://github.com/Kylemaddenar/player-almanac"
+    If the platform does not support clickable links in descriptions,
+    include the full URL as plain text. On-screen attribution during the
+    content is encouraged but not required.
+
+3.7 PROMINENT ATTRIBUTION
+    Attribution must be reasonably visible and accessible. It must appear
+    in at least one primary user-facing location (such as: About screen,
+    footer, README, or distribution listing). Attribution may not be:
+    - hidden behind multiple clicks or navigation steps
+    - displayed in unreasonably small or obscured text
+    - placed only in locations users would not reasonably encounter
+    Where the platform supports clickable links, the official project URL
+    must be a working hyperlink; otherwise, the full URL text is required.
+
+3.8 DERIVATIVE NOTICE
+    If You distribute Derivatives, You must include a clear notice that
+    the Derivative is unofficial and not endorsed by the original author.
+    For example: "This is an unofficial modification of Player Almanac.
+    Not affiliated with or endorsed by Zagreous."
+
+4. RESTRICTIONS
+
+4.1 NONCOMMERCIAL ONLY
+    You may not exercise any rights granted by this license for Commercial
+    Use without separate written permission from the copyright holder.
+
+4.2 NO MONETIZED DISTRIBUTION
+    Hosting or distribution pages for the Work or Derivatives may not be
+    monetized via advertising, affiliate links, sponsorships, or similar
+    arrangements when the Work is the primary or meaningful value being
+    offered. For example: an ad-supported download mirror, a website that
+    runs ads around a hosted copy of the Work, or affiliate links on a
+    page distributing the Work all constitute Commercial Use.
+
+4.3 NO DONATION/SUBSCRIPTION GATING
+    You may not gate access to the Work or Derivatives behind donations,
+    tips, subscriptions, memberships, Patreon tiers, Ko-fi rewards, or
+    any similar arrangement. This includes but is not limited to:
+    - "supporters-only" or "patrons-only" builds or downloads
+    - early access for paying users
+    - premium mirrors or "tip to download" schemes
+    - any arrangement where payment provides preferential access
+
+4.4 NO BUNDLING WITH PAID OFFERINGS
+    Bundling the Work or Derivatives with any paid product, service,
+    community, course, or resource pack constitutes Commercial Use.
+    Examples include: paid resource packs that include the Work, paid
+    Discord servers or community vaults that distribute the Work, paid
+    online courses that include the Work as course material.
+
+4.5 NO SAAS / HOSTED WRAPPERS
+    Offering access to the Work or Derivatives via a hosted service,
+    paywall, subscription, account wall, or "premium features" in exchange
+    for payment or other value constitutes Commercial Use. This includes
+    "paid hosting," "paid support," or "paid analytics" wrappers built
+    around the Work.
+
+4.6 BUSINESS AND INTERNAL USE
+    Use of the Work by or for a for-profit entity, where such use is
+    connected to revenue generation, cost reduction, or business operations,
+    constitutes Commercial Use unless separately licensed. This includes
+    internal deployment at a company, use in commercial game sessions, or
+    integration into business workflows.
+
+4.7 NO TRADEMARK RIGHTS
+    This license does not grant permission to use any trademarks, service
+    marks, product names, or logos of the licensor, except as required for
+    reasonable and customary attribution under Section 3. You may not use
+    the name "Player Almanac" or associated branding in a way that suggests
+    official status, endorsement, or affiliation beyond nominative
+    attribution.
+
+4.8 NO ENDORSEMENT CLAIMS
+    You may not represent that the Work, Derivatives, or your use thereof
+    is officially endorsed, approved, or affiliated with the original
+    author or project, unless You have received explicit written permission.
+
+4.9 NO ADDITIONAL RESTRICTIONS / NO DRM
+    You may not apply legal terms or technological measures that restrict
+    others from exercising rights granted by this license. This includes
+    but is not limited to: DRM (Digital Rights Management), access controls,
+    license keys, account requirements, or any mechanism that limits access
+    to or use of the Work beyond what this license permits. Rehosting is
+    allowed only if it does not add such restrictions or gating.
+
+4.10 AI/ML COMMERCIAL RESTRICTION
+     Using the Work for training, fine-tuning, evaluation, dataset creation,
+     or similar purposes in connection with a commercial AI/ML model,
+     product, or service constitutes Commercial Use. Noncommercial AI/ML
+     use (research, personal projects, education) remains permitted under
+     Section 2.5, with attribution preserved where technically feasible.
+
+4.11 ANTI-CIRCUMVENTION
+     You may not circumvent the intent of this license through proxies,
+     intermediaries, shell entities, component separation, or other
+     arrangements designed to disguise Commercial Use or avoid the
+     restrictions herein.
+
+5. COMMERCIAL LICENSING
+
+For Commercial Use permissions, contact:
+kylemaddenar@gmail.com
+
+6. THIRD-PARTY MATERIALS
+
+6.1 The Work may include or depend on third-party components (such as
+    libraries, fonts, icons, or other assets) that are subject to their
+    own license terms. Those components retain their original licenses;
+    this license (ZNAL) applies only to the portions of the Work to which
+    the copyright holder has rights.
+
+6.2 Third-party components in this Work include but may not be limited to:
+    - GSAP (GreenSock Animation Platform): subject to GreenSock license
+    - Google Fonts (Cinzel, Inter, JetBrains Mono): SIL Open Font License
+    - Custom SVG icons: original artwork by the author
+    - Unicode emoji: rendered by user's device/browser
+
+6.3 You are responsible for complying with the license terms of any
+    third-party components when distributing the Work or Derivatives.
+
+7. TERMINATION AND REINSTATEMENT
+
+7.1 Automatic termination.
+    This license terminates automatically if You fail to comply with its
+    terms.
+
+7.2 Reinstatement.
+    If You cure the violation within 30 days of discovering it, Your rights
+    under this license are reinstated automatically, unless the copyright
+    holder explicitly terminates them in writing.
+
+8. LICENSE VERSIONS
+
+8.1 You may continue to use the Work under the version of this license
+    that was included when You received it.
+
+8.2 Distributors should include the current version of this license from
+    the official project page (https://github.com/Kylemaddenar/player-almanac) with new distributions.
+
+8.3 The copyright holder may publish updated versions of this license.
+    Updated versions will be identified by a new version number (e.g.,
+    ZNAL v1.2). Each version grants similar permissions but may include
+    clarifications or additional terms.
+
+9. DISCLAIMER OF WARRANTY AND LIMITATION OF LIABILITY
+
+THE WORK IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE, AND NONINFRINGEMENT.
+
+TO THE MAXIMUM EXTENT PERMITTED BY LAW, IN NO EVENT SHALL THE AUTHORS OR
+COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES, OR OTHER LIABILITY,
+WHETHER IN AN ACTION OF CONTRACT, TORT, OR OTHERWISE, ARISING FROM, OUT OF,
+OR IN CONNECTION WITH THE WORK OR THE USE OR OTHER DEALINGS IN THE WORK.
+
+=====================================================
+END OF ZNAL v1.1

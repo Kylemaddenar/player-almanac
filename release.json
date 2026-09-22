@@ -1,0 +1,53 @@
+{
+  "version": "7.9.0-dev.1",
+  "appBuild": "47695610d731e02b40ed30e0e07e59e66cb0cfe3d52f446df2bef07156f8a844",
+  "id": "102775ba3c83accfb66cc6aa",
+  "protocol": 1,
+  "files": [
+    {
+      "url": "./player_almanac.html",
+      "sha256": "f7df89fa2d321310c5bf820ffab47aa94599e7f8774d0097ef633e2e24fad4f8",
+      "bytes": 758923
+    },
+    {
+      "url": "./index.html",
+      "sha256": "00ae66ca64b8ca78e537b0feee9e0e10835b5006c99fe59de61cdfdaf553fb06",
+      "bytes": 338
+    },
+    {
+      "url": "./manifest.json",
+      "sha256": "0e801f713ae452aca2e9656c3b8f3b01cefa2c088932b9e39ee9af9d61191a18",
+      "bytes": 1001
+    },
+    {
+      "url": "./icons/icon-192.png",
+      "sha256": "80f6a9b842d63c5b3995273d67fd87d3fd5b47308193eb32a62fa82b93691cca",
+      "bytes": 65778
+    },
+    {
+      "url": "./icons/icon-512.png",
+      "sha256": "58d892afc2fa29e15b61b5c2e93d784683864fd52d8fe722ad3508d407e75304",
+      "bytes": 287447
+    },
+    {
+      "url": "./icons/maskable-192.png",
+      "sha256": "487386529878a3b8d102097ba9d71819b11372979644a79601d9381e5e7c205a",
+      "bytes": 17354
+    },
+    {
+      "url": "./icons/maskable-512.png",
+      "sha256": "b5c348ca7d02dbe2b9e9177a2e784ea65427d4ecc498270672a8a25d2141063a",
+      "bytes": 81631
+    },
+    {
+      "url": "./fonts/Manrope.ttf",
+      "sha256": "d0639be45d0af36e798172419d7bd173c4bd4f29e2b76cbb69db1d11bf8b0a40",
+      "bytes": 165420
+    },
+    {
+      "url": "./fonts/Fraunces.ttf",
+      "sha256": "177ff6c0f14e5550a3c624247cd1189611d4eb65d000b14944c63d967958abbb",
+      "bytes": 360440
+    }
+  ]
+}
