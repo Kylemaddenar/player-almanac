@@ -1,73 +1,85 @@
-# Player Almanac - integrated tutorial release
+# Player Almanac
 
-**7.9.0-folio.2**, based on the supplied **7.9.0-folio.1** application.
+**8.0.0**, the foil edition. An account-free, offline D&D 5e character folio in one HTML file.
 
-This is the working application, not a mock-up. Open **Help** in the header, sidebar or **More** menu. The Library offers an optional first-use walkthrough. The complete task guide is searchable and available without a character.
+This is the working application. Characters stay in this browser on this device; export a backup to keep a copy elsewhere. Open **Help** in the header or the **More** menu for the searchable task guide and the optional walkthrough.
+
+## What 8.0.0 changes
+
+- **Build.** New characters are made on six numbered plates and a Review: the class, species and background tables work out scores, hit points, armour class, speed, saves, skills, slots and spells, and every derived value can be overridden. Existing characters are edited on the same plates, with a one-step Level up.
+- **The shelf.** The Library is a shelf of covers; a cover opens into the sheet.
+- **The sheet.** Vitals, Combat and Checks with gem resources, one-tap rolls and casts, conditions and concentration as chips, short and long rests that show what changes; phones get a quick strip and swipeable tabs.
+- **Spellbook, Inventory, Notes, Print** rebuilt (spells by level with the SRD text, items with worn and attunement state, notes sections with drop caps, a print sheet on page tokens).
+- **Content.** The SRD spell catalogue with full descriptions (a second precached file), class and species tables, catalogue weapons with derived attack and damage.
+- **Removed.** The character questionnaire and online generation. Import can copy a prompt for an AI assistant of your choice instead; the app itself sends nothing.
+
+Every 7.9 character opens unchanged: the stored state stays version 4, new fields are added with defaults, and every 7.9 key is still written. See `docs/CHANGELOG.md`.
 
 ## Apply this update
 
-1. In the existing application, export a backup and check the file outside browser storage. Keep the original project/archive separately. Copying the application folder does **not** back up characters stored in the browser.
-2. Merge this update into the application folder. **Retain the original `fonts/Manrope.ttf` and `fonts/Fraunces.ttf`.** Font binaries and private `Meta/` material are not included in this update. All other runtime assets are included. Do not replace the original fonts directory with an empty directory.
-3. Keep the same served origin and application directory to keep using the same browser Library. A different browser profile, host, port or application path can show another Library. For an isolated test deployment, use exported copies rather than assuming the original Library will appear.
-4. Reload using the existing update flow. Finish pending edits and follow any other-tab/update messages. The service worker verifies a complete, matching asset set before reporting offline readiness. Do not assume an old cached shell is this new release.
+1. In the existing application, export a backup and check the file outside browser storage.
+2. Upload the files as described in `docs/overhaul/DEPLOY.md` (every file listed in `release.json` first, `release.json` and `sw.js` last). Keep the old `fonts/*.ttf` and icon files on the server for this release; clients that have not updated yet still use them.
+3. Keep the same origin and application path to keep the same Library. Open the app, finish pending edits and follow the update notice; the service worker verifies the complete asset set before it reports offline readiness.
 
-The HTML is already built; no installation of a JavaScript framework, package manager or runtime library is needed. `index.html` still opens `player_almanac.html`.
-
-For a **new local test server**, from the application folder on Windows:
+For a local test server, from the application folder:
 
 ```text
 py -m http.server 8000
 ```
 
-Then open `http://localhost:8000/player_almanac.html`. This creates a different origin from another host/port, so its Library may be different. A `file://` launch does not provide the supported service-worker installation/offline workflow. Native offline behavior was not tested in the delivery environment; see the verification report.
+Then open `http://localhost:8000/player_almanac.html`. A different host, port or path is a different Library. A `file://` launch does not provide offline installation.
 
 ## What is included
 
 | Part | Location |
 | --- | --- |
-| Complete updated HTML, icons, manifest, service worker and release metadata | Project root and `icons/` |
-| Authored walkthrough controller and searchable Help workspace | `ui/help.js` |
-| Shared English/German instructional content | `ui/help-content.js` |
-| Integrated styles, including small-screen and reduced-motion handling | `ui/folio.css` |
-| Full task guides | `docs/HELP_GUIDE.en.md`, `docs/HELP_GUIDE.de.md` |
-| Walkthrough paths and finished step text | `docs/WALKTHROUGH.en.md`, `docs/WALKTHROUGH.de.md` |
-| Feature coverage, test method and remaining limitations | `docs/TESTING_AND_COVERAGE.md` |
-| Original inspection checklist | `docs/INSPECTION_AND_COVERAGE.md` |
-| Reproducible browser UI tests and isolated adapters | `tests/` |
-| Original project license | `LICENSE.txt` |
+| Built HTML, icons, fonts, manifest, service worker, release metadata, spell text | project root, `icons/`, `fonts/`, `content/` |
+| Application sources (one module per file, concatenated in the order listed in `tools/build.py`) | `src/` |
+| Styles (tokens, materials, components, layout, motion, print) | `src/styles/` |
+| Help and walkthrough content (English and German) | `src/help/help-content.js`; Markdown copies in `docs/HELP_GUIDE.*.md`, `docs/WALKTHROUGH.*.md` |
+| Overhaul specification, plan, progress record and deploy checklist | `docs/overhaul/` |
+| Tests: unit, smoke, behaviour, Build, views, design, visual, platform, performance, tutorial | `tests/` |
+| Project licence | `LICENSE.txt` |
 
-## Tutorial behavior
+## Game content and licences
 
-The blank-create and existing-character routes contain 10 steps; the import route contains 11. These are designed for approximately five minutes, not a measured novice-user timing result. Use one path, not both create and import.
+This work includes material taken from the System Reference Document 5.1 ("SRD 5.1") by Wizards of the Coast LLC and available at https://dnd.wizards.com/resources/systems-reference-document. The SRD 5.1 is licensed under the Creative Commons Attribution 4.0 International License available at https://creativecommons.org/licenses/by/4.0/legalcode.
 
-Each step has an instruction, explanation, control/area reference and recognizable success result. **Show control** focuses the real control. The user performs actual actions; successful creation and import trigger advancement. Merely reading, skipping, closing or restarting never creates samples, changes values, imports files, deletes records, enables add-ons or sends data online. An explicitly chosen practice roll adds a real roll-history result.
+This work includes material from the System Reference Document 5.2.1 ("SRD 5.2.1") by Wizards of the Coast LLC, available at https://www.dndbeyond.com/srd. The SRD 5.2.1 is licensed under the Creative Commons Attribution 4.0 International License, available at https://creativecommons.org/licenses/by/4.0/legalcode.
 
-Ordinary fields retain their existing commit-on-blur/Enter behavior. Item/document forms retain **Save** and their recoverable unapplied drafts. Existing validation, save barriers, confirmations, ownership and history remain in force. Export reports a download request, not proof that a file was saved externally.
+Spell descriptions are reproduced from the SRD (2014: SRD 5.1; 2024: SRD 5.2.1) with tables set as lines, casting times shortened and ranges abbreviated; they are generated by `tools/spells.py` from pinned sources and loaded from `content/srd-spells.*.js`. The class and species tables come from the same SRDs (`tools/srd_tables.py`). Condition rules and other rules text are abridged and paraphrased to fit a character sheet. Twelve of the sixteen 2024 backgrounds follow the structure of the 2024 Player's Handbook and are not SRD content; they are marked `src: 'PHB24'` in `src/content/catalog.js`. Dungeons & Dragons® is a registered trademark of Wizards of the Coast LLC. Player Almanac is not affiliated with, endorsed, sponsored, or specifically approved by Wizards of the Coast LLC. The same notices appear in the app under Settings → About & privacy, in English and German.
 
-The companion is nonmodal. On phones/tablets it uses a bottom sheet; very short viewports use an inline panel. During a native application dialog it moves inside that dialog instead of opening another modal or disabling its controls. Finish/close the native dialog before advancing the walkthrough. Closing the companion does not close the dialog. It restores focus, removes target descriptions/highlights and clears layout space on exit.
+## Browser support
 
-**Help** supports Start/Resume and Restart. Progress is stored separately under `pa:tutorial:v1:<application scope>`; a missing or unwritable preference store does not block character work. Reloading never forcibly resumes an overlay.
+Safari 16.4, Chrome or Edge 105, Firefox 110, or newer. A small check that runs before the application script looks for the features the app cannot work without (ES2021 syntax, `structuredClone`, `Array.prototype.at`, `Object.hasOwn`, `<dialog>`, CSS container queries) and, when one is missing, shows a plain English and German message instead of a blank page. It reads and writes nothing. Offline installation needs HTTPS (or `localhost`).
 
 ## Build and verify
 
-After editing `ui/folio.css`, `ui/help.js` or `ui/help-content.js`, rebuild the embedded sources and verified release metadata:
+The application is authored as modules under `src/` (one file per former banner section, concatenated in the order listed in `tools/build.py`) and built into the single `player_almanac.html`. The build needs Node 20+ and Python 3.10+; the app itself has no runtime dependencies.
 
 ```text
-python tools/build.py
-python tools/build.py --check
+npm ci                  # development tools only: esbuild, Vitest, Playwright, axe
+npm run build           # src/ -> player_almanac.html, manifest.json, release.json, sw.js RELEASE, SHA256SUMS.txt
+npm run check           # verify those outputs are up to date without writing (python tools/build.py --check)
+npm run ci              # everything CI runs, in order
 ```
 
-The original font files must be present for release verification. The builder uses only the Python standard library. It verifies all nine runtime assets and preserves release protocol 1. The Help content is embedded in the HTML and therefore travels with the cached application; no separate online Help service is needed.
+`tools/build.py` embeds the stylesheet and scripts, minifies the modules with esbuild (whitespace and syntax only), computes the build identity and writes the protocol-1 release manifest for the assets in its `ASSETS` list. The service-worker protocol is unchanged. The Help content is embedded in the HTML and therefore travels with the cached application.
 
-Development tests require Python Playwright and a compatible Chromium executable:
+| Command | What it verifies |
+| --- | --- |
+| `npm run lint` | translations (no unreferenced keys, every key in English and German), line endings, the design rules (colour literals only in tokens, no filters, Cinzel at 12 px or more, finishes rationed) and every colour pairing's contrast |
+| `npm test` | Vitest unit tests for commands, selectors, dice, diffs, import/export round trips, controller, preferences; coverage thresholds |
+| `npm run size` | size budgets (built HTML, fonts, artwork) |
+| `npm run test:smoke` | every route for the four seed characters at 1440, 1024 and 390 px (and German): no console errors, no horizontal overflow, no missing translations, no stray `null`, axe serious = 0; plus the behaviour, Build, views and design tests |
+| `npm run test:perf` | the performance budgets at 4× CPU throttling: sheet render after a command, Lite, composited layers, the roll's frame rate and layouts |
+| `npm run test:platform` | the real service worker verifies the release and reports ready on localhost, the app opens offline; the browser-floor message |
+| `npm run test:tutorial` | the Python tutorial suite (needs `pip install playwright`) |
+| `npm run test:visual` | screenshots per route, width and scheme against `tests/e2e/baselines/<platform>/` |
 
-```text
-python tests/test_tutorial.py --browser /path/to/chromium --output test-results
-python tests/test_tutorial.py --browser /path/to/chromium --case imports --output test-results-import
-python tools/export_help.py --browser /path/to/chromium
-```
+The seed characters in `tests/fixtures/exports/` were exported by the unmodified 7.9.0-folio.2 build (`tools/make-seed-exports.mjs`); migration tests start from them. Fonts and app icons are regenerated with `tools/fonts.py` and `tools/icons.mjs`.
 
-These tests use in-memory adapters on an isolated document. They are **not** native IndexedDB, installation, offline caching, completed-download or physical-print tests. The production app still uses its original storage and service-worker implementations; it never loads the test adapters.
+The smoke, visual and tutorial suites use in-memory adapters on an isolated document. They are **not** native IndexedDB, installation, completed-download or physical-print tests; the platform suite is the one that exercises the real service worker. The production app never loads the test adapters.
 
 ## Source preservation and private material
 
