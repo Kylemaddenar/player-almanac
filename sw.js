@@ -1,53 +1,78 @@
 const RELEASE = {
-  "version": "7.9.0-folio.2",
-  "appBuild": "b914ed43694482b1ef3d378307e7c97cc644799968bb184f7bba7a8f2282da7a",
-  "id": "8952a83b1bc621a8792a4250",
+  "version": "8.0.0",
+  "appBuild": "16be9fe7fe386793078a4d75f6fbd57c9a2aa816278010036e873f7fbdc80cfc",
+  "id": "0c419d2ab32d08cd1022c25d",
   "protocol": 1,
   "files": [
     {
       "url": "./player_almanac.html",
-      "sha256": "3c35137dfad55fd2043811bf8d5214fd4f6973c81f9efe5430bb6c19864d09fc",
-      "bytes": 952445
+      "sha256": "7653d0e2a3c60b66b3cc33a64fa8aea0797fd613e2067f00f002d23f3c38b13b",
+      "bytes": 1066200
     },
     {
       "url": "./index.html",
-      "sha256": "00ae66ca64b8ca78e537b0feee9e0e10835b5006c99fe59de61cdfdaf553fb06",
+      "sha256": "c58cbe04889652fd5b67b5c553abbbd48895cdbe817aba8b44891d75dbef4e69",
       "bytes": 338
     },
     {
       "url": "./manifest.json",
-      "sha256": "9faa9dbf173d197291b174f12ee87f3ec27ae9576cc34c6804d54d0e33c9d7d1",
-      "bytes": 1001
+      "sha256": "f7120f64e6dfcacf3e3e1eded5aa970f927b25f684b7ad46c82681edd42d5a35",
+      "bytes": 1011
     },
     {
-      "url": "./icons/icon-192.png",
-      "sha256": "80f6a9b842d63c5b3995273d67fd87d3fd5b47308193eb32a62fa82b93691cca",
-      "bytes": 65778
+      "url": "./icons/wolf-192.png",
+      "sha256": "217b9bde9ffd746f836eed7fe65b10d161fa7d409263f4c804aaa07dea86d8d7",
+      "bytes": 7669
     },
     {
-      "url": "./icons/icon-512.png",
-      "sha256": "58d892afc2fa29e15b61b5c2e93d784683864fd52d8fe722ad3508d407e75304",
-      "bytes": 287447
+      "url": "./icons/wolf-512.png",
+      "sha256": "d923dc24a4ed9f0937cd176437ca4bba50060b323bdfb2accef127761f21b90f",
+      "bytes": 26451
     },
     {
-      "url": "./icons/maskable-192.png",
-      "sha256": "487386529878a3b8d102097ba9d71819b11372979644a79601d9381e5e7c205a",
-      "bytes": 17354
+      "url": "./icons/wolf-maskable-192.png",
+      "sha256": "a1cef66275ca05906ec81c1d1a533ac22be56719d1d72245bff3bfe30417399d",
+      "bytes": 6212
     },
     {
-      "url": "./icons/maskable-512.png",
-      "sha256": "b5c348ca7d02dbe2b9e9177a2e784ea65427d4ecc498270672a8a25d2141063a",
-      "bytes": 81631
+      "url": "./icons/wolf-maskable-512.png",
+      "sha256": "09077a000247cf1e8c7b4204857b47a5a8175c385362c4ce2a012c72193b50a1",
+      "bytes": 20014
     },
     {
-      "url": "./fonts/Manrope.ttf",
-      "sha256": "d0639be45d0af36e798172419d7bd173c4bd4f29e2b76cbb69db1d11bf8b0a40",
-      "bytes": 165420
+      "url": "./icons/wolf-filigree.webp",
+      "sha256": "663c4ea226ecdbc1fef88ad4b0d6d229d74f80822a07a6942d6f329cec9b2946",
+      "bytes": 137824
     },
     {
-      "url": "./fonts/Fraunces.ttf",
-      "sha256": "177ff6c0f14e5550a3c624247cd1189611d4eb65d000b14944c63d967958abbb",
-      "bytes": 360440
+      "url": "./fonts/Cinzel-600.woff2",
+      "sha256": "4b91559035330fbe97d546035092a4c1da11cc07c58b9e28f5ef87ba6dfcbe94",
+      "bytes": 17556
+    },
+    {
+      "url": "./fonts/Cinzel-700.woff2",
+      "sha256": "a4eda93fae065b7d1655db047964133eaab68efd1bb07514d894103254860e55",
+      "bytes": 17568
+    },
+    {
+      "url": "./fonts/Rajdhani-500.woff2",
+      "sha256": "948b38e6d7051b46528e8eaa236e4a21937540fdd73135ed9ab8f77c2f3ccff6",
+      "bytes": 12156
+    },
+    {
+      "url": "./fonts/Rajdhani-600.woff2",
+      "sha256": "545118838dce9c1cc09d31f2eceecb58028c0e6d1a155c844c444206d06e7a6b",
+      "bytes": 12828
+    },
+    {
+      "url": "./fonts/Rajdhani-700.woff2",
+      "sha256": "0e4ca984aceb2af47fb6ba6a7cc94f3562769cbb8d0311386d2129ffc6d99f53",
+      "bytes": 12424
+    },
+    {
+      "url": "./content/srd-spells.b6802e3cf6a6.js",
+      "sha256": "b6802e3cf6a6cb6c56f0aac53f9c73437cad4edb0b1112a9298300c64ec2aaaa",
+      "bytes": 522529
     }
   ]
 };
@@ -125,7 +150,7 @@ self.addEventListener('fetch', event => {
     // network HTML into an old release cache, even after a fresh deployment.
     try { const response = await download(file); await cache.put(key, response.clone()); return response; }
     catch {
-      return new Response('Player Almanac: this installed release is incomplete. Reconnect, prepare an update, close all Player Almanac tabs, then reopen. Your character storage has not been changed. / Diese installierte Version ist unvollstaendig. Verbinde dich, bereite ein Update vor, schliesse alle Almanac-Fenster und oeffne die App erneut. Charakterdaten wurden nicht geaendert.', { status: 503, headers: { 'Content-Type': 'text/plain;charset=utf-8', 'Cache-Control': 'no-store' } });
+      return new Response('Player Almanac: this installed release is incomplete. Reconnect, prepare an update, close all Player Almanac tabs, then reopen. Your character storage has not been changed. / Diese installierte Version ist unvollständig. Verbinde dich, bereite ein Update vor, schließe alle Almanac-Fenster und öffne die App erneut. Charakterdaten wurden nicht geändert.', { status: 503, headers: { 'Content-Type': 'text/plain;charset=utf-8', 'Cache-Control': 'no-store' } });
     }
   })());
 });
